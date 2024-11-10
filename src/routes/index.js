@@ -1,12 +1,7 @@
-import Home from '~/pages/Home';
-import Profile from '~/pages/Profile';
 import { SignInSignUpLayout } from '~/components/Layout';
 
 // Public Routes
-const publicRoutes = [
-    { path: '', component: Home },
-    { path: 'profile', component: Profile },
-];
+const publicRoutes = [];
 
 // Private Routes
 const privateRoutes = [];
