@@ -12,10 +12,13 @@
 /build
 
 # note
-/task.text
+task.text
 
 # vscode config
-/.vscode
+.vscode
+
+# firebase config
+.firebase
 
 # misc
 .DS_Store
