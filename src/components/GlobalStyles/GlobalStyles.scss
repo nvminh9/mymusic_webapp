@@ -1,13 +1,325 @@
 // import Font chữ
+// Font Funnel Sans
+@import url('https://fonts.googleapis.com/css2?family=Funnel+Sans:ital,wght@0,300..800;1,300..800&display=swap');
 
 // CSS Tổng quát
 :root {
 }
 
 html {
+    height: 100%;
+    scroll-behavior: smooth;
 }
 
 body {
+    font-family: 'Funnel Sans', sans-serif;
+    text-rendering: optimizeSpeed;
+    height: 100%;
+    width: auto;
+    margin: 0;
 }
 
+#root {
+    height: 100%;
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #121212;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #777777aa;
+    backdrop-filter: blur(5px);
+    cursor: pointer;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #777;
+}
+
+// CSS Default Layout
+.wrapper {
+    height: 100%;
+    margin: 0 auto;
+
+    .container {
+        height: 100%;
+        margin: 0px;
+        background-color: #121212;
+    }
+}
+
+// CSS Left Container
+.leftContainer {
+    position: fixed;
+    background: #121212;
+    height: 100%;
+    width: 100%;
+    left: 0px;
+    border-right: 0.5px solid #1f1f1f;
+
+    .top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px;
+        border-bottom: 0.5px solid #1f1f1f;
+        background-color: #121212;
+        position: relative;
+        z-index: 1;
+
+        .logo {
+            display: flex;
+            align-items: center;
+
+            img {
+                height: 35px;
+                // width: 100%;
+                cursor: pointer;
+            }
+        }
+        .search {
+            .btnOpenSearch {
+                background-color: transparent;
+                border: 0.5px solid transparent;
+                // border-radius: 4px;
+                padding: 4px;
+                display: flex;
+                align-items: center;
+                cursor: pointer;
+                color: #ffffff;
+                transition: ease-in 0.2s;
+            }
+            .btnOpenSearch:hover {
+                background-color: #1f1f1f;
+            }
+        }
+    }
+
+    .middle {
+        overflow-x: hidden;
+        overflow-y: auto;
+        height: 92%;
+
+        .user {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            height: 80px;
+            border-bottom: 0.5px solid #1f1f1f;
+            background-color: #121212;
+            position: relative;
+            z-index: 1;
+
+            .avatar {
+                display: flex;
+                align-items: center;
+                height: 100%;
+                width: 85px;
+
+                img {
+                    height: 100%;
+                    width: 100%;
+                    border: 0.5px solid #1f1f1f;
+                    object-fit: cover;
+                    cursor: pointer;
+                }
+            }
+
+            .name {
+                display: grid;
+                align-items: center;
+                justify-content: center;
+                height: 100%;
+                width: 75%;
+
+                span {
+                    color: #ffffff;
+                    font-size: 16px;
+                    font-weight: 400;
+                    cursor: pointer;
+                    transition: ease-in 0.2s;
+                }
+                span:hover {
+                    text-decoration: underline;
+                }
+            }
+        }
+
+        .playlist {
+            position: relative;
+            height: 42px;
+            transition: ease-out 0.2s;
+
+            .top {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 8px;
+                border-bottom: 0.5px solid #1f1f1f;
+                background-color: #121212cc;
+                backdrop-filter: blur(15px);
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                z-index: 1;
+
+                .title {
+                    display: flex;
+                    align-items: center;
+                    font-size: 18px;
+                    font-weight: 500;
+                    color: #ffffff;
+                }
+                .options {
+                    display: flex;
+                    align-items: center;
+
+                    .btnExpand {
+                        display: flex;
+                        align-items: center;
+                        background-color: transparent;
+                        border: 0.5px solid transparent;
+                        color: #ffffff;
+                        padding: 5px;
+                        transition: ease-out 0.2s;
+                        cursor: pointer;
+                    }
+                    .btnExpand:hover {
+                        background-color: #1f1f1f;
+                    }
+                    .btnExpand:active {
+                        background-color: #000;
+                    }
+                    .btnAdd {
+                        display: flex;
+                        align-items: center;
+                        background-color: transparent;
+                        border: 0.5px solid transparent;
+                        color: #ffffff;
+                        padding: 5px;
+                        transition: ease-out 0.2s;
+                        cursor: pointer;
+                    }
+                    .btnAdd:hover {
+                        background-color: #1f1f1f;
+                    }
+                    .btnAdd:active {
+                        background-color: #ffffff;
+                        color: #000;
+                    }
+                }
+            }
+
+            .backTop {
+                height: 42px;
+            }
+
+            .main {
+                height: 0px;
+                width: 100%;
+                overflow-x: hidden;
+                overflow-y: auto;
+                scroll-behavior: smooth;
+                border-bottom: 0.5px solid #1f1f1f;
+                transition: ease-in 0.2s;
+                position: relative;
+                z-index: 0;
+
+                .btnPlaylist {
+                    display: flex;
+                    align-items: center;
+                    background-color: transparent;
+                    border: none;
+                    border-bottom: 0.5px solid transparent;
+                    height: 80px;
+                    width: 100%;
+                    padding: 8px;
+                    transition: ease-out 0.2s;
+                    cursor: pointer;
+
+                    .coverImage {
+                        display: flex;
+                        align-items: center;
+                        height: 100%;
+                        width: 85px;
+
+                        img {
+                            height: 100%;
+                            width: 100%;
+                            border: 0.5px solid #1f1f1f;
+                            object-fit: cover;
+                            cursor: pointer;
+                            filter: blur(0.4px);
+                        }
+                    }
+
+                    .info {
+                        display: grid;
+                        align-items: center;
+                        padding-left: 8px;
+
+                        .name {
+                            display: flex;
+                            align-items: center;
+                            justify-content: left;
+                            color: #ffffff;
+                            font-size: 16px;
+                            font-weight: 400;
+                            padding-bottom: 4px;
+                            cursor: pointer;
+                            transition: ease-out 0.2s;
+                        }
+                        .name:hover {
+                            text-decoration: underline;
+                        }
+                        .quantity {
+                            display: flex;
+                            align-items: center;
+                            justify-content: left;
+                            // color: #b3b3b3;
+                            color: #777777aa;
+                            font-size: 14px;
+                            font-weight: 400;
+                        }
+                    }
+                }
+                .btnPlaylist:hover {
+                    background-color: #1f1f1f;
+                }
+            }
+        }
+    }
+
+    .bottom {
+    }
+}
+
+// CSS Right Container
+.rightContainer {
+    position: fixed;
+    // background: pink;
+    background-color: #121212;
+    border-left: 0.5px solid #1f1f1f;
+    height: 100%;
+    width: 100%;
+    right: 0px;
+}
+
+// CSS Admin Layout
+
+// CSS Sign In/Out Layout
+
 // CSS
+h1 {
+    margin: 0;
+}

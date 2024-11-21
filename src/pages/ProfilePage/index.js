@@ -1,5 +1,12 @@
+import { useEffect } from 'react';
+
 function ProfilePage() {
-    return <h1>ProfilePage</h1>;
+    // Đổi title trang
+    useEffect(() => {
+        document.title = 'Profile | mymusic';
+    }, []);
+
+    return <></>;
 }
 
 export default ProfilePage;
