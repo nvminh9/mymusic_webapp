@@ -1,39 +1,85 @@
 import logo from '~/assets/images/logoWhiteTransparent.png';
-import avatarTest from '~/assets/images/avatarTest.jpg';
 import avatarTest2 from '~/assets/images/avatarTest2.jpg';
 import coverPlaylistTest from '~/assets/images/0054a59f216f1ffcecf0def0621a8fa2.jpg';
 import coverPlaylistTest2 from '~/assets/images/studyCover.jpg';
 import coverPlaylistTest3 from '~/assets/images/relaxMusicCover.jpg';
+import coverSongTest from '~/assets/images/timanhghen.jpg';
+import coverSongTest2 from '~/assets/images/getmoney.jpg';
+import coverMySongTest from '~/assets/images/d125db5a3cac269c33f2314b318163a2.jpg';
+import coverMySongTest2 from '~/assets/images/339dba2a2e19e5440dafb92b60a6e66b.jpg';
 import CircumIcon from '@klarr-agency/circum-icons-react';
-import { VscChevronDown, VscAdd, VscChevronUp } from 'react-icons/vsc';
+import { VscChevronDown, VscAdd, VscChevronUp, VscClose, VscLibrary, VscMusic, VscHistory } from 'react-icons/vsc';
 import { useState } from 'react';
 
 function LeftContainer() {
     const [isOpenPlayList, setIsOpenPlayList] = useState(false);
-    const [isOpenPlayListTwo, setIsOpenPlayListTwo] = useState(false);
+    const [isOpenHistoryListen, setIsOpenHistoryListen] = useState(false);
+    const [isOpenMySong, setIsOpenMySong] = useState(false);
 
     // Đóng / Mở Playlist
     const btnExpandPlaylist = () => {
         let mainPlaylistLeftContainerID = document.getElementById('mainPlaylistLeftContainerID');
         if (!isOpenPlayList) {
-            document.getElementById('playlistID2').style.transform = 'translateY(358px)';
-            mainPlaylistLeftContainerID.style.height = '400px';
-            setIsOpenPlayList(true);
+            if (isOpenHistoryListen) {
+                document.getElementById('historyListenID').style.transform = 'translateY(358px)';
+                document.getElementById('mySongID').style.transform = 'translateY(716px)';
+                mainPlaylistLeftContainerID.style.height = '400px';
+                setIsOpenPlayList(true);
+            } else {
+                document.getElementById('historyListenID').style.transform = 'translateY(358px)';
+                document.getElementById('mySongID').style.transform = 'translateY(358px)';
+                mainPlaylistLeftContainerID.style.height = '400px';
+                setIsOpenPlayList(true);
+            }
         } else {
-            mainPlaylistLeftContainerID.style.height = '0px';
-            document.getElementById('playlistID2').style.transform = 'translateY(0px)';
-            setIsOpenPlayList(false);
+            if (isOpenHistoryListen) {
+                mainPlaylistLeftContainerID.style.height = '0px';
+                document.getElementById('historyListenID').style.transform = 'translateY(0px)';
+                document.getElementById('mySongID').style.transform = 'translateY(358px)';
+                setIsOpenPlayList(false);
+            } else {
+                mainPlaylistLeftContainerID.style.height = '0px';
+                document.getElementById('historyListenID').style.transform = 'translateY(0px)';
+                document.getElementById('mySongID').style.transform = 'translateY(0px)';
+                setIsOpenPlayList(false);
+            }
         }
     };
-    // Đóng / Mở Playlist 2 Test
-    const btnExpandPlaylist2 = () => {
-        let mainPlaylistLeftContainerID2 = document.getElementById('mainPlaylistLeftContainerID2');
-        if (!isOpenPlayListTwo) {
-            mainPlaylistLeftContainerID2.style.height = '400px';
-            setIsOpenPlayListTwo(true);
+    // Đóng / Mở History Listen
+    const btnExpandHistoryListen = () => {
+        let mainHistoryListen = document.getElementById('mainHistoryListenID');
+        if (!isOpenHistoryListen) {
+            if (isOpenPlayList) {
+                mainHistoryListen.style.height = '400px';
+                document.getElementById('mySongID').style.transform = 'translateY(716px)';
+                setIsOpenHistoryListen(true);
+            } else {
+                mainHistoryListen.style.height = '400px';
+                document.getElementById('mySongID').style.transform = 'translateY(358px)';
+                setIsOpenHistoryListen(true);
+            }
         } else {
-            mainPlaylistLeftContainerID2.style.height = '0px';
-            setIsOpenPlayListTwo(false);
+            if (isOpenPlayList) {
+                mainHistoryListen.style.height = '0px';
+                document.getElementById('mySongID').style.transform = 'translateY(358px)';
+                setIsOpenHistoryListen(false);
+            } else {
+                mainHistoryListen.style.height = '0px';
+                document.getElementById('mySongID').style.transform = 'translateY(0px)';
+                setIsOpenHistoryListen(false);
+            }
+        }
+    };
+
+    // Đóng / Mở My Song
+    const btnExpandMySong = () => {
+        let mainMySong = document.getElementById('mainMySongID');
+        if (!isOpenMySong) {
+            mainMySong.style.height = '400px';
+            setIsOpenMySong(true);
+        } else {
+            mainMySong.style.height = '0px';
+            setIsOpenMySong(false);
         }
     };
 
@@ -60,9 +106,12 @@ function LeftContainer() {
                     </div>
                 </div>
                 {/* Playlist */}
-                <div className="playlist">
+                <div id="playListID" className="playlist">
                     <div className="top">
-                        <span className="title">Danh sách phát</span>
+                        <span className="title">
+                            <VscLibrary style={{ marginRight: '5px' }} />
+                            Danh sách phát
+                        </span>
                         <div className="options">
                             <button className="btnExpand" onClick={btnExpandPlaylist}>
                                 {isOpenPlayList ? <VscChevronUp /> : <VscChevronDown />}
@@ -166,109 +215,88 @@ function LeftContainer() {
                         </button>
                     </div>
                 </div>
-                {/* Playlist */}
-                <div id="playlistID2" className="playlist">
+                {/* History Listen */}
+                <div id="historyListenID" className="historyListen">
                     <div className="top">
-                        <span className="title">Danh sách phát</span>
+                        <span className="title">
+                            <VscHistory style={{ marginRight: '5px' }} />
+                            Lịch sử nghe
+                        </span>
                         <div className="options">
-                            <button className="btnExpand" onClick={btnExpandPlaylist2}>
-                                {isOpenPlayList ? <VscChevronUp /> : <VscChevronDown />}
-                            </button>
-                            <button className="btnAdd">
-                                <VscAdd />
+                            <button className="btnExpand" onClick={btnExpandHistoryListen}>
+                                {isOpenHistoryListen ? <VscChevronUp /> : <VscChevronDown />}
                             </button>
                         </div>
                     </div>
-                    <div id="mainPlaylistLeftContainerID2" className="main">
+                    <div id="mainHistoryListenID" className="main">
                         <div className="backTop"></div>
                         {/* Each Item */}
                         <button className="btnPlaylist">
                             <div className="coverImage">
-                                <img src={coverPlaylistTest} />
+                                <img src={coverSongTest} />
                             </div>
                             <div className="info">
-                                <span className="name">workout music</span>
-                                <span className="quantity">10 bài hát</span>
+                                <span className="name">
+                                    TIM ANH GHEN (ft. LVK, Dangrangto, TeuYungBoy) [prod. by rev, sleepat6pm]
+                                </span>
+                                <span className="quantity">Wxrdie</span>
+                            </div>
+                            <div className="btnRemoveBox">
+                                <button className="btnRemove">
+                                    <VscClose />
+                                </button>
                             </div>
                         </button>
                         {/* Each Item */}
                         <button className="btnPlaylist">
                             <div className="coverImage">
-                                <img src={coverPlaylistTest2} />
+                                <img src={coverSongTest2} />
                             </div>
                             <div className="info">
-                                <span className="name">study music</span>
-                                <span className="quantity">15 bài hát</span>
+                                <span className="name">GET MONEY (ft. Thai VG) [prod. by Marlykid]</span>
+                                <span className="quantity">Wxrdie</span>
+                            </div>
+                            <div className="btnRemoveBox">
+                                <button className="btnRemove">
+                                    <VscClose />
+                                </button>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+                {/* My Song */}
+                <div id="mySongID" className="mySong">
+                    <div className="top">
+                        <span className="title">
+                            <VscMusic style={{ marginRight: '5px' }} />
+                            Âm nhạc của tôi
+                        </span>
+                        <div className="options">
+                            <button className="btnExpand" onClick={btnExpandMySong}>
+                                {isOpenMySong ? <VscChevronUp /> : <VscChevronDown />}
+                            </button>
+                        </div>
+                    </div>
+                    <div id="mainMySongID" className="main">
+                        <div className="backTop"></div>
+                        {/* Each Item */}
+                        <button className="btnPlaylist">
+                            <div className="coverImage">
+                                <img src={coverMySongTest} />
+                            </div>
+                            <div className="info">
+                                <span className="name">wonder</span>
+                                <span className="quantity">minhngo</span>
                             </div>
                         </button>
                         {/* Each Item */}
                         <button className="btnPlaylist">
                             <div className="coverImage">
-                                <img src={coverPlaylistTest3} />
+                                <img src={coverMySongTest2} />
                             </div>
                             <div className="info">
-                                <span className="name">relax music</span>
-                                <span className="quantity">20 bài hát</span>
-                            </div>
-                        </button>
-                        {/* Each Item */}
-                        <button className="btnPlaylist">
-                            <div className="coverImage">
-                                <img src={coverPlaylistTest} />
-                            </div>
-                            <div className="info">
-                                <span className="name">workout music</span>
-                                <span className="quantity">10 bài hát</span>
-                            </div>
-                        </button>
-                        {/* Each Item */}
-                        <button className="btnPlaylist">
-                            <div className="coverImage">
-                                <img src={coverPlaylistTest2} />
-                            </div>
-                            <div className="info">
-                                <span className="name">study music</span>
-                                <span className="quantity">15 bài hát</span>
-                            </div>
-                        </button>
-                        {/* Each Item */}
-                        <button className="btnPlaylist">
-                            <div className="coverImage">
-                                <img src={coverPlaylistTest3} />
-                            </div>
-                            <div className="info">
-                                <span className="name">relax music</span>
-                                <span className="quantity">20 bài hát</span>
-                            </div>
-                        </button>
-                        {/* Each Item */}
-                        <button className="btnPlaylist">
-                            <div className="coverImage">
-                                <img src={coverPlaylistTest} />
-                            </div>
-                            <div className="info">
-                                <span className="name">workout music</span>
-                                <span className="quantity">10 bài hát</span>
-                            </div>
-                        </button>
-                        {/* Each Item */}
-                        <button className="btnPlaylist">
-                            <div className="coverImage">
-                                <img src={coverPlaylistTest2} />
-                            </div>
-                            <div className="info">
-                                <span className="name">study music</span>
-                                <span className="quantity">15 bài hát</span>
-                            </div>
-                        </button>
-                        {/* Each Item */}
-                        <button className="btnPlaylist">
-                            <div className="coverImage">
-                                <img src={coverPlaylistTest3} />
-                            </div>
-                            <div className="info">
-                                <span className="name">relax music</span>
-                                <span className="quantity">20 bài hát</span>
+                                <span className="name">GRINDING</span>
+                                <span className="quantity">minhngo</span>
                             </div>
                         </button>
                     </div>

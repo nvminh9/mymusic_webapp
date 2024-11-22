@@ -65,7 +65,7 @@ body {
     width: 100%;
     left: 0px;
     border-right: 0.5px solid #1f1f1f;
-
+    // phần top của leftContainer
     .top {
         display: flex;
         align-items: center;
@@ -76,6 +76,7 @@ body {
         position: relative;
         z-index: 1;
 
+        // logo
         .logo {
             display: flex;
             align-items: center;
@@ -86,6 +87,7 @@ body {
                 cursor: pointer;
             }
         }
+        // nút tìm kiếm
         .search {
             .btnOpenSearch {
                 background-color: transparent;
@@ -103,12 +105,12 @@ body {
             }
         }
     }
-
+    // phần middle của leftContainer
     .middle {
         overflow-x: hidden;
         overflow-y: auto;
         height: 92%;
-
+        // Nút xem hồ sơ
         .user {
             display: flex;
             align-items: center;
@@ -147,13 +149,17 @@ body {
                     font-weight: 400;
                     cursor: pointer;
                     transition: ease-in 0.2s;
+                    width: 105px;
+                    text-overflow: ellipsis;
+                    overflow: hidden;
+                    text-align: center;
                 }
                 span:hover {
                     text-decoration: underline;
                 }
             }
         }
-
+        // Danh sách phát
         .playlist {
             position: relative;
             height: 42px;
@@ -236,6 +242,7 @@ body {
                 z-index: 0;
 
                 .btnPlaylist {
+                    font-family: 'Funnel Sans', sans-serif;
                     display: flex;
                     align-items: center;
                     background-color: transparent;
@@ -267,17 +274,362 @@ body {
                         display: grid;
                         align-items: center;
                         padding-left: 8px;
+                        width: 75%;
 
                         .name {
-                            display: flex;
-                            align-items: center;
-                            justify-content: left;
+                            // display: flex;
+                            // align-items: center;
+                            // justify-content: left;
                             color: #ffffff;
                             font-size: 16px;
                             font-weight: 400;
-                            padding-bottom: 4px;
+                            // padding-bottom: 4px;
                             cursor: pointer;
                             transition: ease-out 0.2s;
+                            line-height: 25px;
+                            display: -webkit-box;
+                            -webkit-box-orient: vertical;
+                            -webkit-line-clamp: 1;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            text-align: left;
+                            width: 100%;
+                        }
+                        .name:hover {
+                            text-decoration: underline;
+                        }
+                        .quantity {
+                            display: flex;
+                            align-items: center;
+                            justify-content: left;
+                            // color: #b3b3b3;
+                            color: #777777aa;
+                            font-size: 14px;
+                            font-weight: 400;
+                        }
+                    }
+                }
+                .btnPlaylist:hover {
+                    background-color: #1f1f1f;
+                }
+            }
+        }
+        // Lịch sử nghe
+        .historyListen {
+            position: relative;
+            height: 42px;
+            transition: ease-out 0.2s;
+
+            .top {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 8px;
+                border-bottom: 0.5px solid #1f1f1f;
+                background-color: #121212cc;
+                backdrop-filter: blur(15px);
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                z-index: 1;
+
+                .title {
+                    display: flex;
+                    align-items: center;
+                    font-size: 18px;
+                    font-weight: 500;
+                    color: #ffffff;
+                }
+                .options {
+                    display: flex;
+                    align-items: center;
+
+                    .btnExpand {
+                        display: flex;
+                        align-items: center;
+                        background-color: transparent;
+                        border: 0.5px solid transparent;
+                        color: #ffffff;
+                        padding: 5px;
+                        transition: ease-out 0.2s;
+                        cursor: pointer;
+                    }
+                    .btnExpand:hover {
+                        background-color: #1f1f1f;
+                    }
+                    .btnExpand:active {
+                        background-color: #000;
+                    }
+                    .btnAdd {
+                        display: flex;
+                        align-items: center;
+                        background-color: transparent;
+                        border: 0.5px solid transparent;
+                        color: #ffffff;
+                        padding: 5px;
+                        transition: ease-out 0.2s;
+                        cursor: pointer;
+                    }
+                    .btnAdd:hover {
+                        background-color: #1f1f1f;
+                    }
+                    .btnAdd:active {
+                        background-color: #ffffff;
+                        color: #000;
+                    }
+                }
+            }
+
+            .backTop {
+                height: 42px;
+            }
+
+            .main {
+                height: 0px;
+                width: 100%;
+                overflow-x: hidden;
+                overflow-y: auto;
+                scroll-behavior: smooth;
+                border-bottom: 0.5px solid #1f1f1f;
+                transition: ease-in 0.2s;
+                position: relative;
+                z-index: 0;
+
+                .btnPlaylist {
+                    font-family: 'Funnel Sans', sans-serif;
+                    display: flex;
+                    align-items: center;
+                    background-color: transparent;
+                    border: none;
+                    border-bottom: 0.5px solid transparent;
+                    height: 80px;
+                    width: 100%;
+                    padding: 8px;
+                    transition: ease-out 0.2s;
+                    cursor: pointer;
+
+                    .coverImage {
+                        display: flex;
+                        align-items: center;
+                        height: 100%;
+                        width: 85px;
+
+                        img {
+                            height: 100%;
+                            width: 100%;
+                            border: 0.5px solid #1f1f1f;
+                            object-fit: cover;
+                            cursor: pointer;
+                            filter: blur(0.4px);
+                        }
+                    }
+
+                    .info {
+                        display: grid;
+                        align-items: center;
+                        padding-left: 8px;
+                        width: 70%;
+
+                        .name {
+                            // display: flex;
+                            // align-items: center;
+                            // justify-content: left;
+                            color: #ffffff;
+                            font-size: 16px;
+                            font-weight: 400;
+                            // padding-bottom: 4px;
+                            cursor: pointer;
+                            transition: ease-out 0.2s;
+                            line-height: 25px;
+                            display: -webkit-box;
+                            -webkit-box-orient: vertical;
+                            -webkit-line-clamp: 1;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            text-align: left;
+                            width: 100%;
+                        }
+                        .name:hover {
+                            text-decoration: underline;
+                        }
+                        .quantity {
+                            display: flex;
+                            align-items: center;
+                            justify-content: left;
+                            // color: #b3b3b3;
+                            color: #777777aa;
+                            font-size: 14px;
+                            font-weight: 400;
+                        }
+                    }
+
+                    .btnRemoveBox {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        height: 100%;
+
+                        .btnRemove {
+                            border: 0.5px solid transparent;
+                            background-color: transparent;
+                            padding: 5px;
+                            transition: ease-out 0.2s;
+                            color: #ffffff;
+                            cursor: pointer;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            z-index: 1;
+                        }
+                        .btnRemove:hover {
+                            background-color: #121212;
+                        }
+                        .btnRemove:active {
+                            background-color: red;
+                        }
+                    }
+                }
+                .btnPlaylist:hover {
+                    background-color: #1f1f1f;
+                }
+            }
+        }
+        // Âm nhạc của tôi
+        .mySong {
+            position: relative;
+            height: 42px;
+            transition: ease-out 0.2s;
+
+            .top {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 8px;
+                border-bottom: 0.5px solid #1f1f1f;
+                background-color: #121212cc;
+                backdrop-filter: blur(15px);
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                z-index: 1;
+
+                .title {
+                    display: flex;
+                    align-items: center;
+                    font-size: 18px;
+                    font-weight: 500;
+                    color: #ffffff;
+                }
+                .options {
+                    display: flex;
+                    align-items: center;
+
+                    .btnExpand {
+                        display: flex;
+                        align-items: center;
+                        background-color: transparent;
+                        border: 0.5px solid transparent;
+                        color: #ffffff;
+                        padding: 5px;
+                        transition: ease-out 0.2s;
+                        cursor: pointer;
+                    }
+                    .btnExpand:hover {
+                        background-color: #1f1f1f;
+                    }
+                    .btnExpand:active {
+                        background-color: #000;
+                    }
+                    .btnAdd {
+                        display: flex;
+                        align-items: center;
+                        background-color: transparent;
+                        border: 0.5px solid transparent;
+                        color: #ffffff;
+                        padding: 5px;
+                        transition: ease-out 0.2s;
+                        cursor: pointer;
+                    }
+                    .btnAdd:hover {
+                        background-color: #1f1f1f;
+                    }
+                    .btnAdd:active {
+                        background-color: #ffffff;
+                        color: #000;
+                    }
+                }
+            }
+
+            .backTop {
+                height: 42px;
+            }
+
+            .main {
+                height: 0px;
+                width: 100%;
+                overflow-x: hidden;
+                overflow-y: auto;
+                scroll-behavior: smooth;
+                border-bottom: 0.5px solid #1f1f1f;
+                transition: ease-in 0.2s;
+                position: relative;
+                z-index: 0;
+
+                .btnPlaylist {
+                    font-family: 'Funnel Sans', sans-serif;
+                    display: flex;
+                    align-items: center;
+                    background-color: transparent;
+                    border: none;
+                    border-bottom: 0.5px solid transparent;
+                    height: 80px;
+                    width: 100%;
+                    padding: 8px;
+                    transition: ease-out 0.2s;
+                    cursor: pointer;
+
+                    .coverImage {
+                        display: flex;
+                        align-items: center;
+                        height: 100%;
+                        width: 85px;
+
+                        img {
+                            height: 100%;
+                            width: 100%;
+                            border: 0.5px solid #1f1f1f;
+                            object-fit: cover;
+                            cursor: pointer;
+                            filter: blur(0.4px);
+                        }
+                    }
+
+                    .info {
+                        display: grid;
+                        align-items: center;
+                        padding-left: 8px;
+                        width: 75%;
+
+                        .name {
+                            // display: flex;
+                            // align-items: center;
+                            // justify-content: left;
+                            color: #ffffff;
+                            font-size: 16px;
+                            font-weight: 400;
+                            // padding-bottom: 4px;
+                            cursor: pointer;
+                            transition: ease-out 0.2s;
+                            line-height: 25px;
+                            display: -webkit-box;
+                            -webkit-box-orient: vertical;
+                            -webkit-line-clamp: 1;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            text-align: left;
+                            width: 100%;
                         }
                         .name:hover {
                             text-decoration: underline;
@@ -299,8 +651,138 @@ body {
             }
         }
     }
-
+    // phần bottom của leftContainer
     .bottom {
+    }
+}
+
+// CSS Middle Container
+.middleContainer {
+    position: relative;
+    padding-top: 58.4px; // chừa cho phần thanh chuyển tab
+
+    .tabSwitchBar {
+        display: flex;
+        align-items: center;
+        background-color: rgba(18, 18, 18, 0.8);
+        backdrop-filter: blur(15px);
+        border-bottom: 0.5px solid #1f1f1f;
+        height: 58.4px;
+        position: fixed;
+        top: 0;
+        width: 50%;
+        z-index: 1;
+
+        .btnHomePage {
+            font-family: 'Funnel Sans', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            background-color: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            transition: ease-out 0.2s;
+            width: 50%;
+
+            span {
+                color: #ffffff;
+                font-size: 16px;
+                font-weight: 400;
+                display: block;
+            }
+        }
+        .btnHomePage:hover {
+            background-color: #1f1f1f;
+        }
+        .btnHomePage:active {
+            background-color: #000;
+        }
+        .btnFeedPage {
+            font-family: 'Funnel Sans', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            background-color: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            transition: ease-out 0.2s;
+            width: 50%;
+
+            span {
+                color: #ffffff;
+                font-size: 16px;
+                font-weight: 400;
+                display: block;
+            }
+        }
+        .btnFeedPage:hover {
+            background-color: #1f1f1f;
+        }
+        .btnFeedPage:active {
+            background-color: #000;
+        }
+        .btnComeBackBox {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+
+            .btnComeBack {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border: 0.5px solid transparent;
+                background-color: transparent;
+                color: #ffffff;
+                transition: ease-out 0.2s;
+                cursor: pointer;
+                height: 100%;
+                padding: 5px 10px;
+            }
+            .tooltip {
+                position: relative;
+                display: inline-block;
+                // border-bottom: 1px dotted black;
+            }
+            .tooltip .tooltiptext {
+                visibility: hidden;
+                width: 80px;
+                background-color: #000;
+                color: #fff;
+                text-align: center;
+                border-radius: 6px;
+                padding: 5px 0;
+                transition: ease-out 0.1s;
+
+                /* Position the tooltip */
+                position: absolute;
+                z-index: 1;
+                top: 100%;
+                left: 50%;
+                margin-top: 5px;
+                margin-left: -40px; /* Use half of the width (80/2 = 40), to center the tooltip */
+            }
+            .tooltip:hover .tooltiptext {
+                visibility: visible;
+                transition: ease-out 0.1s;
+            }
+            .btnComeBack:hover {
+                background-color: #1f1f1f;
+            }
+            .btnComeBack:active {
+                background-color: #ffffff;
+                color: #000;
+            }
+        }
+
+        .actived {
+            border: none;
+            border-bottom: 3px solid #ffffff;
+        }
     }
 }
 
@@ -319,7 +801,33 @@ body {
 
 // CSS Sign In/Out Layout
 
-// CSS
-h1 {
-    margin: 0;
+// CSS Home Page
+.homePage {
+    // Thử
+    h1 {
+        margin: 0px;
+    }
+}
+
+/*                           MEDIA QUERY                          */
+/***** 1. Thiết bị có kích thước màn hình 740px - 1023px (màn hình tablet và laptop nhỏ) *****/
+@media (min-width: 740px) and (max-width: 1023px) {
+}
+/***** 2. Thiết bị có kích thước màn hình 1024px - 1239px (màn của PC or Laptop) *****/
+@media (min-width: 1024px) and (max-width: 1239px) {
+}
+/***** 3. Thiết bị có kích thước màn hình >= 740px (màn từ Tablet trở lên) *****/
+@media (min-width: 740px) {
+}
+/***** 4. Thiết bị có kích thước màn hình >= 1113px (PC or Laptop có màn lớn) *****/
+@media (min-width: 1113px) {
+}
+/***** 5. Thiết bị có kích thước màn hình <= 600px (Điện thoại) *****/
+@media (max-width: 600px) {
+    // CSS Middle Container
+    .middleContainer {
+        .tabSwitchBar {
+            width: 100%;
+        }
+    }
 }

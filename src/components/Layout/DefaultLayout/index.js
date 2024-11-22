@@ -1,4 +1,5 @@
 import LeftContainer from '~/components/LeftContainer';
+import MiddleContainer from '~/components/MiddleContainer';
 import RightContainer from '~/components/RightContainer';
 
 function DefaultLayout({ children }) {
@@ -9,11 +10,7 @@ function DefaultLayout({ children }) {
                     {/* LeftContainer */}
                     <LeftContainer></LeftContainer>
                     {/* MiddleContainer */}
-                    <div className="col l-3 m-0 c-0"></div>
-                    <div className="col l-6 m-12 c-12 middleContainer" style={{ padding: '0px' }}>
-                        {children}
-                    </div>
-                    <div className="col l-3 m-0 c-0"></div>
+                    <MiddleContainer>{children}</MiddleContainer>
                     {/* RightContainer */}
                     <RightContainer></RightContainer>
                 </div>

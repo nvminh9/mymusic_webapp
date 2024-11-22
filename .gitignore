@@ -12,7 +12,7 @@
 /build
 
 # note
-task.text
+.task.text
 
 # vscode config
 .vscode

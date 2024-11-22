@@ -19,7 +19,7 @@ Phân tích, thiết kế cơ sở dữ liệu: ...
 Tasks:
 - Phân tích, thiết kế lại các giao diện, layout.
  + Giao diện:
-  1. Layout gồm có 2 thanh ở hai bên. Bên trái là thanh chứ logo, avatar, danh sách phát,... Bên phải chứa phần chơi nhạc. 
+  1. Layout gồm có 2 thanh ở hai bên. Bên trái là thanh chứ logo, avatar, danh sách phát,... Bên phải chứa phần chơi nhạc. (ok)
      Còn ở giữa chứa nội dung chính. Ở giữa có nhiều tab, ở trên sẽ có thanh chuyển tab (có tab trang chủ, tab trang bài đăng).
   2. Trang chủ (hiển thị, gợi ý các album, nghệ sĩ hot, các thể loại nhạc,...).
   3. Trang bài đăng (hiển thị các bài đăng của người dùng, nghệ sĩ,...).
@@ -42,6 +42,7 @@ Tasks:
   2. Màu hover / highlight: #1f1f1f
   3. Màu click / press: #000
   4. ...
+  5. Icon sử dụng của CircumIcon, VS Code Icon.
 
 - Phân tích app có các route như thế nào.
 
