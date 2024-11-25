@@ -1,47 +1,49 @@
 {
-  "name": "mymusic",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@vscode/codicons": "^0.0.36",
-    "cra-template": "1.2.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-favicon": "^2.0.7",
-    "react-icons": "^5.3.0",
-    "react-router-dom": "^6.28.0",
-    "react-scripts": "5.0.1",
-    "web-vitals": "^4.2.4"
-  },
-  "devDependencies": {
-    "@klarr-agency/circum-icons-react": "^2.0.2",
-    "babel-plugin-module-resolver": "^5.0.2",
-    "customize-cra": "^1.0.0",
-    "react-app-rewired": "^2.2.1",
-    "sass": "^1.80.6"
-  },
-  "scripts": {
-    "start": "react-app-rewired start",
-    "build": "react-app-rewired build",
-    "test": "react-app-rewired test",
-    "eject": "react-app-rewired eject"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  }
+    "name": "mymusic",
+    "version": "0.1.0",
+    "private": true,
+    "dependencies": {
+        "@vscode/codicons": "^0.0.36",
+        "cra-template": "1.2.0",
+        "react": "^18.3.1",
+        "react-dom": "^18.3.1",
+        "react-favicon": "^2.0.7",
+        "react-icons": "^5.3.0",
+        "react-router-dom": "^6.28.0",
+        "react-scripts": "5.0.1",
+        "react-slick": "^0.30.2",
+        "slick-carousel": "^1.8.1",
+        "web-vitals": "^4.2.4"
+    },
+    "devDependencies": {
+        "@klarr-agency/circum-icons-react": "^2.0.2",
+        "babel-plugin-module-resolver": "^5.0.2",
+        "customize-cra": "^1.0.0",
+        "react-app-rewired": "^2.2.1",
+        "sass": "^1.80.6"
+    },
+    "scripts": {
+        "start": "react-app-rewired start",
+        "build": "react-app-rewired build",
+        "test": "react-app-rewired test",
+        "eject": "react-app-rewired eject"
+    },
+    "eslintConfig": {
+        "extends": [
+            "react-app",
+            "react-app/jest"
+        ]
+    },
+    "browserslist": {
+        "production": [
+            ">0.2%",
+            "not dead",
+            "not op_mini all"
+        ],
+        "development": [
+            "last 1 chrome version",
+            "last 1 firefox version",
+            "last 1 safari version"
+        ]
+    }
 }

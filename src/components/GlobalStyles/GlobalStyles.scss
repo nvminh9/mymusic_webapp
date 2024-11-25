@@ -312,6 +312,9 @@ body {
                 .btnPlaylist:hover {
                     background-color: #1f1f1f;
                 }
+                .btnPlaylist:active {
+                    background-color: #000;
+                }
             }
         }
         // Lịch sử nghe
@@ -493,6 +496,9 @@ body {
                 .btnPlaylist:hover {
                     background-color: #1f1f1f;
                 }
+                .btnPlaylist:active {
+                    background-color: #000;
+                }
             }
         }
         // Âm nhạc của tôi
@@ -647,6 +653,9 @@ body {
                 }
                 .btnPlaylist:hover {
                     background-color: #1f1f1f;
+                }
+                .btnPlaylist:active {
+                    background-color: #000;
                 }
             }
         }
@@ -803,9 +812,65 @@ body {
 
 // CSS Home Page
 .homePage {
+    background-color: #121212;
+    padding: 0px;
+
     // Thử
     h1 {
         margin: 0px;
+    }
+
+    .carouselNews {
+        position: relative;
+
+        .btnPrevCarousel {
+            display: flex;
+            align-items: center;
+            position: absolute;
+            background: rgb(0, 0, 0);
+            background: linear-gradient(
+                90deg,
+                rgba(0, 0, 0, 0.8) 0%,
+                rgba(0, 0, 0, 0.3) 35%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            border: none;
+            color: #ffffff;
+            padding-left: 10px;
+            padding-right: 10px;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            cursor: pointer;
+            transition: ease-out 0.2s;
+        }
+        .btnPrevCarousel:active {
+            padding-left: 8px;
+        }
+        .btnNextCarousel {
+            display: flex;
+            align-items: center;
+            position: absolute;
+            background: rgb(0, 0, 0);
+            background: linear-gradient(
+                270deg,
+                rgba(0, 0, 0, 0.8) 0%,
+                rgba(0, 0, 0, 0.3) 35%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            border: none;
+            color: #ffffff;
+            padding-left: 10px;
+            padding-right: 10px;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            cursor: pointer;
+            transition: ease-out 0.2s;
+        }
+        .btnNextCarousel:active {
+            padding-right: 8px;
+        }
     }
 }
 
