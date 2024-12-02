@@ -5,9 +5,19 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import aptBanner from '~/assets/images/643564536.jpg';
+import { VscChevronLeft, VscChevronRight } from 'react-icons/vsc';
+import { useRef } from 'react';
+import { Fragment } from 'react';
 
 function Carousel({ slides }) {
     // config carousel (React Slick)
+    let sliderRef = useRef(null);
+    const next = () => {
+        sliderRef.slickNext();
+    };
+    const previous = () => {
+        sliderRef.slickPrev();
+    };
     const settings = {
         dots: false,
         arrows: false,
@@ -53,9 +63,14 @@ function Carousel({ slides }) {
     return (
         <>
             <div className="carousel">
-                <Slider {...settings}>
-                    {slides.map((slide) => (
-                        <>
+                <Slider
+                    ref={(slider) => {
+                        sliderRef = slider;
+                    }}
+                    {...settings}
+                >
+                    {slides.map((slide, index) => (
+                        <Fragment key={index}>
                             <div
                                 className="carouselItem"
                                 style={{
@@ -118,9 +133,15 @@ function Carousel({ slides }) {
                                     </span>
                                 </div>
                             </div>
-                        </>
+                        </Fragment>
                     ))}
                 </Slider>
+                <button className="btnPrevCarousel" onClick={previous}>
+                    <VscChevronLeft />
+                </button>
+                <button className="btnNextCarousel" onClick={next}>
+                    <VscChevronRight />
+                </button>
             </div>
         </>
     );

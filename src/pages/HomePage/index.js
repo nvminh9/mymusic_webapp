@@ -4,6 +4,8 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { VscChevronLeft, VscChevronRight } from 'react-icons/vsc';
+import { Outlet } from 'react-router-dom';
+import { Fragment } from 'react';
 // import Component
 import Carousel from './components/Carousel';
 // hết import Component
@@ -158,8 +160,8 @@ function HomePage() {
                     }}
                     {...settings}
                 >
-                    {slides.map((slide) => (
-                        <>
+                    {slides.map((slide, index) => (
+                        <Fragment key={index}>
                             <div>
                                 <img
                                     src={slide.img}
@@ -172,7 +174,7 @@ function HomePage() {
                                     }}
                                 />
                             </div>
-                        </>
+                        </Fragment>
                     ))}
                 </Slider>
                 <button className="btnPrevCarousel" onClick={previous}>
@@ -210,64 +212,6 @@ function HomePage() {
                 <h1>
                     Hello <span style={{ background: '#1f1f1f', color: 'whitesmoke' }}>mymusic</span>!
                 </h1>
-                <h1>Hello World!</h1>
-                <h1>Hello mymusic!</h1>
-                <h1>Hello World!</h1>
-                <h1>Hello mymusic!</h1>
-                <h1>Hello World!</h1>
-                <h1>Hello mymusic!</h1>
-                <h1>Hello World!</h1>
-                <h1>Hello mymusic!</h1>
-                <h1>Hello World!</h1>
-                <h1>Hello mymusic!</h1>
-                <h1>Hello World!</h1>
-                <h1>Hello mymusic!</h1>
-                <h1>Hello World!</h1>
-                <h1>Hello mymusic!</h1>
-                <h1>Hello World!</h1>
-                <h1>Hello mymusic!</h1>
-                <h1>Hello World!</h1>
-                <h1>Hello mymusic!</h1>
-                <h1>Hello World!</h1>
-                <h1>Hello mymusic!</h1>
-                <h1>Hello World!</h1>
-                <h1>Hello mymusic!</h1>
-                <h1>Hello World!</h1>
-                <h1>Hello mymusic!</h1>
-                <h1>Hello World!</h1>
-                <h1>Hello mymusic!</h1>
-                <h1>Hello World!</h1>
-                <h1>Hello mymusic!</h1>
-                <h1>Hello World!</h1>
-                <h1>Hello mymusic!</h1>
-                <h1>Hello World!</h1>
-                <h1>Hello mymusic!</h1>
-                <h1>Hello World!</h1>
-                <h1>Hello mymusic!</h1>
-                <h1>Hello World!</h1>
-                <h1>Hello mymusic!</h1>
-                <h1>Hello World!</h1>
-                <h1>Hello mymusic!</h1>
-                <h1>Hello World!</h1>
-                <h1>Hello mymusic!</h1>
-                <h1>Hello World!</h1>
-                <h1>Hello mymusic!</h1>
-                <h1>Hello World!</h1>
-                <h1>Hello mymusic!</h1>
-                <h1>Hello World!</h1>
-                <h1>Hello mymusic!</h1>
-                <h1>Hello World!</h1>
-                <h1>Hello mymusic!</h1>
-                <h1>Hello World!</h1>
-                <h1>Hello mymusic!</h1>
-                <h1>Hello World!</h1>
-                <h1>Hello mymusic!</h1>
-                <h1>Hello World!</h1>
-                <h1>Hello mymusic!</h1>
-                <h1>Hello World!</h1>
-                <h1>Hello mymusic!</h1>
-                <h1>Hello World!</h1>
-                <h1>Hello mymusic!</h1>
             </div>
         </div>
     );

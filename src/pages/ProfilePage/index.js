@@ -6,7 +6,20 @@ function ProfilePage() {
         document.title = 'Profile | mymusic';
     }, []);
 
-    return <></>;
+    return (
+        <>
+            <h1>Hello</h1>
+            <h1>Hello</h1>
+            <h1>Hello</h1>
+            <h1>Hello</h1>
+            <h1>Hello</h1>
+            <h1>Hello</h1>
+            <h1>Hello</h1>
+            <h1>Hello</h1>
+            <h1>Hello</h1>
+            <h1>Hello</h1>
+        </>
+    );
 }
 
 export default ProfilePage;
