@@ -1,17 +1,11 @@
 import { useState } from 'react';
 import { VscChevronLeft } from 'react-icons/vsc';
-import { Outlet, Link, useNavigate } from 'react-router-dom';
+import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 
 function MiddleContainer({ children }) {
-    const [tab, setTab] = useState(1); // tạm thời giá trị khởi tạo là 1 (trang chủ), có thể tương lai bằng tab lưu trong localstorage
-
     // Chuyển Tab
+    const location = useLocation();
     const navigate = useNavigate();
-    const handleSwitchTab = (e) => {
-        e.preventDefault();
-        // setTab với id của tab được bấm
-        setTab(parseInt(e.target.id));
-    };
 
     return (
         <>
@@ -38,14 +32,13 @@ function MiddleContainer({ children }) {
                     >
                         <button
                             id="1"
-                            className={['btnHomePage', tab === 1 ? 'actived' : ''].join(' ')}
-                            // onClick={handleSwitchTab}
+                            className={['btnHomePage', location.pathname === '/' ? 'actived' : ''].join(' ')}
                         >
                             <span>Trang chủ</span>
                         </button>
                     </Link>
                     <Link
-                        to="/feed"
+                        to="/feeds"
                         style={{
                             fontFamily: '"Funnel Sans", sans-serif',
                             display: 'flex',
@@ -63,8 +56,7 @@ function MiddleContainer({ children }) {
                     >
                         <button
                             id="2"
-                            className={['btnFeedPage', tab === 2 ? 'actived' : ''].join(' ')}
-                            // onClick={handleSwitchTab}
+                            className={['btnFeedPage', location.pathname === '/feeds' ? 'actived' : ''].join(' ')}
                         >
                             <span>Bài đăng</span>
                         </button>

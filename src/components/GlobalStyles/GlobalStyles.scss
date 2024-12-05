@@ -65,6 +65,8 @@ body {
     width: 100%;
     left: 0px;
     border-right: 0.5px solid #1f1f1f;
+    z-index: 2;
+
     // phần top của leftContainer
     .top {
         display: flex;
@@ -680,7 +682,7 @@ body {
         position: fixed;
         top: 0;
         width: 50%;
-        z-index: 1;
+        z-index: 99;
 
         .btnHomePage {
             font-family: 'Funnel Sans', sans-serif;
@@ -769,7 +771,7 @@ body {
 
                 /* Position the tooltip */
                 position: absolute;
-                z-index: 1;
+                z-index: 99;
                 top: 100%;
                 left: 50%;
                 margin-top: 5px;
@@ -804,6 +806,7 @@ body {
     height: 100%;
     width: 100%;
     right: 0px;
+    z-index: 2;
 }
 
 // CSS Admin Layout
@@ -988,6 +991,44 @@ body {
             }
         }
     }
+}
+
+// CSS Feed Page
+.feedPage {
+}
+
+// CSS Component Video Ambilight
+.videoWrapper {
+    width: 100%;
+    max-width: 720px;
+    margin: 25px auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.ambilightWrapper {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+#video {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    // border-radius: 8px;
+    aspect-ratio: 16 / 9;
+    z-index: 2;
+}
+#ambilight {
+    filter: blur(80px) opacity(0.5) saturate(300%);
+    left: 0;
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    // transform: scale(1.1) translateZ(0);
+    width: 100%;
+    z-index: 1;
+    height: 100%;
 }
 
 /*                           MEDIA QUERY                          */

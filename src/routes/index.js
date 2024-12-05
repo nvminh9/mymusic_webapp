@@ -4,6 +4,7 @@ import { SignInSignUpLayout } from '~/components/Layout';
 import HomePage from '~/pages/HomePage';
 import ProfilePage from '~/pages/ProfilePage';
 import PublicPage from '~/pages/PublicPage';
+import FeedPage from '~/pages/FeedPage';
 // hết import Component
 
 // Public Routes
@@ -13,10 +14,9 @@ const publicRoutes = [
         component: PublicPage,
         children: [
             { path: '', component: HomePage },
-            { path: 'feed', component: ProfilePage },
+            { path: 'feeds', component: FeedPage },
         ],
     },
-    // { path: 'profile', component: ProfilePage },
 ];
 
 // Private Routes

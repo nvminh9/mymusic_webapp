@@ -7,7 +7,7 @@ import { VscChevronLeft, VscChevronRight } from 'react-icons/vsc';
 import { Outlet } from 'react-router-dom';
 import { Fragment } from 'react';
 // import Component
-import Carousel from './components/Carousel';
+import Carousel from '../components/Carousel';
 // hết import Component
 
 function HomePage() {

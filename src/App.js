@@ -17,6 +17,7 @@ function App() {
                             1.route.layout = null -> không xài layout
                             2.route.layout = <layout> -> thì xài layout đó
                             3.route.layout Không được truyền thì xài layout mặc định 
+                            4.nếu route.children có, thì sẽ trả về các child route tương ứng (chung Layout với route cha)
                         */
                     }
                     let Layout = DefaultLayout;
