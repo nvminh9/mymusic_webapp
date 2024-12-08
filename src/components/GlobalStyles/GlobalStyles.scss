@@ -105,6 +105,9 @@ body {
             .btnOpenSearch:hover {
                 background-color: #1f1f1f;
             }
+            .btnOpenSearch:active {
+                background-color: #000;
+            }
         }
     }
     // phần middle của leftContainer
@@ -671,6 +674,7 @@ body {
 .middleContainer {
     position: relative;
     padding-top: 58.4px; // chừa cho phần thanh chuyển tab
+    background-color: #121212;
 
     .tabSwitchBar {
         display: flex;
@@ -807,6 +811,127 @@ body {
     width: 100%;
     right: 0px;
     z-index: 2;
+
+    // Song Player
+    .songPlayer {
+        position: relative;
+        width: 100%;
+        height: 100%;
+
+        .top {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 58.4px;
+            border: none;
+            padding: 8px;
+            // background-color: rgba(18, 18, 18, 0.8);
+            // backdrop-filter: blur(15px);
+            z-index: 99;
+
+            .title {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #ffffff;
+                font-size: 16px;
+                font-weight: 400;
+            }
+
+            .options {
+                display: flex;
+                align-items: center;
+                height: 100%;
+
+                button:hover {
+                    background-color: #1f1f1f;
+                }
+                button:active {
+                    background-color: #000;
+                }
+
+                .btnFullSreen {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    height: 100%;
+                    padding: 4px;
+                    background-color: transparent;
+                    border: 0.5px solid transparent;
+                    cursor: pointer;
+                    color: #ffffff;
+                    transition: ease-in 0.2s;
+                }
+                .btnPicInPic {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    height: 100%;
+                    padding: 4px;
+                    background-color: transparent;
+                    border: 0.5px solid transparent;
+                    cursor: pointer;
+                    color: #ffffff;
+                    transition: ease-in 0.2s;
+                }
+            }
+        }
+
+        .middle {
+            background-color: #121212;
+            height: 100%;
+            width: 100%;
+            overflow-x: hidden;
+            overflow-y: auto;
+
+            // topBack
+            .topBack {
+                height: 58.4px;
+            }
+
+            // bottomBack
+            .bottomBack {
+                height: 58.4px;
+                background-color: red;
+            }
+
+            .carouselThumbnail {
+                width: 100%;
+                height: 50%;
+                padding-top: 30px;
+
+                // react slick
+                .slick-list {
+                    overflow: visible;
+                }
+
+                .thumbnail {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 100%;
+                    height: 100%;
+                }
+            }
+        }
+
+        .bottom {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            height: 58.4px;
+            background-color: rgba(18, 18, 18, 0.8);
+            backdrop-filter: blur(15px);
+            border: none;
+            // border-top: 0.5px solid #1f1f1f;
+        }
+    }
 }
 
 // CSS Admin Layout
@@ -1001,34 +1126,105 @@ body {
 .videoWrapper {
     width: 100%;
     max-width: 720px;
-    margin: 25px auto;
+    // margin: 25px auto;
+    margin: 0 auto;
     display: flex;
     align-items: center;
     justify-content: center;
+
+    .ambilightWrapper {
+        width: 100%;
+        height: 100%;
+        position: relative;
+    }
+
+    .aspectRatio {
+        padding: 15px;
+        padding-top: 0px;
+    }
+
+    #video {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        // border-radius: 8px;
+        aspect-ratio: 16 / 9;
+        z-index: 2;
+    }
+
+    #ambilight {
+        filter: blur(80px) opacity(0.5) saturate(300%);
+        left: 0;
+        pointer-events: none;
+        position: absolute;
+        top: 0;
+        // transform: scale(1.1) translateZ(0);
+        width: 100%;
+        z-index: 1;
+        height: 100%;
+    }
 }
-.ambilightWrapper {
+
+// CSS Component Image Ambilight
+.imageWrapper {
     width: 100%;
-    height: 100%;
-    position: relative;
-}
-#video {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    // border-radius: 8px;
-    aspect-ratio: 16 / 9;
-    z-index: 2;
-}
-#ambilight {
-    filter: blur(80px) opacity(0.5) saturate(300%);
-    left: 0;
-    pointer-events: none;
-    position: absolute;
-    top: 0;
-    // transform: scale(1.1) translateZ(0);
-    width: 100%;
-    z-index: 1;
-    height: 100%;
+    max-width: 720px;
+    // margin: 25px auto;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .ambilightWrapper {
+        width: 100%;
+        height: 100%;
+        position: relative;
+    }
+
+    .aspectRatio {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #imageAmbilight {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        height: 300px;
+        width: 300px;
+        object-fit: cover;
+        object-position: center center;
+        // filter: blur(80px) opacity(0.5) saturate(300%);
+        filter: blur(35px) opacity(0.2) saturate(300%);
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    #image {
+        position: relative;
+        // width: 100%;
+        // height: 100%;
+        // // border-radius: 8px;
+        // // aspect-ratio: 16 / 9;
+        height: 300px;
+        width: 300px;
+        object-fit: cover;
+        object-position: center center;
+        z-index: 2;
+    }
+
+    #ambilight {
+        filter: blur(80px) opacity(0.5) saturate(300%);
+        left: 0;
+        pointer-events: none;
+        position: absolute;
+        top: 0;
+        // transform: scale(1.1) translateZ(0);
+        width: 100%;
+        z-index: 1;
+        height: 100%;
+    }
 }
 
 /*                           MEDIA QUERY                          */

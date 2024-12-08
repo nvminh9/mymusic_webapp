@@ -69,10 +69,9 @@ const VideoAmbilight = ({ videoSrc }) => {
         <div className="videoWrapper">
             <div className="ambilightWrapper">
                 <div className="aspectRatio">
-                    <video id="video" ref={videoRef} autoPlay loop controls>
+                    <video id="video" ref={videoRef} autoPlay loop controls muted playsInline>
                         <source src={videoSrc} type="video/mp4" />
                     </video>
-                    {/* <img id="video" ref={videoRef} src={videoSrc} /> */}
                 </div>
                 <canvas id="ambilight" ref={canvasRef} />
             </div>
