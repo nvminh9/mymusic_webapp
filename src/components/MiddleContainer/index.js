@@ -10,7 +10,7 @@ function MiddleContainer({ children }) {
     return (
         <>
             <div className="col l-3 m-0 c-0"></div>
-            <div className="col l-6 m-12 c-12 middleContainer">
+            <div className="col l-6 m-12 c-0 middleContainer">
                 {/* Thanh chuyển tab */}
                 <div className="tabSwitchBar">
                     <Link

@@ -1,9 +1,11 @@
 import { Fragment } from 'react';
 import CircumIcon from '@klarr-agency/circum-icons-react';
-import videoTest from '~/assets/videos/pain.mp4';
+import videoTest from '~/assets/videos/timanhghen.mp4';
 import imageTest from '~/assets/images/gnxKendrick.jpg';
+import audioTest from '~/assets/audio/lutherAudio.mp3';
+import coverMySongTest2 from '~/assets/images/timanhghen.jpg';
 import Slider from 'react-slick';
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import { VscChevronLeft, VscChevronRight } from 'react-icons/vsc';
 // import Component
 import VideoAmbilight from '../VideoAmbilight';
@@ -11,6 +13,14 @@ import ImageAmbilight from '../ImageAmbilight';
 // hết import Component
 
 function SongPlayer() {
+    // test (chưa chính thức)
+    useEffect(() => {
+        let songName = document.getElementById('songNameID');
+        if (songName && songName.offsetWidth > 300) {
+            songName.classList.add('songNameMarqueeActived');
+        }
+    }, []);
+
     // config slider cho carousel thumbnail (React Slick)
     let sliderRef = useRef(null);
     const settings = {
@@ -21,6 +31,7 @@ function SongPlayer() {
         slidesToShow: 1,
         slidesToScroll: 1,
         initialSlide: 0,
+        accessibility: false,
         responsive: [
             {
                 breakpoint: 1024,
@@ -55,7 +66,7 @@ function SongPlayer() {
     // Thumbnail data test
     const thumbnails = [
         {
-            imageUrl: imageTest,
+            imageUrl: coverMySongTest2,
         },
         {
             videoUrl: videoTest,
@@ -91,14 +102,27 @@ function SongPlayer() {
                         >
                             {thumbnails.map((thumbnail, index) => (
                                 <div className="thumbnail" key={index}>
-                                    {thumbnail.imageUrl && <ImageAmbilight imageSrc={imageTest}></ImageAmbilight>}
-                                    {thumbnail.videoUrl && <VideoAmbilight videoSrc={videoTest}></VideoAmbilight>}
+                                    {thumbnail.imageUrl && (
+                                        <ImageAmbilight imageSrc={thumbnail.imageUrl}></ImageAmbilight>
+                                    )}
+                                    {thumbnail.videoUrl && (
+                                        <VideoAmbilight videoSrc={thumbnail.videoUrl}></VideoAmbilight>
+                                    )}
                                 </div>
                             ))}
                         </Slider>
                     </div>
                     {/* Song Info */}
-                    <div className="songInfo"></div>
+                    <div className="songInfo">
+                        <div className="name">
+                            <span id="songNameID">
+                                TIM ANH GHEN (ft. LVK, Dangrangto, TeuYungBoy) [prod. by rev, sleepat6pm]
+                            </span>
+                        </div>
+                        <div className="artist">
+                            <span>Wxrdie</span>
+                        </div>
+                    </div>
                 </div>
                 {/* bottom */}
                 <div className="bottom"></div>
