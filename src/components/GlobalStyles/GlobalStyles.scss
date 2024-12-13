@@ -933,6 +933,7 @@ body {
                     scroll-behavior: smooth;
                     position: relative;
                     height: 23.2px;
+                    transition: all 0.2s;
 
                     span {
                         display: block;
@@ -941,10 +942,15 @@ body {
                         font-size: 18px;
                         font-weight: 400;
                         position: absolute;
+                        cursor: default;
                     }
+
                     .songNameMarqueeActived {
                         animation: songNameMarquee 18s ease-in-out infinite;
                     }
+                }
+                .name:hover {
+                    background-color: #1f1f1f;
                 }
                 .artist {
                     width: 300px;

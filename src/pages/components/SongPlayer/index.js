@@ -7,19 +7,43 @@ import coverMySongTest2 from '~/assets/images/timanhghen.jpg';
 import Slider from 'react-slick';
 import { useRef, useEffect } from 'react';
 import { VscChevronLeft, VscChevronRight } from 'react-icons/vsc';
+import Hls from 'hls.js';
 // import Component
 import VideoAmbilight from '../VideoAmbilight';
 import ImageAmbilight from '../ImageAmbilight';
 // hết import Component
 
 function SongPlayer() {
-    // test (chưa chính thức)
+    // Test HLS
+    const videoSrc = 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8';
+    const videoHLSRef = useRef(null);
+
+    // const audioSrc =
+    //     'https://cdn.bitmovin.com/content/assets/art-of-motion-dash-hls-progressive/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa-audio-only.m3u8';
+    // const audioHLSRef = useRef(null);
+
     useEffect(() => {
+        const hls = new Hls();
+        if (Hls.isSupported()) {
+            hls.loadSource(videoSrc);
+            if (videoHLSRef.current) {
+                hls.attachMedia(videoHLSRef.current);
+            }
+        }
+    }, []);
+
+    // test (chưa chính thức)
+    const activeSongNameMarquee = () => {
         let songName = document.getElementById('songNameID');
         if (songName && songName.offsetWidth > 300) {
             songName.classList.add('songNameMarqueeActived');
         }
-    }, []);
+    };
+    const turnOffSongNameMarquee = () => {
+        let songName = document.getElementById('songNameID');
+        songName.classList.remove('songNameMarqueeActived');
+        songName.style.transform = 'transformX("0px")';
+    };
 
     // config slider cho carousel thumbnail (React Slick)
     let sliderRef = useRef(null);
@@ -115,13 +139,18 @@ function SongPlayer() {
                     {/* Song Info */}
                     <div className="songInfo">
                         <div className="name">
-                            <span id="songNameID">
+                            <span
+                                id="songNameID"
+                                onMouseOver={activeSongNameMarquee}
+                                onMouseLeave={turnOffSongNameMarquee}
+                            >
                                 TIM ANH GHEN (ft. LVK, Dangrangto, TeuYungBoy) [prod. by rev, sleepat6pm]
                             </span>
                         </div>
                         <div className="artist">
                             <span>Wxrdie</span>
                         </div>
+                        <video ref={videoHLSRef} id="videoHLS" controls style={{ width: '300px' }}></video>
                     </div>
                 </div>
                 {/* bottom */}
