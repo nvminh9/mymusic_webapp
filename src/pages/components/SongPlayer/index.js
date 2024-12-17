@@ -129,9 +129,9 @@ function SongPlayer() {
                                     {thumbnail.imageUrl && (
                                         <ImageAmbilight imageSrc={thumbnail.imageUrl}></ImageAmbilight>
                                     )}
-                                    {thumbnail.videoUrl && (
+                                    {/* {thumbnail.videoUrl && (
                                         <VideoAmbilight videoSrc={thumbnail.videoUrl}></VideoAmbilight>
-                                    )}
+                                    )} */}
                                 </div>
                             ))}
                         </Slider>

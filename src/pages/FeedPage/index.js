@@ -1,12 +1,15 @@
 // Import Component
-
+import Article from '../components/Article';
 // hết Import Component
 
 function FeedPage() {
     return (
         <>
             <div className="feedPage">
-                <h1 style={{ color: 'whitesmoke' }}>Feed Page</h1>
+                <div className="articleContainer">
+                    <Article></Article>
+                    <Article></Article>
+                </div>
             </div>
         </>
     );

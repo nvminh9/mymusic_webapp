@@ -676,6 +676,7 @@ body {
     padding-top: 58.4px; // chừa cho phần thanh chuyển tab
     background-color: #121212;
 
+    // Thanh chuyển tab ở middleContainer
     .tabSwitchBar {
         display: flex;
         align-items: center;
@@ -1182,6 +1183,110 @@ body {
 
 // CSS Feed Page
 .feedPage {
+    // Bài viết (articleContainer)
+    .articleContainer {
+        .article {
+            padding: 12px 24px;
+            display: flex;
+            // height: 300px;
+            width: 100%;
+            border-bottom: 0.5px solid #1f1f1f;
+
+            .left {
+                width: fit-content;
+                height: 100%;
+                display: grid;
+                align-items: start;
+                justify-content: center;
+                padding-right: 10px;
+                // background-color: rebeccapurple;
+
+                // avatar
+                .userAvatar {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    height: fit-content;
+                    width: fit-content;
+                    // padding: 8px;
+
+                    img {
+                        height: 42px;
+                        width: 42px;
+                        border: 0.5px solid #1f1f1f;
+                        border-radius: 50%;
+                        object-fit: cover;
+                        cursor: pointer;
+                    }
+                }
+            }
+
+            .right {
+                // background-color: green;
+                height: 100%;
+                width: 100%;
+
+                .top {
+                    display: flex;
+                    // align-items: center;
+                    justify-content: space-between;
+
+                    .articleInfo {
+                        display: flex;
+                        height: 100%;
+
+                        .userName {
+                            color: #ffffff;
+                            font-size: 15px;
+                            font-weight: 500;
+                            height: 100%;
+                            margin-right: 5px;
+                            cursor: pointer;
+                            transition: ease-out 0.2s;
+                            display: -webkit-box;
+                            -webkit-box-orient: vertical;
+                            -webkit-line-clamp: 1;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            width: max-content;
+                            max-width: 230px;
+                        }
+                        .userName:hover {
+                            text-decoration: underline;
+                        }
+                        .createdAt {
+                            display: flex;
+                            align-items: start;
+                            justify-content: center;
+                            color: rgba(119, 119, 119, 0.6666666667);
+                            font-size: 15px;
+                            font-weight: 300;
+                            height: 100%;
+                        }
+                    }
+                    .articleOptions {
+                        .btnArticleOptions {
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            background-color: transparent;
+                            border: 0.5px solid transparent;
+                            color: rgba(119, 119, 119, 0.6666666667);
+                            cursor: pointer;
+                            transition: ease-out 0.2s;
+                            padding: 5px;
+                        }
+                        .btnArticleOptions:hover {
+                            background-color: #1f1f1f;
+                        }
+                        .btnArticleOptions:active {
+                            background-color: #000;
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 // CSS Component Video Ambilight
