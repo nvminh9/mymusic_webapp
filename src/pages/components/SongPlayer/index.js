@@ -1,6 +1,7 @@
 import { Fragment } from 'react';
 import CircumIcon from '@klarr-agency/circum-icons-react';
-import videoTest from '~/assets/videos/timanhghen.mp4';
+import videoTest from '~/assets/videos/thuyet_trinh.mp4';
+import videoTestHLS from '~/assets/videos/thuyet_trinh_playlist.m3u8';
 import imageTest from '~/assets/images/gnxKendrick.jpg';
 import audioTest from '~/assets/audio/lutherAudio.mp3';
 import coverMySongTest2 from '~/assets/images/timanhghen.jpg';
@@ -8,6 +9,7 @@ import Slider from 'react-slick';
 import { useRef, useEffect } from 'react';
 import { VscChevronLeft, VscChevronRight } from 'react-icons/vsc';
 import Hls from 'hls.js';
+import { IKContext, IKVideo } from 'imagekitio-react';
 // import Component
 import VideoAmbilight from '../VideoAmbilight';
 import ImageAmbilight from '../ImageAmbilight';
@@ -15,22 +17,27 @@ import ImageAmbilight from '../ImageAmbilight';
 
 function SongPlayer() {
     // Test HLS
-    const videoSrc = 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8';
-    const videoHLSRef = useRef(null);
 
-    // const audioSrc =
-    //     'https://cdn.bitmovin.com/content/assets/art-of-motion-dash-hls-progressive/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa-audio-only.m3u8';
-    // const audioHLSRef = useRef(null);
+    // test với api file m3u8 trên mạng
+    // const videoSrc = 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8';
 
-    useEffect(() => {
-        const hls = new Hls();
-        if (Hls.isSupported()) {
-            hls.loadSource(videoSrc);
-            if (videoHLSRef.current) {
-                hls.attachMedia(videoHLSRef.current);
-            }
-        }
-    }, []);
+    // test với file m3u8 trên máy
+    // const videoSrc = videoTestHLS;
+
+    // test với file video trên ImageKit.io, dùng thư viện hls.js để phát (lỗi)
+    // const videoSrc = `https://ik.imagekit.io/d7q5hnktr/timanhghen.mp4?updatedAt=1734602507871`;
+
+    // const videoHLSRef = useRef(null);
+
+    // useEffect(() => {
+    //     const hls = new Hls();
+    //     if (Hls.isSupported()) {
+    //         hls.loadSource(videoSrc);
+    //         if (videoHLSRef.current) {
+    //             hls.attachMedia(videoHLSRef.current);
+    //         }
+    //     }
+    // }, []);
 
     // test (chưa chính thức)
     const activeSongNameMarquee = () => {
@@ -90,10 +97,12 @@ function SongPlayer() {
     // Thumbnail data test
     const thumbnails = [
         {
-            imageUrl: coverMySongTest2,
+            // tên hình
+            imageUrl: `timanhghen.jpg`,
         },
         {
-            videoUrl: videoTest,
+            // tên video
+            videoUrl: `timanhghen.mp4`,
         },
     ];
 
@@ -129,9 +138,9 @@ function SongPlayer() {
                                     {thumbnail.imageUrl && (
                                         <ImageAmbilight imageSrc={thumbnail.imageUrl}></ImageAmbilight>
                                     )}
-                                    {/* {thumbnail.videoUrl && (
+                                    {thumbnail.videoUrl && (
                                         <VideoAmbilight videoSrc={thumbnail.videoUrl}></VideoAmbilight>
-                                    )} */}
+                                    )}
                                 </div>
                             ))}
                         </Slider>
@@ -150,7 +159,22 @@ function SongPlayer() {
                         <div className="artist">
                             <span>Wxrdie</span>
                         </div>
-                        <video ref={videoHLSRef} id="videoHLS" controls style={{ width: '300px' }}></video>
+                        {/* test với link nhúng (thẻ iframe) có HLS ABS của ImageKit.io * (sử dụng HLS) (iframe này giao diện ko đẹp, khó custom)/}
+                        {/* <iframe
+                            width="560"
+                            height="315"
+                            src="https://imagekit.io/player/embed/d7q5hnktr/thuyet_trinh.mp4/ik-master.m3u8?updatedAt=1734597978231&thumbnail=https%3A%2F%2Fik.imagekit.io%2Fd7q5hnktr%2Fthuyet_trinh.mp4%2Fik-thumbnail.jpg%3FupdatedAt%3D1734597978231&updatedAt=1734597978231&tr=sr-240_360_480_720_1080"
+                            title="ImageKit video player"
+                            frameBorder="0"
+                            allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen; controls"
+                            style={{ width: '300px' }}
+                        >
+                            {' '}
+                        </iframe> */}
+                        {/* test với link file trên ImageKit.io, gán trực tiếp vào thẻ video */}
+                        {/* <video src={videoSrc} id="videoHLS" controls style={{ width: '300px' }}></video> */}
+                        {/* test với link file trên ImageKit.io sử dụng thư viện hls.js */}
+                        {/* <video ref={videoHLSRef} id="videoHLS" controls style={{ width: '300px' }}></video> */}
                     </div>
                 </div>
                 {/* bottom */}

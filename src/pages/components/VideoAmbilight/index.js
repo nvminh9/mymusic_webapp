@@ -1,7 +1,11 @@
 import { useRef, useEffect } from 'react';
 import axios from 'axios';
+import { IKContext, IKVideo } from 'imagekitio-react';
 
 const VideoAmbilight = ({ videoSrc }) => {
+    // config ImageKit.io
+    const IMAGEKIT_URL_ENDPOINT = `https://ik.imagekit.io/d7q5hnktr`;
+
     const videoRef = useRef(null);
     const canvasRef = useRef(null);
     let intervalId;
@@ -24,6 +28,8 @@ const VideoAmbilight = ({ videoSrc }) => {
             clearInterval(intervalId);
         }
 
+        console.log(videoElement);
+
         videoElement.addEventListener('play', startAmbilightRepaint);
         videoElement.addEventListener('pause', stopAmbilightRepaint);
         videoElement.addEventListener('ended', stopAmbilightRepaint);
@@ -40,38 +46,52 @@ const VideoAmbilight = ({ videoSrc }) => {
         };
     }, []);
 
-    useEffect(() => {
-        // Proxy the video request through Next.js server to avoid cross-origin issues
-        const fetchVideo = async () => {
-            try {
-                const response = await axios.get(videoSrc, { responseType: 'blob' });
-                const videoBlob = response.data;
-                const videoUrl = URL.createObjectURL(videoBlob);
-                if (videoRef.current) {
-                    videoRef.current.src = videoUrl;
-                }
-            } catch (error) {
-                console.error('Failed to fetch video:', error);
-            }
-        };
+    // for cross-origin issues (tạm thời comment lại)
+    // useEffect(() => {
+    //     // Proxy the video request through server to avoid cross-origin issues
+    //     const fetchVideo = async () => {
+    //         try {
+    //             const response = await axios.get(`${IMAGEKIT_URL_ENDPOINT}/${videoSrc}`, { responseType: 'blob' });
+    //             const videoBlob = response.data;
+    //             const videoUrl = URL.createObjectURL(videoBlob);
+    //             if (videoRef.current) {
+    //                 videoRef.current.src = videoUrl;
+    //                 console.log(videoUrl);
+    //             }
+    //         } catch (error) {
+    //             console.error('Failed to fetch video:', error);
+    //         }
+    //     };
 
-        fetchVideo();
+    //     fetchVideo();
 
-        return () => {
-            // Revoke the video URL when component is unmounted
-            if (videoRef.current && videoRef.current.src) {
-                URL.revokeObjectURL(videoRef.current.src);
-            }
-        };
-    }, [videoSrc]);
+    //     return () => {
+    //         // Revoke the video URL when component is unmounted
+    //         if (videoRef.current && videoRef.current.src) {
+    //             URL.revokeObjectURL(videoRef.current.src);
+    //         }
+    //     };
+    // }, [videoSrc]);
 
     return (
         <div className="videoWrapper">
             <div className="ambilightWrapper">
                 <div className="aspectRatio">
                     <video id="video" ref={videoRef} autoPlay loop controls muted playsInline>
-                        <source src={videoSrc} type="video/mp4" />
+                        <source src={`${IMAGEKIT_URL_ENDPOINT}/${videoSrc}`} type="video/mp4" />
                     </video>
+                    {/* test với ImageKit.io bằng component IKVideo (đang lỗi ko vẽ được ambilight) */}
+                    {/* <IKContext urlEndpoint={IMAGEKIT_URL_ENDPOINT}>
+                        <IKVideo
+                            id="video"
+                            ref={videoRef}
+                            className="ikvideo-default"
+                            path={videoSrc}
+                            // transformation={[{ width: 300 }]}
+                            controls={true}
+                            style={{ width: '300px' }}
+                        />
+                    </IKContext> */}
                 </div>
                 <canvas id="ambilight" ref={canvasRef} />
             </div>

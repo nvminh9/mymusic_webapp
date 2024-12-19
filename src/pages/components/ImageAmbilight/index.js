@@ -2,6 +2,9 @@ import { useRef, useEffect } from 'react';
 import axios from 'axios';
 
 const ImageAmbilight = ({ imageSrc }) => {
+    // config ImageKit.io
+    const IMAGEKIT_URL_ENDPOINT = `https://ik.imagekit.io/d7q5hnktr`;
+
     const imageRef = useRef(null);
     const canvasRef = useRef(null);
     let intervalId;
@@ -27,37 +30,38 @@ const ImageAmbilight = ({ imageSrc }) => {
         return () => {};
     }, []);
 
-    useEffect(() => {
-        // Proxy the video request through Next.js server to avoid cross-origin issues
-        const fetchVideo = async () => {
-            try {
-                const response = await axios.get(imageSrc, { responseType: 'blob' });
-                const imageBlob = response.data;
-                const imageUrl = URL.createObjectURL(imageBlob);
-                if (imageRef.current) {
-                    imageRef.current.src = imageUrl;
-                }
-            } catch (error) {
-                console.error('Failed to fetch video:', error);
-            }
-        };
+    // for cross-origin issues
+    // useEffect(() => {
+    //     // Proxy the video request through Next.js server to avoid cross-origin issues
+    //     const fetchVideo = async () => {
+    //         try {
+    //             const response = await axios.get(imageSrc, { responseType: 'blob' });
+    //             const imageBlob = response.data;
+    //             const imageUrl = URL.createObjectURL(imageBlob);
+    //             if (imageRef.current) {
+    //                 imageRef.current.src = imageUrl;
+    //             }
+    //         } catch (error) {
+    //             console.error('Failed to fetch video:', error);
+    //         }
+    //     };
 
-        fetchVideo();
+    //     fetchVideo();
 
-        return () => {
-            // Revoke the video URL when component is unmounted
-            if (imageRef.current && imageRef.current.src) {
-                URL.revokeObjectURL(imageRef.current.src);
-            }
-        };
-    }, [imageSrc]);
+    //     return () => {
+    //         // Revoke the video URL when component is unmounted
+    //         if (imageRef.current && imageRef.current.src) {
+    //             URL.revokeObjectURL(imageRef.current.src);
+    //         }
+    //     };
+    // }, [imageSrc]);
 
     return (
         <div className="imageWrapper">
             <div className="ambilightWrapper">
                 <div className="aspectRatio">
-                    <img id="image" ref={imageRef} src={imageSrc} />
-                    <img id="imageAmbilight" src={imageSrc} />
+                    <img id="image" ref={imageRef} src={`${IMAGEKIT_URL_ENDPOINT}/${imageSrc}`} />
+                    <img id="imageAmbilight" src={`${IMAGEKIT_URL_ENDPOINT}/${imageSrc}`} />
                 </div>
                 <canvas id="ambilight" ref={canvasRef} />
             </div>
