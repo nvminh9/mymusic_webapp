@@ -1224,8 +1224,8 @@ body {
             .right {
                 // background-color: green;
                 height: 100%;
-                width: 100%;
-
+                width: 92%;
+                // top
                 .top {
                     display: flex;
                     // align-items: center;
@@ -1281,6 +1281,101 @@ body {
                         }
                         .btnArticleOptions:active {
                             background-color: #000;
+                        }
+                    }
+                }
+                // middle
+                .middle {
+                    .content {
+                        .text {
+                            display: flex;
+                            align-items: start;
+                            justify-content: start;
+                            color: #ffffff;
+                            font-size: 15px;
+                            font-weight: 300;
+                            padding-bottom: 8px;
+                        }
+                        .media {
+                            // outline: 1px solid rgba(243, 245, 247, 0.15);
+                            // outline-offset: -1px;
+
+                            .carouselMedia {
+                                position: relative;
+
+                                .slick-track {
+                                    width: max-content !important;
+                                    margin-left: 0;
+                                    margin-right: 0;
+                                }
+                                .slick-slide {
+                                    width: max-content !important;
+                                }
+                                // mediaContainer
+                                .mediaContainer {
+                                    height: 280px;
+                                    padding-right: 6px;
+
+                                    img {
+                                        height: 100%;
+                                        // width: 98%;
+                                        object-fit: cover;
+                                        object-position: center center;
+                                        outline: 1px solid rgba(243, 245, 247, 0.15);
+                                        outline-offset: -1px;
+                                        // border-radius: 8px;
+                                    }
+                                }
+                                // Nút điều khiển Carousel Media
+                                .btnPrevCarousel {
+                                    display: flex;
+                                    align-items: center;
+                                    position: absolute;
+                                    background: rgb(0, 0, 0);
+                                    background: linear-gradient(
+                                        90deg,
+                                        rgba(0, 0, 0, 0.8) 0%,
+                                        rgba(0, 0, 0, 0.3) 35%,
+                                        rgba(255, 255, 255, 0) 100%
+                                    );
+                                    border: none;
+                                    color: #ffffff;
+                                    padding-left: 10px;
+                                    padding-right: 10px;
+                                    top: 0;
+                                    bottom: 0;
+                                    left: 0;
+                                    cursor: pointer;
+                                    transition: ease-out 0.2s;
+                                }
+                                .btnPrevCarousel:active {
+                                    padding-left: 8px;
+                                }
+                                .btnNextCarousel {
+                                    display: flex;
+                                    align-items: center;
+                                    position: absolute;
+                                    background: rgb(0, 0, 0);
+                                    background: linear-gradient(
+                                        270deg,
+                                        rgba(0, 0, 0, 0.8) 0%,
+                                        rgba(0, 0, 0, 0.3) 35%,
+                                        rgba(255, 255, 255, 0) 100%
+                                    );
+                                    border: none;
+                                    color: #ffffff;
+                                    padding-left: 10px;
+                                    padding-right: 10px;
+                                    top: 0;
+                                    bottom: 0;
+                                    right: 0;
+                                    cursor: pointer;
+                                    transition: ease-out 0.2s;
+                                }
+                                .btnNextCarousel:active {
+                                    padding-right: 8px;
+                                }
+                            }
                         }
                     }
                 }

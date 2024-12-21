@@ -4,7 +4,7 @@ import SongPlayer from '~/pages/components/SongPlayer';
 
 function RightContainer() {
     return (
-        <div className="col l-3 m-0 c-12 rightContainer">
+        <div className="col l-3 m-0 c-0 rightContainer">
             <SongPlayer></SongPlayer>
         </div>
     );
