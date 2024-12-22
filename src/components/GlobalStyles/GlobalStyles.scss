@@ -1183,17 +1183,22 @@ body {
 
 // CSS Feed Page
 .feedPage {
+    width: 100%;
+
     // Bài viết (articleContainer)
     .articleContainer {
+        padding: 12px 12px;
+        width: 100%;
+        border-bottom: 0.5px solid #1f1f1f;
+
         .article {
-            padding: 12px 24px;
             display: flex;
             // height: 300px;
             width: 100%;
-            border-bottom: 0.5px solid #1f1f1f;
 
             .left {
-                width: fit-content;
+                // width: fit-content;
+                // width: 7%;
                 height: 100%;
                 display: grid;
                 align-items: start;
@@ -1224,7 +1229,7 @@ body {
             .right {
                 // background-color: green;
                 height: 100%;
-                width: 92%;
+                width: 93%;
                 // top
                 .top {
                     display: flex;
@@ -1297,28 +1302,31 @@ body {
                             padding-bottom: 8px;
                         }
                         .media {
-                            // outline: 1px solid rgba(243, 245, 247, 0.15);
-                            // outline-offset: -1px;
-
                             .carouselMedia {
+                                height: max-content;
                                 position: relative;
+                                width: 400px; // trên mobile đổi lại thành 100%
+                                margin-bottom: 26px;
 
                                 .slick-track {
-                                    width: max-content !important;
-                                    margin-left: 0;
-                                    margin-right: 0;
+                                    // width: max-content !important;
+                                    // margin-left: 0;
+                                    // margin-right: 0;
+                                    display: flex;
+                                    align-items: center;
+                                    // background: black;
                                 }
                                 .slick-slide {
-                                    width: max-content !important;
+                                    // width: max-content !important;
                                 }
+
                                 // mediaContainer
                                 .mediaContainer {
-                                    height: 280px;
-                                    padding-right: 6px;
+                                    height: 100%;
 
                                     img {
                                         height: 100%;
-                                        // width: 98%;
+                                        width: 100%;
                                         object-fit: cover;
                                         object-position: center center;
                                         outline: 1px solid rgba(243, 245, 247, 0.15);
@@ -1331,13 +1339,14 @@ body {
                                     display: flex;
                                     align-items: center;
                                     position: absolute;
-                                    background: rgb(0, 0, 0);
-                                    background: linear-gradient(
-                                        90deg,
-                                        rgba(0, 0, 0, 0.8) 0%,
-                                        rgba(0, 0, 0, 0.3) 35%,
-                                        rgba(255, 255, 255, 0) 100%
-                                    );
+                                    background-color: transparent;
+                                    // background: rgb(0, 0, 0);
+                                    // background: linear-gradient(
+                                    //     90deg,
+                                    //     rgba(0, 0, 0, 0.8) 0%,
+                                    //     rgba(0, 0, 0, 0.3) 35%,
+                                    //     rgba(255, 255, 255, 0) 100%
+                                    // );
                                     border: none;
                                     color: #ffffff;
                                     padding-left: 10px;
@@ -1350,18 +1359,20 @@ body {
                                 }
                                 .btnPrevCarousel:active {
                                     padding-left: 8px;
+                                    color: #000;
                                 }
                                 .btnNextCarousel {
                                     display: flex;
                                     align-items: center;
                                     position: absolute;
-                                    background: rgb(0, 0, 0);
-                                    background: linear-gradient(
-                                        270deg,
-                                        rgba(0, 0, 0, 0.8) 0%,
-                                        rgba(0, 0, 0, 0.3) 35%,
-                                        rgba(255, 255, 255, 0) 100%
-                                    );
+                                    background-color: transparent;
+                                    // background: rgb(0, 0, 0);
+                                    // background: linear-gradient(
+                                    //     270deg,
+                                    //     rgba(0, 0, 0, 0.8) 0%,
+                                    //     rgba(0, 0, 0, 0.3) 35%,
+                                    //     rgba(255, 255, 255, 0) 100%
+                                    // );
                                     border: none;
                                     color: #ffffff;
                                     padding-left: 10px;
@@ -1374,6 +1385,7 @@ body {
                                 }
                                 .btnNextCarousel:active {
                                     padding-right: 8px;
+                                    color: #000;
                                 }
                             }
                         }
@@ -1510,4 +1522,26 @@ body {
             width: 100%;
         }
     }
+    // CSS Feed Page
+    .feedPage {
+        .articleContainer {
+            .article {
+                .right {
+                    width: 85%;
+
+                    .middle {
+                        .content {
+                            .media {
+                                .carouselMedia {
+                                    width: 100%;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    //
 }
