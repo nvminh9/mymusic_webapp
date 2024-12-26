@@ -5,6 +5,7 @@ import SongPlayer from '~/pages/components/SongPlayer';
 function RightContainer() {
     return (
         <div className="col l-3 m-0 c-0 rightContainer">
+            {/* Trình Phát Nhạc */}
             <SongPlayer></SongPlayer>
         </div>
     );

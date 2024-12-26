@@ -15,6 +15,7 @@ const publicRoutes = [
         children: [
             { path: '', component: HomePage },
             { path: 'feeds', component: FeedPage },
+            { path: 'profile/*', component: ProfilePage },
         ],
     },
 ];

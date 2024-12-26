@@ -8,16 +8,7 @@ function ProfilePage() {
 
     return (
         <>
-            <h1>Hello</h1>
-            <h1>Hello</h1>
-            <h1>Hello</h1>
-            <h1>Hello</h1>
-            <h1>Hello</h1>
-            <h1>Hello</h1>
-            <h1>Hello</h1>
-            <h1>Hello</h1>
-            <h1>Hello</h1>
-            <h1>Hello</h1>
+            <h1>Profile</h1>
         </>
     );
 }

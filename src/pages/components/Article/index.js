@@ -2,6 +2,7 @@ import { VscEllipsis } from 'react-icons/vsc';
 import { VscChevronLeft, VscChevronRight } from 'react-icons/vsc';
 import { useRef } from 'react';
 import { Fragment } from 'react';
+import { Link } from 'react-router-dom';
 import Slider from 'react-slick';
 import aptBanner from '~/assets/images/643564536.jpg';
 // Import Component
@@ -80,13 +81,17 @@ function Article({ feed }) {
             <div className="left">
                 {/* Avatar */}
                 <div className="userAvatar">
-                    <img src={feed.user.avatar} />
+                    <Link to={`/profile/${feed.user.userName}`}>
+                        <img src={feed.user.avatar} />
+                    </Link>
                 </div>
             </div>
             <div className="right">
                 <div className="top">
                     <div className="articleInfo">
-                        <span className="userName">{feed.user.userName}</span>
+                        <Link to={`/profile/${feed.user.userName}`} style={{ textDecoration: 'none' }}>
+                            <span className="userName">{feed.user.userName}</span>
+                        </Link>
                         <span className="createdAt">{feed.feed.createdAt}</span>
                     </div>
                     <div className="articleOptions">

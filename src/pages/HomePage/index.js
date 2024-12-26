@@ -78,6 +78,11 @@ function HomePage() {
             info1: 'Daily Mix 4',
             info2: 'Deftones',
         },
+        {
+            img: `https://pickasso.spotifycdn.com/image/ab67c0de0000deef/dt/v1/img/daily/4/ab6761610000e5eb4b2da0b72cab26ac518f1f0d/vi`,
+            info1: 'Daily Mix 4',
+            info2: 'Deftones',
+        },
     ];
     // data mẫu cho carousel Âm nhạc thịnh hành
     const dataTrendingMusic = [

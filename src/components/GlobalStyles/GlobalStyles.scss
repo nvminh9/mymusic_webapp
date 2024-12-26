@@ -1195,7 +1195,7 @@ body {
             display: flex;
             // height: 300px;
             width: 100%;
-
+            // left
             .left {
                 // width: fit-content;
                 // width: 7%;
@@ -1225,7 +1225,7 @@ body {
                     }
                 }
             }
-
+            // right
             .right {
                 // background-color: green;
                 height: 100%;
@@ -1304,6 +1304,7 @@ body {
                         .media {
                             .carouselMedia {
                                 height: max-content;
+                                max-height: 600px;
                                 position: relative;
                                 width: 400px; // trên mobile đổi lại thành 100%
                                 margin-bottom: 26px;

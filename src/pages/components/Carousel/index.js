@@ -23,6 +23,7 @@ function Carousel({ slides }) {
         arrows: false,
         infinite: false,
         speed: 500,
+        draggable: slides.length > 2 ? true : false,
         slidesToShow: 4.5,
         slidesToScroll: 4,
         initialSlide: 0,
@@ -136,12 +137,16 @@ function Carousel({ slides }) {
                         </Fragment>
                     ))}
                 </Slider>
-                <button className="btnPrevCarousel" onClick={previous}>
-                    <VscChevronLeft />
-                </button>
-                <button className="btnNextCarousel" onClick={next}>
-                    <VscChevronRight />
-                </button>
+                {slides.length > 2 && (
+                    <>
+                        <button className="btnPrevCarousel" onClick={previous}>
+                            <VscChevronLeft />
+                        </button>
+                        <button className="btnNextCarousel" onClick={next}>
+                            <VscChevronRight />
+                        </button>
+                    </>
+                )}
             </div>
         </>
     );

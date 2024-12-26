@@ -10,6 +10,7 @@ import coverMySongTest2 from '~/assets/images/339dba2a2e19e5440dafb92b60a6e66b.j
 import CircumIcon from '@klarr-agency/circum-icons-react';
 import { VscChevronDown, VscAdd, VscChevronUp, VscClose, VscLibrary, VscMusic, VscHistory } from 'react-icons/vsc';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 function LeftContainer() {
     const [isOpenPlayList, setIsOpenPlayList] = useState(false);
@@ -99,10 +100,14 @@ function LeftContainer() {
                 {/* User Info */}
                 <div className="user">
                     <div className="avatar">
-                        <img src={avatarTest2} />
+                        <Link to={`/profile/minhngo`} style={{ textDecoration: 'none', height: '100%', width: '100%' }}>
+                            <img src={avatarTest2} />
+                        </Link>
                     </div>
                     <div className="name">
-                        <span>minhngo</span>
+                        <Link to={`/profile/minhngo`} style={{ textDecoration: 'none' }}>
+                            <span>minhngo</span>
+                        </Link>
                     </div>
                 </div>
                 {/* Playlist */}

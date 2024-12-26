@@ -5,7 +5,7 @@ import Article from '../components/Article';
 // hết Import Component
 
 function FeedPage() {
-    useEffect(() => {}, []);
+    // useEffect(() => {}, []);
 
     // check feedsData
     console.log(feedsData);
