@@ -979,6 +979,42 @@ body {
                         transform: translateX(2px);
                     }
                 }
+
+                // Test Audio
+                .progressBarContainer {
+                    height: fit-content;
+                    width: fit-content;
+                    // thanh tải
+                    .progressBar {
+                        height: 5px;
+                        width: 300px;
+                        background-color: #1f1f1f;
+                        margin-top: 10px;
+                        cursor: pointer;
+
+                        .progressed {
+                            height: 100%;
+                            background-color: #ffffff;
+                            width: auto;
+                        }
+                    }
+                    // .progressBar:hover {
+                    //     transition: ease-out 0.2s;
+                    //     background-color: #777;
+                    // }
+                    // thời gian của thanh tải
+                    .timeBar {
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        color: #ffffff;
+
+                        .left {
+                        }
+                        .right {
+                        }
+                    }
+                }
             }
         }
 

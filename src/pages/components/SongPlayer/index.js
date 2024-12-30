@@ -16,42 +16,6 @@ import ImageAmbilight from '../ImageAmbilight';
 // hết import Component
 
 function SongPlayer() {
-    // Test HLS
-
-    // test với api file m3u8 trên mạng
-    // const videoSrc = 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8';
-
-    // test với file m3u8 trên máy
-    // const videoSrc = videoTestHLS;
-
-    // test với file video trên ImageKit.io, dùng thư viện hls.js để phát (lỗi)
-    // const videoSrc = `https://ik.imagekit.io/d7q5hnktr/timanhghen.mp4?updatedAt=1734602507871`;
-
-    // const videoHLSRef = useRef(null);
-
-    // useEffect(() => {
-    //     const hls = new Hls();
-    //     if (Hls.isSupported()) {
-    //         hls.loadSource(videoSrc);
-    //         if (videoHLSRef.current) {
-    //             hls.attachMedia(videoHLSRef.current);
-    //         }
-    //     }
-    // }, []);
-
-    // test (chưa chính thức)
-    const activeSongNameMarquee = () => {
-        let songName = document.getElementById('songNameID');
-        if (songName && songName.offsetWidth > 300) {
-            songName.classList.add('songNameMarqueeActived');
-        }
-    };
-    const turnOffSongNameMarquee = () => {
-        let songName = document.getElementById('songNameID');
-        songName.classList.remove('songNameMarqueeActived');
-        songName.style.transform = 'transformX("0px")';
-    };
-
     // config slider cho carousel thumbnail (React Slick)
     let sliderRef = useRef(null);
     const settings = {
@@ -93,7 +57,6 @@ function SongPlayer() {
             },
         ],
     };
-
     // Thumbnail data test
     const thumbnails = [
         {
@@ -105,6 +68,65 @@ function SongPlayer() {
             videoUrl: `timanhghen.mp4`,
         },
     ];
+
+    // Animation cho tên bài hát
+    const activeSongNameMarquee = () => {
+        let songName = document.getElementById('songNameID');
+        if (songName && songName.offsetWidth > 300) {
+            songName.classList.add('songNameMarqueeActived');
+        }
+    };
+    const turnOffSongNameMarquee = () => {
+        let songName = document.getElementById('songNameID');
+        songName.classList.remove('songNameMarqueeActived');
+        songName.style.transform = 'transformX("0px")';
+    };
+
+    // Test HLS
+    // test với api file m3u8 trên mạng
+    // const videoSrc = 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8';
+    // test với file m3u8 trên máy
+    // const videoSrc = videoTestHLS;
+    // test với file video trên ImageKit.io, dùng thư viện hls.js để phát (lỗi)
+    // const videoSrc = `https://ik.imagekit.io/d7q5hnktr/timanhghen.mp4?updatedAt=1734602507871`;
+    // const videoHLSRef = useRef(null);
+    const audioHLSRef = useRef(null);
+    var audioHLSFile = `http://localhost:8080/music/lutherAudio_master.m3u8`;
+    useEffect(() => {
+        const hls = new Hls();
+        if (Hls.isSupported()) {
+            hls.loadSource(audioHLSFile);
+            if (audioHLSRef.current) {
+                hls.attachMedia(audioHLSRef.current);
+            }
+        }
+    }, []);
+
+    // Test Custom Song Progress Bar
+    useEffect(() => {
+        var progressBar = document.getElementById('progressBarID');
+        var progressed = document.getElementById('progressedID');
+        var leftTimeBar = document.getElementById('leftTimeBarID');
+        progressed.style.width =
+            (audioHLSRef.current.currentTime * 100) /
+                (isNaN(audioHLSRef.current.duration) ? 1 : audioHLSRef.current.duration) +
+            '%';
+        audioHLSRef.current.ontimeupdate = function (e) {
+            progressed.style.width = (audioHLSRef.current.currentTime * 100) / audioHLSRef.current.duration + '%';
+            progressBar.onclick = function (e) {
+                audioHLSRef.current.currentTime = (e.offsetX / progressBar.offsetWidth) * audioHLSRef.current.duration;
+            };
+            leftTimeBar.innerText =
+                Math.floor(audioHLSRef.current.currentTime / 60) +
+                ':' +
+                Math.floor(audioHLSRef.current.currentTime % 60);
+            console.log('audioHLSRef Time: ' + `${audioHLSRef.current.currentTime}`);
+            console.log('audioHLSRef Duration: ' + `${audioHLSRef.current.duration}`);
+            console.log(
+                'audioHLSRef Percent: ' + `${(audioHLSRef.current.currentTime * 100) / audioHLSRef.current.duration}%`,
+            );
+        };
+    }, []);
 
     return (
         <Fragment>
@@ -158,6 +180,23 @@ function SongPlayer() {
                         </div>
                         <div className="artist">
                             <span>Wxrdie</span>
+                        </div>
+                        <audio ref={audioHLSRef} id="audioHLS" controls></audio>
+                        {/* Thanh tải nhạc */}
+                        <div className="progressBarContainer">
+                            {/* Progress */}
+                            <div className="progressBar" id="progressBarID">
+                                <div className="progressed" id="progressedID"></div>
+                            </div>
+                            {/* Time */}
+                            <div className="timeBar">
+                                <div className="left" id="leftTimeBarID">
+                                    0:27
+                                </div>
+                                <div className="right" id="rightTimeBarID">
+                                    2:57
+                                </div>
+                            </div>
                         </div>
                         {/* test với link nhúng (thẻ iframe) có HLS ABS của ImageKit.io * (sử dụng HLS) (iframe này giao diện ko đẹp, khó custom)/}
                         {/* <iframe
