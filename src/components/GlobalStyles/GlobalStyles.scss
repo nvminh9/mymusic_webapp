@@ -830,8 +830,8 @@ body {
             height: 58.4px;
             border: none;
             padding: 8px;
-            // background-color: rgba(18, 18, 18, 0.8);
-            // backdrop-filter: blur(15px);
+            background-color: rgba(18, 18, 18, 0.8);
+            backdrop-filter: blur(15px);
             z-index: 99;
 
             .title {
@@ -894,7 +894,6 @@ body {
             .topBack {
                 height: 58.4px;
             }
-
             // bottomBack
             .bottomBack {
                 height: 58.4px;
@@ -979,40 +978,43 @@ body {
                         transform: translateX(2px);
                     }
                 }
+            }
+            // progress bar
+            .progressBarContainer {
+                height: fit-content;
+                width: 100%;
+                display: grid;
+                justify-content: center;
 
-                // Test Audio
-                .progressBarContainer {
-                    height: fit-content;
-                    width: fit-content;
-                    // thanh tải
-                    .progressBar {
-                        height: 5px;
-                        width: 300px;
-                        background-color: #1f1f1f;
-                        margin-top: 10px;
-                        cursor: pointer;
+                // thanh tải
+                .progressBar {
+                    height: 5px;
+                    width: 300px;
+                    background-color: #1f1f1f;
+                    cursor: pointer;
+                    margin: 10px 0px;
 
-                        .progressed {
-                            height: 100%;
-                            background-color: #ffffff;
-                            width: auto;
-                        }
+                    .progressed {
+                        height: 100%;
+                        background-color: #ffffff;
+                        width: auto;
                     }
-                    // .progressBar:hover {
-                    //     transition: ease-out 0.2s;
-                    //     background-color: #777;
-                    // }
-                    // thời gian của thanh tải
-                    .timeBar {
-                        display: flex;
-                        align-items: center;
-                        justify-content: space-between;
-                        color: #ffffff;
+                }
+                // thời gian của thanh tải
+                .timeBar {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    color: #ffffff;
+                    width: 300px;
 
-                        .left {
-                        }
-                        .right {
-                        }
+                    .left {
+                        font-weight: 300;
+                        font-size: 15px;
+                    }
+                    .right {
+                        font-weight: 300;
+                        font-size: 15px;
                     }
                 }
             }
@@ -1024,11 +1026,221 @@ body {
             left: 0;
             right: 0;
             width: 100%;
-            height: 58.4px;
+            // height: 58.4px;
             background-color: rgba(18, 18, 18, 0.8);
             backdrop-filter: blur(15px);
             border: none;
             // border-top: 0.5px solid #1f1f1f;
+
+            // controls bar
+            .controlsContainer {
+                width: 100%;
+                padding: 8px;
+
+                .controls {
+                    // width: 300px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+
+                    // Button Shuffle
+                    .btnShuffleContainer {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        width: fit-content;
+                        height: fit-content;
+
+                        .btnShuffle {
+                            // width: 60px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            border: none;
+                            background: none;
+                            color: #ffffff;
+                            padding: 8px;
+                            font-size: 20px;
+                            cursor: pointer;
+                            transition: ease-out 0.2s;
+                        }
+                        .btnShuffle:hover {
+                            background-color: #1f1f1f;
+                        }
+                        .btnShuffle:active {
+                            background-color: #000;
+                        }
+                    }
+                    // Button Previous Song
+                    .btnPreviousSongContainer {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        width: fit-content;
+                        height: fit-content;
+
+                        .btnPreviousSong {
+                            // width: 60px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            border: none;
+                            background: none;
+                            color: #ffffff;
+                            padding: 8px;
+                            font-size: 20px;
+                            cursor: pointer;
+                            transition: ease-out 0.2s;
+                        }
+                        .btnPreviousSong:hover {
+                            background-color: #1f1f1f;
+                        }
+                        .btnPreviousSong:active {
+                            background-color: #000;
+                        }
+                    }
+                    // Button Play
+                    .btnPlayContainer {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        width: fit-content;
+                        height: fit-content;
+
+                        .btnPlay {
+                            // width: 60px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            border: none;
+                            background: none;
+                            color: #ffffff;
+                            padding: 8px;
+                            font-size: 20px;
+                            cursor: pointer;
+                            transition: ease-out 0.2s;
+                        }
+                        .btnPlay:hover {
+                            background-color: #1f1f1f;
+                        }
+                        .btnPlay:active {
+                            background-color: #000;
+                        }
+                    }
+                    // Button Next Song
+                    .btnNextSongContainer {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        width: fit-content;
+                        height: fit-content;
+
+                        .btnNextSong {
+                            // width: 60px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            border: none;
+                            background: none;
+                            color: #ffffff;
+                            padding: 8px;
+                            font-size: 20px;
+                            cursor: pointer;
+                            transition: ease-out 0.2s;
+                        }
+                        .btnNextSong:hover {
+                            background-color: #1f1f1f;
+                        }
+                        .btnNextSong:active {
+                            background-color: #000;
+                        }
+                    }
+                    // Button Repeat
+                    .btnRepeatContainer {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        width: fit-content;
+                        height: fit-content;
+
+                        .btnRepeat {
+                            // width: 60px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            border: none;
+                            background: none;
+                            color: #ffffff;
+                            padding: 8px;
+                            font-size: 20px;
+                            cursor: pointer;
+                            transition: ease-out 0.2s;
+                        }
+                        .btnRepeat:hover {
+                            background-color: #1f1f1f;
+                        }
+                        .btnRepeat:active {
+                            background-color: #000;
+                        }
+                    }
+                    // Button Volume Control
+                    .btnVolumeControlContainer {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        width: fit-content;
+                        height: fit-content;
+
+                        .btnVolumeControl {
+                            // width: 60px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            border: none;
+                            background: none;
+                            color: #ffffff;
+                            padding: 8px;
+                            font-size: 20px;
+                            cursor: pointer;
+                            transition: ease-out 0.2s;
+                        }
+                        .btnVolumeControl:hover {
+                            background-color: #1f1f1f;
+                        }
+                        .btnVolumeControl:active {
+                            background-color: #000;
+                        }
+                    }
+                    // Button Like Song
+                    .btnLikeSongContainer {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        width: fit-content;
+                        height: fit-content;
+
+                        .btnLikeSong {
+                            // width: 60px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            border: none;
+                            background: none;
+                            color: #ffffff;
+                            padding: 8px;
+                            font-size: 20px;
+                            cursor: pointer;
+                            transition: ease-out 0.2s;
+                        }
+                        .btnLikeSong:hover {
+                            background-color: #1f1f1f;
+                        }
+                        .btnLikeSong:active {
+                            background-color: #000;
+                        }
+                    }
+                }
+            }
         }
     }
 }

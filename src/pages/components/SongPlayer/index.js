@@ -1,21 +1,32 @@
-import { Fragment } from 'react';
+import { Fragment, useState } from 'react';
 import CircumIcon from '@klarr-agency/circum-icons-react';
-import videoTest from '~/assets/videos/thuyet_trinh.mp4';
-import videoTestHLS from '~/assets/videos/thuyet_trinh_playlist.m3u8';
-import imageTest from '~/assets/images/gnxKendrick.jpg';
-import audioTest from '~/assets/audio/lutherAudio.mp3';
-import coverMySongTest2 from '~/assets/images/timanhghen.jpg';
 import Slider from 'react-slick';
 import { useRef, useEffect } from 'react';
 import { VscChevronLeft, VscChevronRight } from 'react-icons/vsc';
 import Hls from 'hls.js';
-import { IKContext, IKVideo } from 'imagekitio-react';
+import {
+    IoPlaySharp,
+    IoPauseSharp,
+    IoPlaySkipBackSharp,
+    IoPlaySkipForwardSharp,
+    IoShuffleSharp,
+    IoRepeatSharp,
+    IoVolumeHighSharp,
+    IoVolumeMuteSharp,
+    IoHeartSharp,
+} from 'react-icons/io5';
 // import Component
 import VideoAmbilight from '../VideoAmbilight';
 import ImageAmbilight from '../ImageAmbilight';
 // hết import Component
 
 function SongPlayer() {
+    // State (useState)
+    const [isPlay, setIsPlay] = useState();
+
+    // Ref (useRef)
+    const audioHLSRef = useRef(null);
+
     // config slider cho carousel thumbnail (React Slick)
     let sliderRef = useRef(null);
     const settings = {
@@ -90,7 +101,6 @@ function SongPlayer() {
     // test với file video trên ImageKit.io, dùng thư viện hls.js để phát (lỗi)
     // const videoSrc = `https://ik.imagekit.io/d7q5hnktr/timanhghen.mp4?updatedAt=1734602507871`;
     // const videoHLSRef = useRef(null);
-    const audioHLSRef = useRef(null);
     var audioHLSFile = `http://localhost:8080/music/lutherAudio_master.m3u8`;
     useEffect(() => {
         const hls = new Hls();
@@ -102,7 +112,7 @@ function SongPlayer() {
         }
     }, []);
 
-    // Test Custom Song Progress Bar
+    // Custom Song Progress Bar (Test)
     useEffect(() => {
         var progressBar = document.getElementById('progressBarID');
         var progressed = document.getElementById('progressedID');
@@ -127,6 +137,18 @@ function SongPlayer() {
             );
         };
     }, []);
+    // Function for Controls Bar
+    const handlePlayPauseSong = () => {
+        if (isPlay) {
+            audioHLSRef.current.pause();
+            setIsPlay(false);
+            return;
+        }
+
+        audioHLSRef.current.play();
+        setIsPlay(true);
+        return;
+    };
 
     return (
         <Fragment>
@@ -181,23 +203,6 @@ function SongPlayer() {
                         <div className="artist">
                             <span>Wxrdie</span>
                         </div>
-                        <audio ref={audioHLSRef} id="audioHLS" controls></audio>
-                        {/* Thanh tải nhạc */}
-                        <div className="progressBarContainer">
-                            {/* Progress */}
-                            <div className="progressBar" id="progressBarID">
-                                <div className="progressed" id="progressedID"></div>
-                            </div>
-                            {/* Time */}
-                            <div className="timeBar">
-                                <div className="left" id="leftTimeBarID">
-                                    0:27
-                                </div>
-                                <div className="right" id="rightTimeBarID">
-                                    2:57
-                                </div>
-                            </div>
-                        </div>
                         {/* test với link nhúng (thẻ iframe) có HLS ABS của ImageKit.io * (sử dụng HLS) (iframe này giao diện ko đẹp, khó custom)/}
                         {/* <iframe
                             width="560"
@@ -215,9 +220,68 @@ function SongPlayer() {
                         {/* test với link file trên ImageKit.io sử dụng thư viện hls.js */}
                         {/* <video ref={videoHLSRef} id="videoHLS" controls style={{ width: '300px' }}></video> */}
                     </div>
+                    {/* Audio Test */}
+                    <audio ref={audioHLSRef} id="audioHLS"></audio>
+                    {/* Progress Bar */}
+                    <div className="progressBarContainer">
+                        {/* Progress */}
+                        <div className="progressBar" id="progressBarID">
+                            <div className="progressed" id="progressedID"></div>
+                        </div>
+                        {/* Time */}
+                        <div className="timeBar">
+                            <div className="left" id="leftTimeBarID">
+                                0:27
+                            </div>
+                            <div className="right" id="rightTimeBarID">
+                                2:57
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 {/* bottom */}
-                <div className="bottom"></div>
+                <div className="bottom">
+                    {/* Controls */}
+                    <div className="controlsContainer">
+                        <div className="controls">
+                            <div className="btnVolumeControlContainer">
+                                <button className="btnVolumeControl">
+                                    <IoVolumeHighSharp></IoVolumeHighSharp>
+                                </button>
+                            </div>
+                            <div className="btnShuffleContainer">
+                                <button className="btnShuffle">
+                                    <IoShuffleSharp></IoShuffleSharp>
+                                </button>
+                            </div>
+                            <div className="btnPreviousSongContainer">
+                                <button className="btnPreviousSong">
+                                    <IoPlaySkipBackSharp></IoPlaySkipBackSharp>
+                                </button>
+                            </div>
+                            <div className="btnPlayContainer">
+                                <button className="btnPlay" onClick={handlePlayPauseSong}>
+                                    {isPlay ? <IoPauseSharp></IoPauseSharp> : <IoPlaySharp></IoPlaySharp>}
+                                </button>
+                            </div>
+                            <div className="btnNextSongContainer">
+                                <button className="btnNextSong">
+                                    <IoPlaySkipForwardSharp></IoPlaySkipForwardSharp>
+                                </button>
+                            </div>
+                            <div className="btnRepeatContainer">
+                                <button className="btnRepeat">
+                                    <IoRepeatSharp></IoRepeatSharp>
+                                </button>
+                            </div>
+                            <div className="btnLikeSongContainer">
+                                <button className="btnLikeSong">
+                                    <IoHeartSharp></IoHeartSharp>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </Fragment>
     );
