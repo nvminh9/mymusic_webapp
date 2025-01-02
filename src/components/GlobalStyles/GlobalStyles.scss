@@ -830,8 +830,8 @@ body {
             height: 58.4px;
             border: none;
             padding: 8px;
-            background-color: rgba(18, 18, 18, 0.8);
-            backdrop-filter: blur(15px);
+            // background-color: rgba(18, 18, 18, 0.8);
+            // backdrop-filter: blur(15px);
             z-index: 99;
 
             .title {
@@ -1231,6 +1231,37 @@ body {
                             font-size: 20px;
                             cursor: pointer;
                             transition: ease-out 0.2s;
+                            // color: #e84118;
+
+                            .sparkles {
+                                font-size: 8px;
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;
+                                color: transparent;
+                                transition: ease-out 0.2s;
+                                position: absolute;
+                            }
+                            .sparklesActived {
+                                animation: sparklesAnimation 2s ease-out;
+                            }
+                            @keyframes sparklesAnimation {
+                                0% {
+                                    color: #d63031;
+                                }
+
+                                50% {
+                                    color: #fd79a8;
+                                    // transform: translate(-9px, -7px);
+                                }
+
+                                100% {
+                                    color: transparent;
+                                }
+                            }
+                        }
+                        .btnLikeSongActived {
+                            color: #d63031;
                         }
                         .btnLikeSong:hover {
                             background-color: #1f1f1f;
@@ -1238,6 +1269,9 @@ body {
                         .btnLikeSong:active {
                             background-color: #000;
                         }
+                        // .btnLikeSong:active .sparkles {
+                        //     color: #d63031;
+                        // }
                     }
                 }
             }

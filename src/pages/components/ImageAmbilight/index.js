@@ -60,8 +60,10 @@ const ImageAmbilight = ({ imageSrc }) => {
         <div className="imageWrapper">
             <div className="ambilightWrapper">
                 <div className="aspectRatio">
-                    <img id="image" ref={imageRef} src={`${IMAGEKIT_URL_ENDPOINT}/${imageSrc}`} />
-                    <img id="imageAmbilight" src={`${IMAGEKIT_URL_ENDPOINT}/${imageSrc}`} />
+                    {/* <img id="image" ref={imageRef} src={`${IMAGEKIT_URL_ENDPOINT}/${imageSrc}`} />
+                    <img id="imageAmbilight" src={`${IMAGEKIT_URL_ENDPOINT}/${imageSrc}`} /> */}
+                    <img id="image" ref={imageRef} src={imageSrc} />
+                    <img id="imageAmbilight" src={imageSrc} />
                 </div>
                 <canvas id="ambilight" ref={canvasRef} />
             </div>

@@ -14,7 +14,10 @@ import {
     IoVolumeHighSharp,
     IoVolumeMuteSharp,
     IoHeartSharp,
+    IoSparklesSharp,
 } from 'react-icons/io5';
+import lutherCoverImage from '~/assets/images/gnxKendrick.jpg';
+import lutherVideo from '~/assets/videos/luther.mp4';
 // import Component
 import VideoAmbilight from '../VideoAmbilight';
 import ImageAmbilight from '../ImageAmbilight';
@@ -22,10 +25,14 @@ import ImageAmbilight from '../ImageAmbilight';
 
 function SongPlayer() {
     // State (useState)
-    const [isPlay, setIsPlay] = useState();
+    var [isPlay, setIsPlay] = useState();
+    const [isSongLiked, setIsSongLiked] = useState();
+    var [isSongMuted, setIsSongMuted] = useState();
 
     // Ref (useRef)
     const audioHLSRef = useRef(null);
+    const btnLikeSong = useRef(null);
+    const btnVolumeControl = useRef(null);
 
     // config slider cho carousel thumbnail (React Slick)
     let sliderRef = useRef(null);
@@ -68,15 +75,14 @@ function SongPlayer() {
             },
         ],
     };
-    // Thumbnail data test
+
+    // Thumbnails data
     const thumbnails = [
         {
-            // tên hình
-            imageUrl: `timanhghen.jpg`,
+            imageUrl: lutherCoverImage,
         },
         {
-            // tên video
-            videoUrl: `timanhghen.mp4`,
+            videoUrl: lutherVideo,
         },
     ];
 
@@ -130,23 +136,90 @@ function SongPlayer() {
                 Math.floor(audioHLSRef.current.currentTime / 60) +
                 ':' +
                 Math.floor(audioHLSRef.current.currentTime % 60);
-            console.log('audioHLSRef Time: ' + `${audioHLSRef.current.currentTime}`);
-            console.log('audioHLSRef Duration: ' + `${audioHLSRef.current.duration}`);
-            console.log(
-                'audioHLSRef Percent: ' + `${(audioHLSRef.current.currentTime * 100) / audioHLSRef.current.duration}%`,
-            );
+            if ((audioHLSRef.current.currentTime * 100) / audioHLSRef.current.duration == 100) {
+                setIsPlay(false);
+            }
+            // console.log('audioHLSRef Time: ' + `${audioHLSRef.current.currentTime}`);
+            // console.log('audioHLSRef Duration: ' + `${audioHLSRef.current.duration}`);
+            // console.log(
+            //     'audioHLSRef Percent: ' + `${(audioHLSRef.current.currentTime * 100) / audioHLSRef.current.duration}%`,
+            // );
         };
     }, []);
+
+    // Config các Keyboard Event
+    useEffect(() => {
+        document.body.onkeyup = function (e) {
+            if (e.key == ' ' || e.code == 'Space' || e.keyCode == 32) {
+                if (isPlay) {
+                    audioHLSRef.current.pause();
+                    setIsPlay(false);
+                    isPlay = false;
+                    return;
+                } else {
+                    audioHLSRef.current.play();
+                    setIsPlay(true);
+                    isPlay = true;
+                    return;
+                }
+            }
+            if (e.key == 'm' || e.code == 'KeyM' || e.keyCode == 77) {
+                if (isSongMuted) {
+                    audioHLSRef.current.muted = false;
+                    setIsSongMuted(false);
+                    isSongMuted = false;
+                    return;
+                } else {
+                    audioHLSRef.current.muted = true;
+                    setIsSongMuted(true);
+                    isSongMuted = true;
+                    return;
+                }
+            }
+        };
+    }, []);
+
     // Function for Controls Bar
+    // Nút phát/dừng nhạc
     const handlePlayPauseSong = () => {
         if (isPlay) {
             audioHLSRef.current.pause();
             setIsPlay(false);
             return;
         }
-
         audioHLSRef.current.play();
         setIsPlay(true);
+        return;
+    };
+    // Nút thích nhạc
+    const handleBtnLikeSong = () => {
+        let sparkles = document.getElementsByClassName('sparkles');
+        if (isSongLiked) {
+            if (sparkles) {
+                sparkles[0].classList.remove('sparklesActived');
+                sparkles[1].classList.remove('sparklesActived');
+            }
+            btnLikeSong.current.classList.remove('btnLikeSongActived');
+            setIsSongLiked(false);
+            return;
+        }
+        if (sparkles) {
+            sparkles[0].classList.add('sparklesActived');
+            sparkles[1].classList.add('sparklesActived');
+        }
+        btnLikeSong.current.classList.add('btnLikeSongActived');
+        setIsSongLiked(true);
+        return;
+    };
+    // Nút điều chỉnh âm lượng
+    const handleBtnVolumeControl = () => {
+        if (isSongMuted) {
+            audioHLSRef.current.muted = false;
+            setIsSongMuted(false);
+            return;
+        }
+        audioHLSRef.current.muted = true;
+        setIsSongMuted(true);
         return;
     };
 
@@ -197,11 +270,11 @@ function SongPlayer() {
                                 onMouseOver={activeSongNameMarquee}
                                 onMouseLeave={turnOffSongNameMarquee}
                             >
-                                TIM ANH GHEN (ft. LVK, Dangrangto, TeuYungBoy) [prod. by rev, sleepat6pm]
+                                luther
                             </span>
                         </div>
                         <div className="artist">
-                            <span>Wxrdie</span>
+                            <span>Kendrick Lamar</span>
                         </div>
                         {/* test với link nhúng (thẻ iframe) có HLS ABS của ImageKit.io * (sử dụng HLS) (iframe này giao diện ko đẹp, khó custom)/}
                         {/* <iframe
@@ -245,8 +318,16 @@ function SongPlayer() {
                     <div className="controlsContainer">
                         <div className="controls">
                             <div className="btnVolumeControlContainer">
-                                <button className="btnVolumeControl">
-                                    <IoVolumeHighSharp></IoVolumeHighSharp>
+                                <button
+                                    className="btnVolumeControl"
+                                    ref={btnVolumeControl}
+                                    onClick={handleBtnVolumeControl}
+                                >
+                                    {isSongMuted ? (
+                                        <IoVolumeMuteSharp></IoVolumeMuteSharp>
+                                    ) : (
+                                        <IoVolumeHighSharp></IoVolumeHighSharp>
+                                    )}
                                 </button>
                             </div>
                             <div className="btnShuffleContainer">
@@ -275,8 +356,16 @@ function SongPlayer() {
                                 </button>
                             </div>
                             <div className="btnLikeSongContainer">
-                                <button className="btnLikeSong">
+                                <button className="btnLikeSong" ref={btnLikeSong} onClick={handleBtnLikeSong}>
+                                    <IoSparklesSharp
+                                        className="sparkles"
+                                        style={{ transform: 'translate(-11px, -7px)' }}
+                                    ></IoSparklesSharp>
                                     <IoHeartSharp></IoHeartSharp>
+                                    <IoSparklesSharp
+                                        className="sparkles"
+                                        style={{ transform: 'translate(8px, 6px)' }}
+                                    ></IoSparklesSharp>
                                 </button>
                             </div>
                         </div>

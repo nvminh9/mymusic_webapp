@@ -78,7 +78,8 @@ const VideoAmbilight = ({ videoSrc }) => {
             <div className="ambilightWrapper">
                 <div className="aspectRatio">
                     <video id="video" ref={videoRef} autoPlay loop muted playsInline>
-                        <source src={`${IMAGEKIT_URL_ENDPOINT}/${videoSrc}`} type="video/mp4" />
+                        {/* <source src={`${IMAGEKIT_URL_ENDPOINT}/${videoSrc}`} type="video/mp4" /> */}
+                        <source src={videoSrc} type="video/mp4" />
                     </video>
                     {/* test với ImageKit.io bằng component IKVideo (đang lỗi ko vẽ được ambilight) */}
                     {/* <IKContext urlEndpoint={IMAGEKIT_URL_ENDPOINT}>
