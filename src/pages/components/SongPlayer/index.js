@@ -16,8 +16,8 @@ import {
     IoHeartSharp,
     IoSparklesSharp,
 } from 'react-icons/io5';
-import lutherCoverImage from '~/assets/images/gnxKendrick.jpg';
-import lutherVideo from '~/assets/videos/luther.mp4';
+import swimmingPool from '~/assets/videos/swimmingPool.mp4';
+import { Link } from 'react-router-dom';
 // import Component
 import VideoAmbilight from '../VideoAmbilight';
 import ImageAmbilight from '../ImageAmbilight';
@@ -79,10 +79,10 @@ function SongPlayer() {
     // Thumbnails data
     const thumbnails = [
         {
-            imageUrl: lutherCoverImage,
+            imageUrl: `https://upload.wikimedia.org/wikipedia/en/4/4b/KendrickLamarSwimmingPools.jpg`,
         },
         {
-            videoUrl: lutherVideo,
+            videoUrl: swimmingPool,
         },
     ];
 
@@ -107,13 +107,18 @@ function SongPlayer() {
     // test với file video trên ImageKit.io, dùng thư viện hls.js để phát (lỗi)
     // const videoSrc = `https://ik.imagekit.io/d7q5hnktr/timanhghen.mp4?updatedAt=1734602507871`;
     // const videoHLSRef = useRef(null);
-    var audioHLSFile = `http://localhost:8080/music/lutherAudio_master.m3u8`;
+    // var audioHLSFile = `https://mymusic-api-1n5t.onrender.com/music/lutherAudio_master.m3u8`;
+    var audioHLSFile = `http://localhost:3700/music/swimmingpool_master.m3u8`;
     useEffect(() => {
         const hls = new Hls();
         if (Hls.isSupported()) {
             hls.loadSource(audioHLSFile);
             if (audioHLSRef.current) {
                 hls.attachMedia(audioHLSRef.current);
+                // isPlay ? audioHLSRef.current.play() : console.log(audioHLSRef.current);
+                // Đang lỗi do khi người dùng mới truy cập vào web (hay domain) nếu chưa tương tác với web thì sẽ ko thể autoPlay được
+                // Vì vậy sẽ xử lý theo cách khác
+                // audioHLSRef.current.play();
             }
         }
     }, []);
@@ -123,6 +128,8 @@ function SongPlayer() {
         var progressBar = document.getElementById('progressBarID');
         var progressed = document.getElementById('progressedID');
         var leftTimeBar = document.getElementById('leftTimeBarID');
+        var rightTimeBarID = document.getElementById('rightTimeBarID');
+
         progressed.style.width =
             (audioHLSRef.current.currentTime * 100) /
                 (isNaN(audioHLSRef.current.duration) ? 1 : audioHLSRef.current.duration) +
@@ -136,6 +143,12 @@ function SongPlayer() {
                 Math.floor(audioHLSRef.current.currentTime / 60) +
                 ':' +
                 Math.floor(audioHLSRef.current.currentTime % 60);
+            if (isNaN(audioHLSRef.current.duration)) {
+                rightTimeBarID.innerText = '0:0';
+            } else {
+                rightTimeBarID.innerText =
+                    Math.floor(audioHLSRef.current.duration / 60) + ':' + Math.floor(audioHLSRef.current.duration % 60);
+            }
             if ((audioHLSRef.current.currentTime * 100) / audioHLSRef.current.duration == 100) {
                 setIsPlay(false);
             }
@@ -274,7 +287,9 @@ function SongPlayer() {
                             </span>
                         </div>
                         <div className="artist">
-                            <span>Kendrick Lamar</span>
+                            <Link to={`/profile/kendricklamar`} style={{ textDecoration: 'none' }}>
+                                <span>Kendrick Lamar</span>
+                            </Link>
                         </div>
                         {/* test với link nhúng (thẻ iframe) có HLS ABS của ImageKit.io * (sử dụng HLS) (iframe này giao diện ko đẹp, khó custom)/}
                         {/* <iframe

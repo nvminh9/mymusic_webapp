@@ -963,6 +963,11 @@ body {
                         white-space: nowrap;
                         font-size: 16px;
                         font-weight: 400;
+                        transition: ease-out 0.2s;
+                        cursor: pointer;
+                    }
+                    span:hover {
+                        text-decoration: underline;
                     }
                 }
                 @keyframes songNameMarquee {

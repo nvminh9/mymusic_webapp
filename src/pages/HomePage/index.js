@@ -152,7 +152,7 @@ function HomePage() {
     ];
     // Đổi title trang
     useEffect(() => {
-        document.title = 'Home | mymusic';
+        document.title = 'Home | mymusic: Music from everyone';
     }, []);
 
     return (
