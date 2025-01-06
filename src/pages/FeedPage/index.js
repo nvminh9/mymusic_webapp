@@ -10,6 +10,11 @@ function FeedPage() {
     // check feedsData
     console.log(feedsData);
 
+    // Đổi title trang
+    useEffect(() => {
+        document.title = 'Home | mymusic: Music from everyone';
+    }, []);
+
     return (
         <>
             <div className="feedPage">

@@ -1074,6 +1074,7 @@ body {
                         }
                         .btnShuffle:active {
                             background-color: #000;
+                            transform: scale(0.7);
                         }
                     }
                     // Button Previous Song
@@ -1102,6 +1103,7 @@ body {
                         }
                         .btnPreviousSong:active {
                             background-color: #000;
+                            transform: scale(0.7);
                         }
                     }
                     // Button Play
@@ -1130,6 +1132,7 @@ body {
                         }
                         .btnPlay:active {
                             background-color: #000;
+                            transform: scale(0.7);
                         }
                     }
                     // Button Next Song
@@ -1158,6 +1161,7 @@ body {
                         }
                         .btnNextSong:active {
                             background-color: #000;
+                            transform: scale(0.7);
                         }
                     }
                     // Button Repeat
@@ -1186,6 +1190,7 @@ body {
                         }
                         .btnRepeat:active {
                             background-color: #000;
+                            transform: scale(0.7);
                         }
                     }
                     // Button Volume Control
@@ -1214,6 +1219,7 @@ body {
                         }
                         .btnVolumeControl:active {
                             background-color: #000;
+                            transform: scale(0.7);
                         }
                     }
                     // Button Like Song
@@ -1248,7 +1254,7 @@ body {
                                 position: absolute;
                             }
                             .sparklesActived {
-                                animation: sparklesAnimation 2s ease-out;
+                                animation: sparklesAnimation 1s ease-out;
                             }
                             @keyframes sparklesAnimation {
                                 0% {
@@ -1273,6 +1279,7 @@ body {
                         }
                         .btnLikeSong:active {
                             background-color: #000;
+                            transform: scale(0.7);
                         }
                         // .btnLikeSong:active .sparkles {
                         //     color: #d63031;
@@ -1679,6 +1686,195 @@ body {
                         }
                     }
                 }
+            }
+        }
+    }
+}
+
+// CSS Profile Page
+.tabSwitchProfile {
+    display: flex;
+    align-items: center;
+    background-color: #121212;
+    // background-color: rgba(18, 18, 18, 0.8);
+    // backdrop-filter: blur(15px);
+    border-bottom: 0.5px solid #1f1f1f;
+    height: 58.4px;
+    position: fixed;
+    top: 0;
+    width: 50%;
+    z-index: 99;
+
+    .profileUserName {
+        height: 100%;
+        width: 96%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        span {
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 400;
+        }
+    }
+
+    .btnComeBackBox {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+
+        .btnComeBack {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 0.5px solid transparent;
+            background-color: transparent;
+            color: #ffffff;
+            transition: ease-out 0.2s;
+            cursor: pointer;
+            height: 100%;
+            padding: 5px 10px;
+        }
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            // border-bottom: 1px dotted black;
+        }
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 80px;
+            background-color: #000;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px 0;
+            transition: ease-out 0.1s;
+
+            /* Position the tooltip */
+            position: absolute;
+            z-index: 99;
+            top: 100%;
+            left: 50%;
+            margin-top: 5px;
+            margin-left: -40px; /* Use half of the width (80/2 = 40), to center the tooltip */
+        }
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            transition: ease-out 0.1s;
+        }
+        .btnComeBack:hover {
+            background-color: #1f1f1f;
+        }
+        .btnComeBack:active {
+            background-color: #ffffff;
+            color: #000;
+        }
+    }
+}
+.profilePage {
+    .top {
+        display: flex;
+
+        // left
+        .left {
+            .avatar {
+                display: flex;
+                align-items: center;
+                // height: 100%;
+                // width: 85px;
+                height: 130px;
+                width: 130px;
+
+                img {
+                    height: 100%;
+                    width: 100%;
+                    // border: 0.5px solid #1f1f1f;
+                    object-fit: cover;
+                    cursor: pointer;
+                    border-radius: 50%;
+                    outline: 1px solid rgba(243, 245, 247, 0.15);
+                    outline-offset: -1px;
+                }
+            }
+        }
+
+        // right
+        .right {
+            .top {
+                // Thông tin (tên,...)
+                .userInfo {
+                    width: 100%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: start;
+
+                    .userName {
+                        color: #ffffff;
+                        font-size: 20px;
+                        font-weight: 300;
+                    }
+                    .btnFollow {
+                        border: none;
+                        border-radius: 8px;
+                        padding: 8px 15px;
+                        font-size: 14px;
+                        font-weight: 500;
+                        background-color: #ffffff;
+                        color: #000;
+                        cursor: pointer;
+                        transition: ease-out 0.2s;
+                        margin-right: 10px;
+                    }
+                    .btnFollow:hover {
+                        background-color: #dfdfdf;
+                    }
+                    .btnFollow:active {
+                        background-color: #000;
+                        // color: #ffffff;
+                        transform: scale(0.9);
+                    }
+                    .btnOptions {
+                        background-color: transparent;
+                        border: none;
+                        color: #ffffff;
+                        padding: 5px;
+                        border-radius: 8px;
+                        cursor: pointer;
+                        transition: ease-out 0.2s;
+                        font-size: 16px;
+                        font-weight: 500;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        float: right;
+                    }
+                    .btnOptions:hover {
+                        // background-color: #1f1f1f;
+                    }
+                    .btnOptions:active {
+                        color: #1f1f1f;
+                    }
+                }
+            }
+            .middle {
+                // Chỉ số (số bài viết, số người theo dõi, số người đang theo dõi)
+                .userNumeral {
+                    .articles {
+                    }
+                    .followers {
+                    }
+                    .following {
+                    }
+                }
+                // Mô tả
+                .userDescription {
+                    p {
+                    }
+                }
+            }
+            .bottom {
             }
         }
     }
