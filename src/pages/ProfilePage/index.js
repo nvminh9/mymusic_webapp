@@ -39,27 +39,71 @@ function ProfilePage() {
                         <div className="top">
                             <div className="userInfo">
                                 <span className="userName">kendricklamar</span>
-                                <button className="btnFollow">Theo dõi</button>
-                                <button className="btnOptions">
-                                    <IoEllipsisHorizontalSharp></IoEllipsisHorizontalSharp>
-                                </button>
+                                <div className="btnBox">
+                                    <button className="btnFollow">Theo dõi</button>
+                                    <button className="btnMessage">Nhắn tin</button>
+                                    <button className="btnOptions">
+                                        <IoEllipsisHorizontalSharp></IoEllipsisHorizontalSharp>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                         <div className="middle">
                             <div className="userNumeral">
                                 <span className="articles">
-                                    <b>6</b> bài viết
+                                    <span
+                                        style={{
+                                            fontWeight: '600',
+                                        }}
+                                    >
+                                        6
+                                    </span>{' '}
+                                    bài viết
                                 </span>
-                                <span className="followers">
-                                    <b>17,4 Tr</b> người theo dõi
+                                <span
+                                    className="followers"
+                                    onClick={() => {
+                                        alert('17,4 triệu người theo dõi');
+                                    }}
+                                >
+                                    <span
+                                        style={{
+                                            fontWeight: '600',
+                                        }}
+                                    >
+                                        17,4 Tr
+                                    </span>{' '}
+                                    người theo dõi
                                 </span>
-                                <span className="following">
-                                    Đang theo dõi <b>1</b> người dùng
+                                <span
+                                    className="following"
+                                    onClick={() => {
+                                        alert('Đang theo dõi 1 người dùng');
+                                    }}
+                                >
+                                    Đang theo dõi{' '}
+                                    <span
+                                        style={{
+                                            fontWeight: '600',
+                                        }}
+                                    >
+                                        1
+                                    </span>{' '}
+                                    người dùng
                                 </span>
                             </div>
                             <div className="userDescription">
                                 <p>
-                                    Kendrick Lamar <br /> @pglang <br /> my-gnx.com
+                                    Kendrick Lamar <br /> @pglang <br />{' '}
+                                    <a
+                                        href="https://my-gnx.com"
+                                        style={{
+                                            color: 'whitesmoke',
+                                        }}
+                                        target="_blank"
+                                    >
+                                        my-gnx.com
+                                    </a>
                                 </p>
                             </div>
                             <div className="bottom"></div>

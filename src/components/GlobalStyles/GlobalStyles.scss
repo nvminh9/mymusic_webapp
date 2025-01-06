@@ -1779,11 +1779,14 @@ body {
 
         // left
         .left {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 30%;
+
             .avatar {
                 display: flex;
                 align-items: center;
-                // height: 100%;
-                // width: 85px;
                 height: 130px;
                 width: 130px;
 
@@ -1802,18 +1805,29 @@ body {
 
         // right
         .right {
+            width: 65%;
+
             .top {
+                display: block;
+
                 // Thông tin (tên,...)
                 .userInfo {
                     width: 100%;
                     display: flex;
                     align-items: center;
                     justify-content: start;
+                    padding: 20px 0px;
 
                     .userName {
                         color: #ffffff;
                         font-size: 20px;
                         font-weight: 300;
+                        margin-right: 20px;
+                    }
+                    // Box chứa các button kế bên tên user
+                    .btnBox {
+                        display: flex;
+                        align-items: center;
                     }
                     .btnFollow {
                         border: none;
@@ -1831,9 +1845,29 @@ body {
                         background-color: #dfdfdf;
                     }
                     .btnFollow:active {
-                        background-color: #000;
+                        // background-color: #000;
                         // color: #ffffff;
-                        transform: scale(0.9);
+                        transform: scale(0.95);
+                    }
+                    .btnMessage {
+                        border: none;
+                        border-radius: 8px;
+                        padding: 8px 15px;
+                        font-size: 14px;
+                        font-weight: 500;
+                        background-color: #1f1f1f;
+                        color: #ffffff;
+                        cursor: pointer;
+                        transition: ease-out 0.2s;
+                        margin-right: 10px;
+                    }
+                    .btnMessage:hover {
+                        background-color: #2e2e2e;
+                    }
+                    .btnMessage:active {
+                        // background-color: #000;
+                        // color: #ffffff;
+                        transform: scale(0.95);
                     }
                     .btnOptions {
                         background-color: transparent;
@@ -1861,16 +1895,38 @@ body {
             .middle {
                 // Chỉ số (số bài viết, số người theo dõi, số người đang theo dõi)
                 .userNumeral {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    width: 100%;
+                    padding: 10px 0px;
+
                     .articles {
+                        color: #ffffff;
+                        font-size: 15.5px;
+                        font-weight: 300;
                     }
                     .followers {
+                        color: #ffffff;
+                        font-size: 15.5px;
+                        font-weight: 300;
+                        cursor: pointer;
                     }
                     .following {
+                        color: #ffffff;
+                        font-size: 15.5px;
+                        font-weight: 300;
+                        cursor: pointer;
                     }
                 }
                 // Mô tả
                 .userDescription {
                     p {
+                        color: #ffffff;
+                        font-size: 14px;
+                        font-weight: 300;
+                        margin: 0;
+                        padding: 20px 0px;
                     }
                 }
             }
@@ -2027,5 +2083,185 @@ body {
         }
     }
 
-    //
+    // CSS Profile Page
+    .tabSwitchProfile {
+        width: 100%;
+    }
+    .profilePage {
+        .top {
+            // changed
+            display: grid;
+
+            // left
+            .left {
+                // changed
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 100%;
+                padding: 20px 0px;
+
+                .avatar {
+                    display: flex;
+                    align-items: center;
+                    height: 130px;
+                    width: 130px;
+
+                    img {
+                        height: 100%;
+                        width: 100%;
+                        // border: 0.5px solid #1f1f1f;
+                        object-fit: cover;
+                        cursor: pointer;
+                        border-radius: 50%;
+                        outline: 1px solid rgba(243, 245, 247, 0.15);
+                        outline-offset: -1px;
+                    }
+                }
+            }
+
+            // right
+            .right {
+                // changed
+                // width: 65%;
+                width: 100%;
+
+                .top {
+                    display: block;
+
+                    // Thông tin (tên,...)
+                    .userInfo {
+                        width: 100%;
+                        display: grid;
+                        align-items: center;
+                        justify-content: center;
+                        padding: 0px;
+
+                        .userName {
+                            color: #ffffff;
+                            font-size: 20px;
+                            font-weight: 300;
+                            margin-right: 0px;
+                            text-align: center;
+                        }
+                        // Box chứa các button kế bên tên user
+                        .btnBox {
+                            display: flex;
+                            align-items: center;
+                            padding: 15px 0px;
+                        }
+                        .btnFollow {
+                            border: none;
+                            border-radius: 8px;
+                            padding: 8px 15px;
+                            font-size: 14px;
+                            font-weight: 500;
+                            background-color: #ffffff;
+                            color: #000;
+                            cursor: pointer;
+                            transition: ease-out 0.2s;
+                            margin-right: 10px;
+                        }
+                        .btnFollow:hover {
+                            background-color: #dfdfdf;
+                        }
+                        .btnFollow:active {
+                            // background-color: #000;
+                            // color: #ffffff;
+                            transform: scale(0.95);
+                        }
+                        .btnMessage {
+                            border: none;
+                            border-radius: 8px;
+                            padding: 8px 15px;
+                            font-size: 14px;
+                            font-weight: 500;
+                            background-color: #1f1f1f;
+                            color: #ffffff;
+                            cursor: pointer;
+                            transition: ease-out 0.2s;
+                            margin-right: 10px;
+                        }
+                        .btnMessage:hover {
+                            background-color: #2e2e2e;
+                        }
+                        .btnMessage:active {
+                            // background-color: #000;
+                            // color: #ffffff;
+                            transform: scale(0.95);
+                        }
+                        .btnOptions {
+                            background-color: transparent;
+                            border: none;
+                            color: #ffffff;
+                            padding: 5px;
+                            border-radius: 8px;
+                            cursor: pointer;
+                            transition: ease-out 0.2s;
+                            font-size: 16px;
+                            font-weight: 500;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            float: right;
+                        }
+                        .btnOptions:hover {
+                            // background-color: #1f1f1f;
+                        }
+                        .btnOptions:active {
+                            color: #1f1f1f;
+                        }
+                    }
+                }
+                .middle {
+                    width: 100%;
+
+                    // Chỉ số (số bài viết, số người theo dõi, số người đang theo dõi)
+                    .userNumeral {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        width: 100%;
+                        padding: 5px 0px;
+
+                        .articles {
+                            color: #ffffff;
+                            font-size: 14.5px;
+                            font-weight: 300;
+                            padding: 0px 5px;
+                            border-right: 0.5px solid #1f1f1f;
+                        }
+                        .followers {
+                            color: #ffffff;
+                            font-size: 14.5px;
+                            font-weight: 300;
+                            padding: 0px 5px;
+                            border-right: 0.5px solid #1f1f1f;
+                            cursor: pointer;
+                        }
+                        .following {
+                            color: #ffffff;
+                            font-size: 14.5px;
+                            font-weight: 300;
+                            padding: 0px 5px;
+                            cursor: pointer;
+                        }
+                    }
+                    // Mô tả
+                    .userDescription {
+                        p {
+                            color: #ffffff;
+                            font-size: 14px;
+                            font-weight: 300;
+                            margin: 0;
+                            padding: 15px 0px;
+                            text-align: center;
+                        }
+                    }
+                }
+                .bottom {
+                }
+            }
+        }
+    }
 }
