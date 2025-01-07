@@ -1,7 +1,7 @@
 import { Fragment, useEffect } from 'react';
 import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 import { VscChevronLeft } from 'react-icons/vsc';
-import { IoEllipsisHorizontalSharp } from 'react-icons/io5';
+import { IoEllipsisHorizontalSharp, IoMusicalNotesSharp, IoAppsSharp } from 'react-icons/io5';
 
 function ProfilePage() {
     // Chuyển Tab
@@ -12,6 +12,16 @@ function ProfilePage() {
     useEffect(() => {
         document.title = 'Profile | mymusic: Music from everyone';
     }, []);
+
+    // Handle Switch Tab Content
+    const handleBtnToArticle = () => {
+        document.getElementById('btnToArticleID').classList.add('actived');
+        document.getElementById('btnToMusicID').classList.remove('actived');
+    };
+    const handleBtnToMusic = () => {
+        document.getElementById('btnToMusicID').classList.add('actived');
+        document.getElementById('btnToArticleID').classList.remove('actived');
+    };
 
     return (
         <Fragment>
@@ -28,6 +38,7 @@ function ProfilePage() {
                 </div>
             </div>
             <div className="profilePage">
+                {/* Phần top của profile */}
                 <div className="top">
                     <div className="left">
                         {/* Avatar */}
@@ -36,7 +47,8 @@ function ProfilePage() {
                         </div>
                     </div>
                     <div className="right">
-                        <div className="top">
+                        <div className="topRight">
+                            {/* Thông tin (tên,...) */}
                             <div className="userInfo">
                                 <span className="userName">kendricklamar</span>
                                 <div className="btnBox">
@@ -48,7 +60,8 @@ function ProfilePage() {
                                 </div>
                             </div>
                         </div>
-                        <div className="middle">
+                        <div className="middleRight">
+                            {/* Chỉ số (số bài viết, người theo dõi, đang theo dõi,...) */}
                             <div className="userNumeral">
                                 <span className="articles">
                                     <span
@@ -106,9 +119,26 @@ function ProfilePage() {
                                     </a>
                                 </p>
                             </div>
-                            <div className="bottom"></div>
+                            <div className="bottomRight"></div>
                         </div>
                     </div>
+                </div>
+                {/* Phần middle của profile */}
+                <div className="middle">
+                    {/* Phần gợi ý người dùng liên quan (chỉ hiện lên khi follow người dùng,...) */}
+                    <div className="userSuggest"></div>
+                </div>
+                {/* Phần bottom của profile */}
+                <div className="bottom">
+                    <div className="switchBar">
+                        <Link id="btnToArticleID" className="btnToArticle" onClick={handleBtnToArticle}>
+                            <IoAppsSharp style={{ marginRight: '5px' }}></IoAppsSharp> BÀI VIẾT
+                        </Link>
+                        <Link id="btnToMusicID" className="btnToMusic" onClick={handleBtnToMusic}>
+                            <IoMusicalNotesSharp style={{ marginRight: '5px' }}></IoMusicalNotesSharp> ÂM NHẠC
+                        </Link>
+                    </div>
+                    <div className="main"></div>
                 </div>
             </div>
         </Fragment>

@@ -1774,6 +1774,10 @@ body {
     }
 }
 .profilePage {
+    width: 100%;
+    height: 100%;
+
+    // Phần top
     .top {
         display: flex;
 
@@ -1807,7 +1811,7 @@ body {
         .right {
             width: 65%;
 
-            .top {
+            .topRight {
                 display: block;
 
                 // Thông tin (tên,...)
@@ -1892,7 +1896,7 @@ body {
                     }
                 }
             }
-            .middle {
+            .middleRight {
                 // Chỉ số (số bài viết, số người theo dõi, số người đang theo dõi)
                 .userNumeral {
                     display: flex;
@@ -1930,8 +1934,71 @@ body {
                     }
                 }
             }
-            .bottom {
+            .bottomRight {
             }
+        }
+    }
+    // Phần middle
+    .middle {
+        .userSuggest {
+        }
+    }
+    // Phần bottom
+    .bottom {
+        width: 100%;
+        height: 200px;
+        margin-top: 10px;
+        // border-top: 0.5px solid #1f1f1f;
+
+        // Thanh chuyển tab nội dungs
+        .switchBar {
+            display: flex;
+            align-items: center;
+            justify-content: start;
+            border-bottom: 0.5px solid #1f1f1f;
+
+            // Nút chuyển qua tab coi bài viết
+            .btnToArticle {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                text-decoration: none;
+                color: #ffffff;
+                padding: 15px 20px;
+                transition: ease-out 0.2s;
+                width: 50%;
+                border-bottom: 2px solid transparent;
+            }
+            .btnToArticle:hover {
+                background-color: #1f1f1f;
+            }
+            .btnToArticle:active {
+                background-color: #000;
+            }
+            // Nút chuyển qua tab coi âm nhạc
+            .btnToMusic {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                text-decoration: none;
+                color: #ffffff;
+                padding: 15px 20px;
+                transition: ease-out 0.2s;
+                width: 50%;
+                border-bottom: 2px solid transparent;
+            }
+            .btnToMusic:hover {
+                background-color: #1f1f1f;
+            }
+            .btnToMusic:active {
+                background-color: #000;
+            }
+            // Tab Actived
+            .actived {
+                border-bottom: 2px solid #ffffff;
+            }
+        }
+        .main {
         }
     }
 }
