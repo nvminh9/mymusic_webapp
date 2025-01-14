@@ -1,10 +1,10 @@
-import { lazy } from 'react';
-import { SignInSignUpLayout } from '~/components/Layout';
 // Import Component
 import HomePage from '~/pages/HomePage';
 import ProfilePage from '~/pages/ProfilePage';
 import PublicPage from '~/pages/PublicPage';
 import FeedPage from '~/pages/FeedPage';
+import ListArticle from '~/pages/components/ListArticle';
+import ListMusicInProfile from '~/pages/components/ListMusicInProfile';
 // hết import Component
 
 // Public Routes
@@ -15,7 +15,14 @@ const publicRoutes = [
         children: [
             { path: '', component: HomePage },
             { path: 'feeds', component: FeedPage },
-            { path: 'profile/*', component: ProfilePage },
+            {
+                path: 'profile/:user',
+                component: ProfilePage,
+                children: [
+                    { path: '', component: ListArticle },
+                    { path: 'musics', component: ListMusicInProfile },
+                ],
+            },
         ],
     },
 ];

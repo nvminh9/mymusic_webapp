@@ -88,7 +88,17 @@ function LeftContainer() {
         <div className="col l-3 m-0 c-0 leftContainer">
             <div className="top">
                 <div className="logo">
-                    <img src={logo} />
+                    <Link
+                        to={``}
+                        style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            height: 'fit-content',
+                        }}
+                    >
+                        <img src={logo} />
+                    </Link>
                 </div>
                 <div className="search">
                     <button className="btnOpenSearch">

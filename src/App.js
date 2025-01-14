@@ -40,7 +40,21 @@ function App() {
                             {route.children &&
                                 route.children.map((childRoute, index) => {
                                     const ChildPage = childRoute.component;
-                                    return <Route key={index} path={childRoute.path} element={<ChildPage />} />;
+                                    return (
+                                        <Route key={index} path={childRoute.path} element={<ChildPage />}>
+                                            {childRoute.children &&
+                                                childRoute.children.map((childChildRoute, index) => {
+                                                    const ChildComponent = childChildRoute.component;
+                                                    return (
+                                                        <Route
+                                                            key={index}
+                                                            path={childChildRoute.path}
+                                                            element={<ChildComponent />}
+                                                        ></Route>
+                                                    );
+                                                })}
+                                        </Route>
+                                    );
                                 })}
                         </Route>
                     );

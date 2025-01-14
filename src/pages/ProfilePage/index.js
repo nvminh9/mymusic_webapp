@@ -15,12 +15,16 @@ function ProfilePage() {
 
     // Handle Switch Tab Content
     const handleBtnToArticle = () => {
-        document.getElementById('btnToArticleID').classList.add('actived');
-        document.getElementById('btnToMusicID').classList.remove('actived');
+        console.log('Loaded list article');
+        console.log(location.pathname);
+        // document.getElementById('btnToArticleID').classList.add('actived');
+        // document.getElementById('btnToMusicID').classList.remove('actived');
     };
     const handleBtnToMusic = () => {
-        document.getElementById('btnToMusicID').classList.add('actived');
-        document.getElementById('btnToArticleID').classList.remove('actived');
+        console.log('Loaded list music in profile');
+        console.log(location.pathname);
+        // document.getElementById('btnToMusicID').classList.add('actived');
+        // document.getElementById('btnToArticleID').classList.remove('actived');
     };
 
     return (
@@ -130,15 +134,36 @@ function ProfilePage() {
                 </div>
                 {/* Phần bottom của profile */}
                 <div className="bottom">
+                    {/* Thanh switch bar đổi nội dung hiển thị */}
                     <div className="switchBar">
-                        <Link id="btnToArticleID" className="btnToArticle" onClick={handleBtnToArticle}>
+                        <Link
+                            to={``}
+                            id="btnToArticleID"
+                            className={[
+                                'btnToArticle',
+                                location.pathname === '/profile/kendricklamar' ? 'actived' : '',
+                            ].join(' ')}
+                            onClick={handleBtnToArticle}
+                        >
                             <IoAppsSharp style={{ marginRight: '5px' }}></IoAppsSharp> BÀI VIẾT
                         </Link>
-                        <Link id="btnToMusicID" className="btnToMusic" onClick={handleBtnToMusic}>
+                        <Link
+                            to={`musics`}
+                            id="btnToMusicID"
+                            // Tạm test với pathname là /profile/kendricklamar/musics sau này sẽ thay kendricklamar bằng userName từ api
+                            className={[
+                                'btnToMusic',
+                                location.pathname === '/profile/kendricklamar/musics' ? 'actived' : '',
+                            ].join(' ')}
+                            onClick={handleBtnToMusic}
+                        >
                             <IoMusicalNotesSharp style={{ marginRight: '5px' }}></IoMusicalNotesSharp> ÂM NHẠC
                         </Link>
                     </div>
-                    <div className="main"></div>
+                    {/* Nội dung */}
+                    <div className="main">
+                        <Outlet />
+                    </div>
                 </div>
             </div>
         </Fragment>
