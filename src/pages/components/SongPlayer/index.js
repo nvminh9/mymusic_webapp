@@ -28,6 +28,7 @@ function SongPlayer() {
     var [isPlay, setIsPlay] = useState();
     const [isSongLiked, setIsSongLiked] = useState();
     var [isSongMuted, setIsSongMuted] = useState();
+    const [isSongPlayerMaximized, setIsSongPlayerMaximized] = useState(false);
 
     // Ref (useRef)
     const audioHLSRef = useRef(null);
@@ -192,7 +193,25 @@ function SongPlayer() {
         };
     }, []);
 
-    // Function for Controls Bar
+    // Function for Top Controls Bar
+    // Phóng to / thu nhỏ trình phát nhạc
+    const handleMaximizeMinimizeSongPlayer = () => {
+        let middleContainer = document.getElementById('middleContainerID');
+        let rightContainerID = document.getElementById('rightContainerID');
+        if (isSongPlayerMaximized) {
+            rightContainerID.classList = 'col l-3 m-0 c-0 rightContainer';
+            middleContainer.classList = 'col l-6 m-12 c-12 middleContainer';
+            setIsSongPlayerMaximized(false);
+        } else {
+            rightContainerID.classList = 'col l-12 m-0 c-0 rightContainer';
+            middleContainer.classList = 'col l-0 m-12 c-12 middleContainer';
+            setIsSongPlayerMaximized(true);
+        }
+    };
+    // Bật / tắt chế độ hình trong hình
+    const handlePicInPicSongPlayer = () => {};
+
+    // Function for Song Controls Bar
     // Nút phát/dừng nhạc
     const handlePlayPauseSong = () => {
         if (isPlay) {
@@ -243,11 +262,24 @@ function SongPlayer() {
                 <div className="top">
                     <span className="title">Song Player</span>
                     <div className="options">
-                        <button className="btnFullSreen">
-                            <CircumIcon name="maximize_1" />
+                        {/* Nút phóng to / thu nhỏ trình phát nhạc */}
+                        <button className="btnFullSreen tooltip" onClick={handleMaximizeMinimizeSongPlayer}>
+                            {isSongPlayerMaximized ? (
+                                <>
+                                    <CircumIcon name="minimize_1" />
+                                    <span class="tooltiptext">Thu nhỏ</span>
+                                </>
+                            ) : (
+                                <>
+                                    <CircumIcon name="maximize_1" />
+                                    <span class="tooltiptext">Phóng to</span>
+                                </>
+                            )}
                         </button>
-                        <button className="btnPicInPic">
+                        {/* Nút chế độ hình trong hình */}
+                        <button className="btnPicInPic tooltip">
                             <CircumIcon name="minimize_2" />
+                            <span class="tooltiptext">Trình phát thu nhỏ</span>
                         </button>
                     </div>
                 </div>

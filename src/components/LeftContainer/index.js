@@ -85,7 +85,7 @@ function LeftContainer() {
     };
 
     return (
-        <div className="col l-3 m-0 c-0 leftContainer">
+        <div id="leftContainerID" className="col l-3 m-0 c-0 leftContainer">
             <div className="top">
                 <div className="logo">
                     <Link

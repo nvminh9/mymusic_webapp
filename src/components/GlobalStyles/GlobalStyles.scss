@@ -812,12 +812,14 @@ body {
     width: 100%;
     right: 0px;
     z-index: 2;
+    transition: ease-out 0.2s;
 
     // Song Player
     .songPlayer {
         position: relative;
         width: 100%;
         height: 100%;
+        z-index: 100;
 
         .top {
             position: absolute;
@@ -880,6 +882,34 @@ body {
                     color: #ffffff;
                     transition: ease-in 0.2s;
                 }
+                // Tooltip
+                .tooltip {
+                    position: relative;
+                    display: inline-block;
+                    // border-bottom: 1px dotted black;
+                }
+                .tooltip .tooltiptext {
+                    visibility: hidden;
+                    width: 80px;
+                    background-color: #000;
+                    color: #fff;
+                    text-align: center;
+                    border-radius: 6px;
+                    padding: 5px 0;
+                    transition: ease-out 0.1s;
+
+                    /* Position the tooltip */
+                    position: absolute;
+                    z-index: 99;
+                    top: 100%;
+                    left: 50%;
+                    margin-top: 5px;
+                    margin-left: -40px; /* Use half of the width (80/2 = 40), to center the tooltip */
+                }
+                .tooltip:hover .tooltiptext {
+                    visibility: visible;
+                    transition: ease-out 0.1s;
+                }
             }
         }
 
@@ -924,6 +954,7 @@ body {
                 justify-content: center;
                 width: 100%;
                 padding: 10px 0px;
+                padding-top: 40px;
 
                 .name {
                     width: 300px;
