@@ -46,6 +46,7 @@ function SongPlayer() {
         slidesToScroll: 1,
         initialSlide: 0,
         accessibility: false,
+        // adaptiveHeight: true,
         responsive: [
             {
                 breakpoint: 1024,

@@ -6,6 +6,8 @@ import FeedPage from '~/pages/FeedPage';
 import ListArticle from '~/pages/components/ListArticle';
 import ListMusicInProfile from '~/pages/components/ListMusicInProfile';
 import ArticleDetail from '~/pages/ArticleDetail';
+import PlaylistDetail from '~/pages/PlaylistDetail';
+import SongDetail from '~/pages/SongDetail';
 import { compile } from 'sass';
 // hết import Component
 
@@ -28,6 +30,14 @@ const publicRoutes = [
             {
                 path: 'article/:articleID',
                 component: ArticleDetail,
+            },
+            {
+                path: 'playlist/:playlistID',
+                component: PlaylistDetail,
+            },
+            {
+                path: 'song/:songID',
+                component: SongDetail,
             },
         ],
     },

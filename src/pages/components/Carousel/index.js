@@ -8,6 +8,7 @@ import aptBanner from '~/assets/images/643564536.jpg';
 import { VscChevronLeft, VscChevronRight } from 'react-icons/vsc';
 import { useRef } from 'react';
 import { Fragment } from 'react';
+import { Link } from 'react-router-dom';
 
 function Carousel({ slides }) {
     // config carousel (React Slick)
@@ -72,68 +73,73 @@ function Carousel({ slides }) {
                 >
                     {slides.map((slide, index) => (
                         <Fragment key={index}>
-                            <div
-                                className="carouselItem"
-                                style={{
-                                    display: 'grid',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                }}
+                            <Link
+                                to={slide.type === 'playlist' ? `playlist/playlistID` : `song/songID`}
+                                style={{ textDecoration: 'none' }}
                             >
-                                <img
-                                    src={slide.img}
-                                    className="slide-image"
-                                    style={{
-                                        height: '150px',
-                                        width: '150px',
-                                        objectFit: 'cover',
-                                        objectPosition: 'center',
-                                        // border: '.5px solid rgba(18, 18, 18, 0.8)',
-                                    }}
-                                />
                                 <div
-                                    className="info"
+                                    className="carouselItem"
                                     style={{
                                         display: 'grid',
                                         alignItems: 'center',
+                                        justifyContent: 'center',
                                     }}
                                 >
-                                    <span
-                                        className="info1"
+                                    <img
+                                        src={slide.img}
+                                        className="slide-image"
                                         style={{
-                                            color: '#ffffff',
-                                            paddingBottom: '1px',
-                                            paddingTop: '5px',
-                                            fontSize: '14px',
-                                            fontWeight: '400',
-                                            width: '115px',
-                                            display: '-webkit-box',
-                                            WebkitBoxOrient: 'vertical',
-                                            WebkitLineClamp: '1',
-                                            overflow: 'hidden',
-                                            textOverflow: 'ellipsis',
+                                            height: '150px',
+                                            width: '150px',
+                                            objectFit: 'cover',
+                                            objectPosition: 'center',
+                                            // border: '.5px solid rgba(18, 18, 18, 0.8)',
+                                        }}
+                                    />
+                                    <div
+                                        className="info"
+                                        style={{
+                                            display: 'grid',
+                                            alignItems: 'center',
                                         }}
                                     >
-                                        {slide.info1}
-                                    </span>
-                                    <span
-                                        className="info2"
-                                        style={{
-                                            color: 'rgba(119, 119, 119, 0.6666666667)',
-                                            fontSize: '14px',
-                                            fontWeight: '300',
-                                            width: '115px',
-                                            display: '-webkit-box',
-                                            WebkitBoxOrient: 'vertical',
-                                            WebkitLineClamp: '1',
-                                            overflow: 'hidden',
-                                            textOverflow: 'ellipsis',
-                                        }}
-                                    >
-                                        {slide.info2}
-                                    </span>
+                                        <span
+                                            className="info1"
+                                            style={{
+                                                color: '#ffffff',
+                                                paddingBottom: '1px',
+                                                paddingTop: '5px',
+                                                fontSize: '14px',
+                                                fontWeight: '400',
+                                                width: '115px',
+                                                display: '-webkit-box',
+                                                WebkitBoxOrient: 'vertical',
+                                                WebkitLineClamp: '1',
+                                                overflow: 'hidden',
+                                                textOverflow: 'ellipsis',
+                                            }}
+                                        >
+                                            {slide.info1}
+                                        </span>
+                                        <span
+                                            className="info2"
+                                            style={{
+                                                color: 'rgba(119, 119, 119, 0.6666666667)',
+                                                fontSize: '14px',
+                                                fontWeight: '300',
+                                                width: '115px',
+                                                display: '-webkit-box',
+                                                WebkitBoxOrient: 'vertical',
+                                                WebkitLineClamp: '1',
+                                                overflow: 'hidden',
+                                                textOverflow: 'ellipsis',
+                                            }}
+                                        >
+                                            {slide.info2}
+                                        </span>
+                                    </div>
                                 </div>
-                            </div>
+                            </Link>
                         </Fragment>
                     ))}
                 </Slider>
