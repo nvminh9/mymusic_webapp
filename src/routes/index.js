@@ -8,11 +8,25 @@ import ListMusicInProfile from '~/pages/components/ListMusicInProfile';
 import ArticleDetail from '~/pages/ArticleDetail';
 import PlaylistDetail from '~/pages/PlaylistDetail';
 import SongDetail from '~/pages/SongDetail';
+import SignInPage from '~/pages/SignInPage';
+// Import Layout
+import { SignInSignUpLayout } from '~/components/Layout';
 import { compile } from 'sass';
+import SignUpPage from '~/pages/SignUpPage';
 // hết import Component
 
 // Public Routes
 const publicRoutes = [
+    {
+        path: 'signup',
+        component: SignUpPage,
+        layout: SignInSignUpLayout,
+    },
+    {
+        path: 'signin',
+        component: SignInPage,
+        layout: SignInSignUpLayout,
+    },
     {
         path: '',
         component: PublicPage,
