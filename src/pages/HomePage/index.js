@@ -6,6 +6,7 @@ import 'slick-carousel/slick/slick-theme.css';
 import { VscChevronLeft, VscChevronRight } from 'react-icons/vsc';
 import { Outlet } from 'react-router-dom';
 import { Fragment } from 'react';
+import axios from '../../utils/axios.customize';
 // import Component
 import Carousel from '../components/Carousel';
 // hết import Component
@@ -168,6 +169,15 @@ function HomePage() {
     // Đổi title trang
     useEffect(() => {
         document.title = 'Home | mymusic: Music from everyone';
+    }, []);
+
+    // Test Call API
+    useEffect(() => {
+        const testCallAPI = async () => {
+            const res = await axios.get(`/news`);
+            console.log('>>> Check res: ', res.data);
+        };
+        testCallAPI();
     }, []);
 
     return (

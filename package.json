@@ -23,6 +23,7 @@
         "@klarr-agency/circum-icons-react": "^2.0.2",
         "babel-plugin-module-resolver": "^5.0.2",
         "customize-cra": "^1.0.0",
+        "dotenv-webpack": "^8.1.0",
         "react-app-rewired": "^2.2.1",
         "sass": "^1.80.6"
     },
