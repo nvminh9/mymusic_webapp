@@ -175,7 +175,7 @@ function HomePage() {
     useEffect(() => {
         const testCallAPI = async () => {
             const res = await axios.get(`/news`);
-            console.log('>>> Check res: ', res.data);
+            console.log('>>> Check res: ', res);
         };
         testCallAPI();
     }, []);
