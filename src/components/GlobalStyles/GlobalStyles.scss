@@ -1337,6 +1337,7 @@ body {
         display: grid;
         align-items: center;
         justify-content: center;
+        z-index: 2;
 
         .title {
             display: block;
@@ -1345,6 +1346,17 @@ body {
             font-size: 45px;
             font-weight: 700;
             margin: 35px 0px;
+        }
+
+        // Error Message
+        .errorMessage {
+            color: #f3727f;
+            min-inline-size: 0px;
+            overflow-wrap: break-word;
+            width: 350px;
+            font-size: 14px;
+            font-weight: normal;
+            margin: 0px 0px;
         }
 
         // Email
@@ -1389,6 +1401,73 @@ body {
             transform: scale(0.98);
         }
 
+        // Other Registation Method
+        .otherRegisMethod {
+            display: grid;
+
+            .title {
+                width: 100%;
+                position: relative;
+                display: flex;
+                -webkit-box-pack: center;
+                justify-content: center;
+                margin: 20px 0px;
+
+                span {
+                    padding: 0px 12px;
+                    position: relative;
+                    display: inline-block;
+                    background-color: #121212;
+                    font-size: 14px;
+                    font-weight: 600;
+                }
+            }
+            .title::before {
+                content: ' ';
+                height: 0.5px;
+                background-color: var(--essential-subdued, #818181);
+                display: block;
+                position: absolute;
+                top: 50%;
+                left: 0px;
+                right: 0px;
+            }
+
+            .regisMethodGoogle {
+                display: flex;
+                align-items: center;
+                font-family: 'Funnel Sans', sans-serif;
+                margin: 5px 0px;
+                background-color: #121212;
+                border: 2px solid #1f1f1f;
+                border-radius: 2px;
+                padding: 15px 10px;
+                cursor: pointer;
+                transition: ease-out 0.2s;
+                text-decoration: none;
+
+                .logoGoogle {
+                    color: white;
+                    font-size: 20px;
+                }
+                span {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 15px;
+                    font-weight: 600;
+                    color: white;
+                    width: 100%;
+                }
+            }
+            .regisMethodGoogle:hover {
+                border: 2px solid white;
+            }
+            .regisMethodGoogle:active {
+                transform: scale(0.98);
+            }
+        }
+
         .toSignIn {
             margin: 5px 0px;
             color: white;
@@ -1403,6 +1482,7 @@ body {
         width: 100%;
         opacity: 1%;
         top: 0;
+        z-index: 0;
     }
 }
 
