@@ -189,13 +189,108 @@ function SignUpPage() {
                                 })}
                             />
                             <p className="errorMessage">{errors.userName?.message}</p>
+                            {/* Ngày sinh */}
+                            <label className="labelBirth" htmlFor="birth">
+                                Ngày sinh
+                            </label>
+                            <input
+                                className="inputBirth"
+                                id="birth"
+                                name="birth"
+                                type="date"
+                                placeholder="Nhập ngày sinh của bạn"
+                                {...register('birth', {
+                                    required: `Vui lòng nhập ngày sinh`,
+                                    // maxLength: {
+                                    //     value: 500,
+                                    //     message: `Tên người dùng không được vượt quá 500 ký tự`,
+                                    // },
+                                })}
+                            />
+                            <p className="errorMessage">{errors.birth?.message}</p>
+                            {/* Giới tính */}
+                            <label className="labelGender" htmlFor="gender">
+                                Giới tính
+                            </label>
+                            <div className="" style={{ display: 'flex', alignItems: 'center' }}>
+                                {/* Nam */}
+                                <input
+                                    className="inputGender"
+                                    id="genderMale"
+                                    name="gender"
+                                    type="radio"
+                                    value="male"
+                                    hidden
+                                    {...register('gender', {
+                                        required: `Chọn giới tính của bạn`,
+                                    })}
+                                />
+                                <label
+                                    className="labelGenderMale"
+                                    htmlFor="genderMale"
+                                    style={
+                                        formSignUp.getValues('gender') === 'male'
+                                            ? { backgroundColor: 'white', color: '#000' }
+                                            : {}
+                                    }
+                                >
+                                    Nam
+                                </label>
+                                {/* Nữ */}
+                                <input
+                                    className="inputGender"
+                                    id="genderFemale"
+                                    name="gender"
+                                    type="radio"
+                                    value="female"
+                                    hidden
+                                    {...register('gender', {
+                                        required: `Chọn giới tính của bạn`,
+                                    })}
+                                />
+                                <label
+                                    className="labelGenderFemale"
+                                    htmlFor="genderFemale"
+                                    style={
+                                        formSignUp.getValues('gender') === 'female'
+                                            ? { backgroundColor: 'white', color: '#000' }
+                                            : {}
+                                    }
+                                >
+                                    Nữ
+                                </label>
+                                {/* Giới tính khác */}
+                                <input
+                                    className="inputGender"
+                                    id="genderOther"
+                                    name="gender"
+                                    type="radio"
+                                    value="other"
+                                    hidden
+                                    {...register('gender', {
+                                        required: `Chọn giới tính của bạn`,
+                                    })}
+                                />
+                                <label
+                                    className="labelGenderOther"
+                                    htmlFor="genderOther"
+                                    style={
+                                        formSignUp.getValues('gender') === 'other'
+                                            ? { backgroundColor: 'white', color: '#000' }
+                                            : {}
+                                    }
+                                >
+                                    Khác
+                                </label>
+                            </div>
+                            <p className="errorMessage">{errors.gender?.message}</p>
                         </>
                     )}
                     <button className="btnNextStep" type="submit" id="btnNextStepID">
                         {formStep === 2 ? 'Đăng ký' : 'Tiếp theo'}
                     </button>
                     {/* Check Data */}
-                    {/* <pre style={{ color: 'white' }}>{JSON.stringify(watch(), null, 2)}</pre> */}
+                    {/* <pre style={{ color: 'red' }}>{JSON.stringify(watch(), null, 2)}</pre> */}
                     {/* Other Sign Up Method */}
                     {formStep === 0 && (
                         <>

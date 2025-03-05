@@ -1543,6 +1543,72 @@ body {
             transform: scale(0.98);
         }
 
+        // Birth
+        .labelBirth {
+            color: white;
+            font-size: 15px;
+            font-weight: 600;
+            margin: 5px 0px;
+        }
+        .inputBirth {
+            font-family: 'Funnel Sans', sans-serif;
+            padding: 15px 10px;
+            margin: 5px 0px;
+            width: 350px;
+            background-color: #121212;
+            border: 2px solid #1f1f1f;
+            border-radius: 2px;
+            transition: ease-out 0.2s;
+            color: white;
+        }
+        .inputBirth:hover {
+            border: 2px solid whitesmoke;
+        }
+
+        // Gender
+        .labelGender {
+            color: white;
+            font-size: 15px;
+            font-weight: 600;
+            margin: 5px 0px;
+        }
+        .inputGender {
+            font-family: 'Funnel Sans', sans-serif;
+            padding: 15px 10px;
+            margin: 5px 0px;
+            width: 350px;
+            background-color: #121212;
+            border: 2px solid #1f1f1f;
+            border-radius: 2px;
+            transition: ease-out 0.2s;
+            color: white;
+        }
+        .inputGender:hover {
+            border: 2px solid whitesmoke;
+        }
+        .labelGenderMale,
+        .labelGenderFemale,
+        .labelGenderOther {
+            background-color: #121212;
+            border: 2px solid #1f1f1f;
+            border-radius: 2px;
+            transition: ease-out 0.2s;
+            color: white;
+            font-family: 'Funnel Sans', sans-serif;
+            font-size: 13px;
+            padding: 15px 10px;
+            width: 34%;
+            margin: 5px 0px;
+            margin-right: 5px;
+            text-align: center;
+            cursor: pointer;
+        }
+        .labelGenderMale:hover,
+        .labelGenderFemale:hover,
+        .labelGenderOther:hover {
+            border: 2px solid whitesmoke;
+        }
+
         // Other Registation Method
         .otherRegisMethod {
             display: grid;
