@@ -3,21 +3,23 @@ import { IoLogoGoogle, IoChevronBackSharp, IoEyeOffOutline, IoEyeOutline } from 
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
+import { signUpApi } from '~/utils/api';
+import { useNavigate } from 'react-router-dom';
 
 function SignUpPage() {
     // State (useState)
     const [formStep, setFormStep] = useState(0); // Mỗi step tương ứng với một thành phần khác nhau trong form
     const [isShowPassword, setIsShowPassword] = useState(false); // Hiển thị mật khẩu
 
+    // React Hook Form (Form Sign Up)
     const formSignUp = useForm();
     const { register, handleSubmit, formState, watch } = formSignUp;
     const { errors } = formState;
 
-    // Handle Button Next Step
-    const handleBtnNextStep = (data) => {
-        console.log('Button Next Step clicked');
-    };
+    // Navigate
+    const navigate = useNavigate();
 
+    // --- HANDLE FUNCTION ---
     // Handle Button Show Password
     const handleBtnShowPassword = () => {
         var inputPassword = document.getElementById('password');
@@ -29,12 +31,23 @@ function SignUpPage() {
             inputPassword.type = 'password';
         }
     };
-
     // Handle Submit Form Sign Up
-    const onSubmit = (data) => {
+    const onSubmit = async (data) => {
         console.log('Form submitted', data);
         // Đến bước tiếp theo
         setFormStep(formStep + 1);
+        // Nếu là bước cuối thì thực hiện call API sign up
+        if (formStep === 2) {
+            console.log('Call API Sign Up');
+            const { name, userName, gender, birth, email, password } = data;
+            const res = await signUpApi(name, userName, gender, birth, email, password); // Call API Sign Up
+            if (res) {
+                console.log('API Sign Up Response:', res);
+                navigate('/signin'); // Chuyển hướng đến trang đăng nhập
+            } else {
+                console.log('API Sign Up Failed');
+            }
+        }
     };
 
     return (
@@ -290,7 +303,9 @@ function SignUpPage() {
                         {formStep === 2 ? 'Đăng ký' : 'Tiếp theo'}
                     </button>
                     {/* Check Data */}
-                    {/* <pre style={{ color: 'red' }}>{JSON.stringify(watch(), null, 2)}</pre> */}
+                    <pre style={{ color: 'red' }} hidden>
+                        {JSON.stringify(watch(), null, 2)}
+                    </pre>
                     {/* Other Sign Up Method */}
                     {formStep === 0 && (
                         <>
