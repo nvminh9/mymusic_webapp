@@ -110,7 +110,7 @@ function SongPlayer() {
     // const videoSrc = `https://ik.imagekit.io/d7q5hnktr/timanhghen.mp4?updatedAt=1734602507871`;
     // const videoHLSRef = useRef(null);
     // var audioHLSFile = `https://mymusic-api-1n5t.onrender.com/music/lutherAudio_master.m3u8`;
-    var audioHLSFile = `http://localhost:3700/music/swimmingpool_master.m3u8`;
+    var audioHLSFile = `http://localhost:3700/v1/api/music/swimmingpool_master.m3u8`;
     useEffect(() => {
         const hls = new Hls();
         if (Hls.isSupported()) {

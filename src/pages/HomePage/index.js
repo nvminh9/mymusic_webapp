@@ -171,15 +171,6 @@ function HomePage() {
         document.title = 'Home | mymusic: Music from everyone';
     }, []);
 
-    // Test Call API
-    useEffect(() => {
-        const testCallAPI = async () => {
-            const res = await axios.get(`/news`);
-            console.log('>>> Check res: ', res);
-        };
-        testCallAPI();
-    }, []);
-
     return (
         <div className="homePage">
             {/* Phần carousel news */}
