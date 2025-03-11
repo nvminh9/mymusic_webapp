@@ -165,32 +165,32 @@ function SongPlayer() {
     // Config các Keyboard Event
     useEffect(() => {
         document.body.onkeyup = function (e) {
-            if (e.key == ' ' || e.code == 'Space' || e.keyCode == 32) {
-                if (isPlay) {
-                    audioHLSRef.current.pause();
-                    setIsPlay(false);
-                    isPlay = false;
-                    return;
-                } else {
-                    audioHLSRef.current.play();
-                    setIsPlay(true);
-                    isPlay = true;
-                    return;
-                }
-            }
-            if (e.key == 'm' || e.code == 'KeyM' || e.keyCode == 77) {
-                if (isSongMuted) {
-                    audioHLSRef.current.muted = false;
-                    setIsSongMuted(false);
-                    isSongMuted = false;
-                    return;
-                } else {
-                    audioHLSRef.current.muted = true;
-                    setIsSongMuted(true);
-                    isSongMuted = true;
-                    return;
-                }
-            }
+            // if (e.key == ' ' || e.code == 'Space' || e.keyCode == 32) {
+            //     if (isPlay) {
+            //         audioHLSRef.current.pause();
+            //         setIsPlay(false);
+            //         isPlay = false;
+            //         return;
+            //     } else {
+            //         audioHLSRef.current.play();
+            //         setIsPlay(true);
+            //         isPlay = true;
+            //         return;
+            //     }
+            // }
+            // if (e.key == 'm' || e.code == 'KeyM' || e.keyCode == 77) {
+            //     if (isSongMuted) {
+            //         audioHLSRef.current.muted = false;
+            //         setIsSongMuted(false);
+            //         isSongMuted = false;
+            //         return;
+            //     } else {
+            //         audioHLSRef.current.muted = true;
+            //         setIsSongMuted(true);
+            //         isSongMuted = true;
+            //         return;
+            //     }
+            // }
         };
     }, []);
 

@@ -24,4 +24,19 @@ const signInApi = (email, password) => {
     return axios.post(URL_API, data);
 };
 
-export { signUpApi, signInApi };
+// API Lấy thông tin người dùng (theo email)
+const getUserInfoApi = (email) => {
+    const URL_API = '/v1/api/user/';
+    const data = {
+        email,
+    };
+    return axios.post(URL_API, data);
+};
+
+// API Lấy thông tin người dùng đang đăng nhập (theo token)
+const getAuthUserInfoApi = () => {
+    const URL_API = '/v1/api/auth/';
+    return axios.get(URL_API);
+};
+
+export { signUpApi, signInApi, getAuthUserInfoApi, getUserInfoApi };

@@ -1,5 +1,5 @@
 import logo from '~/assets/images/logoWhiteTransparent.png';
-import { IoLogoGoogle, IoChevronBackSharp, IoEyeOffOutline, IoEyeOutline } from 'react-icons/io5';
+import { IoLogoGoogle, IoChevronBackSharp, IoEyeOffOutline, IoEyeOutline, IoAlertCircleOutline } from 'react-icons/io5';
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 function SignInPage() {
     // State (useState)
     const [isShowPassword, setIsShowPassword] = useState(false); // Hiển thị mật khẩu
+    const [onSubmitErrorMessage, setOnSubmitErrorMessage] = useState(''); // Lỗi khi submit (nếu có)
 
     // React Hook Form (Form Sign In)
     const formSignUp = useForm();
@@ -38,24 +39,36 @@ function SignInPage() {
         const res = await signInApi(email, password);
         // Kiểm tra response
         if (res && res.status === 200 && res.message === 'Đăng nhập thành công') {
+            setOnSubmitErrorMessage('');
             console.log('Đăng nhập thành công');
             // Lưu token vào localStorage
             localStorage.setItem('actk', res.data.accessToken);
+            localStorage.setItem('userEmail', res.data.email); // lát xóa
             // Chuyển hướng đến trang chủ
             navigate('/');
         } else {
-            console.log('>>> Đăng nhập thất bại');
-            console.log(res?.message ?? 'Lỗi đăng nhập thất bại');
+            setOnSubmitErrorMessage(res?.message ?? 'Lỗi đăng nhập thất bại');
+            // console.log('>>> Đăng nhập thất bại');
+            // console.log(res?.message ?? 'Lỗi đăng nhập thất bại');
         }
     };
 
     return (
         <>
             <div className="signInContainer">
-                <img className="logo" src={logo} alt="Logo mymusic" draggable="false" />
+                {/* <img className="logo" src={logo} alt="Logo mymusic" draggable="false" /> */}
                 <form className="signInForm" onSubmit={handleSubmit(onSubmit)} method="POST" noValidate>
                     <span className="title">Đăng nhập</span>
                     <>
+                        {onSubmitErrorMessage !== '' ? (
+                            <div className="onSubmitErrorMessage">
+                                <span>
+                                    <IoAlertCircleOutline style={{ marginRight: '5px' }} /> {onSubmitErrorMessage}
+                                </span>
+                            </div>
+                        ) : (
+                            <></>
+                        )}
                         {/* Email */}
                         <label className="labelEmail" htmlFor="email">
                             Địa chỉ email

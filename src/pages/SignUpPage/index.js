@@ -1,5 +1,12 @@
 import logo from '~/assets/images/logoWhiteTransparent.png';
-import { IoLogoGoogle, IoChevronBackSharp, IoEyeOffOutline, IoEyeOutline } from 'react-icons/io5';
+import {
+    IoLogoGoogle,
+    IoChevronBackSharp,
+    IoEyeOffOutline,
+    IoEyeOutline,
+    IoAlertCircleOutline,
+    IoCheckmarkCircleOutline,
+} from 'react-icons/io5';
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
@@ -10,6 +17,9 @@ function SignUpPage() {
     // State (useState)
     const [formStep, setFormStep] = useState(0); // Mỗi step tương ứng với một thành phần khác nhau trong form
     const [isShowPassword, setIsShowPassword] = useState(false); // Hiển thị mật khẩu
+    const [onSubmitMessage, setOnSubmitMessage] = useState('');
+    const [timeLeft, setTimeLeft] = useState(5);
+    const [disabledTimeLeft, setDisabledTimeLeft] = useState(true);
 
     // React Hook Form (Form Sign Up)
     const formSignUp = useForm();
@@ -35,27 +45,69 @@ function SignUpPage() {
     const onSubmit = async (data) => {
         console.log('Form submitted', data);
         // Đến bước tiếp theo
-        setFormStep(formStep + 1);
+        if (formStep < 2) {
+            setFormStep(formStep + 1);
+        }
         // Nếu là bước cuối thì thực hiện call API sign up
         if (formStep === 2) {
             console.log('Call API Sign Up');
             const { name, userName, gender, birth, email, password } = data;
             const res = await signUpApi(name, userName, gender, birth, email, password); // Call API Sign Up
-            if (res) {
+            if (res.message === 'Đăng ký thành công') {
+                setOnSubmitMessage('Đăng ký thành công');
+                setFormStep(3);
                 console.log('API Sign Up Response:', res);
-                navigate('/signin'); // Chuyển hướng đến trang đăng nhập
-            } else {
-                console.log('API Sign Up Failed');
+                // Chuyển hướng đến trang đăng nhập
+                if (disabledTimeLeft && timeLeft === 5) {
+                    startCountdown(5);
+                }
+            } else if (res.status == 409 && res.message === 'Email hoặc tên người dùng đã tồn tại') {
+                setOnSubmitMessage(res?.message);
+                // console.log('>>> Đăng ký thất bại');
+                // console.log('Email hoặc tên người dùng đã tồn tại');
             }
+        }
+    };
+    // Handle Countdown navigate to sign in
+    const startCountdown = (time) => {
+        if (time > 0) {
+            setTimeout(() => {
+                setTimeLeft(time - 1);
+                startCountdown(time - 1);
+                console.log(timeLeft);
+            }, 1000);
+        } else {
+            setDisabledTimeLeft(false);
+            // Chuyển hướng sang trang đăng nhập
+            navigate('/signin');
         }
     };
 
     return (
         <>
             <div className="signUpContainer">
-                <img className="logo" src={logo} alt="Logo mymusic" draggable="false" />
+                {/* <img className="logo" src={logo} alt="Logo mymusic" draggable="false" /> */}
                 <form className="signUpForm" onSubmit={handleSubmit(onSubmit)} method="POST" noValidate>
                     <span className="title">Đăng ký</span>
+                    {/* On Submit Error Message */}
+                    {onSubmitMessage === 'Email hoặc tên người dùng đã tồn tại' ? (
+                        <div className="onSubmitErrorMessage">
+                            <span>
+                                <IoAlertCircleOutline style={{ marginRight: '5px' }} /> {onSubmitMessage}
+                            </span>
+                        </div>
+                    ) : (
+                        <></>
+                    )}
+                    {onSubmitMessage === 'Đăng ký thành công' ? (
+                        <div className="onSubmitErrorMessage" style={{ backgroundColor: '#2ecc71' }}>
+                            <span>
+                                <IoCheckmarkCircleOutline style={{ marginRight: '5px' }} /> {onSubmitMessage}
+                            </span>
+                        </div>
+                    ) : (
+                        <></>
+                    )}
                     {/* Step 0 */}
                     {formStep === 0 && (
                         <>
@@ -299,9 +351,27 @@ function SignUpPage() {
                             <p className="errorMessage">{errors.gender?.message}</p>
                         </>
                     )}
-                    <button className="btnNextStep" type="submit" id="btnNextStepID">
-                        {formStep === 2 ? 'Đăng ký' : 'Tiếp theo'}
-                    </button>
+                    {/* Button Submit */}
+                    {formStep < 2 ? (
+                        <button className="btnNextStep" type="submit" id="btnNextStepID">
+                            Tiếp theo
+                        </button>
+                    ) : (
+                        <>
+                            {formStep === 2 ? (
+                                <button className="btnNextStep" type="submit" id="btnNextStepID">
+                                    Đăng ký
+                                </button>
+                            ) : (
+                                <button
+                                    className="btnNextStep"
+                                    type="submit"
+                                    id="btnNextStepID"
+                                    style={{ fontWeight: '400' }}
+                                >{`Chuyển tới trang đăng nhập (${timeLeft})`}</button>
+                            )}
+                        </>
+                    )}
                     {/* Check Data */}
                     <pre style={{ color: 'red' }} hidden>
                         {JSON.stringify(watch(), null, 2)}

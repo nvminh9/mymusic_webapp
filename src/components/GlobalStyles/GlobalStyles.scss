@@ -1325,6 +1325,15 @@ body {
 // CSS Admin Layout
 
 // CSS Sign In/Out Layout
+.signInSignUpContainer {
+    .logo {
+        position: absolute;
+        width: 100%;
+        opacity: 1%;
+        top: 0;
+        z-index: 0;
+    }
+}
 
 // CSS Sign Up Page
 .signUpContainer {
@@ -1340,6 +1349,23 @@ body {
         align-items: center;
         justify-content: center;
         z-index: 2;
+
+        .onSubmitErrorMessage {
+            background-color: #e91429;
+            margin: 5px 0px;
+            margin-top: 0px;
+            border-radius: 2px;
+            padding: 10px;
+
+            span {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 100%;
+                color: white;
+                font-size: 14px;
+            }
+        }
 
         .title {
             display: block;
@@ -1686,14 +1712,6 @@ body {
             color: #777;
         }
     }
-
-    .logo {
-        position: absolute;
-        width: 100%;
-        opacity: 1%;
-        top: 0;
-        z-index: 0;
-    }
 }
 
 // CSS Sign In Page
@@ -1710,6 +1728,23 @@ body {
         align-items: center;
         justify-content: center;
         z-index: 2;
+
+        .onSubmitErrorMessage {
+            background-color: #e91429;
+            margin: 5px 0px;
+            margin-top: 0px;
+            border-radius: 2px;
+            padding: 10px;
+
+            span {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 100%;
+                color: white;
+                font-size: 14px;
+            }
+        }
 
         .title {
             display: block;
@@ -1998,14 +2033,6 @@ body {
             font-size: 15px;
             color: #777;
         }
-    }
-
-    .logo {
-        position: absolute;
-        width: 100%;
-        opacity: 1%;
-        top: 0;
-        z-index: 0;
     }
 }
 
