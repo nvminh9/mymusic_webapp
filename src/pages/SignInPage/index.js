@@ -2,14 +2,18 @@ import logo from '~/assets/images/logoWhiteTransparent.png';
 import { IoLogoGoogle, IoChevronBackSharp, IoEyeOffOutline, IoEyeOutline, IoAlertCircleOutline } from 'react-icons/io5';
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { signInApi, signUpApi } from '~/utils/api';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '~/context/auth.context';
 
 function SignInPage() {
     // State (useState)
     const [isShowPassword, setIsShowPassword] = useState(false); // Hiển thị mật khẩu
     const [onSubmitErrorMessage, setOnSubmitErrorMessage] = useState(''); // Lỗi khi submit (nếu có)
+
+    // Context (useContext)
+    const { setAuth } = useContext(AuthContext);
 
     // React Hook Form (Form Sign In)
     const formSignUp = useForm();
@@ -43,7 +47,11 @@ function SignInPage() {
             console.log('Đăng nhập thành công');
             // Lưu token vào localStorage
             localStorage.setItem('actk', res.data.accessToken);
-            localStorage.setItem('userEmail', res.data.email); // lát xóa
+            // Set Auth Context
+            setAuth({
+                isAuthenticated: true,
+                user: res?.data?.user ?? {},
+            });
             // Chuyển hướng đến trang chủ
             navigate('/');
         } else {

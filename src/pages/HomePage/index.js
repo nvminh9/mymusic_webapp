@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 import aptBanner from '~/assets/images/643564536.jpg';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
@@ -7,11 +7,19 @@ import { VscChevronLeft, VscChevronRight } from 'react-icons/vsc';
 import { Outlet } from 'react-router-dom';
 import { Fragment } from 'react';
 import axios from '../../utils/axios.customize';
+import { getAuthUserInfoApi } from '~/utils/api';
+import { useState } from 'react';
 // import Component
 import Carousel from '../components/Carousel';
+import { AuthContext } from '~/context/auth.context';
 // hết import Component
 
 function HomePage() {
+    // State (useState)
+
+    // Context (useContext)
+    const { auth, setAuth, isFirstLoading, setIsFirstLoading } = useContext(AuthContext);
+
     // config slider (React Slick)
     let sliderRef = useRef(null);
     const next = () => {
@@ -166,8 +174,10 @@ function HomePage() {
             type: 'playlist',
         },
     ];
-    // Đổi title trang
+
+    // --- HANDLE FUNCTION ---
     useEffect(() => {
+        // Đổi title trang
         document.title = 'Home | mymusic: Music from everyone';
     }, []);
 

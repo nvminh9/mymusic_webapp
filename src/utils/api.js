@@ -24,6 +24,9 @@ const signInApi = (email, password) => {
     return axios.post(URL_API, data);
 };
 
+// API Đăng xuất
+const signOutApi = () => {};
+
 // API Lấy thông tin người dùng (theo email)
 const getUserInfoApi = (email) => {
     const URL_API = '/v1/api/user/';

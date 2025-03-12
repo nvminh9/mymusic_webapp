@@ -1,9 +1,16 @@
-import { Fragment, useEffect } from 'react';
+import { Fragment, useContext, useEffect, useState } from 'react';
 import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 import { VscChevronLeft } from 'react-icons/vsc';
 import { IoEllipsisHorizontalSharp, IoMusicalNotesSharp, IoAppsSharp } from 'react-icons/io5';
+import { AuthContext } from '~/context/auth.context';
 
 function ProfilePage() {
+    // State (useState)
+    const [isOpenSettingMenu, setIsOpenSettingMenu] = useState(false);
+
+    // Context (useContext)
+    const { auth } = useContext(AuthContext);
+
     // Chuyển Tab
     const location = useLocation();
     const navigate = useNavigate();
@@ -11,8 +18,10 @@ function ProfilePage() {
     // Đổi title trang
     useEffect(() => {
         document.title = 'Profile | mymusic: Music from everyone';
+        console.log('>>> auth: ', auth);
     }, []);
 
+    // --- HANDLE FUNCTION ---
     // Handle Switch Tab Content
     const handleBtnToArticle = () => {
         console.log('Loaded list article');
@@ -26,13 +35,50 @@ function ProfilePage() {
         // document.getElementById('btnToMusicID').classList.add('actived');
         // document.getElementById('btnToArticleID').classList.remove('actived');
     };
+    // Handle Sign Out
+    const handleSignOut = () => {
+        // Call API Sign Out
+        localStorage.clear('actk');
+        console.log('Xóa local storage token thành công !');
+        // Chuyển sang trang đăng nhập
+        navigate('/signin');
+    };
 
     return (
         <Fragment>
+            {/* Menu Setting */}
+            {isOpenSettingMenu ? (
+                <div className="settingMenuContainer">
+                    <div className="settingMenu">
+                        <span className="title">Cài đặt hồ sơ</span>
+                        <button
+                            id="btnSignOutID"
+                            className="btnSignOut"
+                            onClick={() => {
+                                handleSignOut();
+                            }}
+                        >
+                            Đăng xuất
+                        </button>
+                        <button
+                            id="btnCloseID"
+                            className="btnClose"
+                            onClick={() => {
+                                setIsOpenSettingMenu(false);
+                            }}
+                        >
+                            Hủy
+                        </button>
+                    </div>
+                </div>
+            ) : (
+                <></>
+            )}
+
             {/* Thanh chuyển tab */}
             <div className="tabSwitchProfile">
                 <div className="profileUserName">
-                    <span>kendricklamar</span>
+                    <span>{auth?.user?.userName ?? `Tên người dùng`}</span>
                 </div>
                 <div className="btnComeBackBox">
                     <button className="btnComeBack tooltip" onClick={() => navigate(-1)}>
@@ -58,7 +104,12 @@ function ProfilePage() {
                                 <div className="btnBox">
                                     <button className="btnFollow">Theo dõi</button>
                                     <button className="btnMessage">Nhắn tin</button>
-                                    <button className="btnOptions">
+                                    <button
+                                        className="btnOptions"
+                                        onClick={() => {
+                                            setIsOpenSettingMenu(true);
+                                        }}
+                                    >
                                         <IoEllipsisHorizontalSharp></IoEllipsisHorizontalSharp>
                                     </button>
                                 </div>

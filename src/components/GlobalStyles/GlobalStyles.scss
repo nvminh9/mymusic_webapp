@@ -2432,7 +2432,83 @@ body {
     }
 }
 
+// CSS Loading Animation
+.loadingAnimation {
+    color: white;
+    -webkit-animation: spin 1s linear infinite;
+    animation: spin 1s linear infinite;
+    text-align: center;
+    font-size: 28px;
+}
+@-webkit-keyframes spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+    }
+}
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
 // CSS Profile Page
+.settingMenuContainer {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(18, 18, 18, 0.8);
+    backdrop-filter: blur(3px);
+    z-index: 5;
+    display: flex;
+    justify-content: center;
+
+    .settingMenu {
+        display: grid;
+        margin-top: 80px;
+        background-color: #2e2e2e;
+        height: fit-content;
+        width: 300px;
+        border-radius: 5px;
+
+        .title {
+            display: block;
+            text-align: center;
+            padding: 10px 0px;
+            color: white;
+            font-size: 15px;
+            font-weight: 400;
+            border-bottom: 0.5px solid #777;
+        }
+
+        button {
+            background-color: transparent;
+            font-family: 'Funnel Sans', sans-serif;
+            color: white;
+            border: 0.2px solid transparent;
+            font-size: 15px;
+            font-weight: 400;
+            cursor: pointer;
+            padding: 10px 0px;
+            transition: ease-out 0.2s;
+        }
+        button:hover {
+            background-color: #1f1f1f;
+        }
+        button:active {
+            background-color: #000;
+        }
+
+        .btnClose {
+            border-radius: 0px 0px 5px 5px;
+        }
+    }
+}
 .tabSwitchProfile {
     display: flex;
     align-items: center;
@@ -2517,6 +2593,7 @@ body {
 .profilePage {
     width: 100%;
     height: 100%;
+    // position: relative;
 
     // Phần top
     .top {

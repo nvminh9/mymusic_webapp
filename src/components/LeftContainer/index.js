@@ -10,16 +10,19 @@ import coverMySongTest from '~/assets/images/d125db5a3cac269c33f2314b318163a2.jp
 import coverMySongTest2 from '~/assets/images/339dba2a2e19e5440dafb92b60a6e66b.jpg';
 import CircumIcon from '@klarr-agency/circum-icons-react';
 import { VscChevronDown, VscAdd, VscChevronUp, VscClose, VscLibrary, VscMusic, VscHistory } from 'react-icons/vsc';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { getUserInfoApi } from '~/utils/api';
+import { getAuthUserInfoApi } from '~/utils/api';
+import { AuthContext } from '~/context/auth.context';
 
 function LeftContainer() {
     // State (useState)
     const [isOpenPlayList, setIsOpenPlayList] = useState(false);
     const [isOpenHistoryListen, setIsOpenHistoryListen] = useState(false);
     const [isOpenMySong, setIsOpenMySong] = useState(false);
-    const [userInfo, setUserInfo] = useState({});
+
+    // Context (useContext)
+    const { auth } = useContext(AuthContext);
 
     // Đóng / Mở Playlist
     const btnExpandPlaylist = () => {
@@ -88,20 +91,8 @@ function LeftContainer() {
         }
     };
 
-    // Lấy thông tin người dùng đang đăng nhập
-    useEffect(() => {
-        const authUserEmail = localStorage.getItem('userEmail');
-        const getUserInfo = async (email) => {
-            const res = await getUserInfoApi(email);
-            if (res) {
-                console.log('>>> res.data', res.data);
-                setUserInfo(res.data);
-                return;
-            }
-            return;
-        };
-        getUserInfo(authUserEmail);
-    }, []);
+    // Lấy thông tin người dùng đang đăng nhập (Auth User)
+    useEffect(() => {}, []);
 
     return (
         <div id="leftContainerID" className="col l-3 m-0 c-0 leftContainer">
@@ -130,12 +121,12 @@ function LeftContainer() {
                 <div className="user">
                     <div className="avatar">
                         <Link to={`/profile/minhngo`} style={{ textDecoration: 'none', height: '100%', width: '100%' }}>
-                            <img src={userInfo?.userAvatar ?? avatarDefault} />
+                            <img src={auth?.user?.userAvatar ?? avatarDefault} />
                         </Link>
                     </div>
                     <div className="name">
                         <Link to={`/profile/minhngo`} style={{ textDecoration: 'none' }}>
-                            <span>{userInfo.userName}</span>
+                            <span>{auth?.user?.userName ?? `Tên người dùng`}</span>
                         </Link>
                     </div>
                 </div>
