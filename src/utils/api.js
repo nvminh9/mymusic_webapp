@@ -25,7 +25,10 @@ const signInApi = (email, password) => {
 };
 
 // API Đăng xuất
-const signOutApi = () => {};
+const signOutApi = () => {
+    const URL_API = '/v1/api/auth/signout';
+    return axios.get(URL_API);
+};
 
 // API Lấy thông tin người dùng (theo email)
 const getUserInfoApi = (email) => {
@@ -42,4 +45,4 @@ const getAuthUserInfoApi = () => {
     return axios.get(URL_API);
 };
 
-export { signUpApi, signInApi, getAuthUserInfoApi, getUserInfoApi };
+export { signUpApi, signInApi, signOutApi, getAuthUserInfoApi, getUserInfoApi };

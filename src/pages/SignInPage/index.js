@@ -35,7 +35,7 @@ function SignInPage() {
             inputPassword.type = 'password';
         }
     };
-    // Handle Submit Form Sign Up
+    // Handle Submit Form Sign In
     const onSubmit = async (data) => {
         console.log('Form submitted', data);
         // Call API

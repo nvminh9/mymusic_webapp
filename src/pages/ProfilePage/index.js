@@ -3,6 +3,7 @@ import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 import { VscChevronLeft } from 'react-icons/vsc';
 import { IoEllipsisHorizontalSharp, IoMusicalNotesSharp, IoAppsSharp } from 'react-icons/io5';
 import { AuthContext } from '~/context/auth.context';
+import { signOutApi } from '~/utils/api';
 
 function ProfilePage() {
     // State (useState)
@@ -36,12 +37,23 @@ function ProfilePage() {
         // document.getElementById('btnToArticleID').classList.remove('actived');
     };
     // Handle Sign Out
-    const handleSignOut = () => {
-        // Call API Sign Out
-        localStorage.clear('actk');
-        console.log('Xóa local storage token thành công !');
-        // Chuyển sang trang đăng nhập
-        navigate('/signin');
+    const handleSignOut = async () => {
+        // const token = localStorage?.getItem('actk');
+        try {
+            // Call API Sign Out
+            const res = await signOutApi();
+            if (res.message === 'Đăng xuất thành công') {
+                localStorage.clear('actk');
+                console.log('Đăng xuất thành công !');
+                // Chuyển sang trang đăng nhập
+                navigate('/signin');
+            } else {
+                console.log('Đăng xuất thất bại !');
+            }
+        } catch (error) {
+            console.log('>>> Error Sign Out: ', error);
+            return;
+        }
     };
 
     return (

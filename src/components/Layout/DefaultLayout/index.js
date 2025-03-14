@@ -6,12 +6,16 @@ import { AuthContext } from '~/context/auth.context';
 import { getAuthUserInfoApi } from '~/utils/api';
 import logo from '~/assets/images/logoWhiteTransparent.png';
 import { IoBowlingBallOutline } from 'react-icons/io5';
+import { useNavigate } from 'react-router-dom';
 
 function DefaultLayout({ children }) {
     // State (useState)
 
     // Context (useContext)
     const { auth, setAuth, isFirstLoading, setIsFirstLoading } = useContext(AuthContext);
+
+    // Navigation
+    const navigate = useNavigate();
 
     // --- HANDLE FUNCTION ---
     useEffect(() => {
@@ -24,12 +28,14 @@ function DefaultLayout({ children }) {
             if (res) {
                 console.log('>>> res.data', res.data);
                 setAuth({
-                    isAuthenticated: true,
+                    isAuthenticated: true, // true do user đã login trước đó
                     user: res?.data ?? {},
                 });
                 setTimeout(() => {
                     setIsFirstLoading(false);
-                }, 2000);
+                }, 1000);
+            } else {
+                // ...
             }
         };
         getAuthUserInfo();

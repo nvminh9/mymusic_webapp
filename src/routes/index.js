@@ -9,13 +9,14 @@ import ArticleDetail from '~/pages/ArticleDetail';
 import PlaylistDetail from '~/pages/PlaylistDetail';
 import SongDetail from '~/pages/SongDetail';
 import SignInPage from '~/pages/SignInPage';
-// Import Layout
+import { Navigate, Outlet } from 'react-router-dom';
 import { SignInSignUpLayout } from '~/components/Layout';
 import { compile } from 'sass';
 import SignUpPage from '~/pages/SignUpPage';
-// hết import Component
+import { useContext } from 'react';
+import { AuthContext } from '~/context/auth.context';
 
-// Public Routes
+// Public Routes (Chưa đăng nhập vẫn truy cập được)
 const publicRoutes = [
     {
         path: 'signup',
@@ -27,6 +28,10 @@ const publicRoutes = [
         component: SignInPage,
         layout: SignInSignUpLayout,
     },
+];
+
+// Private Routes (Yêu cầu đăng nhập)
+const privateRoutes = [
     {
         path: '',
         component: PublicPage,
@@ -57,7 +62,14 @@ const publicRoutes = [
     },
 ];
 
-// Private Routes
-const privateRoutes = [];
+// Component Protected Route
+const ProtectedRoute = () => {
+    const { auth } = useContext(AuthContext);
+    const token = localStorage.getItem('actk');
 
-export { publicRoutes, privateRoutes };
+    // Nếu client vẫn còn lưu token thì sẽ được truy cập vào route (có thể sẽ thêm gọi api check xem token còn valid ko)
+    // Ngược lại sẽ chuyển hướng về Sign In
+    return token ? <Outlet /> : <Navigate to={`/signin`} />;
+};
+
+export { publicRoutes, privateRoutes, ProtectedRoute };
