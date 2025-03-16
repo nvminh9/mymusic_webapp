@@ -3,12 +3,13 @@ import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 import { VscChevronLeft } from 'react-icons/vsc';
 import { IoEllipsisHorizontalSharp, IoMusicalNotesSharp, IoAppsSharp } from 'react-icons/io5';
 import { AuthContext } from '~/context/auth.context';
-import { signOutApi } from '~/utils/api';
+import { getUserProfileInfoApi, signOutApi } from '~/utils/api';
 import defaultAvatar from '~/assets/images/avatarDefault.jpg';
 
 function ProfilePage() {
     // State (useState)
     const [isOpenSettingMenu, setIsOpenSettingMenu] = useState(false);
+    const [profileInfo, setProfileInfo] = useState();
 
     // Context (useContext)
     // auth là object, trong đó có thuộc tính user chứa thông tin của user auth
@@ -17,13 +18,6 @@ function ProfilePage() {
     // Chuyển Tab
     const location = useLocation();
     const navigate = useNavigate();
-
-    // Đổi title trang
-    useEffect(() => {
-        document.title = 'Profile | mymusic: Music from everyone';
-        console.log('>>> auth: ', auth);
-        console.log('>>> location: ', location);
-    }, []);
 
     // --- HANDLE FUNCTION ---
     // Handle Switch Tab Content
@@ -53,6 +47,7 @@ function ProfilePage() {
                 });
                 // Clear token in local storage
                 localStorage.clear('actk');
+                localStorage.clear('valid');
                 console.log('Đăng xuất thành công !');
                 // Chuyển sang trang đăng nhập
                 navigate('/signin');
@@ -64,6 +59,44 @@ function ProfilePage() {
             return;
         }
     };
+    // Handle Format Numeral
+    const formatNumeral = (count) => {
+        if (count) {
+            if (count >= 1000000) {
+                return (count / 1000000).toFixed(1).replace('.0', '') + ' Tr'; // 1.5 Tr
+            } else if (count >= 10000) {
+                return (count / 1000).toFixed(1).replace('.0', '') + ' N'; // 1.5 N
+            }
+            return count.toString(); // Nếu nhỏ hơn 10000, giữ nguyên
+        } else {
+            return count;
+        }
+    };
+    // Handle Call API
+    useEffect(() => {
+        // Đổi title trang
+        document.title = 'Profile | mymusic: Music from everyone';
+        console.log('>>> auth: ', auth);
+        console.log('>>> location: ', location);
+        // userName của trang profile đó
+        const userName = location.pathname.split('/')[2];
+        // Call API Lấy thông tin profile
+        const getUserProfileInfo = async (userName) => {
+            try {
+                const res = await getUserProfileInfoApi(userName);
+                if (res) {
+                    // console.log("Thông tin profile: ", res?.data);
+                    setProfileInfo(res?.data);
+                } else {
+                    // console.log("Lấy thông tin profile thất bại !")
+                    setProfileInfo({});
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        getUserProfileInfo(userName);
+    }, [location.pathname.split('/')[2]]);
 
     return (
         <Fragment>
@@ -123,14 +156,7 @@ function ProfilePage() {
                             <div className="userInfo">
                                 <span className="userName">{auth?.user?.userName ?? 'Tên người dùng'}</span>
                                 <div className="btnBox">
-                                    {auth?.user?.userName ===
-                                    location.pathname.split('/').find((item) => {
-                                        if (item === `${auth?.user?.userName}`) {
-                                            return item;
-                                        } else {
-                                            return null;
-                                        }
-                                    }) ? (
+                                    {auth?.user?.userName === location.pathname.split('/')[2] ? (
                                         <>
                                             {/* Nút chỉnh sửa trang cá nhân */}
                                             <button className="btnFollow">Chỉnh sửa trang cá nhân</button>
@@ -164,7 +190,7 @@ function ProfilePage() {
                                             fontWeight: '600',
                                         }}
                                     >
-                                        6
+                                        {profileInfo?.articles?.count}
                                     </span>{' '}
                                     bài viết
                                 </span>
@@ -179,7 +205,7 @@ function ProfilePage() {
                                             fontWeight: '600',
                                         }}
                                     >
-                                        17,4 Tr
+                                        {formatNumeral(profileInfo?.follower?.count)}
                                     </span>{' '}
                                     người theo dõi
                                 </span>
@@ -195,7 +221,7 @@ function ProfilePage() {
                                             fontWeight: '600',
                                         }}
                                     >
-                                        1
+                                        {formatNumeral(profileInfo?.follow?.count)}
                                     </span>{' '}
                                     người dùng
                                 </span>

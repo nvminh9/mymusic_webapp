@@ -45,4 +45,10 @@ const getAuthUserInfoApi = () => {
     return axios.get(URL_API);
 };
 
-export { signUpApi, signInApi, signOutApi, getAuthUserInfoApi, getUserInfoApi };
+// API Lấy thông tin profile user
+const getUserProfileInfoApi = (userName) => {
+    const URL_API = `/v1/api/user/profile/${userName}`;
+    return axios.get(URL_API);
+};
+
+export { signUpApi, signInApi, signOutApi, getAuthUserInfoApi, getUserInfoApi, getUserProfileInfoApi };
