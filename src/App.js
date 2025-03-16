@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { privateRoutes, publicRoutes, ProtectedRoute } from './routes';
+import { privateRoutes, publicRoutes } from './routes';
+import ProtectedRoute from './components/ProtectedRoute';
 import { DefaultLayout } from './components/Layout';
 import { Fragment } from 'react';
 import Favicon from 'react-favicon';

@@ -34,6 +34,14 @@ instance.interceptors.response.use(
     function (error) {
         // Any status codes that falls outside the range of 2xx cause this function to trigger
         // Do something with response error
+
+        // Handle if token expire or invalid (Nếu token hết hạn hoặc không khả dụng thì set valid thành false)
+        if (error?.response?.status === 401) {
+            // console.log('>>>> error?.response?.status: ', error?.response?.status);
+            // Set valid trong local storage thành false
+            localStorage.setItem('valid', false);
+        }
+
         // Nếu Exception có data thì sẽ trả về data
         if (error?.response?.data) {
             return error?.response?.data;

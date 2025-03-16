@@ -4,13 +4,15 @@ import { VscChevronLeft } from 'react-icons/vsc';
 import { IoEllipsisHorizontalSharp, IoMusicalNotesSharp, IoAppsSharp } from 'react-icons/io5';
 import { AuthContext } from '~/context/auth.context';
 import { signOutApi } from '~/utils/api';
+import defaultAvatar from '~/assets/images/avatarDefault.jpg';
 
 function ProfilePage() {
     // State (useState)
     const [isOpenSettingMenu, setIsOpenSettingMenu] = useState(false);
 
     // Context (useContext)
-    const { auth } = useContext(AuthContext);
+    // auth là object, trong đó có thuộc tính user chứa thông tin của user auth
+    const { auth, setAuth } = useContext(AuthContext);
 
     // Chuyển Tab
     const location = useLocation();
@@ -20,6 +22,7 @@ function ProfilePage() {
     useEffect(() => {
         document.title = 'Profile | mymusic: Music from everyone';
         console.log('>>> auth: ', auth);
+        console.log('>>> location: ', location);
     }, []);
 
     // --- HANDLE FUNCTION ---
@@ -43,6 +46,12 @@ function ProfilePage() {
             // Call API Sign Out
             const res = await signOutApi();
             if (res.message === 'Đăng xuất thành công') {
+                // Set Auth Context For Sign Out
+                setAuth({
+                    isAuthenticated: false,
+                    user: {},
+                });
+                // Clear token in local storage
                 localStorage.clear('actk');
                 console.log('Đăng xuất thành công !');
                 // Chuyển sang trang đăng nhập
@@ -105,17 +114,36 @@ function ProfilePage() {
                     <div className="left">
                         {/* Avatar */}
                         <div className="avatar">
-                            <img src="https://cdn-images.dzcdn.net/images/artist/be0a7c550567f4af0ed202d7235b74d6/1900x1900-000000-80-0-0.jpg" />
+                            <img src={auth?.user?.userAvatar ?? defaultAvatar} />
                         </div>
                     </div>
                     <div className="right">
                         <div className="topRight">
                             {/* Thông tin (tên,...) */}
                             <div className="userInfo">
-                                <span className="userName">kendricklamar</span>
+                                <span className="userName">{auth?.user?.userName ?? 'Tên người dùng'}</span>
                                 <div className="btnBox">
-                                    <button className="btnFollow">Theo dõi</button>
-                                    <button className="btnMessage">Nhắn tin</button>
+                                    {auth?.user?.userName ===
+                                    location.pathname.split('/').find((item) => {
+                                        if (item === `${auth?.user?.userName}`) {
+                                            return item;
+                                        } else {
+                                            return null;
+                                        }
+                                    }) ? (
+                                        <>
+                                            {/* Nút chỉnh sửa trang cá nhân */}
+                                            <button className="btnFollow">Chỉnh sửa trang cá nhân</button>
+                                        </>
+                                    ) : (
+                                        <>
+                                            {/* Nút theo dõi */}
+                                            <button className="btnFollow">Theo dõi</button>
+                                            {/* Nút nhắn tin */}
+                                            <button className="btnMessage">Nhắn tin</button>
+                                        </>
+                                    )}
+
                                     <button
                                         className="btnOptions"
                                         onClick={() => {
@@ -174,7 +202,7 @@ function ProfilePage() {
                             </div>
                             <div className="userDescription">
                                 <p>
-                                    Kendrick Lamar <br /> @pglang <br />{' '}
+                                    {/* Kendrick Lamar <br /> @pglang <br />{' '}
                                     <a
                                         href="https://my-gnx.com"
                                         style={{
@@ -183,7 +211,8 @@ function ProfilePage() {
                                         target="_blank"
                                     >
                                         my-gnx.com
-                                    </a>
+                                    </a> */}
+                                    {auth?.user?.description}
                                 </p>
                             </div>
                             <div className="bottomRight"></div>

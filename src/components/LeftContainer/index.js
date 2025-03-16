@@ -125,7 +125,7 @@ function LeftContainer() {
                         </Link>
                     </div>
                     <div className="name">
-                        <Link to={`/profile/minhngo`} style={{ textDecoration: 'none' }}>
+                        <Link to={`/profile/${auth?.user?.userName}`} style={{ textDecoration: 'none' }}>
                             <span>{auth?.user?.userName ?? `Tên người dùng`}</span>
                         </Link>
                     </div>

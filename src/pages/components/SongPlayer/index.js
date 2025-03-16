@@ -113,16 +113,17 @@ function SongPlayer() {
     var audioHLSFile = `http://localhost:3700/v1/api/music/swimmingpool_master.m3u8`;
     useEffect(() => {
         const hls = new Hls();
-        if (Hls.isSupported()) {
-            hls.loadSource(audioHLSFile);
-            if (audioHLSRef.current) {
-                hls.attachMedia(audioHLSRef.current);
-                // isPlay ? audioHLSRef.current.play() : console.log(audioHLSRef.current);
-                // Đang lỗi do khi người dùng mới truy cập vào web (hay domain) nếu chưa tương tác với web thì sẽ ko thể autoPlay được
-                // Vì vậy sẽ xử lý theo cách khác
-                // audioHLSRef.current.play();
-            }
-        }
+        // TẠM THỜI COMMENT LẠI (DO API SONG CHƯA HOÀN THIỆN)
+        // if (Hls.isSupported()) {
+        //     hls.loadSource(audioHLSFile);
+        //     if (audioHLSRef.current) {
+        //         hls.attachMedia(audioHLSRef.current);
+        //         // isPlay ? audioHLSRef.current.play() : console.log(audioHLSRef.current);
+        //         // Đang lỗi do khi người dùng mới truy cập vào web (hay domain) nếu chưa tương tác với web thì sẽ ko thể autoPlay được
+        //         // Vì vậy sẽ xử lý theo cách khác
+        //         // audioHLSRef.current.play();
+        //     }
+        // }
     }, []);
 
     // Custom Song Progress Bar (Test)

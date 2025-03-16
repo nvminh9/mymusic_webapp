@@ -1,8 +1,8 @@
 import logo from '~/assets/images/logoWhiteTransparent.png';
 import { IoLogoGoogle, IoChevronBackSharp, IoEyeOffOutline, IoEyeOutline, IoAlertCircleOutline } from 'react-icons/io5';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { signInApi, signUpApi } from '~/utils/api';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '~/context/auth.context';
@@ -21,7 +21,9 @@ function SignInPage() {
     const { errors } = formState;
 
     // Navigate
+    const location = useLocation();
     const navigate = useNavigate();
+    const from = location.state?.from?.pathname || '/';
 
     // --- HANDLE FUNCTION ---
     // Handle Button Show Password
@@ -47,6 +49,8 @@ function SignInPage() {
             console.log('Đăng nhập thành công');
             // Lưu token vào localStorage
             localStorage.setItem('actk', res.data.accessToken);
+            // Set valid trong local storage
+            localStorage.setItem('valid', true);
             // Set Auth Context
             setAuth({
                 isAuthenticated: true,
@@ -56,10 +60,22 @@ function SignInPage() {
             navigate('/');
         } else {
             setOnSubmitErrorMessage(res?.message ?? 'Lỗi đăng nhập thất bại');
+            // Set valid trong local storage
+            localStorage.setItem('valid', true);
             // console.log('>>> Đăng nhập thất bại');
             // console.log(res?.message ?? 'Lỗi đăng nhập thất bại');
         }
     };
+    // Handle Is User Signed In
+    useEffect(() => {
+        // Kiểm tra xem đã đăng nhập chưa
+        const checkIsSignedIn = () => {
+            if (JSON.parse(localStorage?.getItem('valid')) === true && localStorage?.getItem('actk')) {
+                navigate(from);
+            }
+        };
+        checkIsSignedIn();
+    }, []);
 
     return (
         <>
