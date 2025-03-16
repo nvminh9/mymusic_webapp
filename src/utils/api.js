@@ -51,4 +51,18 @@ const getUserProfileInfoApi = (userName) => {
     return axios.get(URL_API);
 };
 
-export { signUpApi, signInApi, signOutApi, getAuthUserInfoApi, getUserInfoApi, getUserProfileInfoApi };
+// API Lấy danh sách bài viết của người dùng
+const getUserArticlesApi = (userName) => {
+    const URL_API = `/v1/api/user/${userName}/articles`;
+    return axios.get(URL_API);
+};
+
+export {
+    signUpApi,
+    signInApi,
+    signOutApi,
+    getAuthUserInfoApi,
+    getUserInfoApi,
+    getUserProfileInfoApi,
+    getUserArticlesApi,
+};

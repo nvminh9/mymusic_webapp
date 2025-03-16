@@ -1,30 +1,79 @@
-import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
-import { IoHeartSharp, IoChatbubbleSharp } from 'react-icons/io5';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { IoBowlingBallOutline } from 'react-icons/io5';
+import { useEffect, useState } from 'react';
+import { getUserArticlesApi } from '~/utils/api';
+import ArticleProfile from '../ArticleProfile';
 
 function ListArticle() {
+    // State (useState)
+    const [listArticleData, setListArticleData] = useState();
+
+    // Context (useContext)
+
     // chuyển path
     const location = useLocation();
     const navigate = useNavigate();
+
+    // --- HANDLE FUNCTION ---
+    // Handle Call API
+    useEffect(() => {
+        const userName = location.pathname.split('/')[2];
+        // Call API Lấy danh sách bài viết
+        const getUserArticles = async (userName) => {
+            try {
+                const res = await getUserArticlesApi(userName);
+                if (res.data !== null) {
+                    // setTimeout(() => {
+                    //     setListArticleData(res?.data?.articles?.rows);
+                    // }, 3000);
+                    setListArticleData(res?.data?.articles?.rows);
+                } else {
+                    setListArticleData([]);
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        getUserArticles(userName);
+    }, [location.pathname.split('/')[2]]);
 
     return (
         <div className="listArticle">
             {/* List Articles */}
             <div className="row">
-                <Link to={`/article/DE0KIYdSAL8`} className="col l-4 m-4 c-4">
-                    <div className="thumbnail">
-                        <img
-                            src={`https://i.pinimg.com/736x/bb/d3/bc/bbd3bc3fc939bc50cf8f3bc018aa0dd7.jpg`}
-                            alt="thumbnail"
-                        />
-                        {/* Phần hiển thị khi hover vào thumbnail */}
-                        <div className="thumbnailHover">
-                            {/* Lượt thích */}
-                            <IoHeartSharp></IoHeartSharp> <span className="likes">21,6 N</span>
-                            {/* Lượt bình luận */}
-                            <IoChatbubbleSharp></IoChatbubbleSharp> <span className="comments">189</span>
-                        </div>
-                    </div>
-                </Link>
+                {listArticleData?.length === 0 ? (
+                    <>
+                        <h1 style={{ color: 'white' }}>Chưa có bài viết</h1>
+                    </>
+                ) : (
+                    <>
+                        {listArticleData ? (
+                            <>
+                                {listArticleData.map((article, index) => (
+                                    <>
+                                        {/* Article */}
+                                        <ArticleProfile key={index} article={article} />
+                                    </>
+                                ))}
+                            </>
+                        ) : (
+                            <>
+                                <div
+                                    style={{
+                                        width: '100%',
+                                        height: '100%',
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        marginTop: '50px',
+                                    }}
+                                >
+                                    <IoBowlingBallOutline className="loadingAnimation" />
+                                </div>
+                            </>
+                        )}
+                    </>
+                )}
             </div>
         </div>
     );

@@ -1,7 +1,7 @@
 import { Fragment, useContext, useEffect, useState } from 'react';
 import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 import { VscChevronLeft } from 'react-icons/vsc';
-import { IoEllipsisHorizontalSharp, IoMusicalNotesSharp, IoAppsSharp } from 'react-icons/io5';
+import { IoEllipsisHorizontalSharp, IoMusicalNotesSharp, IoAppsSharp, IoBowlingBallOutline } from 'react-icons/io5';
 import { AuthContext } from '~/context/auth.context';
 import { getUserProfileInfoApi, signOutApi } from '~/utils/api';
 import defaultAvatar from '~/assets/images/avatarDefault.jpg';
@@ -259,7 +259,7 @@ function ProfilePage() {
                             id="btnToArticleID"
                             className={[
                                 'btnToArticle',
-                                location.pathname === '/profile/kendricklamar' ? 'actived' : '',
+                                location.pathname.split('/')[3] === 'musics' ? '' : 'actived',
                             ].join(' ')}
                             onClick={handleBtnToArticle}
                         >
@@ -268,10 +268,9 @@ function ProfilePage() {
                         <Link
                             to={`musics`}
                             id="btnToMusicID"
-                            // Tạm test với pathname là /profile/kendricklamar/musics sau này sẽ thay kendricklamar bằng userName từ api
                             className={[
                                 'btnToMusic',
-                                location.pathname === '/profile/kendricklamar/musics' ? 'actived' : '',
+                                location.pathname.split('/')[3] === 'musics' ? 'actived' : '',
                             ].join(' ')}
                             onClick={handleBtnToMusic}
                         >
