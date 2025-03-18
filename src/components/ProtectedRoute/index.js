@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '~/context/auth.context';
 import { getAuthUserInfoApi } from '~/utils/api';
 import { Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { message, notification } from 'antd';
 
 function ProtectedRoute({ props }) {
     console.log('>>> Is re-render ...');
@@ -15,6 +16,9 @@ function ProtectedRoute({ props }) {
     // Navigate
     const navigate = useNavigate();
     const location = useLocation();
+
+    // Notification (Ant Design)
+    const [messageApi, contextHolder] = message.useMessage();
 
     // Check Token
     useEffect(() => {
@@ -36,6 +40,7 @@ function ProtectedRoute({ props }) {
                         isAuthenticated: false,
                         user: {},
                     });
+                    console.log('Warning');
                     localStorage.setItem('valid', false);
                     console.log('Phiên đăng nhập hết hạn, xin hãy đăng nhập lại');
                 }
@@ -45,10 +50,14 @@ function ProtectedRoute({ props }) {
         };
         //
         checkToken();
-    }, [JSON.parse(localStorage?.getItem('valid'))]); // Có thể thêm location?.pathname vào depen nếu muốn kiểm tra valid mỗi khi chuyển route
+    }, [JSON.parse(localStorage?.getItem?.('valid') ? localStorage?.getItem?.('valid') : null)]); // Có thể thêm location?.pathname vào depen nếu muốn kiểm tra valid mỗi khi chuyển route
 
     // Nếu token của client còn valid (bằng true) thì sẽ được truy cập vào Home page, ngược lại sẽ chuyển hướng về Sign In
-    return JSON.parse(localStorage?.getItem('valid')) === true ? <Outlet /> : <Navigate to={`/signin`} />;
+    return JSON.parse(localStorage?.getItem?.('valid') ? localStorage?.getItem?.('valid') : null) === true ? (
+        <Outlet />
+    ) : (
+        <Navigate to={`/signin`} />
+    );
 }
 
 export default ProtectedRoute;

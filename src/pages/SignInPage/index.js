@@ -6,6 +6,7 @@ import { useContext, useEffect, useState } from 'react';
 import { signInApi, signUpApi } from '~/utils/api';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '~/context/auth.context';
+import { message } from 'antd';
 
 function SignInPage() {
     // State (useState)
@@ -14,6 +15,9 @@ function SignInPage() {
 
     // Context (useContext)
     const { setAuth } = useContext(AuthContext);
+
+    // Ant Design Message
+    const [messageApi, contextHolder] = message.useMessage();
 
     // React Hook Form (Form Sign In)
     const formSignUp = useForm();
@@ -42,35 +46,65 @@ function SignInPage() {
         console.log('Form submitted', data);
         // Call API
         const { email, password } = data;
-        const res = await signInApi(email, password);
-        // Kiểm tra response
-        if (res && res.status === 200 && res.message === 'Đăng nhập thành công') {
-            setOnSubmitErrorMessage('');
-            console.log('Đăng nhập thành công');
-            // Lưu token vào localStorage
-            localStorage.setItem('actk', res.data.accessToken);
-            // Set valid trong local storage
-            localStorage.setItem('valid', true);
-            // Set Auth Context
-            setAuth({
-                isAuthenticated: true,
-                user: res?.data?.user ?? {},
+        // Loading ... (Ant Design)
+        messageApi
+            .loading({
+                content: 'Đang đăng nhập ...',
+                duration: 1.5,
+                style: {
+                    color: 'white',
+                },
+            })
+            .then(async () => {
+                // Call API Đăng nhập
+                const res = await signInApi(email, password);
+                // Kiểm tra response
+                if (res && res.status === 200 && res.message === 'Đăng nhập thành công') {
+                    setOnSubmitErrorMessage('');
+                    // console.log('Đăng nhập thành công');
+                    // Lưu token vào localStorage
+                    localStorage.setItem('actk', res.data.accessToken);
+                    // Set valid trong local storage
+                    localStorage.setItem('valid', true);
+                    // Set Auth Context
+                    setAuth({
+                        isAuthenticated: true,
+                        user: res?.data?.user ?? {},
+                    });
+                    message.success({
+                        content: 'Đăng nhập thành công',
+                        duration: 1.5,
+                        style: {
+                            color: 'white',
+                        },
+                    });
+                    // Chuyển hướng đến trang chủ
+                    navigate('/');
+                } else {
+                    setOnSubmitErrorMessage(res?.message ?? 'Lỗi đăng nhập thất bại');
+                    // Set valid trong local storage
+                    localStorage.setItem('valid', false);
+                    // console.log('>>> Đăng nhập thất bại');
+                    // console.log(res?.message ?? 'Lỗi đăng nhập thất bại');
+                    message.error({
+                        content: 'Đăng nhập không thành công',
+                        duration: 1.5,
+                        style: {
+                            color: 'white',
+                        },
+                    });
+                }
             });
-            // Chuyển hướng đến trang chủ
-            navigate('/');
-        } else {
-            setOnSubmitErrorMessage(res?.message ?? 'Lỗi đăng nhập thất bại');
-            // Set valid trong local storage
-            localStorage.setItem('valid', true);
-            // console.log('>>> Đăng nhập thất bại');
-            // console.log(res?.message ?? 'Lỗi đăng nhập thất bại');
-        }
     };
+
     // Handle Is User Signed In
     useEffect(() => {
         // Kiểm tra xem đã đăng nhập chưa
         const checkIsSignedIn = () => {
-            if (JSON.parse(localStorage?.getItem('valid')) === true && localStorage?.getItem('actk')) {
+            if (
+                JSON.parse(localStorage?.getItem?.('valid') ? localStorage?.getItem?.('valid') : null) === true &&
+                localStorage?.getItem('actk')
+            ) {
                 navigate(from);
             }
         };
@@ -79,6 +113,7 @@ function SignInPage() {
 
     return (
         <>
+            {contextHolder}
             <div className="signInContainer">
                 {/* <img className="logo" src={logo} alt="Logo mymusic" draggable="false" /> */}
                 <form className="signInForm" onSubmit={handleSubmit(onSubmit)} method="POST" noValidate>
