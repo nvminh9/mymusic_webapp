@@ -19,24 +19,13 @@ function DefaultLayout({ children }) {
 
     // --- HANDLE FUNCTION ---
     useEffect(() => {
-        // FIRST APP LOADING
-        // Handle Get Auth User (Tạm thời comment Call API để tối ưu, do bên ProtectedRoute và SignIn đã set data auth.user)
+        // FIRST APP LOADING (Or Reload)
+        // Handle Get Auth User (Tạm thời comment Call API để tối ưu, do bên ProtectedRoute và SignIn đã Call API tương tự
+        // và set data auth.user)
         const getAuthUserInfo = async () => {
             setIsFirstLoading(true);
             // Call API /auth
             // const res = await getAuthUserInfoApi();
-            // if (res) {
-            //     console.log('>>> res.data', res.data);
-            //     setAuth({
-            //         isAuthenticated: true, // true do user đã login trước đó
-            //         user: res?.data ?? {},
-            //     });
-            //     setTimeout(() => {
-            //         setIsFirstLoading(false);
-            //     }, 1000);
-            // } else {
-            //     // ...
-            // }
             setTimeout(() => {
                 setIsFirstLoading(false);
             }, 1000);

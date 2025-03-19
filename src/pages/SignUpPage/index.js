@@ -12,6 +12,7 @@ import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 import { signUpApi } from '~/utils/api';
 import { useNavigate } from 'react-router-dom';
+import { message } from 'antd';
 
 function SignUpPage() {
     // State (useState)
@@ -28,6 +29,9 @@ function SignUpPage() {
 
     // Navigate
     const navigate = useNavigate();
+
+    // Ant Design Message
+    const [messageApi, contextHolder] = message.useMessage();
 
     // --- HANDLE FUNCTION ---
     // Handle Button Show Password
@@ -52,20 +56,49 @@ function SignUpPage() {
         if (formStep === 2) {
             console.log('Call API Sign Up');
             const { name, userName, gender, birth, email, password } = data;
-            const res = await signUpApi(name, userName, gender, birth, email, password); // Call API Sign Up
-            if (res.message === 'Đăng ký thành công') {
-                setOnSubmitMessage('Đăng ký thành công');
-                setFormStep(3);
-                console.log('API Sign Up Response:', res);
-                // Chuyển hướng đến trang đăng nhập
-                if (disabledTimeLeft && timeLeft === 5) {
-                    startCountdown(5);
-                }
-            } else if (res.status == 409 && res.message === 'Email hoặc tên người dùng đã tồn tại') {
-                setOnSubmitMessage(res?.message);
-                // console.log('>>> Đăng ký thất bại');
-                // console.log('Email hoặc tên người dùng đã tồn tại');
-            }
+            // Loading ... (Ant Design Message)
+            messageApi
+                .open({
+                    type: 'loading',
+                    content: 'Đang đăng ký ...',
+                    duration: 1.5,
+                    style: {
+                        color: 'white',
+                    },
+                })
+                .then(async () => {
+                    // Call API Sign Up
+                    const res = await signUpApi(name, userName, gender, birth, email, password);
+                    if (res.message === 'Đăng ký thành công') {
+                        message.success({
+                            content: 'Đăng ký thành công',
+                            duration: 1.5,
+                            style: {
+                                color: 'white',
+                            },
+                        });
+                        setOnSubmitMessage('Đăng ký thành công');
+                        setFormStep(3);
+                        console.log('API Sign Up Response:', res);
+                        // Chuyển hướng đến trang đăng nhập
+                        if (disabledTimeLeft && timeLeft === 5) {
+                            startCountdown(5);
+                        }
+                    } else if (res.status == 409 && res.message === 'Email hoặc tên người dùng đã tồn tại') {
+                        message.error({
+                            content: 'Đăng ký không thành công',
+                            duration: 1.5,
+                            style: {
+                                color: 'white',
+                            },
+                        });
+                        console.log(typeof res.status);
+
+                        setOnSubmitMessage(res?.message);
+                        // console.log('>>> Đăng ký thất bại');
+                        // console.log('Email hoặc tên người dùng đã tồn tại');
+                    }
+                });
         }
     };
     // Handle Countdown navigate to sign in
@@ -85,6 +118,8 @@ function SignUpPage() {
 
     return (
         <>
+            {/* Ant Design Message */}
+            {contextHolder}
             <div className="signUpContainer">
                 {/* <img className="logo" src={logo} alt="Logo mymusic" draggable="false" /> */}
                 <form className="signUpForm" onSubmit={handleSubmit(onSubmit)} method="POST" noValidate>
@@ -368,6 +403,9 @@ function SignUpPage() {
                                     type="submit"
                                     id="btnNextStepID"
                                     style={{ fontWeight: '400' }}
+                                    onClick={() => {
+                                        navigate('/signin');
+                                    }}
                                 >{`Chuyển tới trang đăng nhập (${timeLeft})`}</button>
                             )}
                         </>

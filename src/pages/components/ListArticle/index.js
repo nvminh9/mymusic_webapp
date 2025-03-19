@@ -22,7 +22,7 @@ function ListArticle() {
         const getUserArticles = async (userName) => {
             try {
                 const res = await getUserArticlesApi(userName);
-                if (res.data !== null) {
+                if (res?.status === 200 && res?.data !== null) {
                     // setTimeout(() => {
                     //     setListArticleData(res?.data?.articles?.rows);
                     // }, 3000);
@@ -43,7 +43,19 @@ function ListArticle() {
             <div className="row">
                 {listArticleData?.length === 0 ? (
                     <>
-                        <h1 style={{ color: 'white' }}>Chưa có bài viết</h1>
+                        <span
+                            style={{
+                                color: 'white',
+                                fontSize: '18px',
+                                fontWeight: '500',
+                                textAlign: 'center',
+                                display: 'block',
+                                width: '100%',
+                                padding: '50px 0px',
+                            }}
+                        >
+                            Chưa có bài viết
+                        </span>
                     </>
                 ) : (
                     <>

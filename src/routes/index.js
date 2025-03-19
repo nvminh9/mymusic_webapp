@@ -11,6 +11,7 @@ import SongDetail from '~/pages/SongDetail';
 import SignInPage from '~/pages/SignInPage';
 import { SignInSignUpLayout } from '~/components/Layout';
 import SignUpPage from '~/pages/SignUpPage';
+import ProfileEditPage from '~/pages/ProfileEditPage';
 
 // Public Routes (Chưa đăng nhập vẫn truy cập được)
 const publicRoutes = [
@@ -35,12 +36,16 @@ const privateRoutes = [
             { path: '', component: HomePage },
             { path: 'feeds', component: FeedPage },
             {
-                path: 'profile/:user',
+                path: 'profile/:userName',
                 component: ProfilePage,
                 children: [
                     { path: '', component: ListArticle },
                     { path: 'musics', component: ListMusicInProfile },
                 ],
+            },
+            {
+                path: 'profile/:userName/edit',
+                component: ProfileEditPage,
             },
             {
                 path: 'article/:articleID',

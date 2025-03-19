@@ -80,16 +80,18 @@ function ProfilePage() {
         console.log('>>> location: ', location);
         // userName của trang profile đó
         const userName = location.pathname.split('/')[2];
-        // Call API Lấy thông tin profile
+        // Call API Lấy thông tin profile (API Get User Profile)
         const getUserProfileInfo = async (userName) => {
             try {
                 const res = await getUserProfileInfoApi(userName);
-                if (res) {
-                    // console.log("Thông tin profile: ", res?.data);
+                if (res?.status === 200) {
+                    // console.log('Thông tin profile: ', res?.data);
                     setProfileInfo(res?.data);
-                } else {
-                    // console.log("Lấy thông tin profile thất bại !")
-                    setProfileInfo({});
+                } else if (res?.status === 404) {
+                    // console.log('Lấy thông tin profile thất bại !');
+                    setProfileInfo({
+                        userNotExist: true,
+                    });
                 }
             } catch (error) {
                 console.log(error);
@@ -128,11 +130,10 @@ function ProfilePage() {
             ) : (
                 <></>
             )}
-
             {/* Thanh chuyển tab */}
             <div className="tabSwitchProfile">
                 <div className="profileUserName">
-                    <span>{auth?.user?.userName ?? `Tên người dùng`}</span>
+                    <span>{profileInfo?.user?.userName ?? ``}</span>
                 </div>
                 <div className="btnComeBackBox">
                     <button className="btnComeBack tooltip" onClick={() => navigate(-1)}>
@@ -141,94 +142,123 @@ function ProfilePage() {
                     </button>
                 </div>
             </div>
-            <div className="profilePage">
-                {/* Phần top của profile */}
-                <div className="top">
-                    <div className="left">
-                        {/* Avatar */}
-                        <div className="avatar">
-                            <img src={auth?.user?.userAvatar ?? defaultAvatar} />
-                        </div>
-                    </div>
-                    <div className="right">
-                        <div className="topRight">
-                            {/* Thông tin (tên,...) */}
-                            <div className="userInfo">
-                                <span className="userName">{auth?.user?.userName ?? 'Tên người dùng'}</span>
-                                <div className="btnBox">
-                                    {auth?.user?.userName === location.pathname.split('/')[2] ? (
-                                        <>
-                                            {/* Nút chỉnh sửa trang cá nhân */}
-                                            <button className="btnFollow">Chỉnh sửa trang cá nhân</button>
-                                        </>
-                                    ) : (
-                                        <>
-                                            {/* Nút theo dõi */}
-                                            <button className="btnFollow">Theo dõi</button>
-                                            {/* Nút nhắn tin */}
-                                            <button className="btnMessage">Nhắn tin</button>
-                                        </>
-                                    )}
-
-                                    <button
-                                        className="btnOptions"
-                                        onClick={() => {
-                                            setIsOpenSettingMenu(true);
-                                        }}
-                                    >
-                                        <IoEllipsisHorizontalSharp></IoEllipsisHorizontalSharp>
-                                    </button>
+            {/* Tài khoản người dùng không tồn tại */}
+            {profileInfo?.userNotExist === true ? (
+                <>
+                    <span
+                        style={{
+                            color: 'white',
+                            fontSize: '18px',
+                            fontWeight: '500',
+                            textAlign: 'center',
+                            display: 'block',
+                            width: '100%',
+                            padding: '50px 0px',
+                        }}
+                    >
+                        Người dùng này không tồn tại
+                    </span>
+                </>
+            ) : (
+                <>
+                    {/* Profile */}
+                    <div className="profilePage">
+                        {/* Phần top của profile */}
+                        <div className="top">
+                            <div className="left">
+                                {/* Avatar */}
+                                <div className="avatar">
+                                    <img src={profileInfo?.user?.userAvatar ?? defaultAvatar} />
                                 </div>
                             </div>
-                        </div>
-                        <div className="middleRight">
-                            {/* Chỉ số (số bài viết, người theo dõi, đang theo dõi,...) */}
-                            <div className="userNumeral">
-                                <span className="articles">
-                                    <span
-                                        style={{
-                                            fontWeight: '600',
-                                        }}
-                                    >
-                                        {profileInfo?.articles?.count}
-                                    </span>{' '}
-                                    bài viết
-                                </span>
-                                <span
-                                    className="followers"
-                                    onClick={() => {
-                                        alert('17,4 triệu người theo dõi');
-                                    }}
-                                >
-                                    <span
-                                        style={{
-                                            fontWeight: '600',
-                                        }}
-                                    >
-                                        {formatNumeral(profileInfo?.follower?.count)}
-                                    </span>{' '}
-                                    người theo dõi
-                                </span>
-                                <span
-                                    className="following"
-                                    onClick={() => {
-                                        alert('Đang theo dõi 1 người dùng');
-                                    }}
-                                >
-                                    Đang theo dõi{' '}
-                                    <span
-                                        style={{
-                                            fontWeight: '600',
-                                        }}
-                                    >
-                                        {formatNumeral(profileInfo?.follow?.count)}
-                                    </span>{' '}
-                                    người dùng
-                                </span>
-                            </div>
-                            <div className="userDescription">
-                                <p>
-                                    {/* Kendrick Lamar <br /> @pglang <br />{' '}
+                            <div className="right">
+                                <div className="topRight">
+                                    {/* Thông tin (tên,...) */}
+                                    <div className="userInfo">
+                                        <span className="userName">
+                                            {profileInfo?.user?.userName ?? 'Tên người dùng'}
+                                        </span>
+                                        <div className="btnBox">
+                                            {auth?.user?.userName === location.pathname.split('/')[2] ? (
+                                                <>
+                                                    {/* Nút chỉnh sửa trang cá nhân */}
+                                                    <button
+                                                        className="btnFollow"
+                                                        onClick={() => {
+                                                            navigate('edit');
+                                                        }}
+                                                    >
+                                                        Chỉnh sửa trang cá nhân
+                                                    </button>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    {/* Nút theo dõi */}
+                                                    <button className="btnFollow">Theo dõi</button>
+                                                    {/* Nút nhắn tin */}
+                                                    <button className="btnMessage">Nhắn tin</button>
+                                                </>
+                                            )}
+
+                                            <button
+                                                className="btnOptions"
+                                                onClick={() => {
+                                                    setIsOpenSettingMenu(true);
+                                                }}
+                                            >
+                                                <IoEllipsisHorizontalSharp></IoEllipsisHorizontalSharp>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="middleRight">
+                                    {/* Chỉ số (số bài viết, người theo dõi, đang theo dõi,...) */}
+                                    <div className="userNumeral">
+                                        <span className="articles">
+                                            <span
+                                                style={{
+                                                    fontWeight: '600',
+                                                }}
+                                            >
+                                                {profileInfo?.articles?.count}
+                                            </span>{' '}
+                                            bài viết
+                                        </span>
+                                        <span
+                                            className="followers"
+                                            onClick={() => {
+                                                alert('17,4 triệu người theo dõi');
+                                            }}
+                                        >
+                                            <span
+                                                style={{
+                                                    fontWeight: '600',
+                                                }}
+                                            >
+                                                {formatNumeral(profileInfo?.follower?.count)}
+                                            </span>{' '}
+                                            người theo dõi
+                                        </span>
+                                        <span
+                                            className="following"
+                                            onClick={() => {
+                                                alert('Đang theo dõi 1 người dùng');
+                                            }}
+                                        >
+                                            Đang theo dõi{' '}
+                                            <span
+                                                style={{
+                                                    fontWeight: '600',
+                                                }}
+                                            >
+                                                {formatNumeral(profileInfo?.follow?.count)}
+                                            </span>{' '}
+                                            người dùng
+                                        </span>
+                                    </div>
+                                    <div className="userDescription">
+                                        <p>
+                                            {/* Kendrick Lamar <br /> @pglang <br />{' '}
                                     <a
                                         href="https://my-gnx.com"
                                         style={{
@@ -238,51 +268,53 @@ function ProfilePage() {
                                     >
                                         my-gnx.com
                                     </a> */}
-                                    {auth?.user?.description}
-                                </p>
+                                            {profileInfo?.user?.description}
+                                        </p>
+                                    </div>
+                                    <div className="bottomRight"></div>
+                                </div>
                             </div>
-                            <div className="bottomRight"></div>
+                        </div>
+                        {/* Phần middle của profile */}
+                        <div className="middle">
+                            {/* Phần gợi ý người dùng liên quan (chỉ hiện lên khi follow người dùng,...) */}
+                            <div className="userSuggest"></div>
+                        </div>
+                        {/* Phần bottom của profile */}
+                        <div className="bottom">
+                            {/* Thanh switch bar đổi nội dung hiển thị */}
+                            <div className="switchBar">
+                                <Link
+                                    to={``}
+                                    id="btnToArticleID"
+                                    className={[
+                                        'btnToArticle',
+                                        location.pathname.split('/')[3] === 'musics' ? '' : 'actived',
+                                    ].join(' ')}
+                                    onClick={handleBtnToArticle}
+                                >
+                                    <IoAppsSharp style={{ marginRight: '5px' }}></IoAppsSharp> BÀI VIẾT
+                                </Link>
+                                <Link
+                                    to={`musics`}
+                                    id="btnToMusicID"
+                                    className={[
+                                        'btnToMusic',
+                                        location.pathname.split('/')[3] === 'musics' ? 'actived' : '',
+                                    ].join(' ')}
+                                    onClick={handleBtnToMusic}
+                                >
+                                    <IoMusicalNotesSharp style={{ marginRight: '5px' }}></IoMusicalNotesSharp> ÂM NHẠC
+                                </Link>
+                            </div>
+                            {/* Nội dung */}
+                            <div className="main">
+                                <Outlet />
+                            </div>
                         </div>
                     </div>
-                </div>
-                {/* Phần middle của profile */}
-                <div className="middle">
-                    {/* Phần gợi ý người dùng liên quan (chỉ hiện lên khi follow người dùng,...) */}
-                    <div className="userSuggest"></div>
-                </div>
-                {/* Phần bottom của profile */}
-                <div className="bottom">
-                    {/* Thanh switch bar đổi nội dung hiển thị */}
-                    <div className="switchBar">
-                        <Link
-                            to={``}
-                            id="btnToArticleID"
-                            className={[
-                                'btnToArticle',
-                                location.pathname.split('/')[3] === 'musics' ? '' : 'actived',
-                            ].join(' ')}
-                            onClick={handleBtnToArticle}
-                        >
-                            <IoAppsSharp style={{ marginRight: '5px' }}></IoAppsSharp> BÀI VIẾT
-                        </Link>
-                        <Link
-                            to={`musics`}
-                            id="btnToMusicID"
-                            className={[
-                                'btnToMusic',
-                                location.pathname.split('/')[3] === 'musics' ? 'actived' : '',
-                            ].join(' ')}
-                            onClick={handleBtnToMusic}
-                        >
-                            <IoMusicalNotesSharp style={{ marginRight: '5px' }}></IoMusicalNotesSharp> ÂM NHẠC
-                        </Link>
-                    </div>
-                    {/* Nội dung */}
-                    <div className="main">
-                        <Outlet />
-                    </div>
-                </div>
-            </div>
+                </>
+            )}
         </Fragment>
     );
 }

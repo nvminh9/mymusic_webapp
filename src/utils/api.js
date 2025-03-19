@@ -57,6 +57,12 @@ const getUserArticlesApi = (userName) => {
     return axios.get(URL_API);
 };
 
+// API Lấy danh sách bài nhạc của người dùng
+const getUserSongsApi = (userName) => {
+    const URL_API = `/v1/api/user/${userName}/musics`;
+    return axios.get(URL_API);
+};
+
 export {
     signUpApi,
     signInApi,
@@ -65,4 +71,5 @@ export {
     getUserInfoApi,
     getUserProfileInfoApi,
     getUserArticlesApi,
+    getUserSongsApi,
 };

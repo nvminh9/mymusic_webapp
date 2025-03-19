@@ -48,7 +48,8 @@ function SignInPage() {
         const { email, password } = data;
         // Loading ... (Ant Design)
         messageApi
-            .loading({
+            .open({
+                type: 'loading',
                 content: 'Đang đăng nhập ...',
                 duration: 1.5,
                 style: {
