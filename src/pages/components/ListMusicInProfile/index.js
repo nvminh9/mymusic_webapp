@@ -43,8 +43,9 @@ function ListMusicInProfile() {
                         <span
                             style={{
                                 color: 'white',
-                                fontSize: '18px',
+                                fontSize: '17px',
                                 fontWeight: '500',
+                                fontFamily: 'sans-serif',
                                 textAlign: 'center',
                                 display: 'block',
                                 width: '100%',

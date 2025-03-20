@@ -148,8 +148,9 @@ function ProfilePage() {
                     <span
                         style={{
                             color: 'white',
-                            fontSize: '18px',
+                            fontSize: '17px',
                             fontWeight: '500',
+                            fontFamily: 'sans-serif',
                             textAlign: 'center',
                             display: 'block',
                             width: '100%',
@@ -168,7 +169,13 @@ function ProfilePage() {
                             <div className="left">
                                 {/* Avatar */}
                                 <div className="avatar">
-                                    <img src={profileInfo?.user?.userAvatar ?? defaultAvatar} />
+                                    <img
+                                        src={
+                                            profileInfo?.user?.userAvatar
+                                                ? process.env.REACT_APP_BACKEND_URL + profileInfo?.user?.userAvatar
+                                                : defaultAvatar
+                                        }
+                                    />
                                 </div>
                             </div>
                             <div className="right">

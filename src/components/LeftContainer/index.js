@@ -121,7 +121,13 @@ function LeftContainer() {
                 <div className="user">
                     <div className="avatar">
                         <Link to={`/profile/minhngo`} style={{ textDecoration: 'none', height: '100%', width: '100%' }}>
-                            <img src={auth?.user?.userAvatar ?? avatarDefault} />
+                            <img
+                                src={
+                                    auth?.user?.userAvatar
+                                        ? process.env.REACT_APP_BACKEND_URL + auth?.user?.userAvatar
+                                        : avatarDefault
+                                }
+                            />
                         </Link>
                     </div>
                     <div className="name">
