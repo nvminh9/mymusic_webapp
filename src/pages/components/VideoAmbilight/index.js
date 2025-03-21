@@ -28,7 +28,7 @@ const VideoAmbilight = ({ videoSrc }) => {
             clearInterval(intervalId);
         }
 
-        console.log(videoElement);
+        // console.log(videoElement);
 
         videoElement.addEventListener('play', startAmbilightRepaint);
         videoElement.addEventListener('pause', stopAmbilightRepaint);

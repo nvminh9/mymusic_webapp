@@ -51,6 +51,12 @@ const getUserProfileInfoApi = (userName) => {
     return axios.get(URL_API);
 };
 
+// API Cập nhật profile
+const updateUserProfileInfoApi = (userName, data) => {
+    const URL_API = `/v1/api/user/profile/${userName}`;
+    return axios.patch(URL_API, data);
+};
+
 // API Lấy danh sách bài viết của người dùng
 const getUserArticlesApi = (userName) => {
     const URL_API = `/v1/api/user/${userName}/articles`;
@@ -72,4 +78,5 @@ export {
     getUserProfileInfoApi,
     getUserArticlesApi,
     getUserSongsApi,
+    updateUserProfileInfoApi,
 };

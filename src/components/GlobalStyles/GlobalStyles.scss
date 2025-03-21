@@ -2829,6 +2829,173 @@ body {
 
 // CSS Profile Edit Page
 .profileEditPage {
+    width: 100%;
+    height: 100%;
+
+    .profileEditForm {
+        display: grid;
+        align-items: center;
+        padding: 15px;
+        position: relative;
+        width: 100%;
+
+        // Error Message
+        .errorMessage {
+            color: #f3727f;
+            min-inline-size: 0px;
+            overflow-wrap: break-word;
+            width: 350px;
+            font-size: 14px;
+            font-weight: normal;
+            margin: 0px 0px;
+        }
+
+        // User Avatar
+        .userAvatarWrapper {
+            display: grid;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            border-radius: 2px;
+
+            .userAvatarContainer {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: 130px;
+                width: 130px;
+
+                .userAvatar {
+                    height: 100%;
+                    width: 100%;
+                    object-fit: cover;
+                    cursor: pointer;
+                    border-radius: 50%;
+                    outline: 1px solid rgba(243, 245, 247, 0.15);
+                    outline-offset: -1px;
+                }
+            }
+            .labelUserAvatar {
+                background-color: #121212;
+                border: 2px solid #1f1f1f;
+                border-radius: 2px;
+                transition: ease-out 0.2s;
+                color: white;
+                font-family: 'Funnel Sans', sans-serif;
+                font-size: 13px;
+                padding: 10px 20px;
+                margin: 20px 0px;
+                margin-bottom: 0px;
+                text-align: center;
+                cursor: pointer;
+                transition: ease-out 0.2s;
+            }
+            .labelUserAvatar:hover {
+                border: 2px solid white;
+            }
+            .labelUserAvatar:active {
+                transform: scale(0.98);
+            }
+            .inputUserAvatar {
+                color: white;
+                width: 130px;
+                opacity: 0%;
+            }
+        }
+
+        // Description
+        .labelDescription {
+            color: white;
+            font-size: 15px;
+            font-weight: 600;
+            margin: 5px 0px;
+        }
+        .inputDescription {
+            font-family: 'Funnel Sans', sans-serif;
+            padding: 10px;
+            margin: 5px 0px;
+            width: 100%;
+            height: 80px;
+            resize: none;
+            background-color: #121212;
+            border: 2px solid #1f1f1f;
+            border-radius: 2px;
+            transition: ease-out 0.2s;
+            color: white;
+            text-align: start;
+        }
+        .inputDescription:hover {
+            border: 2px solid whitesmoke;
+        }
+
+        // Gender
+        .labelGender {
+            color: white;
+            font-size: 15px;
+            font-weight: 600;
+            margin: 5px 0px;
+        }
+        .inputGender {
+            font-family: 'Funnel Sans', sans-serif;
+            padding: 15px 10px;
+            margin: 5px 0px;
+            width: 350px;
+            background-color: #121212;
+            border: 2px solid #1f1f1f;
+            border-radius: 2px;
+            transition: ease-out 0.2s;
+            color: white;
+        }
+        .inputGender:hover {
+            border: 2px solid whitesmoke;
+        }
+        .labelGenderMale,
+        .labelGenderFemale,
+        .labelGenderOther {
+            background-color: #121212;
+            border: 2px solid #1f1f1f;
+            border-radius: 2px;
+            transition: ease-out 0.2s;
+            color: white;
+            font-family: 'Funnel Sans', sans-serif;
+            font-size: 13px;
+            padding: 15px 10px;
+            width: 34%;
+            margin: 5px 0px;
+            margin-right: 5px;
+            text-align: center;
+            cursor: pointer;
+        }
+        .labelGenderOther {
+            margin-right: 0px;
+        }
+        .labelGenderMale:hover,
+        .labelGenderFemale:hover,
+        .labelGenderOther:hover {
+            border: 2px solid whitesmoke;
+        }
+
+        // Button submit
+        .btnSubmit {
+            font-family: 'Funnel Sans', sans-serif;
+            margin: 5px 0px;
+            background-color: #000;
+            border: 2px solid transparent;
+            border-radius: 2px;
+            color: white;
+            padding: 15px 10px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: ease-out 0.2s;
+        }
+        .btnSubmit:hover {
+            background-color: #2e2e2e;
+        }
+        .btnSubmit:active {
+            transform: scale(0.98);
+        }
+    }
 }
 
 // CSS Component List Article

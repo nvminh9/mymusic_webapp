@@ -5,7 +5,7 @@ import { Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { message, notification } from 'antd';
 
 function ProtectedRoute({ props }) {
-    console.log('>>> Is re-render ...');
+    // console.log('>>> Is re-render ...');
 
     // State (useState)
     // const [isTokenValid, setIsTokenValid] = useState();
