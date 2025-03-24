@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { getUserSongsApi } from '~/utils/api';
-import { IoBowlingBallOutline } from 'react-icons/io5';
+import { IoBowlingBallOutline, IoSyncSharp } from 'react-icons/io5';
 
 function ListMusicInProfile() {
     // State (useState)
@@ -79,7 +79,7 @@ function ListMusicInProfile() {
                                         marginTop: '50px',
                                     }}
                                 >
-                                    <IoBowlingBallOutline className="loadingAnimation" />
+                                    <IoSyncSharp className="loadingAnimation" />
                                 </div>
                             </>
                         )}

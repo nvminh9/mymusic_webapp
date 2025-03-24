@@ -35,6 +35,10 @@ function ProfileEditPage() {
     // --- HANDLE FUNCTION ---
     // Old User Data for User Gender
     useEffect(() => {
+        // check if username is different auth userName
+        if (!(auth?.user?.userName === location.pathname.split('/')[2])) {
+            return navigate(-1);
+        }
         if (auth?.user?.gender === 'male') {
             document.getElementsByClassName('labelGenderMale')[0].style.backgroundColor = 'white';
             document.getElementsByClassName('labelGenderMale')[0].style.color = '#000';
@@ -162,6 +166,7 @@ function ProfileEditPage() {
                             id="userAvatar"
                             name="userAvatar"
                             type="file"
+                            accept="image/jpeg,image/jpg,image/png,image/gif,image/webp"
                             {...register('userAvatar')}
                             onChange={handlePreviewUserAvatar}
                             // hidden

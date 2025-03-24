@@ -3,7 +3,7 @@ import HomePage from '~/pages/HomePage';
 import ProfilePage from '~/pages/ProfilePage';
 import PublicPage from '~/pages/PublicPage';
 import FeedPage from '~/pages/FeedPage';
-import ListArticle from '~/pages/components/ListArticle';
+// import ListArticle from '~/pages/components/ListArticle';
 import ListMusicInProfile from '~/pages/components/ListMusicInProfile';
 import ArticleDetail from '~/pages/ArticleDetail';
 import PlaylistDetail from '~/pages/PlaylistDetail';
@@ -12,6 +12,8 @@ import SignInPage from '~/pages/SignInPage';
 import { SignInSignUpLayout } from '~/components/Layout';
 import SignUpPage from '~/pages/SignUpPage';
 import ProfileEditPage from '~/pages/ProfileEditPage';
+import ListFollower from '~/pages/components/ListFollower';
+import ListFollowing from '~/pages/components/ListFollowing';
 
 // Public Routes (Chưa đăng nhập vẫn truy cập được)
 const publicRoutes = [
@@ -39,8 +41,9 @@ const privateRoutes = [
                 path: 'profile/:userName',
                 component: ProfilePage,
                 children: [
-                    { path: '', component: ListArticle },
                     { path: 'musics', component: ListMusicInProfile },
+                    { path: 'followers', component: ListFollower },
+                    { path: 'following', component: ListFollowing },
                 ],
             },
             {

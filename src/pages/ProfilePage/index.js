@@ -1,19 +1,32 @@
-import { Fragment, useContext, useEffect, useState } from 'react';
+import { Fragment, useContext, useEffect, useRef, useState } from 'react';
 import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 import { VscChevronLeft } from 'react-icons/vsc';
-import { IoEllipsisHorizontalSharp, IoMusicalNotesSharp, IoAppsSharp, IoBowlingBallOutline } from 'react-icons/io5';
+import {
+    IoEllipsisHorizontalSharp,
+    IoMusicalNotesSharp,
+    IoAppsSharp,
+    IoChevronDownSharp,
+    IoSyncSharp,
+} from 'react-icons/io5';
 import { AuthContext } from '~/context/auth.context';
-import { getUserProfileInfoApi, signOutApi } from '~/utils/api';
+import { createFollowUserApi, getFollowersApi, getUserProfileInfoApi, signOutApi, unfollowUserApi } from '~/utils/api';
 import defaultAvatar from '~/assets/images/avatarDefault.jpg';
+import { message } from 'antd';
+import ArticleProfile from '../components/ArticleProfile';
 
 function ProfilePage() {
     // State (useState)
     const [isOpenSettingMenu, setIsOpenSettingMenu] = useState(false);
-    const [profileInfo, setProfileInfo] = useState();
+    const [isOpenFollowSetting, setIsOpenFollowSetting] = useState(false);
+    const [profileInfo, setProfileInfo] = useState(); // Profile data
+    const [isFollowed, setIsFollowed] = useState(); // For Loading Follow Animation
 
     // Context (useContext)
     // auth là object, trong đó có thuộc tính user chứa thông tin của user auth
     const { auth, setAuth } = useContext(AuthContext);
+
+    // Ref
+    const followersTotal = useRef();
 
     // Chuyển Tab
     const location = useLocation();
@@ -72,12 +85,98 @@ function ProfilePage() {
             return count;
         }
     };
-    // Handle Call API
+    // Handle Follow User
+    const handleFollowUser = async () => {
+        try {
+            // Loading Follow Handle
+            setIsFollowed('pending');
+            // userName của profile (của user được theo dõi)
+            const userName = location.pathname.split('/')[2];
+            // Call API
+            setTimeout(async () => {
+                const res = await createFollowUserApi(userName);
+                // Kiểm tra response
+                if (res?.data !== null) {
+                    console.log('Theo dõi người dùng thành công');
+                    setProfileInfo({ ...profileInfo, followStatus: true });
+                    console.log('profileInfo change: ', profileInfo);
+                    setIsFollowed('success');
+                    // Tăng số lượng follower hiển thị (+1)
+                    let followersTotalChange = followersTotal.current.getHTML() - 0 + 1;
+                    followersTotal.current.innerHTML = followersTotalChange;
+                    return;
+                } else {
+                    console.log('Theo dõi người dùng không thành công');
+                    setProfileInfo({ ...profileInfo, followStatus: false });
+                    console.log('profileInfo change: ', profileInfo);
+                    setIsFollowed('fail');
+                    message.error({
+                        content: 'Theo dõi người dùng không thành công',
+                        duration: 1.5,
+                    });
+                    return;
+                }
+            }, 1000);
+        } catch (error) {
+            console.log('>>> Error Sign Out: ', error);
+            setIsFollowed('fail');
+            message.error({
+                content: 'Theo dõi người dùng không thành công',
+                duration: 1.5,
+            });
+            return;
+        }
+    };
+    // Handle Unfollow User
+    const handleUnfollowUser = async () => {
+        try {
+            // Đóng Menu Follow Setting
+            setIsOpenFollowSetting(false);
+            // Loading Follow Handle
+            setIsFollowed('pending');
+            // userName của profile (của user được theo dõi)
+            const userName = location.pathname.split('/')[2];
+            // Call API Hủy theo dõi
+            setTimeout(async () => {
+                const res = await unfollowUserApi(userName);
+                // Kiểm tra response
+                if (res?.data === true) {
+                    console.log('Hủy theo dõi người dùng thành công');
+                    setProfileInfo({ ...profileInfo, followStatus: false });
+                    setIsFollowed('fail');
+                    // Giảm số lượng follower hiển thị (-1)
+                    let followersTotalChange = followersTotal.current.getHTML() - 0 - 1;
+                    followersTotal.current.innerHTML = followersTotalChange;
+                    return;
+                } else {
+                    console.log('Hủy theo dõi người dùng không thành công');
+                    setIsFollowed('success');
+                    setProfileInfo({ ...profileInfo, followStatus: true });
+                    message.error({
+                        content: 'Hủy theo dõi người dùng không thành công',
+                        duration: 1.5,
+                    });
+                    return;
+                }
+            }, 1000);
+        } catch (error) {
+            console.log('>>> Error Sign Out: ', error);
+            setIsFollowed('success');
+            message.error({
+                content: 'Hủy theo dõi người dùng không thành công',
+                duration: 1.5,
+            });
+            return;
+        }
+    };
+    // Handle Call API Profile Data
     useEffect(() => {
         // Đổi title trang
         document.title = 'Profile | mymusic: Music from everyone';
         console.log('>>> auth: ', auth);
         console.log('>>> location: ', location);
+        // Đóng Menu Follow Setting
+        setIsOpenFollowSetting(false);
         // userName của trang profile đó
         const userName = location.pathname.split('/')[2];
         // Call API Lấy thông tin profile (API Get User Profile)
@@ -87,12 +186,14 @@ function ProfilePage() {
                 if (res?.status === 200) {
                     // console.log('Thông tin profile: ', res?.data);
                     setProfileInfo(res?.data);
+                    // console.log('Check: ', typeof profileInfo.followStatus);
                 } else if (res?.status === 404) {
                     // console.log('Lấy thông tin profile thất bại !');
                     setProfileInfo({
                         userNotExist: true,
                     });
                 }
+                // console.log('Check: ', typeof profileInfo.followStatus);
             } catch (error) {
                 console.log(error);
             }
@@ -103,10 +204,10 @@ function ProfilePage() {
     return (
         <Fragment>
             {/* Menu Setting */}
-            {isOpenSettingMenu ? (
+            {isOpenSettingMenu === true && auth?.user?.userName === location.pathname.split('/')[2] ? (
                 <div className="settingMenuContainer">
                     <div className="settingMenu">
-                        <span className="title">Cài đặt hồ sơ</span>
+                        <span className="title">Cài đặt</span>
                         <button
                             id="btnSignOutID"
                             className="btnSignOut"
@@ -121,6 +222,59 @@ function ProfilePage() {
                             className="btnClose"
                             onClick={() => {
                                 setIsOpenSettingMenu(false);
+                            }}
+                        >
+                            Hủy
+                        </button>
+                    </div>
+                </div>
+            ) : (
+                <></>
+            )}
+            {/* Menu Follow Setting */}
+            {isOpenFollowSetting === true && location.pathname.split('/')[2] === profileInfo?.user?.userName ? (
+                <div className="settingMenuContainer">
+                    <div className="settingMenu">
+                        <span
+                            className="title"
+                            style={{
+                                display: 'grid',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }}
+                        >
+                            <div style={{ padding: '3px' }}>
+                                <img
+                                    src={
+                                        profileInfo?.user?.userAvatar
+                                            ? process.env.REACT_APP_BACKEND_URL + profileInfo?.user?.userAvatar
+                                            : defaultAvatar
+                                    }
+                                    style={{
+                                        width: '55px',
+                                        height: '55px',
+                                        borderRadius: '50%',
+                                        objectPosition: 'center',
+                                        objectFit: 'cover',
+                                    }}
+                                />
+                            </div>
+                            <span>{profileInfo?.user?.userName ? profileInfo?.user?.userName : 'Tên người dùng'}</span>
+                        </span>
+                        <button
+                            id="btnSignOutID"
+                            className="btnSignOut"
+                            onClick={() => {
+                                handleUnfollowUser();
+                            }}
+                        >
+                            Bỏ theo dõi
+                        </button>
+                        <button
+                            id="btnCloseID"
+                            className="btnClose"
+                            onClick={() => {
+                                setIsOpenFollowSetting(false);
                             }}
                         >
                             Hủy
@@ -192,7 +346,7 @@ function ProfilePage() {
                                                     <button
                                                         className="btnFollow"
                                                         onClick={() => {
-                                                            navigate('edit');
+                                                            navigate(`/profile/${auth?.user?.userName}/edit`);
                                                         }}
                                                     >
                                                         Chỉnh sửa trang cá nhân
@@ -200,21 +354,85 @@ function ProfilePage() {
                                                 </>
                                             ) : (
                                                 <>
-                                                    {/* Nút theo dõi */}
-                                                    <button className="btnFollow">Theo dõi</button>
+                                                    {/* Render nút theo dõi */}
+                                                    {profileInfo?.followStatus === true ? (
+                                                        <button
+                                                            className="btnFollowed"
+                                                            onClick={() => {
+                                                                console.log('setIsOpenFollowSetting true');
+                                                                setIsOpenFollowSetting(true);
+                                                            }}
+                                                        >
+                                                            {isFollowed === 'pending' ? (
+                                                                <>
+                                                                    <div
+                                                                        style={{
+                                                                            width: '15px',
+                                                                            height: '15px',
+                                                                            display: 'flex',
+                                                                            justifyContent: 'center',
+                                                                            alignItems: 'center',
+                                                                        }}
+                                                                    >
+                                                                        <IoSyncSharp
+                                                                            className="loadingAnimation"
+                                                                            style={{ color: 'white' }}
+                                                                        />
+                                                                    </div>
+                                                                </>
+                                                            ) : (
+                                                                <>
+                                                                    Đang theo dõi{' '}
+                                                                    <IoChevronDownSharp style={{ marginLeft: '5px' }} />
+                                                                </>
+                                                            )}
+                                                        </button>
+                                                    ) : (
+                                                        <button
+                                                            className="btnFollow"
+                                                            onClick={() => {
+                                                                handleFollowUser();
+                                                            }}
+                                                        >
+                                                            {isFollowed === 'pending' ? (
+                                                                <>
+                                                                    <div
+                                                                        style={{
+                                                                            width: '15px',
+                                                                            height: '15px',
+                                                                            display: 'flex',
+                                                                            justifyContent: 'center',
+                                                                            alignItems: 'center',
+                                                                        }}
+                                                                    >
+                                                                        <IoSyncSharp
+                                                                            className="loadingAnimation"
+                                                                            style={{ color: '#000' }}
+                                                                        />
+                                                                    </div>
+                                                                </>
+                                                            ) : (
+                                                                <>Theo dõi</>
+                                                            )}
+                                                        </button>
+                                                    )}
                                                     {/* Nút nhắn tin */}
                                                     <button className="btnMessage">Nhắn tin</button>
                                                 </>
                                             )}
-
-                                            <button
-                                                className="btnOptions"
-                                                onClick={() => {
-                                                    setIsOpenSettingMenu(true);
-                                                }}
-                                            >
-                                                <IoEllipsisHorizontalSharp></IoEllipsisHorizontalSharp>
-                                            </button>
+                                            {/* Menu của profile cá nhân của mình */}
+                                            {auth?.user?.userName === location.pathname.split('/')[2] ? (
+                                                <button
+                                                    className="btnOptions"
+                                                    onClick={() => {
+                                                        setIsOpenSettingMenu(true);
+                                                    }}
+                                                >
+                                                    <IoEllipsisHorizontalSharp></IoEllipsisHorizontalSharp>
+                                                </button>
+                                            ) : (
+                                                <></>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
@@ -234,13 +452,15 @@ function ProfilePage() {
                                         <span
                                             className="followers"
                                             onClick={() => {
-                                                alert('17,4 triệu người theo dõi');
+                                                navigate(`followers`);
                                             }}
                                         >
                                             <span
                                                 style={{
                                                     fontWeight: '600',
                                                 }}
+                                                id="followersTotalID"
+                                                ref={followersTotal}
                                             >
                                                 {formatNumeral(profileInfo?.follower?.count)}
                                             </span>{' '}
@@ -249,7 +469,7 @@ function ProfilePage() {
                                         <span
                                             className="following"
                                             onClick={() => {
-                                                alert('Đang theo dõi 1 người dùng');
+                                                navigate(`following`);
                                             }}
                                         >
                                             Đang theo dõi{' '}
@@ -316,6 +536,64 @@ function ProfilePage() {
                             </div>
                             {/* Nội dung */}
                             <div className="main">
+                                {/* Nếu route là .../musics thì sẽ ko hiển thị danh sách articles */}
+                                {location.pathname.split('/')[3] === 'musics' ? (
+                                    <></>
+                                ) : (
+                                    <>
+                                        <div className="listArticle">
+                                            {/* List Articles */}
+                                            <div className="row">
+                                                {profileInfo?.articles?.rows?.length === 0 ? (
+                                                    <>
+                                                        <span
+                                                            style={{
+                                                                color: 'white',
+                                                                fontSize: '17px',
+                                                                fontWeight: '500',
+                                                                fontFamily: 'sans-serif',
+                                                                textAlign: 'center',
+                                                                display: 'block',
+                                                                width: '100%',
+                                                                padding: '50px 0px',
+                                                            }}
+                                                        >
+                                                            Chưa có bài viết
+                                                        </span>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        {profileInfo?.articles?.rows ? (
+                                                            <>
+                                                                {profileInfo?.articles?.rows.map((article, index) => (
+                                                                    <>
+                                                                        {/* Article */}
+                                                                        <ArticleProfile key={index} article={article} />
+                                                                    </>
+                                                                ))}
+                                                            </>
+                                                        ) : (
+                                                            <>
+                                                                <div
+                                                                    style={{
+                                                                        width: '100%',
+                                                                        height: '100%',
+                                                                        display: 'flex',
+                                                                        justifyContent: 'center',
+                                                                        alignItems: 'center',
+                                                                        marginTop: '50px',
+                                                                    }}
+                                                                >
+                                                                    <IoSyncSharp className="loadingAnimation" />
+                                                                </div>
+                                                            </>
+                                                        )}
+                                                    </>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </>
+                                )}
                                 <Outlet />
                             </div>
                         </div>

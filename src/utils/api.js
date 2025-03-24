@@ -51,6 +51,18 @@ const getUserProfileInfoApi = (userName) => {
     return axios.get(URL_API);
 };
 
+// API Lấy danh sách người theo dõi
+const getFollowersApi = (userName) => {
+    const URL_API = `/v1/api/user/profile/${userName}/followers`;
+    return axios.get(URL_API);
+};
+
+// API Lấy danh sách đang theo dõi
+const getFollowsApi = (userName) => {
+    const URL_API = `/v1/api/user/profile/${userName}/follows`;
+    return axios.get(URL_API);
+};
+
 // API Cập nhật profile
 const updateUserProfileInfoApi = (userName, data) => {
     const URL_API = `/v1/api/user/profile/${userName}`;
@@ -69,6 +81,18 @@ const getUserSongsApi = (userName) => {
     return axios.get(URL_API);
 };
 
+// API Theo dõi người dùng
+const createFollowUserApi = (userName) => {
+    const URL_API = `/v1/api/user/${userName}/follow`;
+    return axios.post(URL_API);
+};
+
+// API Hủy theo dõi người dùng
+const unfollowUserApi = (userName) => {
+    const URL_API = `/v1/api/user/${userName}/unfollow`;
+    return axios.patch(URL_API);
+};
+
 export {
     signUpApi,
     signInApi,
@@ -79,4 +103,8 @@ export {
     getUserArticlesApi,
     getUserSongsApi,
     updateUserProfileInfoApi,
+    createFollowUserApi,
+    unfollowUserApi,
+    getFollowersApi,
+    getFollowsApi,
 };
