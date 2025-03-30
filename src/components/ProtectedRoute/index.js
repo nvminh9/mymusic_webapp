@@ -33,7 +33,7 @@ function ProtectedRoute({ props }) {
                         user: res?.data ?? {},
                     });
                     localStorage.setItem('valid', true);
-                    console.log('Kiểm tra phiên đăng nhập thành công');
+                    console.log('Kiểm tra phiên đăng nhập thành công', auth);
                 } else if (res?.status == 401) {
                     // Set Auth Context
                     setAuth({

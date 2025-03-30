@@ -2519,6 +2519,105 @@ body {
         .btnClose {
             margin-top: 0px;
         }
+
+        .searchInput {
+            margin: 10px;
+            padding: 7px 10px;
+            border-radius: 5px;
+            border: 0.5px solid transparent;
+            background-color: #1f1f1f;
+            color: white;
+        }
+
+        // listFollowerContainer
+        .listFollowerContainer {
+            overflow-x: hidden;
+            overflow-y: auto;
+
+            .follower {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 10px;
+
+                // left
+                .left {
+                    display: flex;
+                    align-items: center;
+                    justify-content: left;
+
+                    .userAvatar {
+                        width: 55px;
+                        height: 55px;
+                        border-radius: 50%;
+                        object-position: center center;
+                        object-fit: cover;
+                        cursor: pointer;
+                    }
+
+                    .userName {
+                        font-size: 15px;
+                        font-weight: 400;
+                        color: white;
+                        margin: 0px 10px;
+                        cursor: pointer;
+                    }
+                    .userName:hover {
+                        text-decoration: underline;
+                    }
+                }
+                // right
+                .right {
+                    margin-left: 35px;
+
+                    // btn Theo dõi
+                    .btnFollow {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        border: none;
+                        border-radius: 8px;
+                        padding: 8px 15px;
+                        font-size: 14px;
+                        font-weight: 500;
+                        background-color: #ffffff;
+                        color: #000;
+                        cursor: pointer;
+                        transition: ease-out 0.2s;
+                        margin: 0px;
+                    }
+                    .btnFollow:hover {
+                        background-color: #dfdfdf;
+                    }
+                    .btnFollow:active {
+                        transform: scale(0.97);
+                    }
+
+                    // btn Đang theo dõi
+                    .btnFollowed {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        border: none;
+                        border-radius: 8px;
+                        padding: 8px 15px;
+                        font-size: 14px;
+                        font-weight: 500;
+                        background-color: #1f1f1f;
+                        color: #ffffff;
+                        cursor: pointer;
+                        transition: ease-out 0.2s;
+                        margin: 0px;
+                    }
+                    .btnFollowed:hover {
+                        background-color: #121212;
+                    }
+                    .btnFollowed:active {
+                        transform: scale(0.97);
+                    }
+                }
+            }
+        }
     }
 }
 .tabSwitchProfile {
