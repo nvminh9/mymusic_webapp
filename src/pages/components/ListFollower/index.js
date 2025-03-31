@@ -116,10 +116,8 @@ function ListFollower() {
                 // console.log('res?.data?.rows: ', res?.data?.rows);
                 // setTimeout(() => {
                 //     setListFollower(res?.data?.rows);
-                // }, 3000);
-                console.log('auth Data: ', auth);
+                // }, 1000);
                 setListFollower(res?.data?.rows);
-                // console.log(listFollower);
                 return;
             }
             return;
@@ -205,9 +203,9 @@ function ListFollower() {
                                                     <img
                                                         className="userAvatar"
                                                         src={
-                                                            follower?.User?.userAvatar
+                                                            follower?.followerUser?.userAvatar
                                                                 ? process.env.REACT_APP_BACKEND_URL +
-                                                                  follower?.User?.userAvatar
+                                                                  follower?.followerUser?.userAvatar
                                                                 : defaultAvatar
                                                         }
                                                         onClick={() => {

@@ -16,7 +16,7 @@ function ProfileEditPage() {
 
     // State (useState)
     const [previewAvatarLink, setPreviewAvatarLink] = useState(
-        process.env.REACT_APP_BACKEND_URL + auth?.user?.userAvatar,
+        auth?.user?.userAvatar ? process.env.REACT_APP_BACKEND_URL + auth?.user?.userAvatar : defaultAvatar,
     );
     // const [preDescription, setPreDescription] = useState(auth?.user?.description);
 
