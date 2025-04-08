@@ -7,6 +7,10 @@ import {
     IoAppsSharp,
     IoChevronDownSharp,
     IoSyncSharp,
+    IoAddSharp,
+    IoImagesOutline,
+    IoMusicalNotesOutline,
+    IoCloseSharp,
 } from 'react-icons/io5';
 import { AuthContext } from '~/context/auth.context';
 import { createFollowUserApi, getFollowersApi, getUserProfileInfoApi, signOutApi, unfollowUserApi } from '~/utils/api';
@@ -16,8 +20,9 @@ import ArticleProfile from '../components/ArticleProfile';
 
 function ProfilePage() {
     // State (useState)
-    const [isOpenSettingMenu, setIsOpenSettingMenu] = useState(false);
-    const [isOpenFollowSetting, setIsOpenFollowSetting] = useState(false);
+    const [isOpenSettingMenu, setIsOpenSettingMenu] = useState(false); // State đóng/mở menu cài đặt
+    const [isOpenFollowSetting, setIsOpenFollowSetting] = useState(false); // State đóng/mở menu theo dõi (nút đang theo dõi)
+    const [isOpenCreateMenu, setIsOpenCreateMenu] = useState(false); // State đóng/mở menu tạo bài viết/nhạc
     const [profileInfo, setProfileInfo] = useState(); // Profile data
     const [isFollowed, setIsFollowed] = useState(); // For Loading Follow Animation
 
@@ -284,6 +289,75 @@ function ProfilePage() {
             ) : (
                 <></>
             )}
+            {/* Menu Tạo bài viết / nhạc */}
+            {isOpenCreateMenu === true && auth?.user?.userName === location.pathname.split('/')[2] ? (
+                <div className="settingMenuContainer">
+                    <div className="settingMenu">
+                        <span className="title" style={{ position: 'relative' }}>
+                            <span>Tạo</span>
+                            {/* Nút thoát */}
+                            <button
+                                className=""
+                                style={{
+                                    position: 'absolute',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    padding: '5px',
+                                    top: '0',
+                                    right: '0',
+                                }}
+                                onClick={() => {
+                                    setIsOpenCreateMenu(false);
+                                }}
+                            >
+                                <IoCloseSharp />
+                            </button>
+                        </span>
+                        {/* Nút tạo bài viết */}
+                        <button
+                            id="btnSignOutID"
+                            className="btnSignOut"
+                            onClick={() => {
+                                navigate(`/article/upload`);
+                                setIsOpenCreateMenu(false);
+                            }}
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                                padding: '10px 105px',
+                                gap: '10px',
+                            }}
+                        >
+                            <IoImagesOutline />{' '}
+                            <span style={{ display: 'block', width: '100%', textAlign: 'left' }}>Bài viết</span>
+                        </button>
+                        {/* Nút tạo nhạc */}
+                        <button
+                            id="btnSignOutID"
+                            className="btnSignOut"
+                            onClick={() => {
+                                navigate(`/music/upload`);
+                                setIsOpenCreateMenu(false);
+                            }}
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                                padding: '10px 105px',
+                                gap: '10px',
+                                marginBottom: '5px',
+                            }}
+                        >
+                            <IoMusicalNotesOutline />{' '}
+                            <span style={{ display: 'block', width: '100%', textAlign: 'left' }}>Nhạc</span>
+                        </button>
+                    </div>
+                </div>
+            ) : (
+                <></>
+            )}
             {/* Thanh chuyển tab */}
             <div className="tabSwitchProfile">
                 <div className="profileUserName">
@@ -350,6 +424,18 @@ function ProfilePage() {
                                                         }}
                                                     >
                                                         Chỉnh sửa trang cá nhân
+                                                    </button>
+                                                    {/* Nút tạo bài viết/nhạc */}
+                                                    <button
+                                                        className="btnCreate"
+                                                        onClick={() => {
+                                                            setIsOpenCreateMenu(true);
+                                                        }}
+                                                    >
+                                                        Tạo{' '}
+                                                        <IoAddSharp
+                                                            style={{ marginLeft: '5px', marginBottom: '1px' }}
+                                                        />
                                                     </button>
                                                 </>
                                             ) : (
@@ -445,7 +531,7 @@ function ProfilePage() {
                                                     fontWeight: '600',
                                                 }}
                                             >
-                                                {profileInfo?.articles?.count}
+                                                {profileInfo?.articles.length}
                                             </span>{' '}
                                             bài viết
                                         </span>
@@ -544,7 +630,7 @@ function ProfilePage() {
                                         <div className="listArticle">
                                             {/* List Articles */}
                                             <div className="row">
-                                                {profileInfo?.articles?.rows?.length === 0 ? (
+                                                {profileInfo?.articles?.length === 0 ? (
                                                     <>
                                                         <span
                                                             style={{
@@ -563,12 +649,16 @@ function ProfilePage() {
                                                     </>
                                                 ) : (
                                                     <>
-                                                        {profileInfo?.articles?.rows ? (
+                                                        {profileInfo?.articles ? (
                                                             <>
-                                                                {profileInfo?.articles?.rows.map((article, index) => (
+                                                                {profileInfo?.articles.map((article, index) => (
                                                                     <>
                                                                         {/* Article */}
-                                                                        <ArticleProfile key={index} article={article} />
+                                                                        <ArticleProfile
+                                                                            key={index}
+                                                                            article={article}
+                                                                            user={profileInfo?.user}
+                                                                        />
                                                                     </>
                                                                 ))}
                                                             </>

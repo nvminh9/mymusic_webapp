@@ -14,6 +14,8 @@ import SignUpPage from '~/pages/SignUpPage';
 import ProfileEditPage from '~/pages/ProfileEditPage';
 import ListFollower from '~/pages/components/ListFollower';
 import ListFollowing from '~/pages/components/ListFollowing';
+import UploadArticlePage from '~/pages/UploadArticlePage';
+import UploadMusicPage from '~/pages/UploadMusicPage';
 
 // Public Routes (Chưa đăng nhập vẫn truy cập được)
 const publicRoutes = [
@@ -51,12 +53,20 @@ const privateRoutes = [
                 component: ProfileEditPage,
             },
             {
+                path: 'article/upload',
+                component: UploadArticlePage,
+            },
+            {
                 path: 'article/:articleID',
                 component: ArticleDetail,
             },
             {
                 path: 'playlist/:playlistID',
                 component: PlaylistDetail,
+            },
+            {
+                path: 'music/upload',
+                component: UploadMusicPage,
             },
             {
                 path: 'song/:songID',

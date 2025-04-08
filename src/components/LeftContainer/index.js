@@ -120,7 +120,10 @@ function LeftContainer() {
                 {/* User Info */}
                 <div className="user">
                     <div className="avatar">
-                        <Link to={`/profile/minhngo`} style={{ textDecoration: 'none', height: '100%', width: '100%' }}>
+                        <Link
+                            to={`/profile/${auth?.user?.userName}`}
+                            style={{ textDecoration: 'none', height: '100%', width: '100%' }}
+                        >
                             <img
                                 src={
                                     auth?.user?.userAvatar
