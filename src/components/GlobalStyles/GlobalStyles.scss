@@ -3154,6 +3154,236 @@ body {
     }
 }
 
+// CSS Upload Article Page
+.uploadArticlePage {
+    .feedPage {
+        .articleContainer {
+            .uploadArticleForm {
+                .article {
+                    .right {
+                        .top {
+                            .articleInfo {
+                                .privacySelect {
+                                    background: #1f1f1f;
+                                    color: #fff;
+                                    cursor: pointer;
+                                    border-radius: 3px;
+                                    border: 0.5px solid transparent;
+                                    font-family: 'Funnel Sans', sans-serif;
+                                    padding: 1px;
+
+                                    .privacyOption {
+                                        cursor: pointer;
+                                    }
+                                    .privacyOption:hover {
+                                        cursor: pointer !important;
+                                    }
+                                }
+                            }
+                        }
+                        .middle {
+                            .content {
+                                .addMoreContentContainer {
+                                    display: grid;
+                                    border: 0.5px solid #1f1f1f;
+                                    border-radius: 3px;
+                                    padding: 10px;
+
+                                    // Hộp thêm ảnh / video
+                                    .addMediaBox {
+                                        background-color: #1f1f1f;
+                                        width: 100%;
+                                        margin-top: 10px;
+                                        border-radius: 3px;
+                                        padding: 10px;
+                                        display: grid;
+                                        // Tiêu đề
+                                        .title {
+                                            display: flex;
+                                            align-items: center;
+                                            justify-content: space-between;
+                                            color: #ffffff;
+                                            font-size: 15px;
+                                            font-weight: 400;
+                                            font-family: sans-serif;
+                                            margin-bottom: 10px;
+                                            // Nút thêm ảnh/video
+                                            .btnAddMedia {
+                                                svg {
+                                                    font-size: 16px;
+                                                    color: #ffffff80;
+                                                }
+                                                display: flex;
+                                                align-items: center;
+                                                justify-content: center;
+                                                background-color: transparent;
+                                                color: #ffffff80;
+                                                font-family: sans-serif;
+                                                font-size: 15px;
+                                                font-weight: 300;
+                                                gap: 5px;
+                                                padding: 5px 10px;
+                                                cursor: pointer;
+                                                border: 1.5px dashed #ffffff80;
+                                                border-radius: 5px;
+                                                transition: ease-out 0.2s;
+                                            }
+                                            .btnAddMedia:hover {
+                                                border: 1.5px dashed #ffffff;
+                                                color: #ffffff;
+
+                                                svg {
+                                                    color: #ffffff;
+                                                }
+                                            }
+                                            .btnAddMedia:active {
+                                                background-color: #000;
+                                            }
+                                            // Nút đóng hộp
+                                            .btnCloseAddMediaBox {
+                                                display: flex;
+                                                align-items: center;
+                                                justify-content: center;
+                                                padding: 8px;
+                                                background-color: transparent;
+                                                border: none;
+                                                color: #ffffff;
+                                                cursor: pointer;
+                                            }
+                                            .btnCloseAddMediaBox:hover {
+                                                background-color: #2e2e2e;
+                                            }
+                                            .btnCloseAddMediaBox:active {
+                                                background-color: red;
+                                            }
+                                        }
+                                        .mediaListContainer {
+                                            display: flex;
+                                            align-items: center;
+                                            justify-content: start;
+                                            // Danh sách xem trước mediaList
+                                            .mediaList {
+                                                display: flex;
+                                                align-items: center;
+                                                overflow-y: hidden;
+                                                overflow-x: auto;
+                                                scroll-behavior: smooth;
+                                                // Ảnh
+                                                img {
+                                                    height: 150px;
+                                                    min-height: 150px;
+                                                    max-height: 150px;
+                                                    width: 100%;
+                                                    margin-right: 5px;
+                                                    outline: 1px solid rgba(243, 245, 247, 0.15);
+                                                    outline-offset: -1px;
+                                                    border-radius: 3px;
+                                                    margin-bottom: 5px;
+                                                }
+                                                // Video
+                                                video {
+                                                    height: 150px;
+                                                    min-height: 150px;
+                                                    max-height: 150px;
+                                                    width: 100%;
+                                                    margin-right: 5px;
+                                                    outline: 1px solid rgba(243, 245, 247, 0.15);
+                                                    outline-offset: -1px;
+                                                    border-radius: 3px;
+                                                    margin-bottom: 5px;
+                                                }
+                                            }
+                                            .mediaList::-webkit-scrollbar {
+                                                height: 8px;
+                                            }
+                                            .mediaList::-webkit-scrollbar-track {
+                                                background-color: transparent;
+                                            }
+                                            .mediaList::-webkit-scrollbar-thumb {
+                                                border-radius: 3px;
+                                                // background-color: rgba(18, 18, 18, 0.8);
+                                            }
+                                            .mediaList::-webkit-scrollbar-thumb:hover {
+                                                // background-color: rgb(14, 14, 14);
+                                            }
+                                        }
+                                    }
+
+                                    // Các chức năng thêm nội dung cho bài viết
+                                    .addMoreContent {
+                                        width: 100%;
+                                        background-color: transparent;
+                                        display: flex;
+                                        align-items: center;
+                                        justify-content: space-between;
+                                        // padding: 10px;
+
+                                        .title {
+                                            color: #ffffff;
+                                            display: block;
+                                            font-family: sans-serif;
+                                            font-size: 14px;
+                                            font-weight: 400;
+                                        }
+
+                                        .contentOptions {
+                                            // width: 50%;
+
+                                            button {
+                                                display: flex;
+                                                align-items: center;
+                                                justify-content: center;
+                                                padding: 8px;
+                                                background-color: transparent;
+                                                border: none;
+                                                // border-radius: 3px;
+                                                color: #ffffff;
+                                                font-size: 16px;
+                                                cursor: pointer;
+                                                transition: ease-out 0.2s;
+                                            }
+                                            button:hover {
+                                                background-color: #1f1f1f;
+                                            }
+                                            button:active {
+                                                background-color: #000;
+                                            }
+                                            button:active svg {
+                                                transition: ease-out 0.2s;
+                                                transform: scale(0.95);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                .btnSubmit {
+                    font-family: sans-serif;
+                    margin: 12px 0px 0px 0px;
+                    background-color: #000;
+                    border: 2px solid transparent;
+                    border-radius: 3px;
+                    color: white;
+                    padding: 15px 10px;
+                    font-size: 15px;
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: ease-out 0.2s;
+                    width: 100%;
+                }
+                .btnSubmit:hover {
+                    background-color: #1f1f1f;
+                }
+                .btnSubmit:active {
+                    transform: scale(0.98);
+                }
+            }
+        }
+    }
+}
+
 // CSS Component List Article
 .listArticle {
     .row {

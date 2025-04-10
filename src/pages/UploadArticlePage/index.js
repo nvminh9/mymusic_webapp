@@ -4,18 +4,37 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Slider from 'react-slick';
 import { AuthContext } from '~/context/auth.context';
 import defaultAvatar from '~/assets/images/avatarDefault.jpg';
+import { set, useForm } from 'react-hook-form';
+import { message } from 'antd';
+import { IoAddSharp, IoAlertCircleOutline, IoCloseSharp, IoImages } from 'react-icons/io5';
 
 function UploadArticlePage() {
     // State
+    const [isOpenAddMediaBox, setIsOpenAddMediaBox] = useState(false);
+    const [mediaFiles, setMediaFiles] = useState([]); // mediaFiles
+    const [previewMediaFiles, setPreviewMediaFiles] = useState([]); // previewMediaFiles dùng lưu ảnh/video xem trước
 
     // Context
     const { auth } = useContext(AuthContext);
+
+    // Ref
+    const addMediaBoxRef = useRef(null); // Ref hộp thêm ảnh/video
+    const mediaList = useRef(null); // Ref mediaList xem trước ảnh/video đã chọn
 
     // Navigate
     const navigate = useNavigate();
     const location = useLocation();
 
+    // React Hook Form (Form Upload Article)
+    const formUploadArticle = useForm();
+    const { register, handleSubmit, formState, watch } = formUploadArticle;
+    const { errors } = formState;
+
+    // Message (Ant Design)
+    const [messageApi, contextHolder] = message.useMessage();
+
     // Config Carousel Media (React Slick)
+    // Slide Hình xem trước của bài viết
     let sliderRef = useRef(null);
     const next = () => {
         sliderRef.slickNext();
@@ -72,8 +91,93 @@ function UploadArticlePage() {
             },
         ],
     };
+    // Slide Hình ảnh/video đã thêm vào bài viết
+    let sliderRefAddMedia = useRef(null);
+    const nextAddMedia = () => {
+        sliderRefAddMedia.slickNext();
+    };
+    const previousAddMedia = () => {
+        sliderRefAddMedia.slickPrev();
+    };
+    const settingsSlideAddMedia = {
+        // dots: feed.feed.media.length > 1 ? true : false,
+        dots: false,
+        arrows: false,
+        // infinite: feed.feed.media.length > 1 ? true : false,
+        infinite: false,
+        // draggable: feed.feed.media.length > 1 ? true : false,
+        draggable: true,
+        speed: 500,
+        slidesToShow: 2.5,
+        slidesToScroll: 1,
+        initialSlide: 0,
+        accessibility: true,
+        variableWidth: true,
+        responsive: [
+            {
+                breakpoint: 1024,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1,
+                    infinite: true,
+                    dots: true,
+                    // draggable: feed.feed.media.length > 1 ? true : false,
+                    draggable: true,
+                },
+            },
+            {
+                breakpoint: 600,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1,
+                    initialSlide: 2,
+                    // draggable: feed.feed.media.length > 1 ? true : false,
+                    draggable: true,
+                },
+            },
+            {
+                breakpoint: 480,
+                settings: {
+                    // slidesToShow: 1,
+                    // slidesToScroll: 1,
+                    slidesToShow: 1,
+                    slidesToScroll: 1,
+                    initialSlide: 2,
+                    // draggable: feed.feed.media.length > 1 ? true : false,
+                    draggable: true,
+                },
+            },
+        ],
+    };
 
     // --- HANDLE FUNCTIONS ---
+    // Handle Submit Form Upload Article
+    const onSubmit = async (data) => {
+        // ...
+        console.log(data);
+    };
+    // Handle Input Add Media File
+    const handleAddMedia = (e) => {
+        // Files mới chọn
+        const selectedFiles = Array.from(e.target.files);
+        // Gán loại và URL tạm thời cho file
+        const filesWithPreview = selectedFiles.map((file) => ({
+            file,
+            type: file.type.startsWith('image') ? 'image' : 'video',
+            preview: URL.createObjectURL(file),
+        }));
+        // Thêm vào mediaFiles và previewMediaFiles
+        setMediaFiles((prevFiles) => [...prevFiles, ...selectedFiles]);
+        setPreviewMediaFiles((prevFiles) => [...prevFiles, ...filesWithPreview]);
+        // Reset input
+        e.target.value = null;
+        // Scroll xuống cuối mediaList
+        setTimeout(() => {
+            mediaList.current.scrollLeft = mediaList.current.scrollWidth;
+        }, 200);
+        // console.log(mediaFiles);
+        // console.log(previewMediaFiles);
+    };
 
     return (
         <Fragment>
@@ -93,116 +197,312 @@ function UploadArticlePage() {
                 {/* Upload Article */}
                 <div className="feedPage">
                     <div className="articleContainer">
-                        <div className="article">
-                            <div className="left">
-                                {/* Avatar */}
-                                <div className="userAvatar">
-                                    <Link to={`/profile/${auth?.user?.userName}`} style={{ textDecoration: 'none' }}>
-                                        <img
-                                            src={
-                                                auth?.user?.userAvatar
-                                                    ? process.env.REACT_APP_BACKEND_URL + auth?.user?.userAvatar
-                                                    : defaultAvatar
-                                            }
-                                        />
-                                    </Link>
-                                </div>
-                            </div>
-                            <div className="right">
-                                <div className="top">
-                                    <div className="articleInfo">
+                        {/* Form Upload Article */}
+                        <form className="uploadArticleForm" onSubmit={handleSubmit(onSubmit)} method="POST" noValidate>
+                            <div className="article">
+                                <div className="left">
+                                    {/* Avatar */}
+                                    <div className="userAvatar">
                                         <Link
                                             to={`/profile/${auth?.user?.userName}`}
                                             style={{ textDecoration: 'none' }}
                                         >
-                                            <span className="userName">{auth?.user?.userName}</span>
+                                            <img
+                                                src={
+                                                    auth?.user?.userAvatar
+                                                        ? process.env.REACT_APP_BACKEND_URL + auth?.user?.userAvatar
+                                                        : defaultAvatar
+                                                }
+                                            />
                                         </Link>
-                                        {/* <span className="createdAt"></span> */}
-                                    </div>
-                                    <div className="articleOptions">
-                                        <button className="btnArticleOptions">
-                                            <VscEllipsis></VscEllipsis>
-                                        </button>
                                     </div>
                                 </div>
-                                <div className="middle">
-                                    <div className="content">
-                                        {/* <div className="text">Tiêu đề bài viết</div> */}
-                                        <textarea
-                                            className="text"
-                                            placeholder="Nhập nội dung bài viết..."
-                                            style={{
-                                                background: 'transparent',
-                                                borderRadius: '5px',
-                                                border: '.5px solid transparent',
-                                                fontFamily: "'Funnel Sans', sans-serif",
-                                                maxWidth: '100%',
-                                                minWidth: '100%',
-                                                minHeight: 'max-content',
-                                                padding: '0px 0px 8px 0px',
-                                            }}
-                                        />
-                                        <div className="media">
-                                            {/* Carousel Media */}
-                                            <div className="carouselMedia">
-                                                <Slider
-                                                    ref={(slider) => {
-                                                        sliderRef = slider;
+                                <div className="right">
+                                    <div className="top">
+                                        <div className="articleInfo">
+                                            <Link
+                                                to={`/profile/${auth?.user?.userName}`}
+                                                style={{ textDecoration: 'none' }}
+                                            >
+                                                <span className="userName">{auth?.user?.userName}</span>
+                                            </Link>
+                                            {/* Chọn Privacy */}
+                                            <select
+                                                className="privacySelect"
+                                                name="privacy"
+                                                id="privacy"
+                                                {...register('privacy', {})}
+                                            >
+                                                <option className="privacyOption" value="0">
+                                                    Công khai
+                                                </option>
+                                                <option className="privacyOption" value="1">
+                                                    Chỉ mình tôi
+                                                </option>
+                                            </select>
+                                            {/* <span className="createdAt"></span> */}
+                                        </div>
+                                        <div className="articleOptions">
+                                            <button type="button" className="btnArticleOptions">
+                                                <VscEllipsis></VscEllipsis>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div className="middle">
+                                        <div className="content">
+                                            {/* Nội dung textContent */}
+                                            <textarea
+                                                className="text"
+                                                placeholder="Có gì mới?"
+                                                {...register('textContent', {
+                                                    required: 'Chưa nhập nội dung bài viết',
+                                                    maxLength: {
+                                                        value: 1500,
+                                                        message: 'Nội dung bài viết không được quá 1500 ký tự',
+                                                    },
+                                                })}
+                                                onChange={() => {
+                                                    console.log(errors.textContent?.message);
+                                                }}
+                                                style={{
+                                                    background: 'transparent',
+                                                    borderRadius: '3px',
+                                                    border: '.5px solid transparent',
+                                                    fontFamily: "'Funnel Sans', sans-serif",
+                                                    maxWidth: '100%',
+                                                    minWidth: '100%',
+                                                    height: 'max-content',
+                                                    minHeight: 'max-content',
+                                                    padding: '0px 0px 8px 0px',
+                                                    marginBottom: '8px',
+                                                    marginTop: '5px',
+                                                }}
+                                            />
+                                            {/* Validate Error Text Content */}
+                                            {errors.textContent?.message ? (
+                                                <div
+                                                    className="errorMessage"
+                                                    style={{
+                                                        background: '#e91429',
+                                                        width: 'fit-content',
+                                                        padding: '5px',
+                                                        color: 'white',
+                                                        fontSize: '14px',
+                                                        fontFamily: 'sans-serif',
+                                                        margin: '8px 0px',
+                                                        borderRadius: '3px',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                        gap: '5px',
                                                     }}
-                                                    {...settings}
                                                 >
-                                                    {/* {feed.feed.media.map((mediaContent, index) => (
-                                                        <Fragment key={index}>
+                                                    <IoAlertCircleOutline /> {errors.textContent?.message}
+                                                </div>
+                                            ) : (
+                                                <></>
+                                            )}
+                                            {/* Slide Media */}
+                                            <div className="media">
+                                                {/* Carousel Media Xem trước */}
+                                                <div className="carouselMedia">
+                                                    {/* <Slider
+                                                        ref={(slider) => {
+                                                            sliderRef = slider;
+                                                        }}
+                                                        {...settings}
+                                                    >
+                                                        <Fragment>
                                                             <div className="mediaContainer">
                                                                 <img
-                                                                    src={mediaContent.imageUrl}
+                                                                    src={
+                                                                        auth?.user?.userAvatar
+                                                                            ? process.env.REACT_APP_BACKEND_URL +
+                                                                              auth?.user?.userAvatar
+                                                                            : defaultAvatar
+                                                                    }
                                                                     className="slide-image"
                                                                     style={{}}
                                                                 />
                                                             </div>
                                                         </Fragment>
-                                                    ))} */}
-                                                    <Fragment>
-                                                        <div className="mediaContainer">
-                                                            <img
-                                                                src={
-                                                                    auth?.user?.userAvatar
-                                                                        ? process.env.REACT_APP_BACKEND_URL +
-                                                                          auth?.user?.userAvatar
-                                                                        : defaultAvatar
-                                                                }
-                                                                className="slide-image"
-                                                                style={{}}
-                                                            />
-                                                        </div>
-                                                    </Fragment>
-                                                    <Fragment>
-                                                        <div className="mediaContainer">
-                                                            <img
-                                                                src={`https://upload.wikimedia.org/wikipedia/en/4/4b/KendrickLamarSwimmingPools.jpg`}
-                                                                className="slide-image"
-                                                                style={{}}
-                                                            />
-                                                        </div>
-                                                    </Fragment>
-                                                </Slider>
-                                                {2 >= 2 && (
+                                                        <Fragment>
+                                                            <div className="mediaContainer">
+                                                                <img
+                                                                    src={`https://upload.wikimedia.org/wikipedia/en/4/4b/KendrickLamarSwimmingPools.jpg`}
+                                                                    className="slide-image"
+                                                                    style={{}}
+                                                                />
+                                                            </div>
+                                                        </Fragment>
+                                                    </Slider>
+                                                    {2 >= 2 && (
+                                                        <>
+                                                            <button
+                                                                type="button"
+                                                                className="btnPrevCarousel"
+                                                                onClick={previous}
+                                                            >
+                                                                <VscChevronLeft />
+                                                            </button>
+                                                            <button
+                                                                type="button"
+                                                                className="btnNextCarousel"
+                                                                onClick={next}
+                                                            >
+                                                                <VscChevronRight />
+                                                            </button>
+                                                        </>
+                                                    )} */}
+                                                </div>
+                                            </div>
+                                            {/* Phần thêm nội dung vào bài viết */}
+                                            <div className="addMoreContentContainer">
+                                                {/* Các chức thêm nội dung cho bài viết */}
+                                                <div className="addMoreContent">
+                                                    <span className="title">Thêm vào bài viết của bạn</span>
+                                                    <div className="contentOptions">
+                                                        {/* Nút mở hộp thêm ảnh/video */}
+                                                        <button
+                                                            type="button"
+                                                            className="btnOpenAddMediaBox"
+                                                            onClick={() => {
+                                                                setIsOpenAddMediaBox(!isOpenAddMediaBox);
+                                                                setTimeout(() => {
+                                                                    addMediaBoxRef?.current?.scrollIntoView({
+                                                                        behavior: 'smooth',
+                                                                    });
+                                                                }, 150);
+                                                            }}
+                                                        >
+                                                            <IoImages />
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                {/* Hộp Thêm Media File */}
+                                                {isOpenAddMediaBox ? (
                                                     <>
-                                                        <button className="btnPrevCarousel" onClick={previous}>
-                                                            <VscChevronLeft />
-                                                        </button>
-                                                        <button className="btnNextCarousel" onClick={next}>
-                                                            <VscChevronRight />
-                                                        </button>
+                                                        <div className="addMediaBox" ref={addMediaBoxRef}>
+                                                            <span className="title">
+                                                                <span
+                                                                    style={{
+                                                                        display: 'flex',
+                                                                        alignItems: 'center',
+                                                                        gap: '8px',
+                                                                    }}
+                                                                >
+                                                                    {/* Nút thêm ảnh/video */}
+                                                                    <label
+                                                                        className="btnAddMedia"
+                                                                        draggable="false"
+                                                                        htmlFor="mediaFileID"
+                                                                        onClick={(e) => {}}
+                                                                    >
+                                                                        <IoAddSharp /> Thêm ảnh/video
+                                                                    </label>
+                                                                </span>
+                                                                {/* Nút đóng */}
+                                                                <button
+                                                                    type="button"
+                                                                    className="btnCloseAddMediaBox"
+                                                                    onClick={() => {
+                                                                        setIsOpenAddMediaBox(false);
+                                                                    }}
+                                                                >
+                                                                    <IoCloseSharp />
+                                                                </button>
+                                                            </span>
+                                                            <div className="mediaListContainer">
+                                                                {/* Input Media File */}
+                                                                <input
+                                                                    className="inputMediaFile"
+                                                                    id="mediaFileID"
+                                                                    name="mediaFile"
+                                                                    type="file"
+                                                                    accept="image/jpeg,image/jpg,image/png,image/gif,image/webp,video/mp4,video/mkv,video/webm,video/avi"
+                                                                    multiple
+                                                                    // {...register('mediaFiles', {})}
+                                                                    onChange={handleAddMedia}
+                                                                    style={{
+                                                                        opacity: '0',
+                                                                        width: '0px',
+                                                                        height: '0px',
+                                                                    }}
+                                                                />
+                                                                {/* Danh sách ảnh/video đã thêm */}
+                                                                <div
+                                                                    className="mediaList"
+                                                                    ref={mediaList}
+                                                                    style={{
+                                                                        width:
+                                                                            previewMediaFiles.length > 0 ? '' : '100%',
+                                                                    }}
+                                                                >
+                                                                    {/* Render ảnh/video đã chọn */}
+                                                                    {previewMediaFiles.length > 0 ? (
+                                                                        <>
+                                                                            {previewMediaFiles.map(
+                                                                                (previewMediaFile, index) => (
+                                                                                    <>
+                                                                                        {previewMediaFile.type ===
+                                                                                        'image' ? (
+                                                                                            <img
+                                                                                                key={index}
+                                                                                                src={
+                                                                                                    previewMediaFile.preview
+                                                                                                }
+                                                                                            />
+                                                                                        ) : (
+                                                                                            <video
+                                                                                                key={index}
+                                                                                                src={
+                                                                                                    previewMediaFile.preview
+                                                                                                }
+                                                                                                controls
+                                                                                            />
+                                                                                        )}
+                                                                                    </>
+                                                                                ),
+                                                                            )}
+                                                                        </>
+                                                                    ) : (
+                                                                        <span
+                                                                            style={{
+                                                                                color: 'whitesmoke',
+                                                                                fontFamily: 'sans-serif',
+                                                                                fontSize: '15px',
+                                                                                fontWeight: '400',
+                                                                                textAlign: 'center',
+                                                                                display: 'block',
+                                                                                width: '100%',
+                                                                                padding: '66.5px 0px',
+                                                                            }}
+                                                                        >
+                                                                            Chưa chọn ảnh/video nào
+                                                                        </span>
+                                                                    )}
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </>
+                                                ) : (
+                                                    <></>
                                                 )}
                                             </div>
                                         </div>
                                     </div>
+                                    <div className="bottom"></div>
                                 </div>
-                                <div className="bottom"></div>
                             </div>
-                        </div>
+                            {/* Nút Submit */}
+                            <button type="submit" className="btnSubmit" id="btnSubmitID">
+                                Tạo
+                            </button>
+                            {/* Check Data */}
+                            <pre style={{ color: 'red' }} hidden>
+                                {JSON.stringify(watch(), null, 2)}
+                            </pre>
+                        </form>
                     </div>
                 </div>
             </div>
