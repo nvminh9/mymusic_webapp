@@ -3257,10 +3257,14 @@ body {
                                                 background-color: red;
                                             }
                                         }
+                                        // Phần hiển thị các ảnh/video đã chọn
                                         .mediaListContainer {
                                             display: flex;
                                             align-items: center;
                                             justify-content: start;
+                                            overflow-y: hidden;
+                                            overflow-x: auto;
+                                            scroll-behavior: smooth;
                                             // Danh sách xem trước mediaList
                                             .mediaList {
                                                 display: flex;
@@ -3268,29 +3272,53 @@ body {
                                                 overflow-y: hidden;
                                                 overflow-x: auto;
                                                 scroll-behavior: smooth;
-                                                // Ảnh
-                                                img {
+                                                // Div bao ảnh/video
+                                                .previewMediaFilesContainer {
+                                                    position: relative;
                                                     height: 150px;
                                                     min-height: 150px;
                                                     max-height: 150px;
                                                     width: 100%;
                                                     margin-right: 5px;
-                                                    outline: 1px solid rgba(243, 245, 247, 0.15);
-                                                    outline-offset: -1px;
-                                                    border-radius: 3px;
                                                     margin-bottom: 5px;
-                                                }
-                                                // Video
-                                                video {
-                                                    height: 150px;
-                                                    min-height: 150px;
-                                                    max-height: 150px;
-                                                    width: 100%;
-                                                    margin-right: 5px;
-                                                    outline: 1px solid rgba(243, 245, 247, 0.15);
-                                                    outline-offset: -1px;
                                                     border-radius: 3px;
-                                                    margin-bottom: 5px;
+                                                    // Button Remove
+                                                    .btnRemove {
+                                                        position: absolute;
+                                                        top: 2px;
+                                                        right: 2px;
+                                                        display: flex;
+                                                        align-items: center;
+                                                        justify-content: center;
+                                                        padding: 3px 5px;
+                                                        background-color: rgba(18, 18, 18, 0.35);
+                                                        border: none;
+                                                        border-radius: 3px;
+                                                        color: #ffffff;
+                                                        cursor: pointer;
+                                                        transition: ease-out 0.2s;
+                                                    }
+                                                    .btnRemove:hover {
+                                                        background-color: rgba(18, 18, 18, 0.65);
+                                                        backdrop-filter: blur(5px);
+                                                    }
+                                                    .btnRemove:active {
+                                                        background-color: red;
+                                                    }
+                                                    // Ảnh
+                                                    img {
+                                                        height: 100%;
+                                                        outline: 1px solid rgba(243, 245, 247, 0.15);
+                                                        outline-offset: -1px;
+                                                        border-radius: 3px;
+                                                    }
+                                                    // Video
+                                                    video {
+                                                        height: 100%;
+                                                        outline: 1px solid rgba(243, 245, 247, 0.15);
+                                                        outline-offset: -1px;
+                                                        border-radius: 3px;
+                                                    }
                                                 }
                                             }
                                             .mediaList::-webkit-scrollbar {

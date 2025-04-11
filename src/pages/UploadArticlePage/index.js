@@ -156,18 +156,26 @@ function UploadArticlePage() {
         // ...
         console.log(data);
     };
-    // Handle Input Add Media File
+    // Handle Remove Add Media File (có thể tối ưu)
+    const handleRemoveAddMedia = (id) => {
+        // Xóa link ảo (URL blob)
+        // ...
+        // Lọc preview (Lấy ra mảng item trừ item có id được truyền vào)
+        setPreviewMediaFiles((prev) => prev.filter((item) => item.id !== id));
+    };
+    // Handle Input Add Media File (có thể tối ưu)
     const handleAddMedia = (e) => {
         // Files mới chọn
         const selectedFiles = Array.from(e.target.files);
         // Gán loại và URL tạm thời cho file
-        const filesWithPreview = selectedFiles.map((file) => ({
+        const filesWithPreview = selectedFiles.map((file, index) => ({
             file,
             type: file.type.startsWith('image') ? 'image' : 'video',
             preview: URL.createObjectURL(file),
+            id: Math.random().toString(36).substring(2, 9), // id tạm thời để xóa
         }));
         // Thêm vào mediaFiles và previewMediaFiles
-        setMediaFiles((prevFiles) => [...prevFiles, ...selectedFiles]);
+        // setMediaFiles((prevFiles) => [...prevFiles, ...selectedFiles]);
         setPreviewMediaFiles((prevFiles) => [...prevFiles, ...filesWithPreview]);
         // Reset input
         e.target.value = null;
@@ -446,20 +454,62 @@ function UploadArticlePage() {
                                                                                     <>
                                                                                         {previewMediaFile.type ===
                                                                                         'image' ? (
-                                                                                            <img
+                                                                                            <div
                                                                                                 key={index}
-                                                                                                src={
-                                                                                                    previewMediaFile.preview
-                                                                                                }
-                                                                                            />
+                                                                                                className="previewMediaFilesContainer"
+                                                                                            >
+                                                                                                <img
+                                                                                                    key={index + 'img'}
+                                                                                                    src={
+                                                                                                        previewMediaFile.preview
+                                                                                                    }
+                                                                                                />
+                                                                                                <button
+                                                                                                    className="btnRemove"
+                                                                                                    key={
+                                                                                                        index +
+                                                                                                        'btnRemove'
+                                                                                                    }
+                                                                                                    type="button"
+                                                                                                    onClick={() => {
+                                                                                                        handleRemoveAddMedia(
+                                                                                                            previewMediaFile.id,
+                                                                                                        );
+                                                                                                    }}
+                                                                                                >
+                                                                                                    <IoCloseSharp />
+                                                                                                </button>
+                                                                                            </div>
                                                                                         ) : (
-                                                                                            <video
+                                                                                            <div
                                                                                                 key={index}
-                                                                                                src={
-                                                                                                    previewMediaFile.preview
-                                                                                                }
-                                                                                                controls
-                                                                                            />
+                                                                                                className="previewMediaFilesContainer"
+                                                                                            >
+                                                                                                <video
+                                                                                                    key={
+                                                                                                        index + 'video'
+                                                                                                    }
+                                                                                                    src={
+                                                                                                        previewMediaFile.preview
+                                                                                                    }
+                                                                                                    controls
+                                                                                                />
+                                                                                                <button
+                                                                                                    className="btnRemove"
+                                                                                                    key={
+                                                                                                        index +
+                                                                                                        'btnRemove'
+                                                                                                    }
+                                                                                                    type="button"
+                                                                                                    onClick={() => {
+                                                                                                        handleRemoveAddMedia(
+                                                                                                            previewMediaFile.id,
+                                                                                                        );
+                                                                                                    }}
+                                                                                                >
+                                                                                                    <IoCloseSharp />
+                                                                                                </button>
+                                                                                            </div>
                                                                                         )}
                                                                                     </>
                                                                                 ),
