@@ -2345,7 +2345,7 @@ body {
                         .media {
                             .carouselMedia {
                                 height: max-content;
-                                max-height: 600px;
+                                // max-height: 600px; // Tạm bỏ max-height
                                 position: relative;
                                 width: 400px; // trên mobile đổi lại thành 100%
                                 margin-bottom: 26px;
@@ -2365,7 +2365,7 @@ body {
                                 // mediaContainer
                                 .mediaContainer {
                                     height: 100%;
-
+                                    // Ảnh
                                     img {
                                         height: 100%;
                                         width: 100%;
@@ -2373,7 +2373,17 @@ body {
                                         object-position: center center;
                                         outline: 1px solid rgba(243, 245, 247, 0.15);
                                         outline-offset: -1px;
-                                        // border-radius: 8px;
+                                        border-radius: 5px;
+                                    }
+                                    // Video
+                                    video {
+                                        height: 100%;
+                                        width: 100%;
+                                        object-fit: cover;
+                                        object-position: center center;
+                                        outline: 1px solid rgba(243, 245, 247, 0.15);
+                                        outline-offset: -1px;
+                                        border-radius: 5px;
                                     }
                                 }
                                 // Nút điều khiển Carousel Media
@@ -3186,7 +3196,7 @@ body {
                                 .addMoreContentContainer {
                                     display: grid;
                                     border: 0.5px solid #1f1f1f;
-                                    border-radius: 3px;
+                                    border-radius: 5px;
                                     padding: 10px;
 
                                     // Hộp thêm ảnh / video
@@ -3194,7 +3204,7 @@ body {
                                         background-color: #1f1f1f;
                                         width: 100%;
                                         margin-top: 10px;
-                                        border-radius: 3px;
+                                        border-radius: 5px;
                                         padding: 10px;
                                         display: grid;
                                         // Tiêu đề
@@ -3310,7 +3320,7 @@ body {
                                                         height: 100%;
                                                         outline: 1px solid rgba(243, 245, 247, 0.15);
                                                         outline-offset: -1px;
-                                                        border-radius: 3px;
+                                                        border-radius: 5px;
                                                     }
                                                     // Video
                                                     video {
@@ -3392,7 +3402,7 @@ body {
                     margin: 12px 0px 0px 0px;
                     background-color: #000;
                     border: 2px solid transparent;
-                    border-radius: 3px;
+                    border-radius: 5px;
                     color: white;
                     padding: 15px 10px;
                     font-size: 15px;

@@ -43,13 +43,10 @@ function UploadArticlePage() {
         sliderRef.slickPrev();
     };
     const settings = {
-        // dots: feed.feed.media.length > 1 ? true : false,
-        dots: true,
+        dots: previewMediaFiles.length > 1 ? true : false,
         arrows: false,
-        // infinite: feed.feed.media.length > 1 ? true : false,
-        infinite: true,
-        // draggable: feed.feed.media.length > 1 ? true : false,
-        draggable: true,
+        infinite: previewMediaFiles.length > 1 ? true : false,
+        draggable: previewMediaFiles.length > 1 ? true : false,
         speed: 500,
         slidesToShow: 1,
         slidesToScroll: 1,
@@ -63,7 +60,7 @@ function UploadArticlePage() {
                     slidesToScroll: 1,
                     infinite: true,
                     dots: true,
-                    // draggable: feed.feed.media.length > 1 ? true : false,
+                    draggable: previewMediaFiles.length > 1 ? true : false,
                     draggable: true,
                 },
             },
@@ -73,7 +70,7 @@ function UploadArticlePage() {
                     slidesToShow: 1,
                     slidesToScroll: 1,
                     initialSlide: 2,
-                    // draggable: feed.feed.media.length > 1 ? true : false,
+                    draggable: previewMediaFiles.length > 1 ? true : false,
                     draggable: true,
                 },
             },
@@ -85,7 +82,7 @@ function UploadArticlePage() {
                     slidesToShow: 1,
                     slidesToScroll: 1,
                     initialSlide: 2,
-                    // draggable: feed.feed.media.length > 1 ? true : false,
+                    draggable: previewMediaFiles.length > 1 ? true : false,
                     draggable: true,
                 },
             },
@@ -274,7 +271,7 @@ function UploadArticlePage() {
                                                 }}
                                                 style={{
                                                     background: 'transparent',
-                                                    borderRadius: '3px',
+                                                    borderRadius: '5px',
                                                     border: '.5px solid transparent',
                                                     fontFamily: "'Funnel Sans', sans-serif",
                                                     maxWidth: '100%',
@@ -298,7 +295,7 @@ function UploadArticlePage() {
                                                         fontSize: '14px',
                                                         fontFamily: 'sans-serif',
                                                         margin: '8px 0px',
-                                                        borderRadius: '3px',
+                                                        borderRadius: '5px',
                                                         display: 'flex',
                                                         alignItems: 'center',
                                                         justifyContent: 'center',
@@ -314,54 +311,57 @@ function UploadArticlePage() {
                                             <div className="media">
                                                 {/* Carousel Media Xem trước */}
                                                 <div className="carouselMedia">
-                                                    {/* <Slider
-                                                        ref={(slider) => {
-                                                            sliderRef = slider;
-                                                        }}
-                                                        {...settings}
-                                                    >
-                                                        <Fragment>
-                                                            <div className="mediaContainer">
-                                                                <img
-                                                                    src={
-                                                                        auth?.user?.userAvatar
-                                                                            ? process.env.REACT_APP_BACKEND_URL +
-                                                                              auth?.user?.userAvatar
-                                                                            : defaultAvatar
-                                                                    }
-                                                                    className="slide-image"
-                                                                    style={{}}
-                                                                />
-                                                            </div>
-                                                        </Fragment>
-                                                        <Fragment>
-                                                            <div className="mediaContainer">
-                                                                <img
-                                                                    src={`https://upload.wikimedia.org/wikipedia/en/4/4b/KendrickLamarSwimmingPools.jpg`}
-                                                                    className="slide-image"
-                                                                    style={{}}
-                                                                />
-                                                            </div>
-                                                        </Fragment>
-                                                    </Slider>
-                                                    {2 >= 2 && (
+                                                    {/* Render Carousel Media Xem Trước */}
+                                                    {previewMediaFiles.length > 0 ? (
                                                         <>
-                                                            <button
-                                                                type="button"
-                                                                className="btnPrevCarousel"
-                                                                onClick={previous}
+                                                            <Slider
+                                                                ref={(slider) => {
+                                                                    sliderRef = slider;
+                                                                }}
+                                                                {...settings}
                                                             >
-                                                                <VscChevronLeft />
-                                                            </button>
-                                                            <button
-                                                                type="button"
-                                                                className="btnNextCarousel"
-                                                                onClick={next}
-                                                            >
-                                                                <VscChevronRight />
-                                                            </button>
+                                                                {previewMediaFiles.map((previewMediaFile, index) => (
+                                                                    <Fragment key={index}>
+                                                                        <div className="mediaContainer">
+                                                                            {previewMediaFile.type === 'image' ? (
+                                                                                <img
+                                                                                    src={previewMediaFile?.preview}
+                                                                                    className="slide-image"
+                                                                                    style={{}}
+                                                                                />
+                                                                            ) : (
+                                                                                <video
+                                                                                    src={previewMediaFile.preview}
+                                                                                    style={{}}
+                                                                                    controls
+                                                                                />
+                                                                            )}
+                                                                        </div>
+                                                                    </Fragment>
+                                                                ))}
+                                                            </Slider>
+                                                            {previewMediaFiles.length >= 2 && (
+                                                                <>
+                                                                    <button
+                                                                        type="button"
+                                                                        className="btnPrevCarousel"
+                                                                        onClick={previous}
+                                                                    >
+                                                                        <VscChevronLeft />
+                                                                    </button>
+                                                                    <button
+                                                                        type="button"
+                                                                        className="btnNextCarousel"
+                                                                        onClick={next}
+                                                                    >
+                                                                        <VscChevronRight />
+                                                                    </button>
+                                                                </>
+                                                            )}
                                                         </>
-                                                    )} */}
+                                                    ) : (
+                                                        <></>
+                                                    )}
                                                 </div>
                                             </div>
                                             {/* Phần thêm nội dung vào bài viết */}
