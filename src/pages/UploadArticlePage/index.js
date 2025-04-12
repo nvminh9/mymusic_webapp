@@ -7,12 +7,12 @@ import defaultAvatar from '~/assets/images/avatarDefault.jpg';
 import { set, useForm } from 'react-hook-form';
 import { message } from 'antd';
 import { IoAddSharp, IoAlertCircleOutline, IoCloseSharp, IoImages } from 'react-icons/io5';
+import { createArticleApi } from '~/utils/api';
 
 function UploadArticlePage() {
     // State
     const [isOpenAddMediaBox, setIsOpenAddMediaBox] = useState(false);
-    const [mediaFiles, setMediaFiles] = useState([]); // mediaFiles
-    const [previewMediaFiles, setPreviewMediaFiles] = useState([]); // previewMediaFiles dùng lưu ảnh/video xem trước
+    const [previewMediaFiles, setPreviewMediaFiles] = useState([]); // previewMediaFiles dùng lưu ảnh/video xem trước (file, preview, type)
 
     // Context
     const { auth } = useContext(AuthContext);
@@ -150,8 +150,54 @@ function UploadArticlePage() {
     // --- HANDLE FUNCTIONS ---
     // Handle Submit Form Upload Article
     const onSubmit = async (data) => {
-        // ...
-        console.log(data);
+        const { privacy, textContent } = data;
+        // Form Data
+        const formData = new FormData();
+        if (privacy) formData.append('privacy', privacy);
+        if (textContent) formData.append('textContent', textContent);
+        if (previewMediaFiles.length > 0) {
+            previewMediaFiles.forEach((file) => {
+                formData.append('mediaFiles', file.file);
+            });
+        }
+        // Loading ... (Ant Design Message)
+        messageApi
+            .open({
+                type: 'loading',
+                content: 'Đang xử lý ...',
+                duration: 1.5,
+                style: {
+                    color: 'white',
+                    marginTop: '58.4px',
+                },
+            })
+            .then(async () => {
+                // Call API Create Article
+                const res = await createArticleApi(formData);
+                if (res?.status === 200 && res?.message === 'Tạo bài viết thành công') {
+                    // Tạo bài viết thành công
+                    message.success({
+                        content: 'Tạo bài viết thành công',
+                        duration: 1.5,
+                        style: {
+                            color: 'white',
+                            marginTop: '58.4px',
+                        },
+                    });
+                    // Navigate về trang cá nhân
+                    navigate(`/profile/${auth?.user?.userName}`);
+                } else {
+                    // Tạo bài viết không thành công
+                    message.error({
+                        content: 'Có lỗi xảy ra',
+                        duration: 1.5,
+                        style: {
+                            color: 'white',
+                            marginTop: '58.4px',
+                        },
+                    });
+                }
+            });
     };
     // Handle Remove Add Media File (có thể tối ưu)
     const handleRemoveAddMedia = (id) => {
@@ -181,7 +227,7 @@ function UploadArticlePage() {
             mediaList.current.scrollLeft = mediaList.current.scrollWidth;
         }, 200);
         // console.log(mediaFiles);
-        // console.log(previewMediaFiles);
+        console.log(previewMediaFiles);
     };
 
     return (
@@ -201,6 +247,8 @@ function UploadArticlePage() {
                 </div>
                 {/* Upload Article */}
                 <div className="feedPage">
+                    {/* Ant Design Message */}
+                    {contextHolder}
                     <div className="articleContainer">
                         {/* Form Upload Article */}
                         <form className="uploadArticleForm" onSubmit={handleSubmit(onSubmit)} method="POST" noValidate>
@@ -333,6 +381,7 @@ function UploadArticlePage() {
                                                                                 <video
                                                                                     src={previewMediaFile.preview}
                                                                                     style={{}}
+                                                                                    playsInline
                                                                                     controls
                                                                                 />
                                                                             )}
@@ -492,6 +541,7 @@ function UploadArticlePage() {
                                                                                                     src={
                                                                                                         previewMediaFile.preview
                                                                                                     }
+                                                                                                    playsInline
                                                                                                     controls
                                                                                                 />
                                                                                                 <button

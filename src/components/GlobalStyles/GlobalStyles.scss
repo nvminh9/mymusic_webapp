@@ -3465,7 +3465,9 @@ body {
                     overflow: hidden;
                     text-overflow: ellipsis;
                     color: #ffffff;
-                    font-family: sans-serif;
+                    // font-family: sans-serif;
+                    font-size: 15px;
+                    font-weight: 300;
                 }
 
                 .thumbnailHover {

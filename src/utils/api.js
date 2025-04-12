@@ -93,6 +93,12 @@ const unfollowUserApi = (userName) => {
     return axios.patch(URL_API);
 };
 
+// API Đăng bài viết
+const createArticleApi = (data) => {
+    const URL_API = `/v1/api/article/create`;
+    return axios.post(URL_API, data);
+};
+
 export {
     signUpApi,
     signInApi,
@@ -107,4 +113,5 @@ export {
     unfollowUserApi,
     getFollowersApi,
     getFollowsApi,
+    createArticleApi,
 };
