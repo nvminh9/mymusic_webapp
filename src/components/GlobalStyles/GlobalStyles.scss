@@ -3508,6 +3508,601 @@ body {
     }
 }
 
+// CSS Article Detail Page
+.articleDetailPage {
+    width: 100%;
+
+    // Nội dung bài viết
+    .articleDetail {
+        padding: 12px 12px;
+        width: 100%;
+        border-bottom: 0.5px solid #1f1f1f;
+
+        // Bài viết
+        .article {
+            display: flex;
+            // height: 300px;
+            width: 100%;
+            // left
+            .left {
+                // width: fit-content;
+                // width: 7%;
+                height: 100%;
+                display: grid;
+                align-items: start;
+                justify-content: center;
+                padding-right: 10px;
+                // background-color: rebeccapurple;
+
+                // avatar
+                .userAvatar {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    height: fit-content;
+                    width: fit-content;
+                    // padding: 8px;
+
+                    img {
+                        height: 42px;
+                        width: 42px;
+                        border: 0.5px solid #1f1f1f;
+                        border-radius: 50%;
+                        object-fit: cover;
+                        cursor: pointer;
+                    }
+                }
+            }
+            // right
+            .right {
+                // background-color: green;
+                height: 100%;
+                width: 93%;
+                // top
+                .top {
+                    display: flex;
+                    // align-items: center;
+                    justify-content: space-between;
+
+                    .articleInfo {
+                        display: flex;
+                        height: 100%;
+
+                        .userName {
+                            color: #ffffff;
+                            font-size: 15px;
+                            font-weight: 500;
+                            height: 100%;
+                            margin-right: 5px;
+                            cursor: pointer;
+                            transition: ease-out 0.2s;
+                            display: -webkit-box;
+                            -webkit-box-orient: vertical;
+                            -webkit-line-clamp: 1;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            width: max-content;
+                            max-width: 230px;
+                        }
+                        .userName:hover {
+                            text-decoration: underline;
+                        }
+                        .createdAt {
+                            display: flex;
+                            align-items: start;
+                            justify-content: center;
+                            color: rgba(119, 119, 119, 0.6666666667);
+                            font-size: 15px;
+                            font-weight: 300;
+                            height: 100%;
+                        }
+                    }
+                    .articleOptions {
+                        .btnArticleOptions {
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            background-color: transparent;
+                            border: 0.5px solid transparent;
+                            color: rgba(119, 119, 119, 0.6666666667);
+                            cursor: pointer;
+                            transition: ease-out 0.2s;
+                            padding: 5px;
+                        }
+                        .btnArticleOptions:hover {
+                            background-color: #1f1f1f;
+                        }
+                        .btnArticleOptions:active {
+                            background-color: #000;
+                        }
+                    }
+                }
+                // middle
+                .middle {
+                    .content {
+                        .text {
+                            display: flex;
+                            align-items: start;
+                            justify-content: start;
+                            color: #ffffff;
+                            font-size: 15px;
+                            font-weight: 300;
+                            padding-bottom: 8px;
+                        }
+                        .media {
+                            .carouselMedia {
+                                height: max-content;
+                                // max-height: 600px; // Tạm bỏ max-height
+                                position: relative;
+                                width: 400px; // trên mobile đổi lại thành 100%
+                                margin-bottom: 26px;
+
+                                .slick-track {
+                                    // width: max-content !important;
+                                    // margin-left: 0;
+                                    // margin-right: 0;
+                                    display: flex;
+                                    align-items: center;
+                                    // background: black;
+                                }
+                                .slick-slide {
+                                    // width: max-content !important;
+                                }
+
+                                // mediaContainer
+                                .mediaContainer {
+                                    height: 100%;
+                                    // Ảnh
+                                    img {
+                                        height: 100%;
+                                        width: 100%;
+                                        object-fit: cover;
+                                        object-position: center center;
+                                        outline: 1px solid rgba(243, 245, 247, 0.15);
+                                        outline-offset: -1px;
+                                        border-radius: 5px;
+                                    }
+                                    // Video
+                                    video {
+                                        height: 100%;
+                                        width: 100%;
+                                        object-fit: cover;
+                                        object-position: center center;
+                                        outline: 1px solid rgba(243, 245, 247, 0.15);
+                                        outline-offset: -1px;
+                                        border-radius: 5px;
+                                    }
+                                }
+                                // Nút điều khiển Carousel Media
+                                .btnPrevCarousel {
+                                    display: flex;
+                                    align-items: center;
+                                    position: absolute;
+                                    background-color: transparent;
+                                    // background: rgb(0, 0, 0);
+                                    // background: linear-gradient(
+                                    //     90deg,
+                                    //     rgba(0, 0, 0, 0.8) 0%,
+                                    //     rgba(0, 0, 0, 0.3) 35%,
+                                    //     rgba(255, 255, 255, 0) 100%
+                                    // );
+                                    border: none;
+                                    color: #ffffff;
+                                    padding-left: 10px;
+                                    padding-right: 10px;
+                                    top: 0;
+                                    bottom: 0;
+                                    left: 0;
+                                    cursor: pointer;
+                                    transition: ease-out 0.2s;
+                                }
+                                .btnPrevCarousel:active {
+                                    padding-left: 8px;
+                                    color: #000;
+                                }
+                                .btnNextCarousel {
+                                    display: flex;
+                                    align-items: center;
+                                    position: absolute;
+                                    background-color: transparent;
+                                    // background: rgb(0, 0, 0);
+                                    // background: linear-gradient(
+                                    //     270deg,
+                                    //     rgba(0, 0, 0, 0.8) 0%,
+                                    //     rgba(0, 0, 0, 0.3) 35%,
+                                    //     rgba(255, 255, 255, 0) 100%
+                                    // );
+                                    border: none;
+                                    color: #ffffff;
+                                    padding-left: 10px;
+                                    padding-right: 10px;
+                                    top: 0;
+                                    bottom: 0;
+                                    right: 0;
+                                    cursor: pointer;
+                                    transition: ease-out 0.2s;
+                                }
+                                .btnNextCarousel:active {
+                                    padding-right: 8px;
+                                    color: #000;
+                                }
+                            }
+                        }
+                    }
+                }
+                // bottom
+                .bottom {
+                    background-color: transparent;
+                    width: 100%;
+                    display: grid;
+                    gap: 5px;
+                    // Các nút tương tác
+                    .interactiveButtonBox {
+                        display: flex;
+                        align-items: center;
+                        justify-content: start;
+                        height: fit-content;
+                        background-color: transparent;
+                        gap: 10px;
+                        width: 100%;
+                        margin-left: -10px;
+
+                        button {
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            background-color: transparent;
+                            border: none;
+                            border-radius: 5px;
+                            padding: 10px;
+                            cursor: pointer;
+                            font-size: 13px;
+                            font-weight: 400;
+                            font-family: sans-serif;
+                            gap: 4px;
+                            transition: ease-out 0.2s;
+                            color: #dfdfdf;
+
+                            svg {
+                                font-size: 19px;
+                            }
+                        }
+                        button:hover {
+                            background-color: #1f1f1f;
+                        }
+                        button:active {
+                            background-color: #000;
+                        }
+                    }
+                    // Ô bình luận
+                    .commentBox {
+                        display: flex;
+                        align-items: center;
+                        justify-content: start;
+                        gap: 10px;
+                        width: 400px;
+                        // Hình đại diện
+                        .userAvatar {
+                            height: 32px;
+                            // width: 32px;
+                            width: 8%;
+                            border: 0.5px solid #1f1f1f;
+                            border-radius: 50%;
+                            object-fit: cover;
+                            cursor: pointer;
+                        }
+                        .formComment {
+                            width: 92%;
+                            display: flex;
+                            // Input bình luận
+                            .inputComment {
+                                background: transparent;
+                                border-radius: 5px;
+                                border: 0.5px solid transparent;
+                                font-family: 'Funnel Sans', sans-serif;
+                                // width: 180px;
+                                width: 89%;
+                                max-width: 100%;
+                                min-width: max-content;
+                                height: max-content;
+                                min-height: max-content;
+                                color: white;
+                            }
+                            // Nút gửi
+                            .btnPostComment {
+                                width: 11%;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                border: none;
+                                border-radius: 5px;
+                                background-color: transparent;
+                                color: white;
+                                transition: ease-out 0.2s;
+                                padding: 0px 12px;
+                                cursor: pointer;
+                            }
+                            .btnPostComment:hover {
+                                background-color: #1f1f1f;
+                            }
+                            .btnPostComment:active {
+                                background-color: #000;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    // Các bình luận
+    .articleComments {
+        display: grid;
+        gap: 12px;
+        padding: 12px 12px;
+        width: 100%;
+
+        // Bình luận
+        .comment {
+            display: flex;
+            // height: 300px;
+            width: 100%;
+
+            // left
+            .left {
+                // width: fit-content;
+                // width: 7%;
+                height: 100%;
+                display: grid;
+                align-items: start;
+                justify-content: center;
+                padding-right: 10px;
+                // background-color: rebeccapurple;
+
+                // avatar
+                .userAvatar {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    height: fit-content;
+                    width: fit-content;
+                    // padding: 8px;
+
+                    img {
+                        height: 42px;
+                        width: 42px;
+                        border: 0.5px solid #1f1f1f;
+                        border-radius: 50%;
+                        object-fit: cover;
+                        cursor: pointer;
+                    }
+                }
+            }
+            // right
+            .right {
+                // background-color: green;
+                height: 100%;
+                width: 93%;
+                // top
+                .top {
+                    display: flex;
+                    // align-items: center;
+                    justify-content: space-between;
+
+                    .articleInfo {
+                        display: flex;
+                        height: 100%;
+
+                        .userName {
+                            color: #ffffff;
+                            font-size: 15px;
+                            font-weight: 500;
+                            height: 100%;
+                            margin-right: 5px;
+                            cursor: pointer;
+                            transition: ease-out 0.2s;
+                            display: -webkit-box;
+                            -webkit-box-orient: vertical;
+                            -webkit-line-clamp: 1;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            width: max-content;
+                            max-width: 230px;
+                        }
+                        .userName:hover {
+                            text-decoration: underline;
+                        }
+                        .createdAt {
+                            display: flex;
+                            align-items: start;
+                            justify-content: center;
+                            color: rgba(119, 119, 119, 0.6666666667);
+                            font-size: 15px;
+                            font-weight: 300;
+                            height: 100%;
+                        }
+                    }
+                    .articleOptions {
+                        .btnArticleOptions {
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            background-color: transparent;
+                            border: 0.5px solid transparent;
+                            color: rgba(119, 119, 119, 0.6666666667);
+                            cursor: pointer;
+                            transition: ease-out 0.2s;
+                            padding: 5px;
+                        }
+                        .btnArticleOptions:hover {
+                            background-color: #1f1f1f;
+                        }
+                        .btnArticleOptions:active {
+                            background-color: #000;
+                        }
+                    }
+                }
+                // middle
+                .middle {
+                    .content {
+                        .text {
+                            display: flex;
+                            align-items: start;
+                            justify-content: start;
+                            color: #ffffff;
+                            font-size: 15px;
+                            font-weight: 300;
+                            padding-bottom: 8px;
+                            padding-top: 5px;
+                        }
+                        .media {
+                            .carouselMedia {
+                                height: max-content;
+                                // max-height: 600px; // Tạm bỏ max-height
+                                position: relative;
+                                width: 400px; // trên mobile đổi lại thành 100%
+                                margin-bottom: 26px;
+
+                                .slick-track {
+                                    // width: max-content !important;
+                                    // margin-left: 0;
+                                    // margin-right: 0;
+                                    display: flex;
+                                    align-items: center;
+                                    // background: black;
+                                }
+                                .slick-slide {
+                                    // width: max-content !important;
+                                }
+
+                                // mediaContainer
+                                .mediaContainer {
+                                    height: 100%;
+                                    // Ảnh
+                                    img {
+                                        height: 100%;
+                                        width: 100%;
+                                        object-fit: cover;
+                                        object-position: center center;
+                                        outline: 1px solid rgba(243, 245, 247, 0.15);
+                                        outline-offset: -1px;
+                                        border-radius: 5px;
+                                    }
+                                    // Video
+                                    video {
+                                        height: 100%;
+                                        width: 100%;
+                                        object-fit: cover;
+                                        object-position: center center;
+                                        outline: 1px solid rgba(243, 245, 247, 0.15);
+                                        outline-offset: -1px;
+                                        border-radius: 5px;
+                                    }
+                                }
+                                // Nút điều khiển Carousel Media
+                                .btnPrevCarousel {
+                                    display: flex;
+                                    align-items: center;
+                                    position: absolute;
+                                    background-color: transparent;
+                                    // background: rgb(0, 0, 0);
+                                    // background: linear-gradient(
+                                    //     90deg,
+                                    //     rgba(0, 0, 0, 0.8) 0%,
+                                    //     rgba(0, 0, 0, 0.3) 35%,
+                                    //     rgba(255, 255, 255, 0) 100%
+                                    // );
+                                    border: none;
+                                    color: #ffffff;
+                                    padding-left: 10px;
+                                    padding-right: 10px;
+                                    top: 0;
+                                    bottom: 0;
+                                    left: 0;
+                                    cursor: pointer;
+                                    transition: ease-out 0.2s;
+                                }
+                                .btnPrevCarousel:active {
+                                    padding-left: 8px;
+                                    color: #000;
+                                }
+                                .btnNextCarousel {
+                                    display: flex;
+                                    align-items: center;
+                                    position: absolute;
+                                    background-color: transparent;
+                                    // background: rgb(0, 0, 0);
+                                    // background: linear-gradient(
+                                    //     270deg,
+                                    //     rgba(0, 0, 0, 0.8) 0%,
+                                    //     rgba(0, 0, 0, 0.3) 35%,
+                                    //     rgba(255, 255, 255, 0) 100%
+                                    // );
+                                    border: none;
+                                    color: #ffffff;
+                                    padding-left: 10px;
+                                    padding-right: 10px;
+                                    top: 0;
+                                    bottom: 0;
+                                    right: 0;
+                                    cursor: pointer;
+                                    transition: ease-out 0.2s;
+                                }
+                                .btnNextCarousel:active {
+                                    padding-right: 8px;
+                                    color: #000;
+                                }
+                            }
+                        }
+                    }
+                }
+                // bottom
+                .bottom {
+                    background-color: transparent;
+                    width: 100%;
+
+                    .interactiveButtonBox {
+                        display: flex;
+                        align-items: center;
+                        justify-content: start;
+                        height: fit-content;
+                        background-color: transparent;
+                        gap: 10px;
+                        width: 100%;
+                        margin-left: -10px;
+
+                        button {
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            background-color: transparent;
+                            border: none;
+                            border-radius: 5px;
+                            padding: 10px;
+                            cursor: pointer;
+                            font-size: 13px;
+                            font-weight: 400;
+                            font-family: sans-serif;
+                            gap: 4px;
+                            transition: ease-out 0.2s;
+                            color: #dfdfdf;
+
+                            svg {
+                                font-size: 19px;
+                            }
+                        }
+                        button:hover {
+                            background-color: #1f1f1f;
+                        }
+                        button:active {
+                            background-color: #000;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 // CSS Component Video Ambilight
 .videoWrapper {
     width: 100%;
@@ -3638,8 +4233,11 @@ body {
     .feedPage {
         .articleContainer {
             .article {
+                .left {
+                    width: 13%;
+                }
                 .right {
-                    width: 85%;
+                    width: 86%;
 
                     .middle {
                         .content {
@@ -3856,6 +4454,59 @@ body {
                     }
                 }
                 .bottomRight {
+                }
+            }
+        }
+    }
+
+    // Article On Small Screen (Mobile,...)
+    .article {
+        .left {
+            width: 13% !important;
+        }
+        .right {
+            width: 86% !important;
+            // top
+            .top {
+            }
+            // middle
+            .middle {
+                .content {
+                    .media {
+                        .carouselMedia {
+                            width: 100% !important;
+                        }
+                    }
+                }
+            }
+            // bottom
+            .bottom {
+                // Ô bình luận
+                .commentBox {
+                    width: 100% !important;
+                    // Hình đại diện
+                    .userAvatar {
+                        width: 32px !important;
+                    }
+                }
+            }
+        }
+    }
+    // Comment On Small Screen (Mobile,...)
+    .comment {
+        .left {
+            width: 13% !important;
+        }
+        .right {
+            width: 86% !important;
+
+            .middle {
+                .content {
+                    .media {
+                        .carouselMedia {
+                            width: 100% !important;
+                        }
+                    }
                 }
             }
         }

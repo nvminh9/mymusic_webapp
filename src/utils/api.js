@@ -1,6 +1,6 @@
 import axios from '../utils/axios.customize';
 
-// API Đăng ký
+// API Đăng ký (POST)
 const signUpApi = (name, userName, gender, birth, email, password) => {
     const URL_API = '/v1/api/auth/signup';
     const data = {
@@ -14,7 +14,7 @@ const signUpApi = (name, userName, gender, birth, email, password) => {
     return axios.post(URL_API, data);
 };
 
-// API Đăng nhập
+// API Đăng nhập (POST)
 const signInApi = (email, password) => {
     const URL_API = '/v1/api/auth/signin';
     const data = {
@@ -24,13 +24,13 @@ const signInApi = (email, password) => {
     return axios.post(URL_API, data);
 };
 
-// API Đăng xuất
+// API Đăng xuất (GET)
 const signOutApi = () => {
     const URL_API = '/v1/api/auth/signout';
     return axios.get(URL_API);
 };
 
-// API Lấy thông tin người dùng (theo email)
+// API Lấy thông tin người dùng (theo email) (GET)
 const getUserInfoApi = (email) => {
     const URL_API = '/v1/api/user/';
     const data = {
@@ -39,64 +39,70 @@ const getUserInfoApi = (email) => {
     return axios.post(URL_API, data);
 };
 
-// API Lấy thông tin người dùng đang đăng nhập (theo token)
+// API Lấy thông tin người dùng đang đăng nhập (theo token) (GET)
 const getAuthUserInfoApi = () => {
     const URL_API = '/v1/api/auth/';
     return axios.get(URL_API);
 };
 
-// API Lấy thông tin profile user
+// API Lấy thông tin profile user (GET)
 const getUserProfileInfoApi = (userName) => {
     const URL_API = `/v1/api/user/profile/${userName}`;
     return axios.get(URL_API);
 };
 
-// API Lấy danh sách người theo dõi
+// API Lấy danh sách người theo dõi (GET)
 const getFollowersApi = (userName) => {
     const URL_API = `/v1/api/user/profile/${userName}/followers`;
     return axios.get(URL_API);
 };
 
-// API Lấy danh sách đang theo dõi
+// API Lấy danh sách đang theo dõi (GET)
 const getFollowsApi = (userName) => {
     const URL_API = `/v1/api/user/profile/${userName}/follows`;
     return axios.get(URL_API);
 };
 
-// API Cập nhật profile
+// API Cập nhật profile (PATCH)
 const updateUserProfileInfoApi = (userName, data) => {
     const URL_API = `/v1/api/user/profile/${userName}`;
     return axios.patch(URL_API, data);
 };
 
-// API Lấy danh sách bài viết của người dùng
+// API Lấy danh sách bài viết của người dùng (GET)
 const getUserArticlesApi = (userName) => {
     const URL_API = `/v1/api/user/${userName}/articles`;
     return axios.get(URL_API);
 };
 
-// API Lấy danh sách bài nhạc của người dùng
+// API Lấy danh sách bài nhạc của người dùng (GET)
 const getUserSongsApi = (userName) => {
     const URL_API = `/v1/api/user/${userName}/musics`;
     return axios.get(URL_API);
 };
 
-// API Theo dõi người dùng
+// API Theo dõi người dùng (POST)
 const createFollowUserApi = (userName) => {
     const URL_API = `/v1/api/user/${userName}/follow`;
     return axios.post(URL_API);
 };
 
-// API Hủy theo dõi người dùng
+// API Hủy theo dõi người dùng (PATCH)
 const unfollowUserApi = (userName) => {
     const URL_API = `/v1/api/user/${userName}/unfollow`;
     return axios.patch(URL_API);
 };
 
-// API Đăng bài viết
+// API Đăng bài viết (POST)
 const createArticleApi = (data) => {
     const URL_API = `/v1/api/article/create`;
     return axios.post(URL_API, data);
+};
+
+// API Chi tiết bài viết
+const getArticleApi = (articleId) => {
+    const URL_API = `/v1/api/article/${articleId}`;
+    return axios.get(URL_API);
 };
 
 export {
@@ -114,4 +120,5 @@ export {
     getFollowersApi,
     getFollowsApi,
     createArticleApi,
+    getArticleApi,
 };
