@@ -3169,6 +3169,7 @@ body {
     .feedPage {
         .articleContainer {
             .uploadArticleForm {
+                // Mẫu bài viết để nhập
                 .article {
                     .right {
                         .top {
@@ -3397,6 +3398,33 @@ body {
                         }
                     }
                 }
+                .settingMenuContainer {
+                    .settingMenu {
+                        // Mẫu bài viết để xem trước
+                        .article {
+                            .right {
+                                .middle {
+                                    .content {
+                                        .media {
+                                            .carouselMedia {
+                                                // slick-dots
+                                                .slick-dots {
+                                                    button {
+                                                        font-size: 0px;
+                                                    }
+                                                    button:hover {
+                                                        background-color: transparent;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                // Nút submit form
                 .btnSubmit {
                     font-family: sans-serif;
                     margin: 12px 0px 0px 0px;

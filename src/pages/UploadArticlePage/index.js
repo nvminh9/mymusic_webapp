@@ -6,12 +6,20 @@ import { AuthContext } from '~/context/auth.context';
 import defaultAvatar from '~/assets/images/avatarDefault.jpg';
 import { set, useForm } from 'react-hook-form';
 import { message } from 'antd';
-import { IoAddSharp, IoAlertCircleOutline, IoCloseSharp, IoImages } from 'react-icons/io5';
+import {
+    IoAddSharp,
+    IoAlertCircleOutline,
+    IoCloseSharp,
+    IoGlobeOutline,
+    IoImages,
+    IoLockClosedOutline,
+} from 'react-icons/io5';
 import { createArticleApi } from '~/utils/api';
 
 function UploadArticlePage() {
     // State
-    const [isOpenAddMediaBox, setIsOpenAddMediaBox] = useState(false);
+    const [isOpenAddMediaBox, setIsOpenAddMediaBox] = useState(false); // Đóng/mở hộp thêm Media File
+    const [isOpenPreviewArticle, setIsOpenPreviewArticle] = useState(false); // Đóng/mở hộp xem trước bài viết
     const [previewMediaFiles, setPreviewMediaFiles] = useState([]); // previewMediaFiles dùng lưu ảnh/video xem trước (file, preview, type)
 
     // Context
@@ -27,7 +35,7 @@ function UploadArticlePage() {
 
     // React Hook Form (Form Upload Article)
     const formUploadArticle = useForm();
-    const { register, handleSubmit, formState, watch } = formUploadArticle;
+    const { register, handleSubmit, formState, watch, setError, clearErrors } = formUploadArticle;
     const { errors } = formState;
 
     // Message (Ant Design)
@@ -229,6 +237,22 @@ function UploadArticlePage() {
         // console.log(mediaFiles);
         console.log(previewMediaFiles);
     };
+    // Handle Button Create
+    const handleBtnCreate = () => {
+        let textContent = watch('textContent');
+        if (textContent === '') {
+            setError('textContent', {
+                type: 'custom',
+                message: 'Chưa nhập nội dung bài viết',
+            });
+            setIsOpenPreviewArticle(false);
+            return;
+        } else {
+            clearErrors('textContent');
+            setIsOpenPreviewArticle(true);
+            return;
+        }
+    };
 
     return (
         <Fragment>
@@ -252,6 +276,7 @@ function UploadArticlePage() {
                     <div className="articleContainer">
                         {/* Form Upload Article */}
                         <form className="uploadArticleForm" onSubmit={handleSubmit(onSubmit)} method="POST" noValidate>
+                            {/* Mẫu bài viết để nhập */}
                             <div className="article">
                                 <div className="left">
                                     {/* Avatar */}
@@ -594,10 +619,199 @@ function UploadArticlePage() {
                                     <div className="bottom"></div>
                                 </div>
                             </div>
-                            {/* Nút Submit */}
-                            <button type="submit" className="btnSubmit" id="btnSubmitID">
+                            {/* Nút Submit Form Create Article */}
+                            <button
+                                type="button"
+                                className="btnCreate btnSubmit"
+                                onClick={() => {
+                                    handleBtnCreate();
+                                }}
+                            >
                                 Tạo
                             </button>
+                            {/* Menu Xem trước bài viết chuẩn bị tạo */}
+                            {isOpenPreviewArticle === true && location.pathname.split('/')[2] === 'upload' ? (
+                                <div className="settingMenuContainer" style={{ top: 0, height: '99%' }}>
+                                    <div className="settingMenu" style={{ width: 'max-content' }}>
+                                        <span className="title" style={{ position: 'relative' }}>
+                                            <span style={{ fontFamily: 'sans-serif' }}>Xem trước</span>
+                                            {/* Nút thoát */}
+                                            <button
+                                                className=""
+                                                type="button"
+                                                style={{
+                                                    position: 'absolute',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    padding: '5px',
+                                                    top: '0',
+                                                    right: '0',
+                                                }}
+                                                onClick={() => {
+                                                    setIsOpenPreviewArticle(false);
+                                                }}
+                                            >
+                                                <IoCloseSharp />
+                                            </button>
+                                        </span>
+                                        {/* Mẫu bài viết xem trước */}
+                                        <div style={{ padding: '12px', borderBottom: '0.5px solid #777' }}>
+                                            <div className="article">
+                                                <div className="left">
+                                                    {/* Avatar */}
+                                                    <div className="userAvatar">
+                                                        <Link
+                                                            // to={`/profile/${auth?.user?.userName}`}
+                                                            style={{ textDecoration: 'none' }}
+                                                        >
+                                                            <img
+                                                                src={
+                                                                    auth?.user?.userAvatar
+                                                                        ? process.env.REACT_APP_BACKEND_URL +
+                                                                          auth?.user?.userAvatar
+                                                                        : defaultAvatar
+                                                                }
+                                                            />
+                                                        </Link>
+                                                    </div>
+                                                </div>
+                                                <div className="right">
+                                                    <div className="top">
+                                                        <div className="articleInfo">
+                                                            <Link
+                                                                // to={`/profile/${auth?.user?.userName}`}
+                                                                style={{ textDecoration: 'none' }}
+                                                            >
+                                                                <span className="userName">{auth?.user?.userName}</span>
+                                                            </Link>
+                                                            {/* Chọn Privacy */}
+                                                            <span
+                                                                style={{
+                                                                    display: 'flex',
+                                                                    alignItems: 'center',
+                                                                    justifyContent: 'center',
+                                                                }}
+                                                            >
+                                                                {watch('privacy') === '0' ? (
+                                                                    <IoGlobeOutline style={{ color: 'dimgray' }} />
+                                                                ) : (
+                                                                    <IoLockClosedOutline style={{ color: 'dimgray' }} />
+                                                                )}
+                                                            </span>
+                                                        </div>
+                                                        <div className="articleOptions">
+                                                            <button
+                                                                type="button"
+                                                                className="btnArticleOptions"
+                                                                style={{ margin: '0', padding: '3px' }}
+                                                            >
+                                                                <VscEllipsis></VscEllipsis>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                    <div className="middle">
+                                                        <div className="content">
+                                                            {/* Nội dung textContent */}
+                                                            <div className="text">{watch('textContent')}</div>
+                                                            {/* Slide Media */}
+                                                            <div className="media">
+                                                                {/* Carousel Media Xem trước */}
+                                                                <div className="carouselMedia">
+                                                                    {/* Render Carousel Media Xem Trước */}
+                                                                    {previewMediaFiles.length > 0 ? (
+                                                                        <>
+                                                                            <Slider
+                                                                                ref={(slider) => {
+                                                                                    sliderRef = slider;
+                                                                                }}
+                                                                                {...settings}
+                                                                            >
+                                                                                {previewMediaFiles.map(
+                                                                                    (previewMediaFile, index) => (
+                                                                                        <Fragment key={index}>
+                                                                                            <div className="mediaContainer">
+                                                                                                {previewMediaFile.type ===
+                                                                                                'image' ? (
+                                                                                                    <img
+                                                                                                        src={
+                                                                                                            previewMediaFile?.preview
+                                                                                                        }
+                                                                                                        className="slide-image"
+                                                                                                        style={{}}
+                                                                                                    />
+                                                                                                ) : (
+                                                                                                    <video
+                                                                                                        src={
+                                                                                                            previewMediaFile.preview
+                                                                                                        }
+                                                                                                        style={{}}
+                                                                                                        playsInline
+                                                                                                        controls
+                                                                                                    />
+                                                                                                )}
+                                                                                            </div>
+                                                                                        </Fragment>
+                                                                                    ),
+                                                                                )}
+                                                                            </Slider>
+                                                                            {previewMediaFiles.length >= 2 && (
+                                                                                <>
+                                                                                    <button
+                                                                                        type="button"
+                                                                                        className="btnPrevCarousel"
+                                                                                        onClick={previous}
+                                                                                    >
+                                                                                        <VscChevronLeft />
+                                                                                    </button>
+                                                                                    <button
+                                                                                        type="button"
+                                                                                        className="btnNextCarousel"
+                                                                                        onClick={next}
+                                                                                    >
+                                                                                        <VscChevronRight />
+                                                                                    </button>
+                                                                                </>
+                                                                            )}
+                                                                        </>
+                                                                    ) : (
+                                                                        <></>
+                                                                    )}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div className="bottom"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {/* Nút Submit Form Create Article */}
+                                        <button
+                                            type="submit"
+                                            id="btnSubmitID"
+                                            className="btnSignOut"
+                                            onClick={() => {
+                                                // setIsOpenPreviewArticle(false);
+                                            }}
+                                            style={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'space-between',
+                                                padding: '10px 105px',
+                                                gap: '10px',
+                                                marginBottom: '5px',
+                                            }}
+                                        >
+                                            {/* <IoMusicalNotesOutline />{' '} */}
+                                            <span style={{ display: 'block', width: '100%', textAlign: 'center' }}>
+                                                Xác nhận
+                                            </span>
+                                        </button>
+                                    </div>
+                                </div>
+                            ) : (
+                                <></>
+                            )}
                             {/* Check Data */}
                             <pre style={{ color: 'red' }} hidden>
                                 {JSON.stringify(watch(), null, 2)}
