@@ -685,7 +685,7 @@ function UploadArticlePage() {
                                                             >
                                                                 <span className="userName">{auth?.user?.userName}</span>
                                                             </Link>
-                                                            {/* Chọn Privacy */}
+                                                            {/* Privacy */}
                                                             <span
                                                                 style={{
                                                                     display: 'flex',
@@ -704,7 +704,11 @@ function UploadArticlePage() {
                                                             <button
                                                                 type="button"
                                                                 className="btnArticleOptions"
-                                                                style={{ margin: '0', padding: '3px' }}
+                                                                style={{
+                                                                    margin: '0',
+                                                                    padding: '3px',
+                                                                    borderRadius: '0px',
+                                                                }}
                                                             >
                                                                 <VscEllipsis></VscEllipsis>
                                                             </button>
