@@ -1782,6 +1782,7 @@ body {
         }
         .inputEmail {
             font-family: 'Funnel Sans', sans-serif;
+            font-size: 16px;
             padding: 15px 10px;
             margin: 5px 0px;
             width: 350px;
@@ -1804,6 +1805,7 @@ body {
         }
         .inputPassword {
             font-family: 'Funnel Sans', sans-serif;
+            font-size: 16px;
             padding: 15px 10px;
             margin: 5px 0px;
             width: 350px;
@@ -3790,16 +3792,18 @@ body {
                             border: none;
                             border-radius: 5px;
                             padding: 10px;
+                            padding-top: 9px;
                             cursor: pointer;
                             font-size: 13px;
                             font-weight: 400;
-                            font-family: sans-serif;
+                            font-family: 'system-ui';
                             gap: 4px;
                             transition: ease-out 0.2s;
                             color: #dfdfdf;
 
                             svg {
                                 font-size: 19px;
+                                transform: translateY(1.5px);
                             }
                         }
                         button:hover {
@@ -3904,9 +3908,35 @@ body {
     .articleComments {
         display: grid;
         gap: 12px;
-        padding: 12px 12px;
+        padding: 12px 0px;
         width: 100%;
 
+        // Wrapper Bình luận
+        .commentWrapper {
+            position: relative;
+            padding: 0px 12px;
+            padding-bottom: 12px;
+            border-bottom: 0.5px solid #1f1f1f;
+        }
+        .commentWrapper.reply {
+            margin-left: 52px;
+            padding-left: 10px;
+            padding-top: 5px;
+            padding-bottom: 4px;
+            border-left: 2px solid #2e2e2e;
+            border-bottom: none;
+        }
+        // .commentWrapper.reply::before {
+        //     content: '';
+        //     position: absolute;
+        //     top: -10px; /* Bắt đầu từ trên comment con */
+        //     left: -10px; /* Lùi ra ngoài trái để tạo đường nối */
+        //     width: 20px;
+        //     height: 20px;
+        //     border-left: 2px solid #ccc;
+        //     border-top: 2px solid #ccc;
+        //     border-top-left-radius: 10px; /* Đây là phần bo cong */
+        // }
         // Bình luận
         .comment {
             display: flex;
@@ -3982,9 +4012,45 @@ body {
                             align-items: start;
                             justify-content: center;
                             color: rgba(119, 119, 119, 0.6666666667);
-                            font-size: 15px;
-                            font-weight: 300;
+                            font-size: 14px;
+                            font-weight: 400;
+                            font-family: 'system-ui';
                             height: 100%;
+                        }
+                        .createdAt:hover {
+                            text-decoration: underline;
+                            cursor: pointer;
+                        }
+                        // Tooltip
+                        .tooltip {
+                            position: relative;
+                            display: inline-block;
+                            // border-bottom: 1px dotted black;
+                        }
+                        .tooltip .tooltiptext {
+                            visibility: hidden;
+                            width: max-content;
+                            background-color: rgba(255, 255, 255, 0.9);
+                            color: #000;
+                            font-size: 12px;
+                            font-weight: 400;
+                            font-family: 'system-ui';
+                            text-align: center;
+                            border-radius: 5px;
+                            padding: 8px 10px;
+                            transition: ease-out 0.1s;
+
+                            /* Position the tooltip */
+                            position: absolute;
+                            z-index: 99;
+                            top: 100%;
+                            left: 50%;
+                            margin-top: 5px;
+                            margin-left: -40px; /* Use half of the width (80/2 = 40), to center the tooltip */
+                        }
+                        .tooltip:hover .tooltiptext {
+                            visibility: visible;
+                            transition: ease-out 0.1s;
                         }
                     }
                     .articleOptions {
@@ -4144,16 +4210,18 @@ body {
                             border: none;
                             border-radius: 5px;
                             padding: 10px;
+                            padding-top: 9px;
                             cursor: pointer;
                             font-size: 13px;
                             font-weight: 400;
-                            font-family: sans-serif;
+                            font-family: 'system-ui';
                             gap: 4px;
                             transition: ease-out 0.2s;
                             color: #dfdfdf;
 
                             svg {
                                 font-size: 19px;
+                                transform: translateY(1.5px);
                             }
                         }
                         button:hover {

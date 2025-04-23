@@ -71,10 +71,10 @@ function ArticleProfile({ article, user }) {
                                         muted
                                         loop
                                         onMouseOver={(e) => {
-                                            e.target.play();
+                                            e?.target?.play();
                                         }}
                                         onMouseOut={(e) => {
-                                            e.target.pause();
+                                            e?.target?.pause();
                                         }}
                                         alt="thumbnail"
                                     />

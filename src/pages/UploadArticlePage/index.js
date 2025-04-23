@@ -26,6 +26,7 @@ function UploadArticlePage() {
     const { auth } = useContext(AuthContext);
 
     // Ref
+    const textContentInput = useRef(null);
     const addMediaBoxRef = useRef(null); // Ref hộp thêm ảnh/video
     const mediaList = useRef(null); // Ref mediaList xem trước ảnh/video đã chọn
 
@@ -35,7 +36,7 @@ function UploadArticlePage() {
 
     // React Hook Form (Form Upload Article)
     const formUploadArticle = useForm();
-    const { register, handleSubmit, formState, watch, setError, clearErrors } = formUploadArticle;
+    const { register, handleSubmit, formState, watch, setError, clearErrors, setFocus } = formUploadArticle;
     const { errors } = formState;
 
     // Message (Ant Design)
@@ -237,18 +238,22 @@ function UploadArticlePage() {
         // console.log(mediaFiles);
         console.log(previewMediaFiles);
     };
-    // Handle Button Create
-    const handleBtnCreate = () => {
+    // Handle Button Next Step (Tiếp theo)
+    const handleBtnNextStep = () => {
         let textContent = watch('textContent');
         if (textContent === '') {
             setError('textContent', {
                 type: 'custom',
                 message: 'Chưa nhập nội dung bài viết',
             });
+            console.log(formUploadArticle);
+            setFocus('textContent');
             setIsOpenPreviewArticle(false);
             return;
         } else {
             clearErrors('textContent');
+            // scroll to top of page
+            window.scrollTo(0, 0);
             setIsOpenPreviewArticle(true);
             return;
         }
@@ -330,6 +335,7 @@ function UploadArticlePage() {
                                         <div className="content">
                                             {/* Nội dung textContent */}
                                             <textarea
+                                                // ref={textContentInput}
                                                 className="text"
                                                 placeholder="Có gì mới?"
                                                 {...register('textContent', {
@@ -624,10 +630,10 @@ function UploadArticlePage() {
                                 type="button"
                                 className="btnCreate btnSubmit"
                                 onClick={() => {
-                                    handleBtnCreate();
+                                    handleBtnNextStep();
                                 }}
                             >
-                                Tạo
+                                Tiếp theo
                             </button>
                             {/* Menu Xem trước bài viết chuẩn bị tạo */}
                             {isOpenPreviewArticle === true && location.pathname.split('/')[2] === 'upload' ? (

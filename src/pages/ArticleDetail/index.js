@@ -15,6 +15,7 @@ import {
     IoShareSocialOutline,
 } from 'react-icons/io5';
 import { getArticleApi } from '~/utils/api';
+import Comment from '../components/Comment';
 
 function ArticleDetail() {
     // State
@@ -180,7 +181,7 @@ function ArticleDetail() {
                     <div className="left">
                         {/* Avatar */}
                         <div className="userAvatar">
-                            <Link to={`/profile/${articleData?.userId}`}>
+                            <Link to={`/profile/${articleData?.User?.userName}`}>
                                 <img
                                     src={
                                         articleData?.User?.userAvatar
@@ -195,7 +196,7 @@ function ArticleDetail() {
                         <div className="top">
                             <div className="articleInfo">
                                 {/* User Name */}
-                                <Link to={`/profile/${articleData?.userId}`} style={{ textDecoration: 'none' }}>
+                                <Link to={`/profile/${articleData?.User?.userName}`} style={{ textDecoration: 'none' }}>
                                     <span className="userName">{articleData?.User?.userName}</span>
                                 </Link>
                                 {/* Privacy */}
@@ -291,11 +292,12 @@ function ArticleDetail() {
                             <div className="interactiveButtonBox">
                                 {/* Nút thích bài viết */}
                                 <button type="button" className="btnLike" id="btnLikeID">
-                                    <IoHeartOutline /> {articleData?.LikeArticles?.length}
+                                    <IoHeartOutline />{' '}
+                                    {articleData?.LikeArticles ? articleData?.LikeArticles?.length : 0}
                                 </button>
                                 {/* Nút bình luận */}
                                 <button type="button" className="btnComment" id="btnCommentID">
-                                    <IoChatboxOutline /> {articleData?.Comments?.length}
+                                    <IoChatboxOutline /> {articleData?.commentCount ? articleData?.commentCount : 0}
                                 </button>
                                 {/* Nút chia sẻ */}
                                 <button type="button" className="btnShare" id="btnShareID">
@@ -338,7 +340,7 @@ function ArticleDetail() {
             {/* Các bình luận */}
             <div className="articleComments">
                 {/* Render Comments */}
-                {articleData?.Comments?.length <= 0 ? (
+                {articleData?.comments?.length <= 0 ? (
                     <span
                         style={{
                             textAlign: 'center',
@@ -347,115 +349,16 @@ function ArticleDetail() {
                             fontSize: '16px',
                             fontWeight: '400',
                         }}
-                    >
-                        Chưa có bình luận nào
-                    </span>
+                    ></span>
                 ) : (
                     <>
-                        {/* Bình luận */}
-                        <div className="comment">
-                            <div className="left">
-                                {/* Avatar */}
-                                <div className="userAvatar">
-                                    <Link to={`/profile/thinhngo`}>
-                                        <img
-                                            src={
-                                                auth?.user?.userAvatar
-                                                    ? process.env.REACT_APP_BACKEND_URL + auth?.user?.userAvatar
-                                                    : defaultAvatar
-                                            }
-                                        />
-                                    </Link>
-                                </div>
-                            </div>
-                            <div className="right">
-                                <div className="top">
-                                    <div className="articleInfo">
-                                        <Link to={`/profile/thinhngo`} style={{ textDecoration: 'none' }}>
-                                            <span className="userName">thinhngo</span>
-                                        </Link>
-                                        <span className="createdAt">26 phút trước</span>
-                                    </div>
-                                    <div className="articleOptions">
-                                        {/* <button className="btnArticleOptions">
-                                    <VscEllipsis></VscEllipsis>
-                                </button> */}
-                                    </div>
-                                </div>
-                                <div className="middle">
-                                    <div className="content">
-                                        <div className="text">hãy gợi ý cho mình bài nào chill chill buổi tối...</div>
-                                        <div className="media">{/* Media */}</div>
-                                    </div>
-                                </div>
-                                <div className="bottom">
-                                    <div className="interactiveButtonBox">
-                                        {/* Nút thích bài viết */}
-                                        <button type="button" className="btnLike" id="btnLikeID">
-                                            <IoHeartOutline /> 10
-                                        </button>
-                                        {/* Nút bình luận */}
-                                        <button type="button" className="btnComment" id="btnCommentID">
-                                            <IoChatboxOutline /> 10
-                                        </button>
-                                        {/* Nút xem phản hồi */}
-                                        <button type="button" className="btnOpenFeedback" id="btnOpenFeedbackID">
-                                            Xem phản hồi <IoChevronDownSharp />
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        {/* Bình luận */}
-                        <div className="comment">
-                            <div className="left">
-                                {/* Avatar */}
-                                <div className="userAvatar">
-                                    <Link to={`/profile/thanhnguyen`}>
-                                        <img
-                                            src={`http://localhost:3700/image/userAvatar-1744049562031-705794721.png`}
-                                        />
-                                    </Link>
-                                </div>
-                            </div>
-                            <div className="right">
-                                <div className="top">
-                                    <div className="articleInfo">
-                                        <Link to={`/profile/thanhnguyen`} style={{ textDecoration: 'none' }}>
-                                            <span className="userName">thanhnguyen</span>
-                                        </Link>
-                                        <span className="createdAt">26 phút trước</span>
-                                    </div>
-                                    <div className="articleOptions">
-                                        {/* <button className="btnArticleOptions">
-                                    <VscEllipsis></VscEllipsis>
-                                </button> */}
-                                    </div>
-                                </div>
-                                <div className="middle">
-                                    <div className="content">
-                                        <div className="text">cc</div>
-                                        <div className="media">{/* Media */}</div>
-                                    </div>
-                                </div>
-                                <div className="bottom">
-                                    <div className="interactiveButtonBox">
-                                        {/* Nút thích bài viết */}
-                                        <button type="button" className="btnLike" id="btnLikeID">
-                                            <IoHeartOutline /> 10
-                                        </button>
-                                        {/* Nút bình luận */}
-                                        <button type="button" className="btnComment" id="btnCommentID">
-                                            <IoChatboxOutline /> 10
-                                        </button>
-                                        {/* Nút xem phản hồi */}
-                                        <button type="button" className="btnOpenFeedback" id="btnOpenFeedbackID">
-                                            Xem phản hồi <IoChevronDownSharp />
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        {/* Title */}
+                        <span style={{ color: '#ffffff', padding: '0px 12px 12px 12px', fontFamily: 'system-ui' }}>
+                            {articleData?.commentCount} bình luận
+                        </span>
+                        {articleData?.comments.map((comment) => (
+                            <Comment key={comment.commentId} comment={comment} />
+                        ))}
                     </>
                 )}
             </div>
