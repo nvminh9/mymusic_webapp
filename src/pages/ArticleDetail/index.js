@@ -5,6 +5,7 @@ import Slider from 'react-slick';
 import { AuthContext } from '~/context/auth.context';
 import defaultAvatar from '~/assets/images/avatarDefault.jpg';
 import {
+    IoAlertCircleOutline,
     IoArrowUpSharp,
     IoChatboxOutline,
     IoChevronDownSharp,
@@ -13,13 +14,17 @@ import {
     IoLockClosedOutline,
     IoSendOutline,
     IoShareSocialOutline,
+    IoSyncSharp,
 } from 'react-icons/io5';
-import { getArticleApi } from '~/utils/api';
+import { createCommentApi, getArticleApi } from '~/utils/api';
 import Comment from '../components/Comment';
+import { useForm } from 'react-hook-form';
 
 function ArticleDetail() {
     // State
-    const [articleData, setArticleData] = useState();
+    const [articleData, setArticleData] = useState(); // Dữ liệu chi tiết bài viết
+    const [commentsData, setCommentsData] = useState(); // Dữ liệu bình luận của bài viết
+    const [createCommentStatus, setCreateCommentStatus] = useState(); // For Loading Comment Animation
 
     // Context
     const { auth } = useContext(AuthContext);
@@ -27,6 +32,11 @@ function ArticleDetail() {
     // Navigate
     const navigate = useNavigate();
     const location = useLocation();
+
+    // React Hook Form (Form Upload Article)
+    const formComment = useForm();
+    const { register, handleSubmit, formState, watch, setError, clearErrors, setFocus } = formComment;
+    const { errors } = formState;
 
     // Config Carousel Media (React Slick)
     let sliderRef = useRef(null);
@@ -80,6 +90,8 @@ function ArticleDetail() {
         ],
     };
 
+    // console.log(commentsData);
+
     // --- HANDLE FUNCTION ---
     // Call API get article detail
     useEffect(() => {
@@ -88,7 +100,10 @@ function ArticleDetail() {
         const getArticle = async (articleId) => {
             try {
                 const res = await getArticleApi(articleId);
+                // set dữ liệu chi tiết bài viết
                 setArticleData(res?.data);
+                // set bình luận của bài viết
+                setCommentsData({ comments: res?.data?.comments, commentCount: res?.data?.commentCount });
             } catch (error) {
                 console.log(error);
             }
@@ -129,6 +144,68 @@ function ArticleDetail() {
         const minutes = String(date.getMinutes()).padStart(2, '0');
 
         return `${day} Tháng ${month}, ${year} lúc ${hours}:${minutes}`;
+    };
+    // Handle Submit formComment
+    const onSubmitFormComment = async (data) => {
+        // Start Loading
+        setCreateCommentStatus('pending');
+
+        let commentData = {};
+        commentData.articleId = articleData?.articleId;
+        commentData.content = data.content;
+        commentData.parentCommentId = null;
+
+        setTimeout(async () => {
+            // Call API tạo bình luận bài viết
+            try {
+                const res = await createCommentApi(commentData);
+                // Kiểm tra
+                if (res?.data !== null) {
+                    // Set lại commentsData
+                    if (res.data?.parentCommentId === null) {
+                        // Nếu là bình luận cha thì thêm vào đầu danh sách
+                        let newComment = res.data;
+                        newComment.replies = []; // Khởi tạo mảng replies rỗng
+                        setCommentsData((prev) => ({
+                            comments: [newComment, ...prev?.comments],
+                            commentCount: prev?.commentCount + 1,
+                        }));
+                    } else {
+                        // Nếu là bình luận con thì tìm bình luận cha và thêm vào replies
+                        let newComment = res.data;
+                        newComment.replies = []; // Khởi tạo mảng replies rỗng
+                        setCommentsData((prev) => {
+                            return prev.comments.map((oldComment) => {
+                                // Kiểm tra nếu là bình luận cha
+                                if (oldComment.commentId === newComment.parentCommentId) {
+                                    // Thêm bình luận con vào đầu replies[]
+                                    return {
+                                        ...oldComment,
+                                        replies: [newComment, ...oldComment.replies],
+                                    };
+                                } else {
+                                    return oldComment;
+                                }
+                            });
+                        });
+                    }
+
+                    // Reset Form Comment
+                    formComment.reset();
+                    // Stop Loading with success
+                    setCreateCommentStatus('success');
+                    console.log('Tạo bình luận thành công');
+                } else {
+                    // Stop Loading with fail
+                    setCreateCommentStatus('fail');
+                    console.log('Tạo bình luận không thành công');
+                }
+            } catch (error) {
+                // Stop Loading with fail
+                setCreateCommentStatus('fail');
+                console.log(error);
+            }
+        }, 1000);
     };
 
     return (
@@ -297,7 +374,7 @@ function ArticleDetail() {
                                 </button>
                                 {/* Nút bình luận */}
                                 <button type="button" className="btnComment" id="btnCommentID">
-                                    <IoChatboxOutline /> {articleData?.commentCount ? articleData?.commentCount : 0}
+                                    <IoChatboxOutline /> {commentsData?.commentCount ? commentsData?.commentCount : 0}
                                 </button>
                                 {/* Nút chia sẻ */}
                                 <button type="button" className="btnShare" id="btnShareID">
@@ -318,25 +395,93 @@ function ArticleDetail() {
                                             : defaultAvatar
                                     }
                                 />
-                                <form onSubmit="" className="formComment" id="formCommentID" method="POST" noValidate>
+                                <form
+                                    onSubmit={handleSubmit(onSubmitFormComment)}
+                                    className="formComment"
+                                    id="formCommentID"
+                                    method="POST"
+                                    noValidate
+                                >
                                     <textarea
                                         className="inputComment"
                                         id="inputCommentID"
                                         placeholder="Bình luận..."
                                         type="text"
+                                        {...register('content', {
+                                            required: 'Chưa nhập bình luận',
+                                            maxLength: {
+                                                value: 500,
+                                                message: 'Nội dung bình luận không được quá 500 ký tự',
+                                            },
+                                        })}
+                                        style={{
+                                            border:
+                                                createCommentStatus === 'fail'
+                                                    ? '.5px solid rgb(233 20 41 / 54%)'
+                                                    : '0.5px solid transparent',
+                                        }}
                                     />
-                                    {/* <button type="submit" className="btnPostComment" id="btnPostCommentID">
+                                    {/* Nút bình luận */}
+                                    <button type="submit" className="btnPostComment" id="btnPostCommentID">
+                                        {createCommentStatus === 'pending' ? (
+                                            <>
+                                                <div
+                                                    style={{
+                                                        width: '15px',
+                                                        height: '15px',
+                                                        display: 'flex',
+                                                        justifyContent: 'center',
+                                                        alignItems: 'center',
+                                                    }}
+                                                >
+                                                    <IoSyncSharp
+                                                        className="loadingAnimation"
+                                                        style={{ color: 'white' }}
+                                                    />
+                                                </div>
+                                            </>
+                                        ) : (
+                                            <IoArrowUpSharp />
+                                        )}
+                                    </button>
+                                    {/* <button type="button" className="btnPostComment" id="btnPostCommentID">
                                         <IoArrowUpSharp />
                                     </button> */}
-                                    <button type="button" className="btnPostComment" id="btnPostCommentID">
-                                        <IoArrowUpSharp />
-                                    </button>
                                 </form>
                             </div>
+                            {/* Validate Error Comment */}
+                            {errors.content?.message ? (
+                                <div
+                                    className="errorMessage"
+                                    style={{
+                                        background: '#e91429',
+                                        width: 'fit-content',
+                                        padding: '5px',
+                                        color: 'white',
+                                        fontSize: '14px',
+                                        fontFamily: 'sans-serif',
+                                        margin: '8px 0px',
+                                        borderRadius: '5px',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        gap: '5px',
+                                        marginLeft: '42px',
+                                    }}
+                                >
+                                    <IoAlertCircleOutline /> {errors.content?.message}
+                                </div>
+                            ) : (
+                                <></>
+                            )}
                         </div>
                     </div>
                 </div>
             </div>
+            {/* Check Data */}
+            <pre style={{ color: 'red' }} hidden>
+                {JSON.stringify(watch(), null, 2)}
+            </pre>
             {/* Các bình luận */}
             <div className="articleComments">
                 {/* Render Comments */}
@@ -354,9 +499,9 @@ function ArticleDetail() {
                     <>
                         {/* Title */}
                         <span style={{ color: '#ffffff', padding: '0px 12px 12px 12px', fontFamily: 'system-ui' }}>
-                            {articleData?.commentCount} bình luận
+                            {commentsData?.commentCount} bình luận
                         </span>
-                        {articleData?.comments.map((comment) => (
+                        {commentsData?.comments.map((comment) => (
                             <Comment key={comment.commentId} comment={comment} />
                         ))}
                     </>

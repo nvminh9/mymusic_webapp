@@ -105,6 +105,18 @@ const getArticleApi = (articleId) => {
     return axios.get(URL_API);
 };
 
+// API Tạo bình luận bài viết (POST)
+const createCommentApi = (data) => {
+    const URL_API = `/v1/api/comment/create`;
+    return axios.post(URL_API, data);
+};
+
+// API Chi tiết bình luận (GET)
+const getCommentApi = (commentId) => {
+    const URL_API = `/v1/api/comment/${commentId}`;
+    return axios.get(URL_API);
+};
+
 export {
     signUpApi,
     signInApi,
@@ -121,4 +133,6 @@ export {
     getFollowsApi,
     createArticleApi,
     getArticleApi,
+    createCommentApi,
+    getCommentApi,
 };

@@ -1782,7 +1782,7 @@ body {
         }
         .inputEmail {
             font-family: 'Funnel Sans', sans-serif;
-            font-size: 16px;
+            // font-size: 16px;
             padding: 15px 10px;
             margin: 5px 0px;
             width: 350px;
@@ -1805,7 +1805,7 @@ body {
         }
         .inputPassword {
             font-family: 'Funnel Sans', sans-serif;
-            font-size: 16px;
+            // font-size: 16px;
             padding: 15px 10px;
             margin: 5px 0px;
             width: 350px;
@@ -3663,7 +3663,9 @@ body {
                             justify-content: start;
                             color: #ffffff;
                             font-size: 15px;
-                            font-weight: 300;
+                            // font-weight: 300;
+                            font-weight: 400;
+                            font-family: 'system-ui';
                             padding-bottom: 8px;
                         }
                         .media {
@@ -3838,7 +3840,8 @@ body {
                                 background: transparent;
                                 border-radius: 5px;
                                 border: 0.5px solid transparent;
-                                font-family: 'Funnel Sans', sans-serif;
+                                // font-family: 'Funnel Sans', sans-serif;
+                                font-family: 'system-ui';
                                 // width: 180px;
                                 width: 89%;
                                 max-width: 100%;
@@ -3919,7 +3922,7 @@ body {
             border-bottom: 0.5px solid #1f1f1f;
         }
         .commentWrapper.reply {
-            margin-left: 52px;
+            // margin-left: 52px;
             padding-left: 10px;
             padding-top: 5px;
             padding-bottom: 4px;
@@ -4082,7 +4085,9 @@ body {
                             justify-content: start;
                             color: #ffffff;
                             font-size: 15px;
-                            font-weight: 300;
+                            // font-weight: 300;
+                            font-weight: 400;
+                            font-family: 'system-ui';
                             padding-bottom: 8px;
                             padding-top: 5px;
                         }
@@ -4234,6 +4239,63 @@ body {
                 }
             }
         }
+        // Ô Input Bình luận phản hồi
+        .commentBox {
+            display: flex;
+            align-items: center;
+            justify-content: start;
+            gap: 10px;
+            width: 400px;
+            // Hình đại diện
+            .userAvatar {
+                height: 32px;
+                // width: 32px;
+                width: 8%;
+                border: 0.5px solid #1f1f1f;
+                border-radius: 50%;
+                object-fit: cover;
+                cursor: pointer;
+            }
+            .formComment {
+                width: 92%;
+                display: flex;
+                // Input bình luận
+                .inputComment {
+                    background: transparent;
+                    border-radius: 5px;
+                    border: 0.5px solid transparent;
+                    // font-family: 'Funnel Sans', sans-serif;
+                    font-family: 'system-ui';
+                    // width: 180px;
+                    width: 89%;
+                    max-width: 100%;
+                    min-width: max-content;
+                    height: max-content;
+                    min-height: max-content;
+                    color: white;
+                }
+                // Nút gửi
+                .btnPostComment {
+                    width: 11%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    border: none;
+                    border-radius: 5px;
+                    background-color: transparent;
+                    color: white;
+                    transition: ease-out 0.2s;
+                    padding: 0px 12px;
+                    cursor: pointer;
+                }
+                .btnPostComment:hover {
+                    background-color: #1f1f1f;
+                }
+                .btnPostComment:active {
+                    background-color: #000;
+                }
+            }
+        }
     }
 }
 
@@ -4357,6 +4419,11 @@ body {
 }
 /***** 5. Thiết bị có kích thước màn hình <= 600px (Điện thoại) *****/
 @media (max-width: 600px) {
+    // Tiêu chuẩn font-size của input trên màn hình nhỏ
+    input {
+        font-size: 16px;
+    }
+
     // CSS Middle Container
     .middleContainer {
         .tabSwitchBar {
