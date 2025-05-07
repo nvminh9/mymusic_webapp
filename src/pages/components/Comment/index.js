@@ -14,12 +14,11 @@ import defaultAvatar from '~/assets/images/avatarDefault.jpg';
 import { AuthContext } from '~/context/auth.context';
 import { createCommentApi } from '~/utils/api';
 
-function Comment({ comment }) {
+function Comment({ comment, onReplyComment }) {
     // State
     const [isOpenRepliesBox, setIsOpenRepliesBox] = useState(false); // đóng/mở hộp xem phản hồi
     const [isOpenRepliesInput, setIsOpenRepliesInput] = useState(false); // đóng/mở input nhập phản hồi
     const [replyCommentStatus, setReplyCommentStatus] = useState(); // For Loading Reply Comment Animation
-    const [commentData, setCommentData] = useState(comment); // Comment Data
 
     // Context
     const { auth } = useContext(AuthContext);
@@ -85,30 +84,26 @@ function Comment({ comment }) {
     };
     // Handle Submit formReplyComment
     const onSubmitFormReplyComment = async (data) => {
-        // console.log('data', data);
-        // console.log('commentId', commentData?.commentId);
         // Start Loading
         setReplyCommentStatus('pending');
-
+        //
         let replyCommentData = {};
-        replyCommentData.articleId = commentData?.articleId;
+        replyCommentData.articleId = comment?.articleId;
         replyCommentData.content = data.content;
-        replyCommentData.parentCommentId = commentData?.commentId; // ID của bình luận cha
-
+        replyCommentData.parentCommentId =
+            comment?.parentCommentId === null ? comment?.commentId : comment?.parentCommentId; // ID của bình luận cha (Bình luận trả lời bài viết đó)
+        replyCommentData.taggedUserId = comment?.userId; // ID của người dùng được trả lời
+        //
         setTimeout(async () => {
             // Call API tạo bình luận
             try {
                 const res = await createCommentApi(replyCommentData);
                 // Kiểm tra
                 if (res?.data !== null) {
-                    // Set lại comment
+                    // Gọi callback để cập nhật lại danh sách bình luận ở component cha (Để hiển thị bình luận mới ra luôn)
                     if (res.data?.parentCommentId !== null) {
-                        // Nếu là bình luận con thì thêm vào replies
-                        let newReplyComment = res.data;
-                        newReplyComment.replies = []; // Khởi tạo mảng replies rỗng
-                        setCommentData((prev) => ({ ...prev, replies: [newReplyComment, ...prev.replies] }));
+                        onReplyComment(res.data);
                     }
-
                     // Reset Form Reply Comment
                     formReplyComment.reset();
                     // Stop Loading with success
@@ -132,16 +127,16 @@ function Comment({ comment }) {
     return (
         <>
             {/* Bình luận */}
-            <div className={`commentWrapper ${commentData?.parentCommentId ? 'reply' : ''}`}>
+            <div className={`commentWrapper ${comment?.parentCommentId ? 'reply' : ''}`}>
                 <div className="comment">
                     <div className="left">
                         {/* Avatar */}
                         <div className="userAvatar">
-                            <Link to={`/profile/${commentData?.User?.userName}`}>
+                            <Link to={`/profile/${comment?.User?.userName}`}>
                                 <img
                                     src={
-                                        commentData?.User?.userAvatar
-                                            ? process.env.REACT_APP_BACKEND_URL + commentData?.User?.userAvatar
+                                        comment?.User?.userAvatar
+                                            ? process.env.REACT_APP_BACKEND_URL + comment?.User?.userAvatar
                                             : defaultAvatar
                                     }
                                 />
@@ -151,12 +146,12 @@ function Comment({ comment }) {
                     <div className="right">
                         <div className="top">
                             <div className="articleInfo">
-                                <Link to={`/profile/${commentData?.User?.userName}`} style={{ textDecoration: 'none' }}>
-                                    <span className="userName">{commentData?.User?.userName}</span>
+                                <Link to={`/profile/${comment?.User?.userName}`} style={{ textDecoration: 'none' }}>
+                                    <span className="userName">{comment?.User?.userName}</span>
                                 </Link>
                                 <span className="createdAt tooltip">
-                                    {timeAgo(commentData?.createdAt)}
-                                    <span class="tooltiptext">{formatTimestamp(commentData?.createdAt)}</span>
+                                    {timeAgo(comment?.createdAt)}
+                                    <span class="tooltiptext">{formatTimestamp(comment?.createdAt)}</span>
                                 </span>
                             </div>
                             <div className="articleOptions">
@@ -167,7 +162,7 @@ function Comment({ comment }) {
                         </div>
                         <div className="middle">
                             <div className="content">
-                                <div className="text">{commentData?.content}</div>
+                                <div className="text">{comment?.content}</div>
                                 <div className="media">{/* Media */}</div>
                             </div>
                         </div>
@@ -186,10 +181,10 @@ function Comment({ comment }) {
                                         handleBtnReplyComment();
                                     }}
                                 >
-                                    <IoChatboxOutline /> {commentData?.replies.length ? commentData?.replies.length : 0}
+                                    <IoChatboxOutline /> {comment?.replies.length ? comment?.replies.length : 0}
                                 </button>
                                 {/* Nút xem phản hồi */}
-                                {commentData?.replies.length > 0 && (
+                                {comment?.replies.length > 0 && (
                                     <button
                                         type="button"
                                         className="btnOpenFeedback"
@@ -204,7 +199,7 @@ function Comment({ comment }) {
                                             </>
                                         ) : (
                                             <>
-                                                Xem {commentData?.replies.length} phản hồi <IoChevronDownSharp />
+                                                Xem {comment?.replies.length} phản hồi <IoChevronDownSharp />
                                             </>
                                         )}
                                     </button>
@@ -232,7 +227,7 @@ function Comment({ comment }) {
                                             <textarea
                                                 className="inputComment"
                                                 id="inputCommentID"
-                                                placeholder={`Trả lời ${commentData?.User?.userName}...`}
+                                                placeholder={`Trả lời ${comment?.User?.userName}...`}
                                                 type="text"
                                                 {...register('content', {
                                                     required: 'Chưa nhập nội dung',
@@ -301,12 +296,16 @@ function Comment({ comment }) {
                             ) : (
                                 <></>
                             )}
-                            {/* Bình luận phản hồi */}
-                            {isOpenRepliesBox && commentData?.replies && commentData?.replies.length > 0 ? (
+                            {/* Hộp bình luận phản hồi */}
+                            {isOpenRepliesBox && comment?.replies && comment?.replies.length > 0 ? (
                                 <>
                                     {/* <div ref={repliesRef}> */}
-                                    {commentData?.replies.map((reply) => (
-                                        <Comment key={reply.commentId} comment={reply} />
+                                    {comment?.replies.map((reply) => (
+                                        <Comment
+                                            key={reply.commentId}
+                                            comment={reply}
+                                            onReplyComment={onReplyComment}
+                                        />
                                     ))}
                                     {/* </div> */}
                                 </>

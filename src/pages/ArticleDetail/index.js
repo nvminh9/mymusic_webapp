@@ -17,8 +17,8 @@ import {
     IoSyncSharp,
 } from 'react-icons/io5';
 import { createCommentApi, getArticleApi } from '~/utils/api';
-import Comment from '../components/Comment';
-import { useForm } from 'react-hook-form';
+import { set, useForm } from 'react-hook-form';
+import CommentList from '../components/CommentList';
 
 function ArticleDetail() {
     // State
@@ -90,7 +90,7 @@ function ArticleDetail() {
         ],
     };
 
-    // console.log(commentsData);
+    console.log('Rerender ArticleDetail');
 
     // --- HANDLE FUNCTION ---
     // Call API get article detail
@@ -102,7 +102,7 @@ function ArticleDetail() {
                 const res = await getArticleApi(articleId);
                 // set dữ liệu chi tiết bài viết
                 setArticleData(res?.data);
-                // set bình luận của bài viết
+                // set bình luận của bài viết (chỉ sử dụng ở ArticleDetail Component)
                 setCommentsData({ comments: res?.data?.comments, commentCount: res?.data?.commentCount });
             } catch (error) {
                 console.log(error);
@@ -162,33 +162,35 @@ function ArticleDetail() {
                 // Kiểm tra
                 if (res?.data !== null) {
                     // Set lại commentsData
-                    if (res.data?.parentCommentId === null) {
+                    if (res?.data?.parentCommentId === null) {
+                        // console.log('Bình luận cha');
                         // Nếu là bình luận cha thì thêm vào đầu danh sách
-                        let newComment = res.data;
+                        let newComment = res?.data;
                         newComment.replies = []; // Khởi tạo mảng replies rỗng
                         setCommentsData((prev) => ({
                             comments: [newComment, ...prev?.comments],
                             commentCount: prev?.commentCount + 1,
                         }));
-                    } else {
-                        // Nếu là bình luận con thì tìm bình luận cha và thêm vào replies
-                        let newComment = res.data;
-                        newComment.replies = []; // Khởi tạo mảng replies rỗng
-                        setCommentsData((prev) => {
-                            return prev.comments.map((oldComment) => {
-                                // Kiểm tra nếu là bình luận cha
-                                if (oldComment.commentId === newComment.parentCommentId) {
-                                    // Thêm bình luận con vào đầu replies[]
-                                    return {
-                                        ...oldComment,
-                                        replies: [newComment, ...oldComment.replies],
-                                    };
-                                } else {
-                                    return oldComment;
-                                }
-                            });
-                        });
                     }
+                    // else {
+                    //     // Nếu là bình luận con thì tìm bình luận cha và thêm vào replies
+                    //     let newComment = res.data;
+                    //     newComment.replies = []; // Khởi tạo mảng replies rỗng
+                    //     setCommentsData((prev) => {
+                    //         return prev.comments.map((oldComment) => {
+                    //             // Kiểm tra nếu là bình luận cha
+                    //             if (oldComment.commentId === newComment.parentCommentId) {
+                    //                 // Thêm bình luận con vào đầu replies[]
+                    //                 return {
+                    //                     ...oldComment,
+                    //                     replies: [newComment, ...oldComment.replies],
+                    //                 };
+                    //             } else {
+                    //                 return oldComment;
+                    //             }
+                    //         });
+                    //     });
+                    // }
 
                     // Reset Form Comment
                     formComment.reset();
@@ -206,6 +208,34 @@ function ArticleDetail() {
                 console.log(error);
             }
         }, 1000);
+    };
+    // Handle Reset Comments Data (Callback) (Tạm OK, có thể tối ưu hơn)
+    const handleResetCommentsData = (newReplyComment) => {
+        let replyComment = newReplyComment;
+        replyComment.replies = []; // Khởi tạo mảng replies rỗng
+        console.log('replyComment', replyComment);
+        // Tìm bình luận cha và thêm vào replies
+        // newComments
+        let newComments = commentsData.comments.map((oldComment) => {
+            // Kiểm tra nếu là bình luận cha
+            if (oldComment.commentId === replyComment.parentCommentId) {
+                // Thêm bình luận con vào đầu replies[]
+                return {
+                    ...oldComment,
+                    replies: [replyComment, ...oldComment.replies],
+                };
+            } else {
+                return oldComment;
+            }
+        });
+        // console.log('newComments', newComments);
+        //
+        setCommentsData((prev) => ({
+            comments: [...newComments],
+            commentCount: prev?.commentCount + 1,
+        }));
+        //
+        return;
     };
 
     return (
@@ -484,28 +514,8 @@ function ArticleDetail() {
             </pre>
             {/* Các bình luận */}
             <div className="articleComments">
-                {/* Render Comments */}
-                {articleData?.comments?.length <= 0 ? (
-                    <span
-                        style={{
-                            textAlign: 'center',
-                            color: 'white',
-                            fontFamily: 'sans-serif',
-                            fontSize: '16px',
-                            fontWeight: '400',
-                        }}
-                    ></span>
-                ) : (
-                    <>
-                        {/* Title */}
-                        <span style={{ color: '#ffffff', padding: '0px 12px 12px 12px', fontFamily: 'system-ui' }}>
-                            {commentsData?.commentCount} bình luận
-                        </span>
-                        {commentsData?.comments.map((comment) => (
-                            <Comment key={comment.commentId} comment={comment} />
-                        ))}
-                    </>
-                )}
+                {/* Comment List Component */}
+                <CommentList commentListData={commentsData} onReplyComment={handleResetCommentsData} />
             </div>
         </div>
     );
