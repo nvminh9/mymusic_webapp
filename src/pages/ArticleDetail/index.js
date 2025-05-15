@@ -197,19 +197,38 @@ function ArticleDetail() {
                     // Stop Loading with success
                     setCreateCommentStatus('success');
                     console.log('Tạo bình luận thành công');
+                    // Highlight vào comment mới được thêm
+                    const scrollToNewCommentTimeout = setTimeout(() => {
+                        // Scroll vào comment
+                        let offset = 70; // Height của tabSwitchProfile
+                        let y =
+                            document.getElementById(`commentID${res.data?.commentId}`).getBoundingClientRect().top +
+                            window.scrollY -
+                            offset;
+                        window.scrollTo({ top: y, behavior: 'smooth' });
+                        // Highlight vào comment
+                        document.getElementById(`commentID${res.data?.commentId}`).classList.add('highlight');
+                    }, 200);
+                    return () => {
+                        // Clear timeout
+                        clearTimeout(scrollToNewCommentTimeout);
+                    };
                 } else {
                     // Stop Loading with fail
                     setCreateCommentStatus('fail');
                     console.log('Tạo bình luận không thành công');
+                    return;
                 }
             } catch (error) {
                 // Stop Loading with fail
                 setCreateCommentStatus('fail');
                 console.log(error);
+                return;
             }
         }, 1000);
     };
     // Handle Reset Comments Data (Callback) (Tạm OK, có thể tối ưu hơn)
+    // Hàm này thực hiện cập nhật lại state commentsData để bình luận mới được tạo hiện ra giao diện
     const handleResetCommentsData = (newReplyComment) => {
         let replyComment = newReplyComment;
         replyComment.replies = []; // Khởi tạo mảng replies rỗng
@@ -236,6 +255,17 @@ function ArticleDetail() {
         }));
         //
         return;
+    };
+    // Handle lấy thông tin của bình luận được trả lời
+    const handleGetRespondedComment = ({ parentCommentId, respondedCommentId }) => {
+        console.log('handleGetRespondedComment');
+        // Tìm bình luận cha với parentCommentId truyền vào
+        // Sau đó tìm bình luận nào có id là respondedCommentId trong replies của bình luận cha đó
+        // return bình luận tìm thấy
+        // const parentComment = commentsData?.comments?.find((comment) => comment.commentId === parentCommentId);
+        // const respondedComment = parentComment?.replies?.find((comment) => comment.commentId === respondedCommentId);
+        // console.log('respondedComment', respondedComment);
+        // return respondedComment;
     };
 
     return (
@@ -437,6 +467,8 @@ function ArticleDetail() {
                                         id="inputCommentID"
                                         placeholder="Bình luận..."
                                         type="text"
+                                        spellCheck="false"
+                                        rows={1}
                                         {...register('content', {
                                             required: 'Chưa nhập bình luận',
                                             maxLength: {
@@ -515,7 +547,11 @@ function ArticleDetail() {
             {/* Các bình luận */}
             <div className="articleComments">
                 {/* Comment List Component */}
-                <CommentList commentListData={commentsData} onReplyComment={handleResetCommentsData} />
+                <CommentList
+                    commentListData={commentsData}
+                    onReplyComment={handleResetCommentsData}
+                    getRespondedComment={handleGetRespondedComment}
+                />
             </div>
         </div>
     );

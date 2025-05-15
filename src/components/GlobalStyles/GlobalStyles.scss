@@ -3849,6 +3849,7 @@ body {
                                 height: max-content;
                                 min-height: max-content;
                                 color: white;
+                                padding: 8px 5px;
                             }
                             // Nút gửi
                             .btnPostComment {
@@ -3910,16 +3911,35 @@ body {
     // Các bình luận
     .articleComments {
         display: grid;
-        gap: 12px;
-        padding: 12px 0px;
+        // gap: 12px;
+        padding: 0px;
         width: 100%;
 
         // Wrapper Bình luận
         .commentWrapper {
             position: relative;
-            padding: 0px 12px;
-            padding-bottom: 12px;
+            padding: 12px;
             border-bottom: 0.5px solid #1f1f1f;
+        }
+        // New Comment Animation
+        .commentWrapper.highlight {
+            animation: highlightAnimation 1s ease-out;
+        }
+        @keyframes highlightAnimation {
+            0% {
+                // background-color: #d63031;
+                background-color: #1f1f1f;
+            }
+
+            50% {
+                // background-color: #fd79a8;
+                background-color: #444;
+                // transform: translate(-9px, -7px);
+            }
+
+            100% {
+                background-color: transparent;
+            }
         }
         .commentWrapper.reply {
             // margin-left: 52px;
@@ -3991,12 +4011,13 @@ body {
                         display: flex;
                         height: 100%;
 
+                        // Tên người dùng
                         .userName {
                             color: #ffffff;
                             font-size: 15px;
                             font-weight: 500;
                             height: 100%;
-                            margin-right: 5px;
+                            // margin-right: 5px;
                             cursor: pointer;
                             transition: ease-out 0.2s;
                             display: -webkit-box;
@@ -4010,6 +4031,22 @@ body {
                         .userName:hover {
                             text-decoration: underline;
                         }
+                        // Trả lời bình luận của ai
+                        .replyTo {
+                            display: flex;
+                            align-items: center;
+                            justify-content: left;
+
+                            svg {
+                                color: #ffffff;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                font-size: 13px;
+                                padding-top: 2px;
+                            }
+                        }
+                        // Thời gian tạo bình luận
                         .createdAt {
                             display: flex;
                             align-items: start;
@@ -4019,6 +4056,7 @@ body {
                             font-weight: 400;
                             font-family: 'system-ui';
                             height: 100%;
+                            margin-left: 5px;
                         }
                         .createdAt:hover {
                             text-decoration: underline;
@@ -4237,6 +4275,14 @@ body {
                         }
                     }
                 }
+                // User Tag
+                .userTag {
+                    text-decoration: none;
+                    color: rgb(0, 149, 246);
+                }
+                .userTag:hover {
+                    text-decoration: underline;
+                }
             }
         }
         // Ô Input Bình luận phản hồi
@@ -4273,6 +4319,7 @@ body {
                     height: max-content;
                     min-height: max-content;
                     color: white;
+                    padding: 8px 5px;
                 }
                 // Nút gửi
                 .btnPostComment {

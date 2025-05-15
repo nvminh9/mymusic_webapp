@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import {
     IoAlertCircleOutline,
     IoArrowUpSharp,
+    IoCaretForwardSharp,
     IoChatboxOutline,
     IoChevronDownSharp,
     IoChevronUpSharp,
@@ -14,10 +15,11 @@ import defaultAvatar from '~/assets/images/avatarDefault.jpg';
 import { AuthContext } from '~/context/auth.context';
 import { createCommentApi } from '~/utils/api';
 
-function Comment({ comment, onReplyComment }) {
+function Comment({ comment, onReplyComment, getRespondedComment }) {
     // State
     const [isOpenRepliesBox, setIsOpenRepliesBox] = useState(false); // đóng/mở hộp xem phản hồi
     const [isOpenRepliesInput, setIsOpenRepliesInput] = useState(false); // đóng/mở input nhập phản hồi
+    // const [replyCommentContent, setReplyCommentContent] = useState(); // Nội dung phản hồi
     const [replyCommentStatus, setReplyCommentStatus] = useState(); // For Loading Reply Comment Animation
 
     // Context
@@ -80,19 +82,43 @@ function Comment({ comment, onReplyComment }) {
     };
     // Handle nút đóng/mở input phản hồi
     const handleBtnReplyComment = () => {
-        setIsOpenRepliesInput(!isOpenRepliesInput);
+        // Khởi tạo tag
+        const tag = `@${comment?.User?.userName} `;
+        let prevContent = formReplyComment.getValues('content') || ''; // Nội dung của input trước khi tag
+        let tagContent = prevContent.startsWith(tag) ? prevContent : tag + prevContent; // Kiểm tra và thêm tag
+        formReplyComment.setValue('content', tagContent);
+        // Focus vào input được mở
+        setTimeout(() => {
+            if (!isOpenRepliesInput) {
+                // console.log('Focus input');
+                // Focus vào input
+                document.getElementById(`inputCommentID${comment?.commentId}`).focus();
+                // Scroll vào comment được mở input
+                let offset = 70; // Height của tabSwitchProfile
+                let y =
+                    document.getElementById(`commentID${comment?.commentId}`).getBoundingClientRect().top +
+                    window.scrollY -
+                    offset;
+                window.scrollTo({ top: y, behavior: 'smooth' });
+                return;
+            } else {
+                // console.log('Unfocus input');
+                return;
+            }
+        }, 100);
+        setIsOpenRepliesInput(!isOpenRepliesInput); // Set trạng thái đóng/mở input
     };
     // Handle Submit formReplyComment
     const onSubmitFormReplyComment = async (data) => {
         // Start Loading
         setReplyCommentStatus('pending');
-        //
+        // Data
         let replyCommentData = {};
         replyCommentData.articleId = comment?.articleId;
         replyCommentData.content = data.content;
         replyCommentData.parentCommentId =
-            comment?.parentCommentId === null ? comment?.commentId : comment?.parentCommentId; // ID của bình luận cha (Bình luận trả lời bài viết đó)
-        replyCommentData.taggedUserId = comment?.userId; // ID của người dùng được trả lời
+            comment?.parentCommentId === null ? comment?.commentId : comment?.parentCommentId; // ID của bình luận cha (Bình luận trả lời bài viết)
+        replyCommentData.respondedCommentId = comment?.commentId; // ID của bình luận được trả lời
         //
         setTimeout(async () => {
             // Call API tạo bình luận
@@ -100,7 +126,8 @@ function Comment({ comment, onReplyComment }) {
                 const res = await createCommentApi(replyCommentData);
                 // Kiểm tra
                 if (res?.data !== null) {
-                    // Gọi callback để cập nhật lại danh sách bình luận ở component cha (Để hiển thị bình luận mới ra luôn)
+                    // Gọi callback để cập nhật lại state commentsData ở component cha (component ArticleDetail),
+                    // để hiển thị bình luận mới ra luôn
                     if (res.data?.parentCommentId !== null) {
                         onReplyComment(res.data);
                     }
@@ -111,23 +138,68 @@ function Comment({ comment, onReplyComment }) {
                     // Open Replies Box
                     setIsOpenRepliesBox(true);
                     console.log('Trả lời bình luận thành công');
+                    // Highlight vào comment mới được thêm
+                    const scrollToNewCommentTimeout = setTimeout(() => {
+                        // Scroll vào comment
+                        let offset = 70; // Height của tabSwitchProfile
+                        let y =
+                            document.getElementById(`commentID${res.data?.commentId}`).getBoundingClientRect().top +
+                            window.scrollY -
+                            offset;
+                        window.scrollTo({ top: y, behavior: 'smooth' });
+                        // Highlight vào comment
+                        document.getElementById(`commentID${res.data?.commentId}`).classList.add('highlight');
+                    }, 200);
+                    return () => {
+                        // Clear timeout
+                        clearTimeout(scrollToNewCommentTimeout);
+                    };
                 } else {
                     // Stop Loading with fail
                     setReplyCommentStatus('fail');
                     console.log('Trả lời bình luận không thành công');
+                    return;
                 }
             } catch (error) {
                 // Stop Loading with fail
                 setReplyCommentStatus('fail');
                 console.log(error);
+                return;
             }
         }, 1000);
+    };
+    // Handle Format Comment Content (chuyển tag @ thành link)
+    const handleFormatCommentContent = (content) => {
+        // Regex để tách các phần bắt đầu bằng @username hoặc text thường
+        const regex = /(@[a-zA-Z0-9_]+)|([^@]+)/g;
+        const parts = Array.from(content.matchAll(regex)).map((match, index) => {
+            const [fullMatch, tag, text] = match;
+            if (tag) {
+                const userName = tag.slice(1);
+                return (
+                    <Link key={index} to={`/profile/${userName}`} className="userTag">
+                        {tag}
+                    </Link>
+                );
+            } else {
+                return (
+                    <span key={index} style={{ marginLeft: '5px' }}>
+                        {text}
+                    </span>
+                );
+            }
+        });
+        //
+        return parts;
     };
 
     return (
         <>
             {/* Bình luận */}
-            <div className={`commentWrapper ${comment?.parentCommentId ? 'reply' : ''}`}>
+            <div
+                id={`commentID${comment?.commentId}`}
+                className={`commentWrapper ${comment?.parentCommentId ? 'reply' : ''}`}
+            >
                 <div className="comment">
                     <div className="left">
                         {/* Avatar */}
@@ -149,6 +221,28 @@ function Comment({ comment, onReplyComment }) {
                                 <Link to={`/profile/${comment?.User?.userName}`} style={{ textDecoration: 'none' }}>
                                     <span className="userName">{comment?.User?.userName}</span>
                                 </Link>
+                                {/* Trả lời bình luận của ai đó */}
+                                {comment?.respondedComment && comment?.respondedCommentId !== null ? (
+                                    <span className="replyTo">
+                                        <IoCaretForwardSharp />
+                                        <Link
+                                            to={`/profile/${
+                                                comment?.respondedComment
+                                                    ? comment?.respondedComment?.User?.userName
+                                                    : ''
+                                            }`}
+                                            style={{ textDecoration: 'none' }}
+                                        >
+                                            <span className="userName">
+                                                {comment?.respondedComment
+                                                    ? comment?.respondedComment?.User?.userName
+                                                    : ''}
+                                            </span>
+                                        </Link>
+                                    </span>
+                                ) : (
+                                    <></>
+                                )}
                                 <span className="createdAt tooltip">
                                     {timeAgo(comment?.createdAt)}
                                     <span class="tooltiptext">{formatTimestamp(comment?.createdAt)}</span>
@@ -162,7 +256,8 @@ function Comment({ comment, onReplyComment }) {
                         </div>
                         <div className="middle">
                             <div className="content">
-                                <div className="text">{comment?.content}</div>
+                                {/* <div className="text">{comment?.content}</div> */}
+                                <div className="text">{handleFormatCommentContent(comment?.content)}</div>
                                 <div className="media">{/* Media */}</div>
                             </div>
                         </div>
@@ -226,9 +321,11 @@ function Comment({ comment, onReplyComment }) {
                                         >
                                             <textarea
                                                 className="inputComment"
-                                                id="inputCommentID"
+                                                id={`inputCommentID${comment?.commentId}`}
                                                 placeholder={`Trả lời ${comment?.User?.userName}...`}
                                                 type="text"
+                                                spellCheck="false"
+                                                rows={1}
                                                 {...register('content', {
                                                     required: 'Chưa nhập nội dung',
                                                     maxLength: {

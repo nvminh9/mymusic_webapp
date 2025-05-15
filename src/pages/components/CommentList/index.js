@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import Comment from '../Comment';
 import { getArticleApi } from '~/utils/api';
 
-function CommentList({ commentListData, onReplyComment }) {
+function CommentList({ commentListData, onReplyComment, getRespondedComment }) {
     // State
     // const [commentListData, setCommentListData] = useState();
 
@@ -36,11 +36,16 @@ function CommentList({ commentListData, onReplyComment }) {
             ) : (
                 <>
                     {/* Title */}
-                    <span style={{ color: '#ffffff', padding: '0px 12px 12px 12px', fontFamily: 'system-ui' }}>
+                    <span style={{ color: '#ffffff', padding: '12px', fontFamily: 'system-ui' }}>
                         {commentListData?.commentCount} bình luận
                     </span>
                     {commentListData?.comments.map((comment) => (
-                        <Comment key={comment.commentId} comment={comment} onReplyComment={onReplyComment} />
+                        <Comment
+                            key={comment.commentId}
+                            comment={comment}
+                            onReplyComment={onReplyComment}
+                            getRespondedComment={getRespondedComment}
+                        />
                     ))}
                 </>
             )}
