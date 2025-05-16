@@ -192,6 +192,8 @@ function ProfilePage() {
                     // console.log('Thông tin profile: ', res?.data);
                     setProfileInfo(res?.data);
                     // console.log('Check: ', typeof profileInfo.followStatus);
+                    // Set document title
+                    document.title = `${res?.data?.user?.name} (${res?.data?.user?.userName}) | mymusic: Music from everyone`;
                 } else if (res?.status === 404) {
                     // console.log('Lấy thông tin profile thất bại !');
                     setProfileInfo({

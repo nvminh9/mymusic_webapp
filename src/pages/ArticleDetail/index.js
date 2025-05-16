@@ -104,6 +104,8 @@ function ArticleDetail() {
                 setArticleData(res?.data);
                 // set bình luận của bài viết (chỉ sử dụng ở ArticleDetail Component)
                 setCommentsData({ comments: res?.data?.comments, commentCount: res?.data?.commentCount });
+                // set document title
+                document.title = `${res?.data?.textContent} | ${res?.data?.User?.userName}`;
             } catch (error) {
                 console.log(error);
             }
