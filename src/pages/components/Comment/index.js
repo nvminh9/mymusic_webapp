@@ -1,7 +1,5 @@
 import { useContext, useRef, useState } from 'react';
 import {
-    IoAlertCircleOutline,
-    IoArrowUpSharp,
     IoCaretForwardSharp,
     IoChatboxOutline,
     IoChevronDownSharp,
@@ -12,6 +10,8 @@ import { Link } from 'react-router-dom';
 import defaultAvatar from '~/assets/images/avatarDefault.jpg';
 import { AuthContext } from '~/context/auth.context';
 import CommentInput from '../CommentInput';
+import UserTag from '../UserTag';
+import UserName from '../UserName';
 
 function Comment({ comment, onReplyComment, getRespondedComment }) {
     // State
@@ -103,9 +103,9 @@ function Comment({ comment, onReplyComment, getRespondedComment }) {
             if (tag) {
                 const userName = tag.slice(1);
                 return (
-                    <Link key={index} to={`/profile/${userName}`} className="userTag">
+                    <UserTag key={index} userName={userName}>
                         {tag}
-                    </Link>
+                    </UserTag>
                 );
             } else {
                 return (
@@ -144,27 +144,18 @@ function Comment({ comment, onReplyComment, getRespondedComment }) {
                     <div className="right">
                         <div className="top">
                             <div className="articleInfo">
-                                <Link to={`/profile/${comment?.User?.userName}`} style={{ textDecoration: 'none' }}>
-                                    <span className="userName">{comment?.User?.userName}</span>
-                                </Link>
+                                {/* Component UserName */}
+                                <UserName userName={comment?.User?.userName} />
                                 {/* Trả lời bình luận của ai đó */}
                                 {comment?.respondedComment && comment?.respondedCommentId !== null ? (
                                     <span className="replyTo">
                                         <IoCaretForwardSharp />
-                                        <Link
-                                            to={`/profile/${
-                                                comment?.respondedComment
-                                                    ? comment?.respondedComment?.User?.userName
-                                                    : ''
-                                            }`}
-                                            style={{ textDecoration: 'none' }}
-                                        >
-                                            <span className="userName">
-                                                {comment?.respondedComment
-                                                    ? comment?.respondedComment?.User?.userName
-                                                    : ''}
-                                            </span>
-                                        </Link>
+                                        {/* Component UserName */}
+                                        {comment?.respondedComment ? (
+                                            <UserName userName={comment?.respondedComment?.User?.userName} />
+                                        ) : (
+                                            ''
+                                        )}
                                     </span>
                                 ) : (
                                     <></>

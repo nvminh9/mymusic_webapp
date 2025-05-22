@@ -3910,7 +3910,7 @@ body {
     }
     // Các bình luận
     .articleComments {
-        display: grid;
+        // display: grid;
         // gap: 12px;
         padding: 0px;
         width: 100%;
@@ -4275,14 +4275,6 @@ body {
                         }
                     }
                 }
-                // User Tag
-                .userTag {
-                    text-decoration: none;
-                    color: rgb(0, 149, 246);
-                }
-                .userTag:hover {
-                    text-decoration: underline;
-                }
             }
         }
         // Ô Input Bình luận phản hồi
@@ -4292,10 +4284,12 @@ body {
             justify-content: start;
             gap: 10px;
             width: 400px;
+            max-width: 100%;
             // Hình đại diện
             .userAvatar {
-                height: 32px;
+                // height: 100%;
                 // width: 32px;
+                height: 32px;
                 width: 8%;
                 border: 0.5px solid #1f1f1f;
                 border-radius: 50%;
@@ -4341,6 +4335,137 @@ body {
                 .btnPostComment:active {
                     background-color: #000;
                 }
+            }
+        }
+    }
+}
+
+// CSS User Tag
+// User Tag
+.userTagContainer {
+    position: relative;
+    height: 100%;
+
+    .userTag {
+        text-decoration: none;
+        color: rgb(0, 149, 246);
+    }
+    .userTag:hover {
+        text-decoration: underline;
+    }
+    .userTagInfoBox {
+        display: block;
+        position: absolute;
+        background-color: #121212;
+        border: 0.5px solid #1f1f1f;
+        border-radius: 10px;
+        padding: 16px;
+        text-decoration: none;
+        z-index: 99;
+        width: max-content;
+        font-family: 'system-ui';
+        // box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+        box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+        // margin-top: 5px;
+        // transition: all 5s;
+
+        .top {
+            display: flex;
+            padding-bottom: 5px;
+
+            // Thông tin
+            .userInfo {
+                display: grid;
+
+                .name {
+                    font-size: 18px;
+                    font-weight: 400;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    color: #ffffff;
+                }
+                .userName {
+                    font-size: 15px;
+                    font-weight: 300;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    color: #ffffff;
+                }
+            }
+            // Avatar
+            .userAvatar {
+                height: 42px;
+                width: 42px;
+                border: 0.5px solid #1f1f1f;
+                border-radius: 50%;
+                object-fit: cover;
+                cursor: pointer;
+                margin-left: 36px;
+            }
+        }
+        .middle {
+            display: grid;
+            // padding-bottom: 5px;
+
+            .description {
+                font-size: 15px;
+                font-weight: 300;
+                padding-bottom: 5px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                color: #ffffff;
+            }
+            .followers {
+                font-size: 15px;
+                font-weight: 300;
+                color: #777777aa;
+            }
+        }
+        .bottom {
+            text-align: center;
+            margin-top: 12px;
+
+            .btnFollow {
+                width: 100%;
+                border: none;
+                border-radius: 8px;
+                padding: 8px 15px;
+                font-size: 14px;
+                font-weight: 500;
+                background-color: #ffffff;
+                color: #000;
+                cursor: pointer;
+                transition: ease-out 0.2s;
+                margin-right: 10px;
+            }
+            .btnFollow:hover {
+                background-color: #dfdfdf;
+            }
+            .btnFollow:active {
+                // background-color: #000;
+                // color: #ffffff;
+                transform: scale(0.95);
+            }
+            .btnFollowed {
+                width: 100%;
+                border: none;
+                border-radius: 8px;
+                padding: 8px 15px;
+                font-size: 14px;
+                font-weight: 500;
+                background-color: #1f1f1f;
+                color: #ffffff;
+                cursor: pointer;
+                transition: ease-out 0.2s;
+                margin-right: 10px;
+            }
+            .btnFollowed:hover {
+                background-color: #2e2e2e;
+            }
+            .btnFollowed:active {
+                // background-color: #000;
+                // color: #ffffff;
+                transform: scale(0.95);
             }
         }
     }

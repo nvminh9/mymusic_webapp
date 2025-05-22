@@ -36,7 +36,7 @@ function CommentList({ commentListData, onReplyComment, getRespondedComment }) {
             ) : (
                 <>
                     {/* Title */}
-                    <span style={{ color: '#ffffff', padding: '12px', fontFamily: 'system-ui' }}>
+                    <span style={{ display: 'block', color: '#ffffff', padding: '12px', fontFamily: 'system-ui' }}>
                         {commentListData?.commentCount} bình luận
                     </span>
                     {commentListData?.comments.map((comment) => (

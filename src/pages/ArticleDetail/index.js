@@ -16,6 +16,7 @@ import {
 import { createCommentApi, getArticleApi } from '~/utils/api';
 import CommentList from '../components/CommentList';
 import CommentInput from '../components/CommentInput';
+import LikeArticleButton from '../components/LikeArticleButton';
 
 function ArticleDetail() {
     // State
@@ -439,10 +440,10 @@ function ArticleDetail() {
                             {/* Các nút tương tác */}
                             <div className="interactiveButtonBox">
                                 {/* Nút thích bài viết */}
-                                <button type="button" className="btnLike" id="btnLikeID">
-                                    <IoHeartOutline />{' '}
-                                    {articleData?.LikeArticles ? articleData?.LikeArticles?.length : 0}
-                                </button>
+                                {/* <button type="button" className="btnLike" id="btnLikeID">
+                                    <IoHeartOutline /> {articleData?.likeCount ? articleData?.likeCount : 0}
+                                </button> */}
+                                <LikeArticleButton articleData={articleData} />
                                 {/* Nút bình luận */}
                                 <button type="button" className="btnComment" id="btnCommentID">
                                     <IoChatboxOutline /> {commentsData?.commentCount ? commentsData?.commentCount : 0}

@@ -149,14 +149,20 @@ function CommentInput({ comment, articleData, onReplyComment, setIsOpenRepliesBo
             try {
                 // Call API Lấy danh sách đang theo dõi
                 const res = await getFollowsApi(auth?.user?.userName);
-                // Set state suggestions user
-                setSuggestions(res?.data?.rows);
+                // Set state suggestions user (Tạm để setTimeout 300ms)
+                const setSuggestionsTimeout = setTimeout(() => {
+                    setSuggestions(res?.data?.rows);
+                }, 300);
                 // Set state show suggestions
                 setShowSuggestions(true);
+                return () => {
+                    clearTimeout(setSuggestionsTimeout);
+                };
             } catch (error) {
                 console.log('Error fetching users: ', error);
                 setSuggestions([]);
                 setShowSuggestions(false);
+                return;
             }
         }, 400),
         [],
@@ -177,7 +183,7 @@ function CommentInput({ comment, articleData, onReplyComment, setIsOpenRepliesBo
             const tagQuery = newValue.slice(lastAt + 1, cursorIndex);
             // console.log('tagQuery: ', tagQuery);
             if (tagQuery.length >= 0) {
-                // Call API với tagQuery
+                // Call API với tagQuery (đồng thời mở suggestionsList)
                 handleFetchUsers(tagQuery);
                 setTagStartIndex(lastAt); // Lưu vị trí bắt đầu để chèn username
             } else {
@@ -276,10 +282,11 @@ function CommentInput({ comment, articleData, onReplyComment, setIsOpenRepliesBo
                     </button>
                 </form>
             </div>
-            {/* Suggestions Tag */}
+            {/* Suggestions Box For User Tag */}
             {showSuggestions && (
                 <ul
                     className="tagSuggestionsList"
+                    id={`tag${comment?.commentId ? comment?.commentId : articleData?.articleId}`}
                     style={{ height: suggestions?.length > 3 ? '184.8px' : 'max-content' }}
                 >
                     {suggestions?.length > 0 ? (
