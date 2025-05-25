@@ -1,59 +1,80 @@
-import { useState } from 'react';
-import { IoHeartOutline } from 'react-icons/io5';
+import { useCallback, useEffect, useState } from 'react';
+import { IoHeart, IoHeartOutline, IoSparklesSharp } from 'react-icons/io5';
 import { createLikeArticleApi, unLikeArticleApi } from '~/utils/api';
+import { debounce } from 'lodash';
 
 // articleData: được truyền khi gọi dùng ở Component ArticleDetail
 function LikeArticleButton({ articleData }) {
     // State
-    const [liked, setLiked] = useState(); // Xác định người dùng đã thích bài viết chưa
+    const [liked, setLiked] = useState(articleData?.likeStatus); // Xác định người dùng đã thích bài viết chưa
     const [likesCount, setLikesCount] = useState(articleData?.likeCount); // Tổng số lượt thích của bài viết
-    const [loading, setLoading] = useState(false); // Trạng thái loading, nếu API Debounce thích bài viết đang được gọi
+    // const [loading, setLoading] = useState(); // Trạng thái loading, nếu API thích bài viết (Debounce) đang được gọi
 
     // Context
 
     // Ref
 
     // --- HANDLE FUNCTION ---
-    const handleLikeArticleButton = async () => {
-        // Disable nút like nếu API chưa phản hồi (Chặn Spam)
-        if (loading) {
-            return;
-        }
-        setLoading(true);
-        //
-        try {
-            //
-            setLiked((prev) => !prev);
-            setLikesCount((prev) => (liked ? prev - 1 : prev + 1));
-
-            // Call API
-            if (!liked) {
-                // Nếu chưa like thì gọi API like
-                const res = await createLikeArticleApi(articleData?.articleId);
-            } else {
-                // Nếu like rồi thì gọi API unlike
-                const res = await unLikeArticleApi(articleData?.articleId);
+    // Set likesCount, liked State khi render
+    useEffect(() => {
+        // set likesCount
+        // setLikesCount(articleData?.likeCount);
+        // set liked
+    });
+    // Hàm gọi API thích bài viết (Debounce)
+    const debouncedLikeArticle = useCallback(
+        debounce(async (newLiked) => {
+            try {
+                if (newLiked) {
+                    const res = await createLikeArticleApi(articleData?.articleId); // Nếu chưa like thì gọi API like
+                } else {
+                    const res = await unLikeArticleApi(articleData?.articleId); // Nếu like rồi thì gọi API unlike
+                }
+            } catch (error) {
+                console.error('Error updating like status', error);
             }
-        } catch (error) {
-            // rollback nếu lỗi
-            setLiked((prev) => !prev);
-            setLikesCount((prev) => (liked ? prev + 1 : prev - 1));
-            console.error(error);
-        } finally {
-            setLoading(false);
-        }
+        }, 500), // Debounce 500ms
+        [articleData?.articleId],
+    );
+    // Handle nút thích bài viết
+    const handleLikeArticleButton = async () => {
+        const newLiked = !liked;
+        setLiked(newLiked);
+        setLikesCount((prev) => prev + (newLiked ? 1 : -1));
+        // Call API (debounce)
+        debouncedLikeArticle(newLiked);
+        // try {
+        //     // Nếu liked true thì set liked false và ngược lại
+        //     setLiked((prev) => !prev);
+        //     // Nếu đã thích trước đó thì khi bấm sẽ -1 likesCount và ngược lại thì +1
+        //     setLikesCount((prev) => (liked ? prev - 1 : prev + 1));
+        //     // Call API (Debounce)
+        // } catch (error) {
+        //     // rollback nếu lỗi
+        //     setLiked((prev) => !prev);
+        //     setLikesCount((prev) => (liked ? prev + 1 : prev - 1));
+        //     console.error(error);
+        // }
     };
 
     return (
         <button
             type="button"
-            className="btnLike"
+            className={`btnLike ${liked ? 'btnLikeArticleActived' : ''}`}
             id="btnLikeID"
-            disabled={loading}
             onClick={handleLikeArticleButton}
-            style={{ cursor: loading ? 'not-allowed' : 'pointer', backgroundColor: liked ? 'pink' : 'transparent' }}
         >
-            <IoHeartOutline style={{ color: liked ? 'red' : '#dfdfdf' }} /> {likesCount}
+            {/* Hiệu ứng */}
+            {/* <IoSparklesSharp
+                className={`sparkles ${liked ? 'sparklesActived' : ''}`}
+                style={{ transform: 'translate(-14px, -7px)' }}
+            ></IoSparklesSharp> */}
+            {liked ? <IoHeart /> : <IoHeartOutline />} {likesCount}
+            {/* Hiệu ứng */}
+            {/* <IoSparklesSharp
+                className={`sparkles ${liked ? 'sparklesActived' : ''}`}
+                style={{ transform: 'translate(5px, 6px)' }}
+            ></IoSparklesSharp> */}
         </button>
     );
 }

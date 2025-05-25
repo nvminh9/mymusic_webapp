@@ -6,6 +6,7 @@ import { AuthContext } from '~/context/auth.context';
 import defaultAvatar from '~/assets/images/avatarDefault.jpg';
 import {
     IoAlertCircleOutline,
+    IoChatbox,
     IoChatboxOutline,
     IoGlobeOutline,
     IoHeartOutline,
@@ -22,6 +23,7 @@ function ArticleDetail() {
     // State
     const [articleData, setArticleData] = useState(); // Dữ liệu chi tiết bài viết
     const [commentsData, setCommentsData] = useState(); // Dữ liệu bình luận của bài viết
+    const [isOpenCommentInput, SetIsOpenCommentInput] = useState(false); // Đóng/mở input comment
     // const [createCommentStatus, setCreateCommentStatus] = useState(); // For Loading Comment Animation
 
     // Context
@@ -99,7 +101,10 @@ function ArticleDetail() {
             try {
                 const res = await getArticleApi(articleId);
                 // set dữ liệu chi tiết bài viết
-                setArticleData(res?.data);
+                setTimeout(() => {
+                    setArticleData(res?.data);
+                }, 2000);
+                // setArticleData(res?.data);
                 // set bình luận của bài viết (chỉ sử dụng ở ArticleDetail Component)
                 setCommentsData({ comments: res?.data?.comments, commentCount: res?.data?.commentCount });
                 // set document title
@@ -440,12 +445,25 @@ function ArticleDetail() {
                             {/* Các nút tương tác */}
                             <div className="interactiveButtonBox">
                                 {/* Nút thích bài viết */}
-                                {/* <button type="button" className="btnLike" id="btnLikeID">
-                                    <IoHeartOutline /> {articleData?.likeCount ? articleData?.likeCount : 0}
-                                </button> */}
-                                <LikeArticleButton articleData={articleData} />
+                                {articleData ? (
+                                    <LikeArticleButton articleData={articleData} />
+                                ) : (
+                                    <>
+                                        {/* Skeleton Loading */}
+                                        <button type="button" className="btnLike" id="btnLikeID" style={{}}>
+                                            <IoHeartOutline /> 0
+                                        </button>
+                                    </>
+                                )}
                                 {/* Nút bình luận */}
-                                <button type="button" className="btnComment" id="btnCommentID">
+                                <button
+                                    type="button"
+                                    className="btnComment"
+                                    id="btnCommentID"
+                                    onClick={() => {
+                                        SetIsOpenCommentInput(!isOpenCommentInput);
+                                    }}
+                                >
                                     <IoChatboxOutline /> {commentsData?.commentCount ? commentsData?.commentCount : 0}
                                 </button>
                                 {/* Nút chia sẻ */}
@@ -458,102 +476,18 @@ function ArticleDetail() {
                                 </button>
                             </div>
                             {/* Nhập bình luận */}
-                            {/* <div className="commentBox">
-                                <img
-                                    className="userAvatar"
-                                    src={
-                                        auth?.user?.userAvatar
-                                            ? process.env.REACT_APP_BACKEND_URL + auth?.user?.userAvatar
-                                            : defaultAvatar
-                                    }
+                            {isOpenCommentInput ? (
+                                <CommentInput
+                                    onReplyComment={handleResetCommentsDataOfArticle}
+                                    articleData={articleData}
                                 />
-                                <form
-                                    onSubmit={handleSubmit(onSubmitFormComment)}
-                                    className="formComment"
-                                    id="formCommentID"
-                                    method="POST"
-                                    noValidate
-                                >
-                                    <textarea
-                                        className="inputComment"
-                                        id="inputCommentID"
-                                        placeholder="Bình luận..."
-                                        type="text"
-                                        spellCheck="false"
-                                        rows={1}
-                                        {...register('content', {
-                                            required: 'Chưa nhập bình luận',
-                                            maxLength: {
-                                                value: 500,
-                                                message: 'Nội dung bình luận không được quá 500 ký tự',
-                                            },
-                                        })}
-                                        style={{
-                                            border:
-                                                createCommentStatus === 'fail'
-                                                    ? '.5px solid rgb(233 20 41 / 54%)'
-                                                    : '0.5px solid transparent',
-                                        }}
-                                    />
-
-                                    <button type="submit" className="btnPostComment" id="btnPostCommentID">
-                                        {createCommentStatus === 'pending' ? (
-                                            <>
-                                                <div
-                                                    style={{
-                                                        width: '15px',
-                                                        height: '15px',
-                                                        display: 'flex',
-                                                        justifyContent: 'center',
-                                                        alignItems: 'center',
-                                                    }}
-                                                >
-                                                    <IoSyncSharp
-                                                        className="loadingAnimation"
-                                                        style={{ color: 'white' }}
-                                                    />
-                                                </div>
-                                            </>
-                                        ) : (
-                                            <IoArrowUpSharp />
-                                        )}
-                                    </button>
-                                </form>
-                            </div> */}
-                            <CommentInput onReplyComment={handleResetCommentsDataOfArticle} articleData={articleData} />
-                            {/* Validate Error Comment */}
-                            {/* {errors.content?.message ? (
-                                <div
-                                    className="errorMessage"
-                                    style={{
-                                        background: '#e91429',
-                                        width: 'fit-content',
-                                        padding: '5px',
-                                        color: 'white',
-                                        fontSize: '14px',
-                                        fontFamily: 'sans-serif',
-                                        margin: '8px 0px',
-                                        borderRadius: '5px',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        gap: '5px',
-                                        marginLeft: '42px',
-                                    }}
-                                >
-                                    <IoAlertCircleOutline /> {errors.content?.message}
-                                </div>
                             ) : (
                                 <></>
-                            )} */}
+                            )}
                         </div>
                     </div>
                 </div>
             </div>
-            {/* Check Data */}
-            {/* <pre style={{ color: 'red' }} hidden>
-                {JSON.stringify(watch(), null, 2)}
-            </pre> */}
             {/* Các bình luận */}
             <div className="articleComments">
                 {/* Comment List Component */}

@@ -89,12 +89,14 @@ function UserName({ userName }) {
                     {/* Thông tin User */}
                     {userData ? (
                         <>
-                            <div className="top">
-                                <div className="userInfo">
-                                    <span className="name">{userData?.user?.name}</span>
-                                    <span className="userName">{userData?.user?.userName}</span>
-                                </div>
-                                <Link to={`/profile/${userName}`}>
+                            <Link to={`/profile/${userName}`} style={{ textDecoration: 'none' }}>
+                                <div className="top">
+                                    <div className="userInfo">
+                                        <span className="name">{userData?.user?.name}</span>
+                                        <span className="userName" style={{ fontWeight: '300' }}>
+                                            {userData?.user?.userName}
+                                        </span>
+                                    </div>
                                     <img
                                         className="userAvatar"
                                         src={
@@ -103,8 +105,8 @@ function UserName({ userName }) {
                                                 : defaultAvatar
                                         }
                                     />
-                                </Link>
-                            </div>
+                                </div>
+                            </Link>
                             <div className="middle">
                                 <span className="description">{userData?.user?.description}</span>
                                 <span className="followers">

@@ -227,20 +227,20 @@ function SongPlayer() {
     };
     // Nút thích nhạc
     const handleBtnLikeSong = () => {
-        let sparkles = document.getElementsByClassName('sparkles');
-        if (isSongLiked) {
-            if (sparkles) {
-                sparkles[0].classList.remove('sparklesActived');
-                sparkles[1].classList.remove('sparklesActived');
-            }
-            btnLikeSong.current.classList.remove('btnLikeSongActived');
-            setIsSongLiked(false);
-            return;
-        }
-        if (sparkles) {
-            sparkles[0].classList.add('sparklesActived');
-            sparkles[1].classList.add('sparklesActived');
-        }
+        // let sparkles = document.getElementsByClassName('sparkles');
+        // if (isSongLiked) {
+        //     if (sparkles) {
+        //         sparkles[0].classList.remove('sparklesActived');
+        //         sparkles[1].classList.remove('sparklesActived');
+        //     }
+        //     btnLikeSong.current.classList.remove('btnLikeSongActived');
+        //     setIsSongLiked(false);
+        //     return;
+        // }
+        // if (sparkles) {
+        //     sparkles[0].classList.add('sparklesActived');
+        //     sparkles[1].classList.add('sparklesActived');
+        // }
         btnLikeSong.current.classList.add('btnLikeSongActived');
         setIsSongLiked(true);
         return;

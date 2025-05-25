@@ -3807,12 +3807,44 @@ body {
                                 font-size: 19px;
                                 transform: translateY(1.5px);
                             }
+
+                            // Animation Like Action
+                            .sparkles {
+                                font-size: 8px;
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;
+                                color: transparent;
+                                transition: ease-out 0.2s;
+                                position: absolute;
+                            }
+                            .sparklesActived {
+                                animation: sparklesAnimation 1s ease-out;
+                            }
+                            @keyframes sparklesAnimation {
+                                0% {
+                                    color: #d63031;
+                                }
+
+                                50% {
+                                    color: #fd79a8;
+                                    // transform: translate(-9px, -7px);
+                                }
+
+                                100% {
+                                    color: transparent;
+                                }
+                            }
+                        }
+                        .btnLikeArticleActived {
+                            color: #d63031;
                         }
                         button:hover {
                             background-color: #1f1f1f;
                         }
                         button:active {
                             background-color: #000;
+                            transform: scale(0.7);
                         }
                     }
                     // Ô bình luận
@@ -4402,6 +4434,13 @@ body {
                 cursor: pointer;
                 margin-left: 36px;
             }
+        }
+        .top:hover {
+            opacity: 0.55;
+            transition: ease-out 0.2s;
+        }
+        .top:active {
+            opacity: 1;
         }
         .middle {
             display: grid;
