@@ -13,6 +13,7 @@ import {
     IoLockClosedOutline,
     IoSendOutline,
     IoShareSocialOutline,
+    IoSyncSharp,
 } from 'react-icons/io5';
 import { createCommentApi, getArticleApi } from '~/utils/api';
 import CommentList from '../components/CommentList';
@@ -103,7 +104,7 @@ function ArticleDetail() {
                 // set dữ liệu chi tiết bài viết
                 setTimeout(() => {
                     setArticleData(res?.data);
-                }, 2000);
+                }, 300);
                 // setArticleData(res?.data);
                 // set bình luận của bài viết (chỉ sử dụng ở ArticleDetail Component)
                 setCommentsData({ comments: res?.data?.comments, commentCount: res?.data?.commentCount });
@@ -286,218 +287,297 @@ function ArticleDetail() {
     };
 
     return (
-        <div className="articleDetailPage">
-            {/* Thanh chuyển tab */}
-            <div className="tabSwitchProfile">
-                <div
-                    className="profileUserName"
-                    style={{
-                        display: 'grid',
-                        height: 'fit-content',
-                    }}
-                >
-                    <span
+        <>
+            {/* Article Detail */}
+            <div className="articleDetailPage">
+                {/* Thanh chuyển tab */}
+                <div className="tabSwitchProfile">
+                    <div
+                        className="profileUserName"
                         style={{
-                            display: 'block',
-                            fontFamily: 'sans-serif',
-                            fontSize: '16px',
-                            fontWeight: '600',
-                            color: 'white',
-                            textAlign: 'center',
+                            display: 'grid',
+                            height: 'fit-content',
                         }}
                     >
-                        {articleData?.User?.userName}
-                    </span>
-                    <span
-                        style={{
-                            display: 'block',
-                            fontFamily: 'sans-serif',
-                            fontSize: '13px',
-                            fontWeight: '400',
-                            color: 'dimgrey',
-                            textAlign: 'center',
-                        }}
-                    >
-                        {timeAgo(articleData?.createdAt)}
-                    </span>
-                </div>
-                <div className="btnComeBackBox">
-                    <button className="btnComeBack tooltip" onClick={() => navigate(-1)}>
-                        <VscChevronLeft />
-                        <span class="tooltiptext">Quay lại</span>
-                    </button>
-                </div>
-            </div>
-            {/* Phần chi tiết bài viết */}
-            <div className="articleDetail">
-                {/* Nội dung bài viết */}
-                <div className="article">
-                    <div className="left">
-                        {/* Avatar */}
-                        <div className="userAvatar">
-                            <Link to={`/profile/${articleData?.User?.userName}`}>
-                                <img
-                                    src={
-                                        articleData?.User?.userAvatar
-                                            ? process.env.REACT_APP_BACKEND_URL + articleData?.User?.userAvatar
-                                            : defaultAvatar
-                                    }
-                                />
-                            </Link>
-                        </div>
-                    </div>
-                    <div className="right">
-                        <div className="top">
-                            <div className="articleInfo">
-                                {/* User Name */}
-                                <Link to={`/profile/${articleData?.User?.userName}`} style={{ textDecoration: 'none' }}>
-                                    <span className="userName">{articleData?.User?.userName}</span>
-                                </Link>
-                                {/* Privacy */}
+                        {articleData ? (
+                            <>
                                 <span
                                     style={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        marginRight: '3px',
+                                        display: 'block',
+                                        fontFamily: 'sans-serif',
+                                        fontSize: '16px',
+                                        fontWeight: '600',
+                                        color: 'white',
+                                        textAlign: 'center',
                                     }}
                                 >
-                                    {articleData?.privacy === '0' ? (
-                                        <IoGlobeOutline style={{ color: 'dimgray' }} />
-                                    ) : (
-                                        <IoLockClosedOutline style={{ color: 'dimgray' }} />
-                                    )}
+                                    {articleData?.User?.userName}
                                 </span>
-                                {/* Created At */}
-                                <span className="createdAt tooltip">
+                                <span
+                                    style={{
+                                        display: 'block',
+                                        fontFamily: 'sans-serif',
+                                        fontSize: '13px',
+                                        fontWeight: '400',
+                                        color: 'dimgrey',
+                                        textAlign: 'center',
+                                    }}
+                                >
                                     {timeAgo(articleData?.createdAt)}
-                                    <span class="tooltiptext">{formatTimestamp(articleData?.createdAt)}</span>
                                 </span>
-                            </div>
-                            <div className="articleOptions">
-                                <button className="btnArticleOptions">
-                                    <VscEllipsis></VscEllipsis>
-                                </button>
-                            </div>
-                        </div>
-                        <div className="middle">
-                            <div className="content">
-                                <div className="text">{articleData?.textContent}</div>
-                                <div className="media">
-                                    {/* Render Carousel Media */}
-                                    {articleData?.mediaContent.length <= 0 ? (
-                                        <></>
-                                    ) : (
-                                        <>
-                                            <div className="carouselMedia">
-                                                <Slider
-                                                    ref={(slider) => {
-                                                        sliderRef = slider;
-                                                    }}
-                                                    {...settings}
-                                                >
-                                                    {articleData?.mediaContent.map((media, index) => (
-                                                        <Fragment key={index}>
-                                                            <div className="mediaContainer">
-                                                                {media.type === 'photo' ? (
-                                                                    <>
-                                                                        <img
-                                                                            src={
-                                                                                process.env.REACT_APP_BACKEND_URL +
-                                                                                media.photoLink
-                                                                            }
-                                                                            className="slide-image"
-                                                                            style={{}}
-                                                                        />
-                                                                    </>
-                                                                ) : (
-                                                                    <video
-                                                                        src={
-                                                                            process.env.REACT_APP_BACKEND_URL +
-                                                                            media.videoLink
-                                                                        }
-                                                                        style={{}}
-                                                                        playsInline
-                                                                        controls
-                                                                    />
-                                                                )}
-                                                            </div>
-                                                        </Fragment>
-                                                    ))}
-                                                </Slider>
-                                                {articleData?.mediaContent.length >= 2 && (
+                            </>
+                        ) : (
+                            <></>
+                        )}
+                    </div>
+                    <div className="btnComeBackBox">
+                        <button className="btnComeBack tooltip" onClick={() => navigate(-1)}>
+                            <VscChevronLeft />
+                            <span class="tooltiptext">Quay lại</span>
+                        </button>
+                    </div>
+                </div>
+                {/* Phần chi tiết bài viết */}
+                {articleData ? (
+                    <>
+                        <div className="articleDetail">
+                            {/* Nội dung bài viết */}
+                            <div className="article">
+                                <div className="left">
+                                    {/* Avatar */}
+                                    <div className="userAvatar">
+                                        <Link to={`/profile/${articleData?.User?.userName}`}>
+                                            <img
+                                                src={
+                                                    articleData?.User?.userAvatar
+                                                        ? process.env.REACT_APP_BACKEND_URL +
+                                                          articleData?.User?.userAvatar
+                                                        : defaultAvatar
+                                                }
+                                            />
+                                        </Link>
+                                    </div>
+                                </div>
+                                <div className="right">
+                                    <div className="top">
+                                        <div className="articleInfo">
+                                            {/* User Name */}
+                                            <Link
+                                                to={`/profile/${articleData?.User?.userName}`}
+                                                style={{ textDecoration: 'none' }}
+                                            >
+                                                <span className="userName">{articleData?.User?.userName}</span>
+                                            </Link>
+                                            {/* Privacy */}
+                                            <span
+                                                style={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    marginRight: '3px',
+                                                }}
+                                            >
+                                                {articleData?.privacy === '0' ? (
+                                                    <IoGlobeOutline style={{ color: 'dimgray' }} />
+                                                ) : (
+                                                    <IoLockClosedOutline style={{ color: 'dimgray' }} />
+                                                )}
+                                            </span>
+                                            {/* Created At */}
+                                            <span className="createdAt tooltip">
+                                                {timeAgo(articleData?.createdAt)}
+                                                <span class="tooltiptext">
+                                                    {formatTimestamp(articleData?.createdAt)}
+                                                </span>
+                                            </span>
+                                        </div>
+                                        <div className="articleOptions">
+                                            <button className="btnArticleOptions">
+                                                <VscEllipsis></VscEllipsis>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div className="middle">
+                                        <div className="content">
+                                            <div className="text">{articleData?.textContent}</div>
+                                            <div className="media">
+                                                {/* Render Carousel Media */}
+                                                {articleData?.mediaContent.length <= 0 ? (
+                                                    <></>
+                                                ) : (
                                                     <>
-                                                        <button className="btnPrevCarousel" onClick={previous}>
-                                                            <VscChevronLeft />
-                                                        </button>
-                                                        <button className="btnNextCarousel" onClick={next}>
-                                                            <VscChevronRight />
-                                                        </button>
+                                                        <div className="carouselMedia">
+                                                            <Slider
+                                                                ref={(slider) => {
+                                                                    sliderRef = slider;
+                                                                }}
+                                                                {...settings}
+                                                            >
+                                                                {articleData?.mediaContent.map((media, index) => (
+                                                                    <Fragment key={index}>
+                                                                        <div className="mediaContainer">
+                                                                            {media.type === 'photo' ? (
+                                                                                <>
+                                                                                    <img
+                                                                                        src={
+                                                                                            process.env
+                                                                                                .REACT_APP_BACKEND_URL +
+                                                                                            media.photoLink
+                                                                                        }
+                                                                                        className="slide-image"
+                                                                                        style={{}}
+                                                                                    />
+                                                                                </>
+                                                                            ) : (
+                                                                                <video
+                                                                                    src={
+                                                                                        process.env
+                                                                                            .REACT_APP_BACKEND_URL +
+                                                                                        media.videoLink
+                                                                                    }
+                                                                                    style={{}}
+                                                                                    playsInline
+                                                                                    controls
+                                                                                />
+                                                                            )}
+                                                                        </div>
+                                                                    </Fragment>
+                                                                ))}
+                                                            </Slider>
+                                                            {articleData?.mediaContent.length >= 2 && (
+                                                                <>
+                                                                    <button
+                                                                        className="btnPrevCarousel"
+                                                                        onClick={previous}
+                                                                    >
+                                                                        <VscChevronLeft />
+                                                                    </button>
+                                                                    <button className="btnNextCarousel" onClick={next}>
+                                                                        <VscChevronRight />
+                                                                    </button>
+                                                                </>
+                                                            )}
+                                                        </div>
                                                     </>
                                                 )}
                                             </div>
-                                        </>
-                                    )}
+                                        </div>
+                                    </div>
+                                    <div className="bottom">
+                                        {/* Các nút tương tác */}
+                                        <div className="interactiveButtonBox">
+                                            {/* Nút thích bài viết */}
+                                            {articleData ? (
+                                                <LikeArticleButton articleData={articleData} />
+                                            ) : (
+                                                <>
+                                                    {/* Skeleton Loading */}
+                                                    <button type="button" className="btnLike" id="btnLikeID" style={{}}>
+                                                        <IoHeartOutline /> 0
+                                                    </button>
+                                                </>
+                                            )}
+                                            {/* Nút bình luận */}
+                                            <button
+                                                type="button"
+                                                className="btnComment"
+                                                id="btnCommentID"
+                                                onClick={() => {
+                                                    SetIsOpenCommentInput(!isOpenCommentInput);
+                                                }}
+                                            >
+                                                <IoChatboxOutline />{' '}
+                                                {commentsData?.commentCount ? commentsData?.commentCount : 0}
+                                            </button>
+                                            {/* Nút chia sẻ */}
+                                            <button type="button" className="btnShare" id="btnShareID">
+                                                <IoShareSocialOutline /> 0
+                                            </button>
+                                            {/* Nút gửi */}
+                                            <button type="button" className="btnSend" id="btnSendID">
+                                                <IoSendOutline /> 0
+                                            </button>
+                                        </div>
+                                        {/* Nhập bình luận */}
+                                        {isOpenCommentInput ? (
+                                            <CommentInput
+                                                onReplyComment={handleResetCommentsDataOfArticle}
+                                                articleData={articleData}
+                                            />
+                                        ) : (
+                                            <></>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div className="bottom">
-                            {/* Các nút tương tác */}
-                            <div className="interactiveButtonBox">
-                                {/* Nút thích bài viết */}
-                                {articleData ? (
-                                    <LikeArticleButton articleData={articleData} />
-                                ) : (
-                                    <>
-                                        {/* Skeleton Loading */}
-                                        <button type="button" className="btnLike" id="btnLikeID" style={{}}>
-                                            <IoHeartOutline /> 0
-                                        </button>
-                                    </>
-                                )}
-                                {/* Nút bình luận */}
-                                <button
-                                    type="button"
-                                    className="btnComment"
-                                    id="btnCommentID"
-                                    onClick={() => {
-                                        SetIsOpenCommentInput(!isOpenCommentInput);
-                                    }}
-                                >
-                                    <IoChatboxOutline /> {commentsData?.commentCount ? commentsData?.commentCount : 0}
-                                </button>
-                                {/* Nút chia sẻ */}
-                                <button type="button" className="btnShare" id="btnShareID">
-                                    <IoShareSocialOutline /> 0
-                                </button>
-                                {/* Nút gửi */}
-                                <button type="button" className="btnSend" id="btnSendID">
-                                    <IoSendOutline /> 0
-                                </button>
+                    </>
+                ) : (
+                    <>
+                        {/* Skeleton Article */}
+                        <div className="articleSkeleton">
+                            {/* Nội dung bài viết */}
+                            <div className="article">
+                                <div className="left">
+                                    {/* Avatar */}
+                                    <div className="userAvatar"></div>
+                                </div>
+                                <div className="right">
+                                    <div className="top">
+                                        <div className="articleInfo">
+                                            {/* User Name */}
+                                            <span className="userName"></span>
+                                            {/* Created At */}
+                                            <span className="createdAt tooltip"></span>
+                                        </div>
+                                    </div>
+                                    <div className="middle">
+                                        <div className="content">
+                                            <div className="text"></div>
+                                            <div className="media">
+                                                {/* Carousel Media */}
+                                                <div className="carouselMedia">
+                                                    <div className="mediaContainer"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="bottom">
+                                        {/* Các nút tương tác */}
+                                        <div className="interactiveButtonBox"></div>
+                                    </div>
+                                </div>
                             </div>
-                            {/* Nhập bình luận */}
-                            {isOpenCommentInput ? (
-                                <CommentInput
-                                    onReplyComment={handleResetCommentsDataOfArticle}
-                                    articleData={articleData}
-                                />
-                            ) : (
-                                <></>
-                            )}
                         </div>
+                    </>
+                )}
+                {/* Các bình luận */}
+                {articleData ? (
+                    <>
+                        <div className="articleComments">
+                            {/* Comment List Component */}
+                            <CommentList
+                                commentListData={commentsData}
+                                onReplyComment={handleResetCommentsData}
+                                getRespondedComment={handleGetRespondedComment}
+                            />
+                        </div>
+                    </>
+                ) : (
+                    <div
+                        style={{
+                            textAlign: 'center',
+                            padding: '30px 0px',
+                        }}
+                    >
+                        <IoSyncSharp
+                            className="loadingAnimation"
+                            style={{ color: 'white', width: '19px', height: '19px' }}
+                        />
                     </div>
-                </div>
+                )}
             </div>
-            {/* Các bình luận */}
-            <div className="articleComments">
-                {/* Comment List Component */}
-                <CommentList
-                    commentListData={commentsData}
-                    onReplyComment={handleResetCommentsData}
-                    getRespondedComment={handleGetRespondedComment}
-                />
-            </div>
-        </div>
+        </>
     );
 }
 

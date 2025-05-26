@@ -4372,6 +4372,236 @@ body {
     }
 }
 
+// CSS Skeleton Loading Article
+.articleSkeleton {
+    padding: 12px 12px;
+    width: 100%;
+    border-bottom: 0.5px solid #1f1f1f;
+
+    // Bài viết
+    .article {
+        display: flex;
+        // height: 300px;
+        width: 100%;
+        // left
+        .left {
+            // width: fit-content;
+            // width: 7%;
+            height: 100%;
+            display: grid;
+            align-items: start;
+            justify-content: center;
+            padding-right: 10px;
+            // background-color: rebeccapurple;
+
+            // avatar
+            .userAvatar {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: 42px;
+                width: 42px;
+                border: 0.5px solid #1f1f1f;
+                border-radius: 50%;
+                object-fit: cover;
+                cursor: pointer;
+                background-color: #1f1f1f;
+            }
+        }
+        // right
+        .right {
+            // background-color: green;
+            height: 100%;
+            width: 93%;
+            // top
+            .top {
+                display: flex;
+                // align-items: center;
+                justify-content: space-between;
+
+                .articleInfo {
+                    display: flex;
+                    height: 100%;
+
+                    .userName {
+                        color: #ffffff;
+                        font-size: 15px;
+                        font-weight: 500;
+                        height: 19.2px;
+                        width: 100px;
+                        // background-color: #1f1f1f;
+                        margin-right: 5px;
+                        cursor: pointer;
+                        transition: ease-out 0.2s;
+                        max-width: 230px;
+                        border-radius: 5px;
+                        position: relative;
+                        overflow: hidden;
+                    }
+                    .userName::after {
+                        content: '';
+                        position: absolute;
+                        width: 100%;
+                        height: 100%;
+                        top: 0;
+                        left: -100px;
+                        background: linear-gradient(
+                            to right,
+                            transparent 0%,
+                            rgba(255, 255, 255, 0.2) 50%,
+                            transparent 100%
+                        );
+                        animation: articleSkeletonAnimation 2s infinite;
+                    }
+                    .userName:hover {
+                        text-decoration: underline;
+                    }
+                    .createdAt {
+                        display: flex;
+                        align-items: start;
+                        justify-content: center;
+                        color: rgba(119, 119, 119, 0.6666666667);
+                        font-size: 14px;
+                        font-weight: 400;
+                        font-family: 'system-ui';
+                        height: 19.2px;
+                        width: 40px;
+                        // background-color: #1f1f1f;
+                        border-radius: 5px;
+                        // margin-right: 3px;
+                        position: relative;
+                        overflow: hidden;
+                    }
+                    .createdAt::after {
+                        content: '';
+                        position: absolute;
+                        width: 100%;
+                        height: 100%;
+                        top: 0;
+                        left: -100px;
+                        background: linear-gradient(
+                            to right,
+                            transparent 0%,
+                            rgba(255, 255, 255, 0.2) 50%,
+                            transparent 100%
+                        );
+                        animation: articleSkeletonAnimation 2s infinite;
+                    }
+                    .createdAt:hover {
+                        text-decoration: underline;
+                        cursor: pointer;
+                    }
+                }
+            }
+            // middle
+            .middle {
+                .content {
+                    margin-top: 5px;
+
+                    .text {
+                        display: flex;
+                        align-items: start;
+                        justify-content: start;
+                        color: #ffffff;
+                        font-size: 15px;
+                        // font-weight: 300;
+                        font-weight: 400;
+                        font-family: 'system-ui';
+                        padding-bottom: 8px;
+                        width: 350px;
+                        height: 19.2px;
+                        // background-color: #1f1f1f;
+                        border-radius: 5px;
+                        position: relative;
+                        overflow: hidden;
+                    }
+                    .text::after {
+                        content: '';
+                        position: absolute;
+                        width: 100%;
+                        height: 100%;
+                        top: 0;
+                        left: -100px;
+                        background: linear-gradient(
+                            to right,
+                            transparent 0%,
+                            rgba(255, 255, 255, 0.2) 50%,
+                            transparent 100%
+                        );
+                        animation: articleSkeletonAnimation 2s infinite;
+                    }
+                    .media {
+                        .carouselMedia {
+                            height: max-content;
+                            // max-height: 600px; // Tạm bỏ max-height
+                            position: relative;
+                            width: 400px; // trên mobile đổi lại thành 100%
+                            margin-top: 5px;
+
+                            .slick-track {
+                                // width: max-content !important;
+                                // margin-left: 0;
+                                // margin-right: 0;
+                                display: flex;
+                                align-items: center;
+                                // background: black;
+                            }
+                            .slick-slide {
+                                // width: max-content !important;
+                            }
+
+                            // mediaContainer
+                            .mediaContainer {
+                                width: 250px;
+                                height: 19.2px;
+                                // background-color: #1f1f1f;
+                                border-radius: 5px;
+                                position: relative;
+                                overflow: hidden;
+                            }
+                            .mediaContainer::after {
+                                content: '';
+                                position: absolute;
+                                width: 100%;
+                                height: 100%;
+                                top: 0;
+                                left: -100px;
+                                background: linear-gradient(
+                                    to right,
+                                    transparent 0%,
+                                    rgba(255, 255, 255, 0.2) 50%,
+                                    transparent 100%
+                                );
+                                animation: articleSkeletonAnimation 2s infinite;
+                            }
+                        }
+                    }
+                }
+            }
+            // bottom
+            .bottom {
+                // background-color: transparent;
+                // width: 100%;
+                // // display: grid;
+                // gap: 5px;
+                // Các nút tương tác
+                .interactiveButtonBox {
+                }
+            }
+        }
+    }
+
+    // Animation article skeleton
+    @keyframes articleSkeletonAnimation {
+        0% {
+            left: -100px;
+        }
+        100% {
+            left: 100%;
+        }
+    }
+}
+
 // CSS User Tag
 // User Tag
 .userTagContainer {

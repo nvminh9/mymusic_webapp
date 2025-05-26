@@ -190,6 +190,9 @@ function ProfilePage() {
                 const res = await getUserProfileInfoApi(userName);
                 if (res?.status === 200) {
                     // console.log('Thông tin profile: ', res?.data);
+                    // setTimeout(() => {
+                    //     setProfileInfo(res?.data);
+                    // }, 3000);
                     setProfileInfo(res?.data);
                     // console.log('Check: ', typeof profileInfo.followStatus);
                     // Set document title
