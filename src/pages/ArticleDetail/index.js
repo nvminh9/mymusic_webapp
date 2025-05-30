@@ -5,8 +5,6 @@ import Slider from 'react-slick';
 import { AuthContext } from '~/context/auth.context';
 import defaultAvatar from '~/assets/images/avatarDefault.jpg';
 import {
-    IoAlertCircleOutline,
-    IoChatbox,
     IoChatboxOutline,
     IoGlobeOutline,
     IoHeartOutline,
@@ -15,10 +13,11 @@ import {
     IoShareSocialOutline,
     IoSyncSharp,
 } from 'react-icons/io5';
-import { createCommentApi, getArticleApi } from '~/utils/api';
+import { getArticleApi } from '~/utils/api';
 import CommentList from '../components/CommentList';
 import CommentInput from '../components/CommentInput';
 import LikeArticleButton from '../components/LikeArticleButton';
+import UserName from '../components/UserName';
 
 function ArticleDetail() {
     // State
@@ -34,10 +33,7 @@ function ArticleDetail() {
     const navigate = useNavigate();
     const location = useLocation();
 
-    // React Hook Form (Form Upload Article)
-    // const formComment = useForm();
-    // const { register, handleSubmit, formState, watch, setError, clearErrors, setFocus } = formComment;
-    // const { errors } = formState;
+    // React Hook Form
 
     // Config Carousel Media (React Slick)
     let sliderRef = useRef(null);
@@ -151,91 +147,8 @@ function ArticleDetail() {
 
         return `${day} Tháng ${month}, ${year} lúc ${hours}:${minutes}`;
     };
-    // Handle Submit formComment
-    // const onSubmitFormComment = async (data) => {
-    //     // Start Loading
-    //     setCreateCommentStatus('pending');
-
-    //     // Data
-    //     let commentData = {};
-    //     commentData.articleId = articleData?.articleId;
-    //     commentData.content = data.content;
-    //     commentData.parentCommentId = null;
-
-    //     setTimeout(async () => {
-    //         // Call API tạo bình luận bài viết
-    //         try {
-    //             const res = await createCommentApi(commentData);
-    //             // Kiểm tra
-    //             if (res?.data !== null) {
-    //                 // Set lại commentsData
-    //                 if (res?.data?.parentCommentId === null) {
-    //                     // console.log('Bình luận cha');
-    //                     // Nếu là bình luận cha thì thêm vào đầu danh sách
-    //                     let newComment = res?.data;
-    //                     newComment.replies = []; // Khởi tạo mảng replies rỗng
-    //                     setCommentsData((prev) => ({
-    //                         comments: [newComment, ...prev?.comments],
-    //                         commentCount: prev?.commentCount + 1,
-    //                     }));
-    //                 }
-    //                 // else {
-    //                 //     // Nếu là bình luận con thì tìm bình luận cha và thêm vào replies
-    //                 //     let newComment = res.data;
-    //                 //     newComment.replies = []; // Khởi tạo mảng replies rỗng
-    //                 //     setCommentsData((prev) => {
-    //                 //         return prev.comments.map((oldComment) => {
-    //                 //             // Kiểm tra nếu là bình luận cha
-    //                 //             if (oldComment.commentId === newComment.parentCommentId) {
-    //                 //                 // Thêm bình luận con vào đầu replies[]
-    //                 //                 return {
-    //                 //                     ...oldComment,
-    //                 //                     replies: [newComment, ...oldComment.replies],
-    //                 //                 };
-    //                 //             } else {
-    //                 //                 return oldComment;
-    //                 //             }
-    //                 //         });
-    //                 //     });
-    //                 // }
-
-    //                 // Reset Form Comment
-    //                 formComment.reset();
-    //                 // Stop Loading with success
-    //                 setCreateCommentStatus('success');
-    //                 console.log('Tạo bình luận thành công');
-    //                 // Highlight vào comment mới được thêm
-    //                 const scrollToNewCommentTimeout = setTimeout(() => {
-    //                     // Scroll vào comment
-    //                     let offset = 70; // Height của tabSwitchProfile
-    //                     let y =
-    //                         document.getElementById(`commentID${res.data?.commentId}`).getBoundingClientRect().top +
-    //                         window.scrollY -
-    //                         offset;
-    //                     window.scrollTo({ top: y, behavior: 'smooth' });
-    //                     // Highlight vào comment
-    //                     document.getElementById(`commentID${res.data?.commentId}`).classList.add('highlight');
-    //                 }, 200);
-    //                 return () => {
-    //                     // Clear timeout
-    //                     clearTimeout(scrollToNewCommentTimeout);
-    //                 };
-    //             } else {
-    //                 // Stop Loading with fail
-    //                 setCreateCommentStatus('fail');
-    //                 console.log('Tạo bình luận không thành công');
-    //                 return;
-    //             }
-    //         } catch (error) {
-    //             // Stop Loading with fail
-    //             setCreateCommentStatus('fail');
-    //             console.log(error);
-    //             return;
-    //         }
-    //     }, 1000);
-    // };
     // Handle Reset Comments Data ** CHO COMMENT ** (Callback) (Tạm OK, có thể tối ưu hơn)
-    // Hàm này thực hiện cập nhật lại state commentsData để bình luận mới được tạo hiện ra giao diện
+    // Hàm này thực hiện cập nhật lại state commentsData để BÌNH LUẬN CON được tạo hiện ra giao diện
     const handleResetCommentsData = (newReplyComment) => {
         let replyComment = newReplyComment;
         replyComment.replies = []; // Khởi tạo mảng replies rỗng
@@ -264,6 +177,7 @@ function ArticleDetail() {
         return;
     };
     // Handle Reset Comments Data ** CHO ARTICLE ** (Callback) (Tạm thời, có thể sẽ hợp thành 1 hàm reset commentsData duy nhất)
+    // Hàm này thực hiện cập nhật lại state commentsData để BÌNH LUẬN CHA được tạo hiện ra giao diện
     const handleResetCommentsDataOfArticle = (newReplyComment) => {
         // console.log('Bình luận cha');
         // Nếu là bình luận cha thì thêm vào đầu danh sách
@@ -362,12 +276,7 @@ function ArticleDetail() {
                                     <div className="top">
                                         <div className="articleInfo">
                                             {/* User Name */}
-                                            <Link
-                                                to={`/profile/${articleData?.User?.userName}`}
-                                                style={{ textDecoration: 'none' }}
-                                            >
-                                                <span className="userName">{articleData?.User?.userName}</span>
-                                            </Link>
+                                            <UserName userName={articleData?.User?.userName} />
                                             {/* Privacy */}
                                             <span
                                                 style={{

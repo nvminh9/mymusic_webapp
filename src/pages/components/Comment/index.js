@@ -12,6 +12,8 @@ import { AuthContext } from '~/context/auth.context';
 import CommentInput from '../CommentInput';
 import UserTag from '../UserTag';
 import UserName from '../UserName';
+import LikeArticleButton from '../LikeArticleButton';
+import LikeCommentButton from '../LikeCommentButton';
 
 function Comment({ comment, onReplyComment, getRespondedComment }) {
     // State
@@ -181,9 +183,10 @@ function Comment({ comment, onReplyComment, getRespondedComment }) {
                         <div className="bottom">
                             <div className="interactiveButtonBox">
                                 {/* Nút thích bài viết */}
-                                <button type="button" className="btnLike" id="btnLikeID">
+                                {/* <button type="button" className="btnLike" id="btnLikeID">
                                     <IoHeartOutline /> 0
-                                </button>
+                                </button> */}
+                                <LikeCommentButton />
                                 {/* Nút bình luận */}
                                 <button
                                     type="button"
