@@ -100,7 +100,7 @@ function ArticleDetail() {
                 // set dữ liệu chi tiết bài viết
                 setTimeout(() => {
                     setArticleData(res?.data);
-                }, 300);
+                }, 200);
                 // setArticleData(res?.data);
                 // set bình luận của bài viết (chỉ sử dụng ở ArticleDetail Component)
                 setCommentsData({ comments: res?.data?.comments, commentCount: res?.data?.commentCount });

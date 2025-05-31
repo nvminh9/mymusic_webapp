@@ -1,14 +1,14 @@
 import { useCallback, useEffect, useState } from 'react';
 import { IoHeart, IoHeartOutline, IoSparklesSharp } from 'react-icons/io5';
-import { createLikeArticleApi, unLikeArticleApi } from '~/utils/api';
+import { createLikeCommentApi, unLikeCommentApi } from '~/utils/api';
 import { debounce } from 'lodash';
 
-// articleData: được truyền khi gọi dùng ở Component ArticleDetail
-function LikeCommentButton({ articleData }) {
+// commentData: được truyền khi gọi dùng ở Component Comment
+function LikeCommentButton({ commentData }) {
     // State
-    const [liked, setLiked] = useState(articleData?.likeStatus); // Xác định người dùng đã thích bài viết chưa
-    const [likesCount, setLikesCount] = useState(articleData?.likeCount); // Tổng số lượt thích của bài viết
-    // const [loading, setLoading] = useState(); // Trạng thái loading, nếu API thích bài viết (Debounce) đang được gọi
+    const [liked, setLiked] = useState(commentData?.likeStatus); // Xác định người dùng đã thích bình luận hay chưa
+    const [likesCount, setLikesCount] = useState(commentData?.likeCount); // Tổng số lượt thích của bình luận
+    // const [loading, setLoading] = useState(); // Trạng thái loading, nếu API thích bình luận (Debounce) đang được gọi
 
     // Context
 
@@ -21,40 +21,28 @@ function LikeCommentButton({ articleData }) {
         // setLikesCount(articleData?.likeCount);
         // set liked
     });
-    // Hàm gọi API thích bài viết (Debounce)
-    const debouncedLikeArticle = useCallback(
+    // Hàm gọi API thích bình luận (Debounce)
+    const debouncedLikeComment = useCallback(
         debounce(async (newLiked) => {
             try {
                 if (newLiked) {
-                    const res = await createLikeArticleApi(articleData?.articleId); // Nếu chưa like thì gọi API like
+                    const res = await createLikeCommentApi(commentData?.commentId); // Nếu chưa like thì gọi API like
                 } else {
-                    const res = await unLikeArticleApi(articleData?.articleId); // Nếu like rồi thì gọi API unlike
+                    const res = await unLikeCommentApi(commentData?.commentId); // Nếu like rồi thì gọi API unlike
                 }
             } catch (error) {
                 console.error('Error updating like status', error);
             }
         }, 500), // Debounce 500ms
-        [articleData?.articleId],
+        [commentData?.commentId],
     );
-    // Handle nút thích bài viết
-    const handleLikeArticleButton = async () => {
+    // Handle nút thích bình luận
+    const handleLikeCommentButton = async () => {
         const newLiked = !liked;
         setLiked(newLiked);
         setLikesCount((prev) => prev + (newLiked ? 1 : -1));
         // Call API (debounce)
-        debouncedLikeArticle(newLiked);
-        // try {
-        //     // Nếu liked true thì set liked false và ngược lại
-        //     setLiked((prev) => !prev);
-        //     // Nếu đã thích trước đó thì khi bấm sẽ -1 likesCount và ngược lại thì +1
-        //     setLikesCount((prev) => (liked ? prev - 1 : prev + 1));
-        //     // Call API (Debounce)
-        // } catch (error) {
-        //     // rollback nếu lỗi
-        //     setLiked((prev) => !prev);
-        //     setLikesCount((prev) => (liked ? prev + 1 : prev - 1));
-        //     console.error(error);
-        // }
+        debouncedLikeComment(newLiked);
     };
 
     return (
@@ -62,7 +50,7 @@ function LikeCommentButton({ articleData }) {
             type="button"
             className={`btnLike ${liked ? 'btnLikeArticleActived' : ''}`}
             id="btnLikeID"
-            onClick={handleLikeArticleButton}
+            onClick={handleLikeCommentButton}
         >
             {/* Hiệu ứng */}
             {/* <IoSparklesSharp

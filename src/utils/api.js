@@ -129,6 +129,18 @@ const unLikeArticleApi = (articleId) => {
     return axios.patch(URL_API);
 };
 
+// API Thích bình luận (POST)
+const createLikeCommentApi = (commentId) => {
+    const URL_API = `/v1/api/comment/${commentId}/like`;
+    return axios.post(URL_API);
+};
+
+// API Hủy thích bình luận (PATCH)
+const unLikeCommentApi = (commentId) => {
+    const URL_API = `/v1/api/comment/${commentId}/unlike`;
+    return axios.patch(URL_API);
+};
+
 export {
     signUpApi,
     signInApi,
@@ -149,4 +161,6 @@ export {
     getCommentApi,
     createLikeArticleApi,
     unLikeArticleApi,
+    createLikeCommentApi,
+    unLikeCommentApi,
 };

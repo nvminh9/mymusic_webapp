@@ -183,10 +183,7 @@ function Comment({ comment, onReplyComment, getRespondedComment }) {
                         <div className="bottom">
                             <div className="interactiveButtonBox">
                                 {/* Nút thích bài viết */}
-                                {/* <button type="button" className="btnLike" id="btnLikeID">
-                                    <IoHeartOutline /> 0
-                                </button> */}
-                                <LikeCommentButton />
+                                <LikeCommentButton commentData={comment} />
                                 {/* Nút bình luận */}
                                 <button
                                     type="button"

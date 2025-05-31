@@ -192,7 +192,7 @@ function ProfilePage() {
                     // console.log('Thông tin profile: ', res?.data);
                     // setTimeout(() => {
                     //     setProfileInfo(res?.data);
-                    // }, 3000);
+                    // }, 200);
                     setProfileInfo(res?.data);
                     // console.log('Check: ', typeof profileInfo.followStatus);
                     // Set document title
@@ -396,187 +396,194 @@ function ProfilePage() {
             ) : (
                 <>
                     {/* Profile */}
-                    <div className="profilePage">
-                        {/* Phần top của profile */}
-                        <div className="top">
-                            <div className="left">
-                                {/* Avatar */}
-                                <div className="avatar">
-                                    <img
-                                        src={
-                                            profileInfo?.user?.userAvatar
-                                                ? process.env.REACT_APP_BACKEND_URL + profileInfo?.user?.userAvatar
-                                                : defaultAvatar
-                                        }
-                                    />
+                    {profileInfo ? (
+                        <div className="profilePage">
+                            {/* Phần top của profile */}
+                            <div className="top">
+                                <div className="left">
+                                    {/* Avatar */}
+                                    <div className="avatar">
+                                        <img
+                                            src={
+                                                profileInfo?.user?.userAvatar
+                                                    ? process.env.REACT_APP_BACKEND_URL + profileInfo?.user?.userAvatar
+                                                    : defaultAvatar
+                                            }
+                                        />
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="right">
-                                <div className="topRight">
-                                    {/* Thông tin (tên,...) */}
-                                    <div className="userInfo">
-                                        <span className="userName">
-                                            {profileInfo?.user?.userName ?? 'Tên người dùng'}
-                                        </span>
-                                        <div className="btnBox">
-                                            {auth?.user?.userName === location.pathname.split('/')[2] ? (
-                                                <>
-                                                    {/* Nút chỉnh sửa trang cá nhân */}
-                                                    <button
-                                                        className="btnFollow"
-                                                        onClick={() => {
-                                                            navigate(`/profile/${auth?.user?.userName}/edit`);
-                                                        }}
-                                                    >
-                                                        Chỉnh sửa trang cá nhân
-                                                    </button>
-                                                    {/* Nút tạo bài viết/nhạc */}
-                                                    <button
-                                                        className="btnCreate"
-                                                        onClick={() => {
-                                                            setIsOpenCreateMenu(true);
-                                                        }}
-                                                    >
-                                                        Tạo{' '}
-                                                        <IoAddSharp
-                                                            style={{ marginLeft: '5px', marginBottom: '1px' }}
-                                                        />
-                                                    </button>
-                                                </>
-                                            ) : (
-                                                <>
-                                                    {/* Render nút theo dõi */}
-                                                    {profileInfo?.followStatus === true ? (
-                                                        <button
-                                                            className="btnFollowed"
-                                                            onClick={() => {
-                                                                console.log('setIsOpenFollowSetting true');
-                                                                setIsOpenFollowSetting(true);
-                                                            }}
-                                                        >
-                                                            {isFollowed === 'pending' ? (
-                                                                <>
-                                                                    <div
-                                                                        style={{
-                                                                            width: '15px',
-                                                                            height: '15px',
-                                                                            display: 'flex',
-                                                                            justifyContent: 'center',
-                                                                            alignItems: 'center',
-                                                                        }}
-                                                                    >
-                                                                        <IoSyncSharp
-                                                                            className="loadingAnimation"
-                                                                            style={{ color: 'white' }}
-                                                                        />
-                                                                    </div>
-                                                                </>
-                                                            ) : (
-                                                                <>
-                                                                    Đang theo dõi{' '}
-                                                                    <IoChevronDownSharp style={{ marginLeft: '5px' }} />
-                                                                </>
-                                                            )}
-                                                        </button>
-                                                    ) : (
+                                <div className="right">
+                                    <div className="topRight">
+                                        {/* Thông tin (tên,...) */}
+                                        <div className="userInfo">
+                                            <span className="userName">
+                                                {profileInfo?.user?.userName || 'userName'}
+                                            </span>
+                                            <div className="btnBox">
+                                                {auth?.user?.userName === location.pathname.split('/')[2] ? (
+                                                    <>
+                                                        {/* Nút chỉnh sửa trang cá nhân */}
                                                         <button
                                                             className="btnFollow"
                                                             onClick={() => {
-                                                                handleFollowUser();
+                                                                navigate(`/profile/${auth?.user?.userName}/edit`);
                                                             }}
                                                         >
-                                                            {isFollowed === 'pending' ? (
-                                                                <>
-                                                                    <div
-                                                                        style={{
-                                                                            width: '15px',
-                                                                            height: '15px',
-                                                                            display: 'flex',
-                                                                            justifyContent: 'center',
-                                                                            alignItems: 'center',
-                                                                        }}
-                                                                    >
-                                                                        <IoSyncSharp
-                                                                            className="loadingAnimation"
-                                                                            style={{ color: '#000' }}
-                                                                        />
-                                                                    </div>
-                                                                </>
-                                                            ) : (
-                                                                <>Theo dõi</>
-                                                            )}
+                                                            Chỉnh sửa trang cá nhân
                                                         </button>
-                                                    )}
-                                                    {/* Nút nhắn tin */}
-                                                    <button className="btnMessage">Nhắn tin</button>
-                                                </>
-                                            )}
-                                            {/* Menu của profile cá nhân của mình */}
-                                            {auth?.user?.userName === location.pathname.split('/')[2] ? (
-                                                <button
-                                                    className="btnOptions"
-                                                    onClick={() => {
-                                                        setIsOpenSettingMenu(true);
-                                                    }}
-                                                >
-                                                    <IoEllipsisHorizontalSharp></IoEllipsisHorizontalSharp>
-                                                </button>
-                                            ) : (
-                                                <></>
-                                            )}
+                                                        {/* Nút tạo bài viết/nhạc */}
+                                                        <button
+                                                            className="btnCreate"
+                                                            onClick={() => {
+                                                                setIsOpenCreateMenu(true);
+                                                            }}
+                                                        >
+                                                            Tạo{' '}
+                                                            <IoAddSharp
+                                                                style={{ marginLeft: '5px', marginBottom: '1px' }}
+                                                            />
+                                                        </button>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        {/* Render nút theo dõi */}
+                                                        {profileInfo?.followStatus === true ? (
+                                                            <button
+                                                                className="btnFollowed"
+                                                                onClick={() => {
+                                                                    console.log('setIsOpenFollowSetting true');
+                                                                    setIsOpenFollowSetting(true);
+                                                                }}
+                                                            >
+                                                                {isFollowed === 'pending' ? (
+                                                                    <>
+                                                                        <div
+                                                                            style={{
+                                                                                width: '15px',
+                                                                                height: '15px',
+                                                                                display: 'flex',
+                                                                                justifyContent: 'center',
+                                                                                alignItems: 'center',
+                                                                            }}
+                                                                        >
+                                                                            <IoSyncSharp
+                                                                                className="loadingAnimation"
+                                                                                style={{ color: 'white' }}
+                                                                            />
+                                                                        </div>
+                                                                    </>
+                                                                ) : (
+                                                                    <>
+                                                                        Đang theo dõi{' '}
+                                                                        <IoChevronDownSharp
+                                                                            style={{ marginLeft: '5px' }}
+                                                                        />
+                                                                    </>
+                                                                )}
+                                                            </button>
+                                                        ) : (
+                                                            <button
+                                                                className="btnFollow"
+                                                                onClick={() => {
+                                                                    handleFollowUser();
+                                                                }}
+                                                            >
+                                                                {isFollowed === 'pending' ? (
+                                                                    <>
+                                                                        <div
+                                                                            style={{
+                                                                                width: '15px',
+                                                                                height: '15px',
+                                                                                display: 'flex',
+                                                                                justifyContent: 'center',
+                                                                                alignItems: 'center',
+                                                                            }}
+                                                                        >
+                                                                            <IoSyncSharp
+                                                                                className="loadingAnimation"
+                                                                                style={{ color: '#000' }}
+                                                                            />
+                                                                        </div>
+                                                                    </>
+                                                                ) : (
+                                                                    <>Theo dõi</>
+                                                                )}
+                                                            </button>
+                                                        )}
+                                                        {/* Nút nhắn tin */}
+                                                        <button className="btnMessage">Nhắn tin</button>
+                                                    </>
+                                                )}
+                                                {/* Menu của profile cá nhân của mình */}
+                                                {auth?.user?.userName === location.pathname.split('/')[2] ? (
+                                                    <button
+                                                        className="btnOptions"
+                                                        onClick={() => {
+                                                            setIsOpenSettingMenu(true);
+                                                        }}
+                                                    >
+                                                        <IoEllipsisHorizontalSharp></IoEllipsisHorizontalSharp>
+                                                    </button>
+                                                ) : (
+                                                    <></>
+                                                )}
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div className="middleRight">
-                                    {/* Chỉ số (số bài viết, người theo dõi, đang theo dõi,...) */}
-                                    <div className="userNumeral">
-                                        <span className="articles">
+                                    <div className="middleRight">
+                                        {/* Chỉ số (số bài viết, người theo dõi, đang theo dõi,...) */}
+                                        <div className="userNumeral">
+                                            <span className="articles">
+                                                <span
+                                                    style={{
+                                                        fontWeight: '600',
+                                                    }}
+                                                >
+                                                    {profileInfo?.articles.length || 0}
+                                                </span>{' '}
+                                                bài viết
+                                            </span>
                                             <span
-                                                style={{
-                                                    fontWeight: '600',
+                                                className="followers"
+                                                onClick={() => {
+                                                    navigate(`followers`);
                                                 }}
                                             >
-                                                {profileInfo?.articles.length}
-                                            </span>{' '}
-                                            bài viết
-                                        </span>
-                                        <span
-                                            className="followers"
-                                            onClick={() => {
-                                                navigate(`followers`);
-                                            }}
-                                        >
+                                                <span
+                                                    style={{
+                                                        fontWeight: '600',
+                                                    }}
+                                                    id="followersTotalID"
+                                                    ref={followersTotal}
+                                                >
+                                                    {profileInfo?.follower?.count
+                                                        ? formatNumeral(profileInfo?.follower?.count)
+                                                        : 0}
+                                                </span>{' '}
+                                                người theo dõi
+                                            </span>
                                             <span
-                                                style={{
-                                                    fontWeight: '600',
-                                                }}
-                                                id="followersTotalID"
-                                                ref={followersTotal}
-                                            >
-                                                {formatNumeral(profileInfo?.follower?.count)}
-                                            </span>{' '}
-                                            người theo dõi
-                                        </span>
-                                        <span
-                                            className="following"
-                                            onClick={() => {
-                                                navigate(`following`);
-                                            }}
-                                        >
-                                            Đang theo dõi{' '}
-                                            <span
-                                                style={{
-                                                    fontWeight: '600',
+                                                className="following"
+                                                onClick={() => {
+                                                    navigate(`following`);
                                                 }}
                                             >
-                                                {formatNumeral(profileInfo?.follow?.count)}
-                                            </span>{' '}
-                                            người dùng
-                                        </span>
-                                    </div>
-                                    <div className="userDescription">
-                                        <p>
-                                            {/* Kendrick Lamar <br /> @pglang <br />{' '}
+                                                Đang theo dõi{' '}
+                                                <span
+                                                    style={{
+                                                        fontWeight: '600',
+                                                    }}
+                                                >
+                                                    {profileInfo?.follow?.count
+                                                        ? formatNumeral(profileInfo?.follow?.count)
+                                                        : 0}
+                                                </span>{' '}
+                                                người dùng
+                                            </span>
+                                        </div>
+                                        <div className="userDescription">
+                                            <p>
+                                                {/* Kendrick Lamar <br /> @pglang <br />{' '}
                                     <a
                                         href="https://my-gnx.com"
                                         style={{
@@ -586,113 +593,127 @@ function ProfilePage() {
                                     >
                                         my-gnx.com
                                     </a> */}
-                                            {profileInfo?.user?.description}
-                                        </p>
+                                                {profileInfo?.user?.description}
+                                            </p>
+                                        </div>
+                                        <div className="bottomRight"></div>
                                     </div>
-                                    <div className="bottomRight"></div>
+                                </div>
+                            </div>
+                            {/* Phần middle của profile */}
+                            <div className="middle">
+                                {/* Phần gợi ý người dùng liên quan (chỉ hiện lên khi follow người dùng,...) */}
+                                <div className="userSuggest"></div>
+                            </div>
+                            {/* Phần bottom của profile */}
+                            <div className="bottom">
+                                {/* Thanh switch bar đổi nội dung hiển thị */}
+                                <div className="switchBar">
+                                    <Link
+                                        to={``}
+                                        id="btnToArticleID"
+                                        className={[
+                                            'btnToArticle',
+                                            location.pathname.split('/')[3] === 'musics' ? '' : 'actived',
+                                        ].join(' ')}
+                                        onClick={handleBtnToArticle}
+                                    >
+                                        <IoAppsSharp style={{ marginRight: '5px' }}></IoAppsSharp> BÀI VIẾT
+                                    </Link>
+                                    <Link
+                                        to={`musics`}
+                                        id="btnToMusicID"
+                                        className={[
+                                            'btnToMusic',
+                                            location.pathname.split('/')[3] === 'musics' ? 'actived' : '',
+                                        ].join(' ')}
+                                        onClick={handleBtnToMusic}
+                                    >
+                                        <IoMusicalNotesSharp style={{ marginRight: '5px' }}></IoMusicalNotesSharp> ÂM
+                                        NHẠC
+                                    </Link>
+                                </div>
+                                {/* Nội dung */}
+                                <div className="main">
+                                    {/* Nếu route là .../musics thì sẽ ko hiển thị danh sách articles */}
+                                    {location.pathname.split('/')[3] === 'musics' ? (
+                                        <></>
+                                    ) : (
+                                        <>
+                                            <div className="listArticle">
+                                                {/* List Articles */}
+                                                <div className="row">
+                                                    {profileInfo?.articles?.length === 0 ? (
+                                                        <>
+                                                            <span
+                                                                style={{
+                                                                    color: 'white',
+                                                                    fontSize: '17px',
+                                                                    fontWeight: '500',
+                                                                    fontFamily: 'sans-serif',
+                                                                    textAlign: 'center',
+                                                                    display: 'block',
+                                                                    width: '100%',
+                                                                    padding: '50px 0px',
+                                                                }}
+                                                            >
+                                                                Chưa có bài viết
+                                                            </span>
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            {profileInfo?.articles ? (
+                                                                <>
+                                                                    {profileInfo?.articles.map((article, index) => (
+                                                                        <>
+                                                                            {/* Article */}
+                                                                            <ArticleProfile
+                                                                                key={index}
+                                                                                article={article}
+                                                                                user={profileInfo?.user}
+                                                                            />
+                                                                        </>
+                                                                    ))}
+                                                                </>
+                                                            ) : (
+                                                                <>
+                                                                    <div
+                                                                        style={{
+                                                                            width: '100%',
+                                                                            height: '100%',
+                                                                            display: 'flex',
+                                                                            justifyContent: 'center',
+                                                                            alignItems: 'center',
+                                                                            marginTop: '50px',
+                                                                        }}
+                                                                    >
+                                                                        <IoSyncSharp className="loadingAnimation" />
+                                                                    </div>
+                                                                </>
+                                                            )}
+                                                        </>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </>
+                                    )}
+                                    <Outlet />
                                 </div>
                             </div>
                         </div>
-                        {/* Phần middle của profile */}
-                        <div className="middle">
-                            {/* Phần gợi ý người dùng liên quan (chỉ hiện lên khi follow người dùng,...) */}
-                            <div className="userSuggest"></div>
+                    ) : (
+                        <div
+                            style={{
+                                textAlign: 'center',
+                                padding: '30px 0px',
+                            }}
+                        >
+                            <IoSyncSharp
+                                className="loadingAnimation"
+                                style={{ color: 'white', width: '19px', height: '19px' }}
+                            />
                         </div>
-                        {/* Phần bottom của profile */}
-                        <div className="bottom">
-                            {/* Thanh switch bar đổi nội dung hiển thị */}
-                            <div className="switchBar">
-                                <Link
-                                    to={``}
-                                    id="btnToArticleID"
-                                    className={[
-                                        'btnToArticle',
-                                        location.pathname.split('/')[3] === 'musics' ? '' : 'actived',
-                                    ].join(' ')}
-                                    onClick={handleBtnToArticle}
-                                >
-                                    <IoAppsSharp style={{ marginRight: '5px' }}></IoAppsSharp> BÀI VIẾT
-                                </Link>
-                                <Link
-                                    to={`musics`}
-                                    id="btnToMusicID"
-                                    className={[
-                                        'btnToMusic',
-                                        location.pathname.split('/')[3] === 'musics' ? 'actived' : '',
-                                    ].join(' ')}
-                                    onClick={handleBtnToMusic}
-                                >
-                                    <IoMusicalNotesSharp style={{ marginRight: '5px' }}></IoMusicalNotesSharp> ÂM NHẠC
-                                </Link>
-                            </div>
-                            {/* Nội dung */}
-                            <div className="main">
-                                {/* Nếu route là .../musics thì sẽ ko hiển thị danh sách articles */}
-                                {location.pathname.split('/')[3] === 'musics' ? (
-                                    <></>
-                                ) : (
-                                    <>
-                                        <div className="listArticle">
-                                            {/* List Articles */}
-                                            <div className="row">
-                                                {profileInfo?.articles?.length === 0 ? (
-                                                    <>
-                                                        <span
-                                                            style={{
-                                                                color: 'white',
-                                                                fontSize: '17px',
-                                                                fontWeight: '500',
-                                                                fontFamily: 'sans-serif',
-                                                                textAlign: 'center',
-                                                                display: 'block',
-                                                                width: '100%',
-                                                                padding: '50px 0px',
-                                                            }}
-                                                        >
-                                                            Chưa có bài viết
-                                                        </span>
-                                                    </>
-                                                ) : (
-                                                    <>
-                                                        {profileInfo?.articles ? (
-                                                            <>
-                                                                {profileInfo?.articles.map((article, index) => (
-                                                                    <>
-                                                                        {/* Article */}
-                                                                        <ArticleProfile
-                                                                            key={index}
-                                                                            article={article}
-                                                                            user={profileInfo?.user}
-                                                                        />
-                                                                    </>
-                                                                ))}
-                                                            </>
-                                                        ) : (
-                                                            <>
-                                                                <div
-                                                                    style={{
-                                                                        width: '100%',
-                                                                        height: '100%',
-                                                                        display: 'flex',
-                                                                        justifyContent: 'center',
-                                                                        alignItems: 'center',
-                                                                        marginTop: '50px',
-                                                                    }}
-                                                                >
-                                                                    <IoSyncSharp className="loadingAnimation" />
-                                                                </div>
-                                                            </>
-                                                        )}
-                                                    </>
-                                                )}
-                                            </div>
-                                        </div>
-                                    </>
-                                )}
-                                <Outlet />
-                            </div>
-                        </div>
-                    </div>
+                    )}
                 </>
             )}
         </Fragment>
