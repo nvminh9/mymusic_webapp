@@ -4127,22 +4127,68 @@ body {
                         }
                     }
                     .articleOptions {
+                        position: relative;
+                        // Nút tùy chọn bình luận
                         .btnArticleOptions {
                             display: flex;
                             align-items: center;
                             justify-content: center;
                             background-color: transparent;
                             border: 0.5px solid transparent;
+                            border-radius: 3px;
                             color: rgba(119, 119, 119, 0.6666666667);
                             cursor: pointer;
                             transition: ease-out 0.2s;
-                            padding: 5px;
+                            padding: 0px 3px;
                         }
                         .btnArticleOptions:hover {
                             background-color: #1f1f1f;
                         }
                         .btnArticleOptions:active {
                             background-color: #000;
+                        }
+
+                        // Menu tùy chọn bình luận
+                        .commentOptionsBox {
+                            position: absolute;
+                            background-color: #121212;
+                            border: 0.5px solid #1f1f1f;
+                            border-radius: 5px;
+                            padding: 8px;
+                            right: 40%;
+                            width: max-content;
+                            max-width: max-content;
+                            box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+                            z-index: 999;
+                            button {
+                                display: flex;
+                                align-items: center;
+                                justify-content: space-between;
+                                gap: 20px;
+                                background-color: transparent;
+                                border: none;
+                                border-radius: 5px;
+                                padding: 8px 10px;
+                                cursor: pointer;
+                                font-size: 13px;
+                                font-weight: 400;
+                                font-family: 'system-ui';
+                                transition: ease-out 0.2s;
+                                color: #dfdfdf;
+                                width: 100%;
+                                max-width: 100%;
+
+                                svg {
+                                    font-size: 18px;
+                                }
+                            }
+                            button:hover {
+                                background-color: #1f1f1f;
+                            }
+                            button:active {
+                                background-color: #000;
+                                transform: scale(0.98);
+                            }
                         }
                     }
                 }
@@ -4304,7 +4350,7 @@ body {
                         }
                         button:active {
                             background-color: #000;
-                            transform: scale(0.7);
+                            transform: scale(0.8);
                         }
                         .btnLikeArticleActived {
                             color: #d63031;

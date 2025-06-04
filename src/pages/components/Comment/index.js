@@ -1,9 +1,13 @@
-import { useContext, useRef, useState } from 'react';
+import { use, useContext, useEffect, useRef, useState } from 'react';
 import {
+    IoAlertCircleOutline,
+    IoBanOutline,
     IoCaretForwardSharp,
     IoChatboxOutline,
     IoChevronDownSharp,
     IoChevronUpSharp,
+    IoCloseCircleOutline,
+    IoCreateOutline,
     IoHeartOutline,
 } from 'react-icons/io5';
 import { Link } from 'react-router-dom';
@@ -14,16 +18,21 @@ import UserTag from '../UserTag';
 import UserName from '../UserName';
 import LikeArticleButton from '../LikeArticleButton';
 import LikeCommentButton from '../LikeCommentButton';
+import { VscEllipsis } from 'react-icons/vsc';
 
 function Comment({ comment, onReplyComment, getRespondedComment }) {
     // State
     const [isOpenRepliesBox, setIsOpenRepliesBox] = useState(false); // đóng/mở hộp xem phản hồi
     const [isOpenRepliesInput, setIsOpenRepliesInput] = useState(false); // đóng/mở input nhập phản hồi
+    const [isOpenCommentOptions, setIsOpenCommentOptions] = useState(false); // đóng/mở comment options
+    const [commentOptionsBoxPosition, setCommentOptionsBoxPosition] = useState(); // comment options box position
 
     // Context
     const { auth } = useContext(AuthContext);
 
     // Ref
+    const commentOptionsButtonRef = useRef(null); // ref cho nút comment options
+    const commentOptionsBoxRef = useRef(null); // ref cho comment options box
 
     // React Hook Form
 
@@ -120,6 +129,36 @@ function Comment({ comment, onReplyComment, getRespondedComment }) {
         //
         return parts;
     };
+    // Handle nút đóng/mở comment options
+    const handleToggleCommentOptions = () => {
+        setTimeout(() => {
+            setIsOpenCommentOptions(!isOpenCommentOptions);
+            // Xác định vị trí hiển thị
+            setTimeout(() => {
+                if (commentOptionsButtonRef.current && commentOptionsBoxRef.current) {
+                    const commentOptionsButton = commentOptionsButtonRef.current.getBoundingClientRect();
+                    const windowHeight = window.innerHeight;
+                    if (commentOptionsButton.bottom > windowHeight / 2) {
+                        setCommentOptionsBoxPosition('top');
+                    } else {
+                        setCommentOptionsBoxPosition('bottom');
+                    }
+                }
+            }, 0); // đảm bảo DOM đã render xong
+        }, 80);
+    };
+    // Đóng Comment Options khi click ra ngoài
+    useEffect(() => {
+        const handleClickOutsideCommentOptions = (event) => {
+            if (commentOptionsBoxRef.current && !commentOptionsBoxRef.current.contains(event.target)) {
+                setIsOpenCommentOptions(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutsideCommentOptions);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutsideCommentOptions);
+        };
+    }, []);
 
     return (
         <>
@@ -168,9 +207,65 @@ function Comment({ comment, onReplyComment, getRespondedComment }) {
                                 </span>
                             </div>
                             <div className="articleOptions">
-                                {/* <button className="btnArticleOptions">
-                                        <VscEllipsis></VscEllipsis>
-                                    </button> */}
+                                <button
+                                    className="btnArticleOptions"
+                                    onClick={() => {
+                                        handleToggleCommentOptions();
+                                    }}
+                                    ref={commentOptionsButtonRef}
+                                >
+                                    <VscEllipsis />
+                                </button>
+                                {/* Menu Comment Options */}
+                                {isOpenCommentOptions && (
+                                    <div
+                                        className="commentOptionsBox"
+                                        ref={commentOptionsBoxRef}
+                                        style={{
+                                            bottom: commentOptionsBoxPosition === 'top' ? '100%' : 'auto',
+                                        }}
+                                    >
+                                        {auth?.user?.userName === comment?.User?.userName && (
+                                            <div
+                                                className="forAuthUser"
+                                                style={{
+                                                    borderBottom: '0.5px solid #1f1f1f',
+                                                    paddingBottom: '8px',
+                                                    marginBottom: '8px',
+                                                }}
+                                            >
+                                                {/* Nút sửa bình luận */}
+                                                <button className="btnEditComment" id="btnEditCommentID">
+                                                    Sửa <IoCreateOutline />
+                                                </button>
+                                                {/* Nút xóa bình luận */}
+                                                <button
+                                                    className="btnDeleteComment"
+                                                    id="btnDeleteCommentID"
+                                                    style={{ color: 'rgb(255, 48, 64)' }}
+                                                >
+                                                    Xóa <IoCloseCircleOutline />
+                                                </button>
+                                            </div>
+                                        )}
+                                        {/* Nút chặn người bình luận */}
+                                        <button
+                                            className="btnReportComment"
+                                            id="btnReportCommentID"
+                                            style={{ color: 'rgb(255, 48, 64)' }}
+                                        >
+                                            Chặn <IoBanOutline />
+                                        </button>
+                                        {/* Nút báo cáo bình luận */}
+                                        <button
+                                            className="btnReportComment"
+                                            id="btnReportCommentID"
+                                            style={{ color: 'rgb(255, 48, 64)' }}
+                                        >
+                                            Báo cáo <IoAlertCircleOutline />
+                                        </button>
+                                    </div>
+                                )}
                             </div>
                         </div>
                         <div className="middle">

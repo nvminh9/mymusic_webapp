@@ -14,12 +14,15 @@ function UserName({ userName }) {
     // const [hoverInfoBox, setHoverInfoBox] = useState(false);
     const [userData, setUserData] = useState();
     const [isLoading, setIsLoading] = useState(false);
+    const [position, setPosition] = useState(); // tooltip position
 
     // Context
     const { auth } = useContext(AuthContext);
 
     // Ref
     const timeoutFetchUserRef = useRef(null);
+    const userNameRef = useRef(null);
+    const userNameInfoBoxRef = useRef(null);
 
     // Navigate
     const navigate = useNavigate();
@@ -51,11 +54,29 @@ function UserName({ userName }) {
     // Handle Mouse Enter User Tag
     const handleMouseEnter = () => {
         // Set show true để hiện box thông tin
-        setShow(true);
         if (!userData) {
             timeoutFetchUserRef.current = setTimeout(() => {
                 handleFetchUser();
-            }, 300); // Delay 300ms
+                setShow(true);
+                // Xác định vị trí hiển thị
+                setTimeout(() => {
+                    if (userNameRef.current && userNameInfoBoxRef.current) {
+                        const tagRect = userNameRef.current.getBoundingClientRect();
+                        const tooltipRect = userNameInfoBoxRef.current.getBoundingClientRect();
+                        const windowHeight = window.innerHeight;
+                        // const windowWidth = window.innerWidth;
+                        if (tooltipRect.top > windowHeight / 2) {
+                            setPosition('top');
+                        } else {
+                            setPosition('bottom');
+                        }
+                    }
+                }, 0); // đảm bảo DOM đã render xong
+            }, 350); // Delay 350ms
+        } else {
+            timeoutFetchUserRef.current = setTimeout(() => {
+                setShow(true);
+            }, 350); // Delay 350ms
         }
     };
     // Handle Mouse Leave User Tag
@@ -80,12 +101,18 @@ function UserName({ userName }) {
 
     return (
         <div className="userTagContainer" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-            <Link to={`/profile/${userName}`} style={{ textDecoration: 'none' }}>
+            <Link to={`/profile/${userName}`} style={{ textDecoration: 'none' }} ref={userNameRef}>
                 <span className="userName">{userName}</span>
             </Link>
             {/* Render Show User Tag Info */}
             {show && (
-                <div className="userTagInfoBox">
+                <div
+                    className="userTagInfoBox"
+                    ref={userNameInfoBoxRef}
+                    style={{
+                        bottom: position === 'top' ? '100%' : 'auto',
+                    }}
+                >
                     {/* Thông tin User */}
                     {userData ? (
                         <>
