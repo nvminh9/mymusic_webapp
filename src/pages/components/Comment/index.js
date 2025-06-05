@@ -19,6 +19,8 @@ import UserName from '../UserName';
 import LikeArticleButton from '../LikeArticleButton';
 import LikeCommentButton from '../LikeCommentButton';
 import { VscEllipsis } from 'react-icons/vsc';
+import { set } from 'lodash';
+import { deleteCommentApi } from '~/utils/api';
 
 function Comment({ comment, onReplyComment, getRespondedComment }) {
     // State
@@ -26,11 +28,13 @@ function Comment({ comment, onReplyComment, getRespondedComment }) {
     const [isOpenRepliesInput, setIsOpenRepliesInput] = useState(false); // đóng/mở input nhập phản hồi
     const [isOpenCommentOptions, setIsOpenCommentOptions] = useState(false); // đóng/mở comment options
     const [commentOptionsBoxPosition, setCommentOptionsBoxPosition] = useState(); // comment options box position
+    const [isOpenDeleteConfirmBox, setIsOpenDeleteConfirmBox] = useState(false); // đóng/mở hộp xác nhận xóa bình luận
 
     // Context
     const { auth } = useContext(AuthContext);
 
     // Ref
+    const commentRef = useRef(null); // ref cho comment
     const commentOptionsButtonRef = useRef(null); // ref cho nút comment options
     const commentOptionsBoxRef = useRef(null); // ref cho comment options box
 
@@ -159,11 +163,39 @@ function Comment({ comment, onReplyComment, getRespondedComment }) {
             document.removeEventListener('mousedown', handleClickOutsideCommentOptions);
         };
     }, []);
+    // Đóng/mở Hộp xác nhận xóa bình luận
+    const handleToggleDeleteComment = () => {
+        // Hiển thị hộp xác nhận xóa bình luận
+        setIsOpenCommentOptions(false); // Đóng comment options nếu đang mở
+        setIsOpenDeleteConfirmBox(!isOpenDeleteConfirmBox);
+    };
+    // Handle Button Delete Comment
+    const handleBtnDeleteComment = async (commentId) => {
+        // Xử lý xóa bình luận
+        console.log('Xóa bình luận có ID:', commentId);
+        // Call API delete comment
+        try {
+            const res = await deleteCommentApi(commentId);
+            console.log('Response delete comment:', res);
+            // Kiểm tra
+            if (res?.status === 200 && res?.message === 'Xóa bình luận thành công') {
+                console.log('Xóa bình luận thành công');
+                // Xóa comment khỏi DOM
+                commentRef.current.remove();
+                // Đóng hộp xác nhận xóa bình luận
+                setIsOpenDeleteConfirmBox(false);
+            }
+        } catch (error) {
+            console.error('Error deleting comment:', error);
+            return;
+        }
+    };
 
     return (
         <>
             {/* Bình luận */}
             <div
+                ref={commentRef}
                 id={`commentID${comment?.commentId}`}
                 className={`commentWrapper ${comment?.parentCommentId ? 'reply' : ''}`}
             >
@@ -243,6 +275,9 @@ function Comment({ comment, onReplyComment, getRespondedComment }) {
                                                     className="btnDeleteComment"
                                                     id="btnDeleteCommentID"
                                                     style={{ color: 'rgb(255, 48, 64)' }}
+                                                    onClick={() => {
+                                                        handleToggleDeleteComment();
+                                                    }}
                                                 >
                                                     Xóa <IoCloseCircleOutline />
                                                 </button>
@@ -344,6 +379,32 @@ function Comment({ comment, onReplyComment, getRespondedComment }) {
                         </div>
                     </div>
                 </div>
+                {/* Hộp xác nhận xóa bình luận */}
+                {isOpenDeleteConfirmBox && (
+                    <div className="deleteConfirmBox">
+                        <div className="deleteConfirm">
+                            <span className="title">Bạn có chắc muốn xóa bình luận này?</span>
+                            <div className="btnBox">
+                                <button
+                                    className="btnDelete"
+                                    onClick={() => {
+                                        handleBtnDeleteComment(comment?.commentId);
+                                    }}
+                                >
+                                    Xóa
+                                </button>
+                                <button
+                                    className="btnCancel"
+                                    onClick={() => {
+                                        setIsOpenDeleteConfirmBox(false);
+                                    }}
+                                >
+                                    Hủy
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
         </>
     );

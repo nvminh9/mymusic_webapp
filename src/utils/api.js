@@ -141,6 +141,12 @@ const unLikeCommentApi = (commentId) => {
     return axios.patch(URL_API);
 };
 
+// API Xóa bình luận (DELETE)
+const deleteCommentApi = (commentId) => {
+    const URL_API = `/v1/api/comment/${commentId}`;
+    return axios.delete(URL_API);
+};
+
 export {
     signUpApi,
     signInApi,
@@ -163,4 +169,5 @@ export {
     unLikeArticleApi,
     createLikeCommentApi,
     unLikeCommentApi,
+    deleteCommentApi,
 };

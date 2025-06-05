@@ -6,8 +6,8 @@ import { debounce } from 'lodash';
 // commentData: được truyền khi gọi dùng ở Component Comment
 function LikeCommentButton({ commentData }) {
     // State
-    const [liked, setLiked] = useState(commentData?.likeStatus); // Xác định người dùng đã thích bình luận hay chưa
-    const [likesCount, setLikesCount] = useState(commentData?.likeCount); // Tổng số lượt thích của bình luận
+    const [liked, setLiked] = useState(() => (commentData?.likeStatus ? commentData?.likeStatus : false)); // Xác định người dùng đã thích bình luận hay chưa
+    const [likesCount, setLikesCount] = useState(() => (commentData?.likeCount ? commentData?.likeCount : 0)); // Tổng số lượt thích của bình luận
     // const [loading, setLoading] = useState(); // Trạng thái loading, nếu API thích bình luận (Debounce) đang được gọi
 
     // Context
