@@ -22,7 +22,7 @@ import { VscEllipsis } from 'react-icons/vsc';
 import { set } from 'lodash';
 import { deleteCommentApi } from '~/utils/api';
 
-function Comment({ comment, onReplyComment, getRespondedComment }) {
+function Comment({ comment, onReplyComment, onDeleteComment, getRespondedComment }) {
     // State
     const [isOpenRepliesBox, setIsOpenRepliesBox] = useState(false); // đóng/mở hộp xem phản hồi
     const [isOpenRepliesInput, setIsOpenRepliesInput] = useState(false); // đóng/mở input nhập phản hồi
@@ -172,18 +172,19 @@ function Comment({ comment, onReplyComment, getRespondedComment }) {
     // Handle Button Delete Comment
     const handleBtnDeleteComment = async (commentId) => {
         // Xử lý xóa bình luận
-        console.log('Xóa bình luận có ID:', commentId);
-        // Call API delete comment
         try {
+            // Call API delete comment
             const res = await deleteCommentApi(commentId);
-            console.log('Response delete comment:', res);
             // Kiểm tra
             if (res?.status === 200 && res?.message === 'Xóa bình luận thành công') {
                 console.log('Xóa bình luận thành công');
-                // Xóa comment khỏi DOM
-                commentRef.current.remove();
                 // Đóng hộp xác nhận xóa bình luận
                 setIsOpenDeleteConfirmBox(false);
+                // Gọi hàm onDeleteComment để cập nhật lại danh sách bình luận
+                onDeleteComment(commentId);
+            } else {
+                console.error('Xóa bình luận không thành công:', res?.message);
+                return;
             }
         } catch (error) {
             console.error('Error deleting comment:', error);
@@ -261,15 +262,24 @@ function Comment({ comment, onReplyComment, getRespondedComment }) {
                                             <div
                                                 className="forAuthUser"
                                                 style={{
-                                                    borderBottom: '0.5px solid #1f1f1f',
-                                                    paddingBottom: '8px',
-                                                    marginBottom: '8px',
+                                                    borderBottom:
+                                                        auth?.user?.userName !== comment?.User?.userName
+                                                            ? '0.5px solid #1f1f1f'
+                                                            : 'none',
+                                                    paddingBottom:
+                                                        auth?.user?.userName !== comment?.User?.userName
+                                                            ? '8px'
+                                                            : '0px',
+                                                    marginBottom:
+                                                        auth?.user?.userName !== comment?.User?.userName
+                                                            ? '8px'
+                                                            : '0px',
                                                 }}
                                             >
                                                 {/* Nút sửa bình luận */}
-                                                <button className="btnEditComment" id="btnEditCommentID">
+                                                {/* <button className="btnEditComment" id="btnEditCommentID">
                                                     Sửa <IoCreateOutline />
-                                                </button>
+                                                </button> */}
                                                 {/* Nút xóa bình luận */}
                                                 <button
                                                     className="btnDeleteComment"
@@ -283,22 +293,26 @@ function Comment({ comment, onReplyComment, getRespondedComment }) {
                                                 </button>
                                             </div>
                                         )}
-                                        {/* Nút chặn người bình luận */}
-                                        <button
-                                            className="btnReportComment"
-                                            id="btnReportCommentID"
-                                            style={{ color: 'rgb(255, 48, 64)' }}
-                                        >
-                                            Chặn <IoBanOutline />
-                                        </button>
-                                        {/* Nút báo cáo bình luận */}
-                                        <button
-                                            className="btnReportComment"
-                                            id="btnReportCommentID"
-                                            style={{ color: 'rgb(255, 48, 64)' }}
-                                        >
-                                            Báo cáo <IoAlertCircleOutline />
-                                        </button>
+                                        {auth?.user?.userName !== comment?.User?.userName && (
+                                            <>
+                                                {/* Nút chặn người bình luận */}
+                                                <button
+                                                    className="btnReportComment"
+                                                    id="btnReportCommentID"
+                                                    style={{ color: 'rgb(255, 48, 64)' }}
+                                                >
+                                                    Chặn <IoBanOutline />
+                                                </button>
+                                                {/* Nút báo cáo bình luận */}
+                                                <button
+                                                    className="btnReportComment"
+                                                    id="btnReportCommentID"
+                                                    style={{ color: 'rgb(255, 48, 64)' }}
+                                                >
+                                                    Báo cáo <IoAlertCircleOutline />
+                                                </button>
+                                            </>
+                                        )}
                                     </div>
                                 )}
                             </div>
@@ -369,6 +383,7 @@ function Comment({ comment, onReplyComment, getRespondedComment }) {
                                             key={reply.commentId}
                                             comment={reply}
                                             onReplyComment={onReplyComment}
+                                            onDeleteComment={onDeleteComment}
                                         />
                                     ))}
                                     {/* </div> */}

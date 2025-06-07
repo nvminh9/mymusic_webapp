@@ -199,6 +199,33 @@ function ArticleDetail() {
         // console.log('respondedComment', respondedComment);
         // return respondedComment;
     };
+    // Handle Reset Comments Data (Callback) khi có bình luận nào bị XÓA
+    // Hàm xóa bình luận khỏi danh sách bình luận (Đệ quy)
+    const removeCommentById = (comments, commentId) => {
+        return comments
+            .map((comment) => {
+                // Nếu comment có commentId trùng với commentId cần xóa
+                if (comment.commentId === commentId) {
+                    return null; // Trả về null để xóa bình luận này
+                }
+                // Nếu có replies thì gọi đệ quy
+                const replies = removeCommentById(comment.replies || [], commentId);
+                //
+                return {
+                    ...comment,
+                    replies: replies,
+                };
+            })
+            .filter(Boolean); // Lọc các phần tử null
+    };
+    // Hàm cập nhật lại state commentsData để xóa bình luận khỏi danh sách bình luận
+    const handleResetCommentsDataWhenDelete = (commentId) => {
+        console.log('handleResetCommentsDataWhenDelete');
+        setCommentsData((prev) => ({
+            comments: removeCommentById(prev?.comments, commentId),
+            commentCount: prev?.commentCount - 1,
+        }));
+    };
 
     return (
         <>
@@ -468,6 +495,7 @@ function ArticleDetail() {
                             <CommentList
                                 commentListData={commentsData}
                                 onReplyComment={handleResetCommentsData}
+                                onDeleteComment={handleResetCommentsDataWhenDelete}
                                 getRespondedComment={handleGetRespondedComment}
                             />
                         </div>
