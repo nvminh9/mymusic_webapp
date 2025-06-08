@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import Comment from '../Comment';
 import { getArticleApi } from '~/utils/api';
 
-function CommentList({ commentListData, onReplyComment, onDeleteComment, getRespondedComment }) {
+function CommentList({ commentListData, onReplyComment, onDeleteComment, getRespondedComment, onLikeComment }) {
     // State
     // const [commentListData, setCommentListData] = useState();
 
@@ -46,6 +46,7 @@ function CommentList({ commentListData, onReplyComment, onDeleteComment, getResp
                             onReplyComment={onReplyComment}
                             onDeleteComment={onDeleteComment}
                             getRespondedComment={getRespondedComment}
+                            onLikeComment={onLikeComment}
                         />
                     ))}
                 </>

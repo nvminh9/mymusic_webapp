@@ -8,6 +8,7 @@ import {
     IoChevronUpSharp,
     IoCloseCircleOutline,
     IoCreateOutline,
+    IoHeart,
     IoHeartOutline,
 } from 'react-icons/io5';
 import { Link } from 'react-router-dom';
@@ -22,7 +23,7 @@ import { VscEllipsis } from 'react-icons/vsc';
 import { set } from 'lodash';
 import { deleteCommentApi } from '~/utils/api';
 
-function Comment({ comment, onReplyComment, onDeleteComment, getRespondedComment }) {
+function Comment({ comment, onReplyComment, onDeleteComment, getRespondedComment, onLikeComment }) {
     // State
     const [isOpenRepliesBox, setIsOpenRepliesBox] = useState(false); // đóng/mở hộp xem phản hồi
     const [isOpenRepliesInput, setIsOpenRepliesInput] = useState(false); // đóng/mở input nhập phản hồi
@@ -238,6 +239,20 @@ function Comment({ comment, onReplyComment, onDeleteComment, getRespondedComment
                                     {timeAgo(comment?.createdAt)}
                                     <span class="tooltiptext">{formatTimestamp(comment?.createdAt)}</span>
                                 </span>
+                                {/* Được thích bởi người đăng */}
+                                {comment?.isLikedByAuthor && (
+                                    <span className="isLikedByAuthor">
+                                        <img
+                                            src={
+                                                comment?.isLikedByAuthor?.userAvatar
+                                                    ? process.env.REACT_APP_BACKEND_URL +
+                                                      comment?.isLikedByAuthor?.userAvatar
+                                                    : defaultAvatar
+                                            }
+                                        />
+                                        <IoHeart />
+                                    </span>
+                                )}
                             </div>
                             <div className="articleOptions">
                                 <button
@@ -327,7 +342,7 @@ function Comment({ comment, onReplyComment, onDeleteComment, getRespondedComment
                         <div className="bottom">
                             <div className="interactiveButtonBox">
                                 {/* Nút thích bài viết */}
-                                <LikeCommentButton commentData={comment} />
+                                <LikeCommentButton commentData={comment} onLikeComment={onLikeComment} />
                                 {/* Nút bình luận */}
                                 <button
                                     type="button"

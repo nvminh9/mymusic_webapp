@@ -147,6 +147,12 @@ const deleteCommentApi = (commentId) => {
     return axios.delete(URL_API);
 };
 
+// API Xóa bài viết (DELETE)
+const deleteArticleApi = (articleId) => {
+    const URL_API = `/v1/api/article/${articleId}`;
+    return axios.delete(URL_API);
+};
+
 export {
     signUpApi,
     signInApi,
@@ -170,4 +176,5 @@ export {
     createLikeCommentApi,
     unLikeCommentApi,
     deleteCommentApi,
+    deleteArticleApi,
 };

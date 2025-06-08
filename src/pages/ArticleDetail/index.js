@@ -5,7 +5,10 @@ import Slider from 'react-slick';
 import { AuthContext } from '~/context/auth.context';
 import defaultAvatar from '~/assets/images/avatarDefault.jpg';
 import {
+    IoAlertCircleOutline,
+    IoBanOutline,
     IoChatboxOutline,
+    IoCloseCircleOutline,
     IoGlobeOutline,
     IoHeartOutline,
     IoLockClosedOutline,
@@ -13,11 +16,12 @@ import {
     IoShareSocialOutline,
     IoSyncSharp,
 } from 'react-icons/io5';
-import { getArticleApi } from '~/utils/api';
+import { deleteArticleApi, getArticleApi } from '~/utils/api';
 import CommentList from '../components/CommentList';
 import CommentInput from '../components/CommentInput';
 import LikeArticleButton from '../components/LikeArticleButton';
 import UserName from '../components/UserName';
+import { message } from 'antd';
 
 function ArticleDetail() {
     // State
@@ -25,6 +29,9 @@ function ArticleDetail() {
     const [commentsData, setCommentsData] = useState(); // Dữ liệu bình luận của bài viết
     const [isOpenCommentInput, SetIsOpenCommentInput] = useState(false); // Đóng/mở input comment
     // const [createCommentStatus, setCreateCommentStatus] = useState(); // For Loading Comment Animation
+    const [isOpenArticleOptions, setIsOpenArticleOptions] = useState(false); // đóng/mở Article options
+    const [articleOptionsBoxPosition, setArticleOptionsBoxPosition] = useState(); // Article options box position
+    const [isOpenDeleteConfirmBox, setIsOpenDeleteConfirmBox] = useState(false); // đóng/mở hộp xác nhận xóa bài viết
 
     // Context
     const { auth } = useContext(AuthContext);
@@ -33,7 +40,15 @@ function ArticleDetail() {
     const navigate = useNavigate();
     const location = useLocation();
 
+    // Ref
+    const articleRef = useRef(null); // ref cho bài viết
+    const articleOptionsButtonRef = useRef(null); // ref cho nút article options
+    const articleOptionsBoxRef = useRef(null); // ref cho article options box
+
     // React Hook Form
+
+    // Message (Ant Design)
+    const [messageApi, contextHolder] = message.useMessage();
 
     // Config Carousel Media (React Slick)
     let sliderRef = useRef(null);
@@ -97,13 +112,16 @@ function ArticleDetail() {
         const getArticle = async (articleId) => {
             try {
                 const res = await getArticleApi(articleId);
+                console.log('getArticle res', res);
                 // set dữ liệu chi tiết bài viết
-                setTimeout(() => {
-                    setArticleData(res?.data);
-                }, 200);
-                // setArticleData(res?.data);
+                // setTimeout(() => {
+                //     setArticleData(res?.data);
+                // }, 200);
+                setArticleData(res?.data);
+                // Thêm isLikedByAuthor vào từng bình luận trong res và Set State commentsData
+                addIsCommentLikedByAuthor(res?.data);
                 // set bình luận của bài viết (chỉ sử dụng ở ArticleDetail Component)
-                setCommentsData({ comments: res?.data?.comments, commentCount: res?.data?.commentCount });
+                // setCommentsData({ comments: res?.data?.comments, commentCount: res?.data?.commentCount });
                 // set document title
                 document.title = `${res?.data?.textContent} | ${res?.data?.User?.userName}`;
             } catch (error) {
@@ -200,37 +218,205 @@ function ArticleDetail() {
         // return respondedComment;
     };
     // Handle Reset Comments Data (Callback) khi có bình luận nào bị XÓA
+    // Đếm toàn bộ số bình luận trong cây bình luận (bao gồm replies)
+    const countCommentsRecursive = (comment) => {
+        let count = 1; // tính chính nó
+        for (const reply of comment.replies || []) {
+            count += countCommentsRecursive(reply);
+        }
+        return count;
+    };
     // Hàm xóa bình luận khỏi danh sách bình luận (Đệ quy)
     const removeCommentById = (comments, commentId) => {
-        return comments
-            .map((comment) => {
-                // Nếu comment có commentId trùng với commentId cần xóa
-                if (comment.commentId === commentId) {
-                    return null; // Trả về null để xóa bình luận này
-                }
-                // Nếu có replies thì gọi đệ quy
-                const replies = removeCommentById(comment.replies || [], commentId);
-                //
-                return {
-                    ...comment,
-                    replies: replies,
-                };
-            })
-            .filter(Boolean); // Lọc các phần tử null
+        let deletedCount = 0;
+
+        const recursiveRemove = (commentsList) => {
+            return commentsList
+                .map((comment) => {
+                    if (comment.commentId === commentId) {
+                        deletedCount += countCommentsRecursive(comment);
+                        return null;
+                    }
+
+                    // Nếu có replies thì gọi đệ quy
+                    const updatedReplies = recursiveRemove(comment.replies || []);
+
+                    return {
+                        ...comment,
+                        replies: updatedReplies,
+                    };
+                })
+                .filter(Boolean);
+        };
+
+        const newComments = recursiveRemove(comments);
+        return {
+            newComments,
+            deletedCount,
+        };
     };
     // Hàm cập nhật lại state commentsData để xóa bình luận khỏi danh sách bình luận
     const handleResetCommentsDataWhenDelete = (commentId) => {
-        console.log('handleResetCommentsDataWhenDelete');
+        setCommentsData((prev) => {
+            const updatedComments = removeCommentById(prev?.comments, commentId);
+            // Gán vào state commentsData
+            return {
+                comments: updatedComments.newComments,
+                commentCount: prev?.commentCount - updatedComments.deletedCount,
+            };
+        });
+    };
+    // Hàm check xem comment được thích bời người đăng hay không
+    const addIsCommentLikedByAuthor = (articleData) => {
+        if (!articleData || !articleData?.comments) return;
+        // Thêm isLikedByAuthor vào từng bình luận
+        const updatedComments = articleData.comments.map((comment) => {
+            const isLikedByAuthor = comment.likes.some((like) => like.userId === articleData?.userId);
+            return {
+                ...comment,
+                isLikedByAuthor: isLikedByAuthor ? articleData?.User : false,
+            };
+        });
+        // Set state commentsData
         setCommentsData((prev) => ({
-            comments: removeCommentById(prev?.comments, commentId),
-            commentCount: prev?.commentCount - 1,
+            comments: updatedComments,
+            commentCount: articleData?.commentCount,
         }));
+    };
+    // Handle thêm Like cho Comment vào commentsData State (Callback)
+    const handleAddLikeComment = (likeCommentData, action) => {
+        // Cập nhật lại state commentsData để thêm like hoặc xóa like của bình luận
+        if (action === 'unlike') {
+            // Nếu action là 'unlike', xóa like khỏi bình luận
+            setCommentsData((prev) => {
+                const updatedComments = prev.comments.map((comment) => {
+                    if (comment.commentId === likeCommentData.commentId) {
+                        // Xoá like khỏi bình luận
+                        return {
+                            ...comment,
+                            likes: comment.likes.filter((like) => like.userId !== likeCommentData.userId),
+                            likeCount: comment.likeCount - 1,
+                        };
+                    }
+                    return comment;
+                });
+                return {
+                    comments: updatedComments,
+                    commentCount: prev?.commentCount,
+                };
+            });
+        } else if (action === 'like') {
+            // Nếu action là 'like', thêm like vào bình luận
+            setCommentsData((prev) => {
+                const updatedComments = prev.comments.map((comment) => {
+                    if (comment.commentId === likeCommentData.commentId) {
+                        // Thêm like mới vào bình luận
+                        return {
+                            ...comment,
+                            likes: [...comment.likes, likeCommentData],
+                            likeCount: comment.likeCount + 1,
+                        };
+                    }
+                    return comment;
+                });
+                return {
+                    comments: updatedComments,
+                    commentCount: prev?.commentCount,
+                };
+            });
+        }
+        return;
+    };
+    // Handle nút đóng/mở article options
+    const handleToggleArticleOptions = () => {
+        setTimeout(() => {
+            setIsOpenArticleOptions(!isOpenArticleOptions);
+            // Xác định vị trí hiển thị
+            setTimeout(() => {
+                if (articleOptionsButtonRef.current && articleOptionsBoxRef.current) {
+                    const commentOptionsButton = articleOptionsButtonRef.current.getBoundingClientRect();
+                    const windowHeight = window.innerHeight;
+                    if (commentOptionsButton.bottom > windowHeight / 2) {
+                        setArticleOptionsBoxPosition('top');
+                    } else {
+                        setArticleOptionsBoxPosition('bottom');
+                    }
+                }
+            }, 0); // đảm bảo DOM đã render xong
+        }, 80);
+    };
+    // Đóng Article Options khi click ra ngoài
+    useEffect(() => {
+        const handleClickOutsideArticleOptions = (event) => {
+            if (articleOptionsBoxRef.current && !articleOptionsBoxRef.current.contains(event.target)) {
+                setIsOpenArticleOptions(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutsideArticleOptions);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutsideArticleOptions);
+        };
+    }, []);
+    // Đóng/mở Hộp xác nhận xóa bài viết
+    const handleToggleDeleteArticle = () => {
+        // Hiển thị hộp xác nhận xóa bài viết
+        setIsOpenArticleOptions(false); // Đóng article options nếu đang mở
+        setIsOpenDeleteConfirmBox(!isOpenDeleteConfirmBox);
+    };
+    // Handle Button Delete Article
+    const handleBtnDeleteArticle = async (articleId) => {
+        // Xử lý xóa bài viết
+        try {
+            // Loading ... (Ant Design Message)
+            messageApi
+                .open({
+                    type: 'loading',
+                    content: 'Đang xử lý ...',
+                    duration: 1.5,
+                    style: {
+                        color: 'white',
+                        marginTop: '58.4px',
+                    },
+                })
+                .then(async () => {
+                    // Call API Delete Article
+                    const res = await deleteArticleApi(articleId);
+                    if (res?.status === 200 && res?.message === 'Xóa bài viết thành công') {
+                        // Xóa bài viết thành công
+                        message.success({
+                            content: 'Xóa bài viết thành công',
+                            duration: 1.5,
+                            style: {
+                                color: 'white',
+                                marginTop: '58.4px',
+                            },
+                        });
+                        // Navigate quay về (Tạm thời)
+                        navigate(-1);
+                    } else {
+                        // Xóa bài viết không thành công
+                        message.error({
+                            content: 'Có lỗi xảy ra',
+                            duration: 1.5,
+                            style: {
+                                color: 'white',
+                                marginTop: '58.4px',
+                            },
+                        });
+                    }
+                });
+        } catch (error) {
+            console.error('Error deleting article:', error);
+            return;
+        }
     };
 
     return (
         <>
             {/* Article Detail */}
             <div className="articleDetailPage">
+                {/* Ant Design Message */}
+                {contextHolder}
                 {/* Thanh chuyển tab */}
                 <div className="tabSwitchProfile">
                     <div
@@ -281,7 +467,7 @@ function ArticleDetail() {
                 {/* Phần chi tiết bài viết */}
                 {articleData ? (
                     <>
-                        <div className="articleDetail">
+                        <div className="articleDetail" ref={articleRef}>
                             {/* Nội dung bài viết */}
                             <div className="article">
                                 <div className="left">
@@ -327,10 +513,81 @@ function ArticleDetail() {
                                                 </span>
                                             </span>
                                         </div>
-                                        <div className="articleOptions">
-                                            <button className="btnArticleOptions">
+                                        <div className="articleOptions" ref={articleOptionsButtonRef}>
+                                            <button
+                                                className="btnArticleOptions"
+                                                onClick={() => {
+                                                    handleToggleArticleOptions();
+                                                }}
+                                            >
                                                 <VscEllipsis></VscEllipsis>
                                             </button>
+                                            {/* Menu Article Options */}
+                                            {isOpenArticleOptions && (
+                                                <div
+                                                    className="articleOptionsBox"
+                                                    ref={articleOptionsBoxRef}
+                                                    style={{
+                                                        bottom: articleOptionsBoxPosition === 'top' ? '100%' : 'auto',
+                                                    }}
+                                                >
+                                                    {auth?.user?.userName === articleData?.User?.userName && (
+                                                        <div
+                                                            className="forAuthUser"
+                                                            style={{
+                                                                borderBottom:
+                                                                    auth?.user?.userName !== articleData?.User?.userName
+                                                                        ? '0.5px solid #1f1f1f'
+                                                                        : 'none',
+                                                                paddingBottom:
+                                                                    auth?.user?.userName !== articleData?.User?.userName
+                                                                        ? '8px'
+                                                                        : '0px',
+                                                                marginBottom:
+                                                                    auth?.user?.userName !== articleData?.User?.userName
+                                                                        ? '8px'
+                                                                        : '0px',
+                                                            }}
+                                                        >
+                                                            {/* Nút sửa bài viết */}
+                                                            {/* <button className="btnEditArticle" id="btnEditArticleID">
+                                                                                            Sửa <IoCreateOutline />
+                                                                                        </button> */}
+                                                            {/* Nút xóa bài viết */}
+                                                            <button
+                                                                className="btnDeleteArticle"
+                                                                id="btnDeleteArticleID"
+                                                                style={{ color: 'rgb(255, 48, 64)' }}
+                                                                onClick={() => {
+                                                                    handleToggleDeleteArticle();
+                                                                }}
+                                                            >
+                                                                Xóa <IoCloseCircleOutline />
+                                                            </button>
+                                                        </div>
+                                                    )}
+                                                    {auth?.user?.userName !== articleData?.User?.userName && (
+                                                        <>
+                                                            {/* Nút chặn người dùng */}
+                                                            <button
+                                                                className="btnReportArticle"
+                                                                id="btnReportArticleID"
+                                                                style={{ color: 'rgb(255, 48, 64)' }}
+                                                            >
+                                                                Chặn <IoBanOutline />
+                                                            </button>
+                                                            {/* Nút báo cáo bài viết */}
+                                                            <button
+                                                                className="btnReportArticle"
+                                                                id="btnReportArticleID"
+                                                                style={{ color: 'rgb(255, 48, 64)' }}
+                                                            >
+                                                                Báo cáo <IoAlertCircleOutline />
+                                                            </button>
+                                                        </>
+                                                    )}
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
                                     <div className="middle">
@@ -446,6 +703,32 @@ function ArticleDetail() {
                                     </div>
                                 </div>
                             </div>
+                            {/* Hộp xác nhận xóa bài viết */}
+                            {isOpenDeleteConfirmBox && (
+                                <div className="deleteConfirmBox">
+                                    <div className="deleteConfirm">
+                                        <span className="title">Bạn có chắc muốn xóa bài viết này?</span>
+                                        <div className="btnBox">
+                                            <button
+                                                className="btnDelete"
+                                                onClick={() => {
+                                                    handleBtnDeleteArticle(articleData?.articleId);
+                                                }}
+                                            >
+                                                Xóa
+                                            </button>
+                                            <button
+                                                className="btnCancel"
+                                                onClick={() => {
+                                                    setIsOpenDeleteConfirmBox(false);
+                                                }}
+                                            >
+                                                Hủy
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     </>
                 ) : (
@@ -492,12 +775,17 @@ function ArticleDetail() {
                     <>
                         <div className="articleComments">
                             {/* Comment List Component */}
-                            <CommentList
-                                commentListData={commentsData}
-                                onReplyComment={handleResetCommentsData}
-                                onDeleteComment={handleResetCommentsDataWhenDelete}
-                                getRespondedComment={handleGetRespondedComment}
-                            />
+                            {commentsData ? (
+                                <CommentList
+                                    commentListData={commentsData}
+                                    onReplyComment={handleResetCommentsData}
+                                    onDeleteComment={handleResetCommentsDataWhenDelete}
+                                    getRespondedComment={handleGetRespondedComment}
+                                    onLikeComment={handleAddLikeComment}
+                                />
+                            ) : (
+                                <></>
+                            )}
                         </div>
                     </>
                 ) : (

@@ -1,16 +1,18 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import { IoHeart, IoHeartOutline, IoSparklesSharp } from 'react-icons/io5';
 import { createLikeCommentApi, unLikeCommentApi } from '~/utils/api';
 import { debounce } from 'lodash';
+import { AuthContext } from '~/context/auth.context';
 
 // commentData: được truyền khi gọi dùng ở Component Comment
-function LikeCommentButton({ commentData }) {
+function LikeCommentButton({ commentData, onLikeComment }) {
     // State
     const [liked, setLiked] = useState(() => (commentData?.likeStatus ? commentData?.likeStatus : false)); // Xác định người dùng đã thích bình luận hay chưa
     const [likesCount, setLikesCount] = useState(() => (commentData?.likeCount ? commentData?.likeCount : 0)); // Tổng số lượt thích của bình luận
     // const [loading, setLoading] = useState(); // Trạng thái loading, nếu API thích bình luận (Debounce) đang được gọi
 
     // Context
+    const { auth } = useContext(AuthContext);
 
     // Ref
 
@@ -27,8 +29,15 @@ function LikeCommentButton({ commentData }) {
             try {
                 if (newLiked) {
                     const res = await createLikeCommentApi(commentData?.commentId); // Nếu chưa like thì gọi API like
+                    // Thêm like vào state commentsData ở ArticleDetail
+                    // onLikeComment({ commentId: commentData?.commentId, userId: auth?.user?.userId, status: 0 }, 'like');
                 } else {
                     const res = await unLikeCommentApi(commentData?.commentId); // Nếu like rồi thì gọi API unlike
+                    // Xoá like khỏi state commentsData ở ArticleDetail
+                    // onLikeComment(
+                    //     { commentId: commentData?.commentId, userId: auth?.user?.userId, status: 1 },
+                    //     'unlike',
+                    // );
                 }
             } catch (error) {
                 console.error('Error updating like status', error);
