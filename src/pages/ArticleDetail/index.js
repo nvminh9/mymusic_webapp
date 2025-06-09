@@ -105,31 +105,6 @@ function ArticleDetail() {
     console.log('Rerender ArticleDetail');
 
     // --- HANDLE FUNCTION ---
-    // Call API get article detail
-    useEffect(() => {
-        const articleID = location.pathname.split('/')[2];
-        // Call API Get article detail
-        const getArticle = async (articleId) => {
-            try {
-                const res = await getArticleApi(articleId);
-                console.log('getArticle res', res);
-                // set dữ liệu chi tiết bài viết
-                // setTimeout(() => {
-                //     setArticleData(res?.data);
-                // }, 200);
-                setArticleData(res?.data);
-                // Thêm isLikedByAuthor vào từng bình luận trong res và Set State commentsData
-                addIsCommentLikedByAuthor(res?.data);
-                // set bình luận của bài viết (chỉ sử dụng ở ArticleDetail Component)
-                // setCommentsData({ comments: res?.data?.comments, commentCount: res?.data?.commentCount });
-                // set document title
-                document.title = `${res?.data?.textContent} | ${res?.data?.User?.userName}`;
-            } catch (error) {
-                console.log(error);
-            }
-        };
-        getArticle(articleID);
-    }, []);
     // Format thời gian tạo bài viết
     const timeAgo = (timestamp) => {
         const now = new Date();
@@ -165,6 +140,31 @@ function ArticleDetail() {
 
         return `${day} Tháng ${month}, ${year} lúc ${hours}:${minutes}`;
     };
+    // Call API GET ARTICLE DETAIL
+    useEffect(() => {
+        const articleID = location.pathname.split('/')[2];
+        // Call API Get article detail
+        const getArticle = async (articleId) => {
+            try {
+                const res = await getArticleApi(articleId);
+                // set dữ liệu chi tiết bài viết
+                setTimeout(() => {
+                    setArticleData(res?.data);
+                }, 200);
+                // setArticleData(res?.data);
+                // Thêm isLikedByAuthor vào từng bình luận trong res và Set State commentsData
+                addIsCommentLikedByAuthor(res?.data);
+                // set bình luận của bài viết (chỉ sử dụng ở ArticleDetail Component)
+                // setCommentsData({ comments: res?.data?.comments, commentCount: res?.data?.commentCount });
+                // set document title
+                document.title = `${res?.data?.textContent} | ${res?.data?.User?.userName}`;
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        getArticle(articleID);
+    }, []);
+    // *** PHẦN CREATE COMMENT ***
     // Handle Reset Comments Data ** CHO COMMENT ** (Callback) (Tạm OK, có thể tối ưu hơn)
     // Hàm này thực hiện cập nhật lại state commentsData để BÌNH LUẬN CON được tạo hiện ra giao diện
     const handleResetCommentsData = (newReplyComment) => {
@@ -217,6 +217,7 @@ function ArticleDetail() {
         // console.log('respondedComment', respondedComment);
         // return respondedComment;
     };
+    // *** PHẦN DELETE COMMENT ***
     // Handle Reset Comments Data (Callback) khi có bình luận nào bị XÓA
     // Đếm toàn bộ số bình luận trong cây bình luận (bao gồm replies)
     const countCommentsRecursive = (comment) => {
@@ -266,24 +267,32 @@ function ArticleDetail() {
             };
         });
     };
-    // Hàm check xem comment được thích bời người đăng hay không
+    // *** PHẦN LIKE COMMENT ***
+    // Thêm isLikedByAuthor vào các comment trong commentsData (Đệ quy)
+    const recursiveAddIsLikedByAuthor = (comments, articleData) => {
+        return comments.map((comment) => {
+            let isLikedByAuthor = comment.likes.some((like) => like.userId === articleData?.userId);
+            comment.isLikedByAuthor = isLikedByAuthor ? articleData?.User : false;
+            if (comment.replies && comment.replies.length > 0) {
+                comment.replies = recursiveAddIsLikedByAuthor(comment.replies, articleData);
+            }
+            return comment;
+        });
+    };
+    // Hàm check xem comment được thích bời người đăng hay không (Được gọi dùng ở useEffect Call API article detail)
     const addIsCommentLikedByAuthor = (articleData) => {
         if (!articleData || !articleData?.comments) return;
-        // Thêm isLikedByAuthor vào từng bình luận
-        const updatedComments = articleData.comments.map((comment) => {
-            const isLikedByAuthor = comment.likes.some((like) => like.userId === articleData?.userId);
-            return {
-                ...comment,
-                isLikedByAuthor: isLikedByAuthor ? articleData?.User : false,
-            };
-        });
+        // Thêm isLikedByAuthor vào từng bình luận (cả bình luận trong replies)
+        const updatedComments = recursiveAddIsLikedByAuthor(articleData.comments, articleData);
         // Set state commentsData
-        setCommentsData((prev) => ({
+        setCommentsData({
             comments: updatedComments,
             commentCount: articleData?.commentCount,
-        }));
+        });
+        // console.log(commentsData?.comments);
     };
-    // Handle thêm Like cho Comment vào commentsData State (Callback)
+    // Handle Callback thay đổi isLiked
+    // Handle thêm/xóa Like cho Comment tương ứng trong State commentsData (Callback) (Chưa coi lại)
     const handleAddLikeComment = (likeCommentData, action) => {
         // Cập nhật lại state commentsData để thêm like hoặc xóa like của bình luận
         if (action === 'unlike') {
@@ -327,6 +336,7 @@ function ArticleDetail() {
         }
         return;
     };
+    // *** PHẦN MENU OPTIONS ***
     // Handle nút đóng/mở article options
     const handleToggleArticleOptions = () => {
         setTimeout(() => {
