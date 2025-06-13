@@ -1,4 +1,4 @@
-import { Fragment, useContext, useEffect, useRef, useState } from 'react';
+import { Fragment, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { VscChevronLeft, VscChevronRight, VscEllipsis } from 'react-icons/vsc';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Slider from 'react-slick';
@@ -26,7 +26,8 @@ import { message } from 'antd';
 function ArticleDetail() {
     // State
     const [articleData, setArticleData] = useState(); // Dữ liệu chi tiết bài viết
-    const [commentsData, setCommentsData] = useState(); // Dữ liệu bình luận của bài viết
+    const [commentsData, setCommentsData] = useState(); // Dữ liệu bình luận của bài viết từ API (type Map)
+    const [commentTree, setCommentTree] = useState(); // Cây bình luận (type Array)
     const [isOpenCommentInput, SetIsOpenCommentInput] = useState(false); // Đóng/mở input comment
     // const [createCommentStatus, setCreateCommentStatus] = useState(); // For Loading Comment Animation
     const [isOpenArticleOptions, setIsOpenArticleOptions] = useState(false); // đóng/mở Article options
@@ -104,6 +105,31 @@ function ArticleDetail() {
 
     console.log('Rerender ArticleDetail');
 
+    // *** Call API GET ARTICLE DETAIL ***
+    useEffect(() => {
+        const articleID = location.pathname.split('/')[2];
+        // Call API Get article detail
+        const getArticle = async (articleId) => {
+            try {
+                const res = await getArticleApi(articleId);
+                // set dữ liệu chi tiết bài viết
+                setTimeout(() => {
+                    setArticleData(res?.data);
+                }, 200);
+                // setArticleData(res?.data);
+                // Thêm isLikedByAuthor vào từng bình luận trong res và Set State commentsData
+                // addIsCommentLikedByAuthor(res?.data);
+                // set bình luận của bài viết
+                setCommentsData({ comments: res?.data?.comments, commentCount: res?.data?.commentCount });
+                // set document title
+                document.title = `${res?.data?.textContent} | ${res?.data?.User?.userName}`;
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        getArticle(articleID);
+    }, []);
+
     // --- HANDLE FUNCTION ---
     // Format thời gian tạo bài viết
     const timeAgo = (timestamp) => {
@@ -140,58 +166,51 @@ function ArticleDetail() {
 
         return `${day} Tháng ${month}, ${year} lúc ${hours}:${minutes}`;
     };
-    // Call API GET ARTICLE DETAIL
-    useEffect(() => {
-        const articleID = location.pathname.split('/')[2];
-        // Call API Get article detail
-        const getArticle = async (articleId) => {
-            try {
-                const res = await getArticleApi(articleId);
-                // set dữ liệu chi tiết bài viết
-                setTimeout(() => {
-                    setArticleData(res?.data);
-                }, 200);
-                // setArticleData(res?.data);
-                // Thêm isLikedByAuthor vào từng bình luận trong res và Set State commentsData
-                addIsCommentLikedByAuthor(res?.data);
-                // set bình luận của bài viết (chỉ sử dụng ở ArticleDetail Component)
-                // setCommentsData({ comments: res?.data?.comments, commentCount: res?.data?.commentCount });
-                // set document title
-                document.title = `${res?.data?.textContent} | ${res?.data?.User?.userName}`;
-            } catch (error) {
-                console.log(error);
-            }
-        };
-        getArticle(articleID);
-    }, []);
+    // CÁC THAO TÁC CỦA COMMENT (Tạo, Xóa, Thích, Options)
     // *** PHẦN CREATE COMMENT ***
     // Handle Reset Comments Data ** CHO COMMENT ** (Callback) (Tạm OK, có thể tối ưu hơn)
     // Hàm này thực hiện cập nhật lại state commentsData để BÌNH LUẬN CON được tạo hiện ra giao diện
     const handleResetCommentsData = (newReplyComment) => {
         let replyComment = newReplyComment;
-        replyComment.replies = []; // Khởi tạo mảng replies rỗng
-        console.log('replyComment', replyComment);
+        replyComment.replies = {}; // Khởi tạo replies rỗng
+        // console.log('replyComment', replyComment);
         // Tìm bình luận cha và thêm vào replies
         // newComments
-        let newComments = commentsData.comments.map((oldComment) => {
-            // Kiểm tra nếu là bình luận cha
-            if (oldComment.commentId === replyComment.parentCommentId) {
-                // Thêm bình luận con vào đầu replies[]
-                return {
-                    ...oldComment,
-                    replies: [replyComment, ...oldComment.replies],
-                };
-            } else {
-                return oldComment;
-            }
-        });
+        // let newComments = commentsData.comments.map((oldComment) => {
+        //     // Kiểm tra nếu là bình luận cha
+        //     if (oldComment.commentId === replyComment.parentCommentId) {
+        //         // Thêm bình luận con vào đầu replies[]
+        //         return {
+        //             ...oldComment,
+        //             replies: [replyComment, ...oldComment.replies],
+        //         };
+        //     } else {
+        //         return oldComment;
+        //     }
+        // });
         // console.log('newComments', newComments);
         //
-        setCommentsData((prev) => ({
-            comments: [...newComments],
-            commentCount: prev?.commentCount + 1,
-        }));
+        // setCommentsData((prev) => ({
+        //     comments: [...newComments],
+        //     commentCount: prev?.commentCount + 1,
+        // }));
         //
+        setCommentsData((prev) => {
+            let newComments = prev.comments;
+            let newReplyCommentMap = {};
+            // Tạo map cho replyComment
+            newReplyCommentMap[replyComment.commentId] = replyComment;
+            // Thêm vào replies của comment cha tương ứng
+            newComments[replyComment.parentCommentId].replies = {
+                ...newComments[replyComment.parentCommentId].replies,
+                ...newReplyCommentMap,
+            };
+            // return kết quả
+            return {
+                comments: { ...newComments },
+                commentCount: prev?.commentCount + 1,
+            };
+        });
         return;
     };
     // Handle Reset Comments Data ** CHO ARTICLE ** (Callback) (Tạm thời, có thể sẽ hợp thành 1 hàm reset commentsData duy nhất)
@@ -294,45 +313,46 @@ function ArticleDetail() {
     // Handle Callback thay đổi isLiked
     // Handle thêm/xóa Like cho Comment tương ứng trong State commentsData (Callback) (Chưa coi lại)
     const handleAddLikeComment = (likeCommentData, action) => {
+        // const addIsCommentLikedByAuthor
         // Cập nhật lại state commentsData để thêm like hoặc xóa like của bình luận
         if (action === 'unlike') {
             // Nếu action là 'unlike', xóa like khỏi bình luận
-            setCommentsData((prev) => {
-                const updatedComments = prev.comments.map((comment) => {
-                    if (comment.commentId === likeCommentData.commentId) {
-                        // Xoá like khỏi bình luận
-                        return {
-                            ...comment,
-                            likes: comment.likes.filter((like) => like.userId !== likeCommentData.userId),
-                            likeCount: comment.likeCount - 1,
-                        };
-                    }
-                    return comment;
-                });
-                return {
-                    comments: updatedComments,
-                    commentCount: prev?.commentCount,
-                };
-            });
+            // setCommentsData((prev) => {
+            //     const updatedComments = prev.comments.map((comment) => {
+            //         if (comment.commentId === likeCommentData.commentId) {
+            //             // Xoá like khỏi bình luận
+            //             return {
+            //                 ...comment,
+            //                 likes: comment.likes.filter((like) => like.userId !== likeCommentData.userId),
+            //                 likeCount: comment.likeCount - 1,
+            //             };
+            //         }
+            //         return comment;
+            //     });
+            //     return {
+            //         comments: updatedComments,
+            //         commentCount: prev?.commentCount,
+            //     };
+            // });
         } else if (action === 'like') {
             // Nếu action là 'like', thêm like vào bình luận
-            setCommentsData((prev) => {
-                const updatedComments = prev.comments.map((comment) => {
-                    if (comment.commentId === likeCommentData.commentId) {
-                        // Thêm like mới vào bình luận
-                        return {
-                            ...comment,
-                            likes: [...comment.likes, likeCommentData],
-                            likeCount: comment.likeCount + 1,
-                        };
-                    }
-                    return comment;
-                });
-                return {
-                    comments: updatedComments,
-                    commentCount: prev?.commentCount,
-                };
-            });
+            // setCommentsData((prev) => {
+            //     const updatedComments = prev.comments.map((comment) => {
+            //         if (comment.commentId === likeCommentData.commentId) {
+            //             // Thêm like mới vào bình luận
+            //             return {
+            //                 ...comment,
+            //                 likes: [...comment.likes, likeCommentData],
+            //                 likeCount: comment.likeCount + 1,
+            //             };
+            //         }
+            //         return comment;
+            //     });
+            //     return {
+            //         comments: updatedComments,
+            //         commentCount: prev?.commentCount,
+            //     };
+            // });
         }
         return;
     };
