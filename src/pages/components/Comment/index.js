@@ -25,6 +25,7 @@ import { deleteCommentApi } from '~/utils/api';
 
 function Comment({ comment, onReplyComment, onDeleteComment, getRespondedComment, onLikeComment }) {
     // State
+    const [commentData, setCommentData] = useState(comment ? comment : {}); // Data của comment này
     const [isOpenRepliesBox, setIsOpenRepliesBox] = useState(false); // đóng/mở hộp xem phản hồi
     const [isOpenRepliesInput, setIsOpenRepliesInput] = useState(false); // đóng/mở input nhập phản hồi
     const [isOpenCommentOptions, setIsOpenCommentOptions] = useState(false); // đóng/mở comment options
@@ -399,6 +400,7 @@ function Comment({ comment, onReplyComment, onDeleteComment, getRespondedComment
                                             comment={reply}
                                             onReplyComment={onReplyComment}
                                             onDeleteComment={onDeleteComment}
+                                            onLikeComment={onLikeComment}
                                         />
                                     ))}
                                     {/* </div> */}

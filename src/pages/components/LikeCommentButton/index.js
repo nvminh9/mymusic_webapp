@@ -31,6 +31,7 @@ function LikeCommentButton({ commentData, onLikeComment }) {
                     const res = await createLikeCommentApi(commentData?.commentId); // Nếu chưa like thì gọi API like
                     // Thêm like vào state commentsData ở ArticleDetail
                     // onLikeComment({ commentId: commentData?.commentId, userId: auth?.user?.userId, status: 0 }, 'like');
+                    onLikeComment(commentData, 'like');
                 } else {
                     const res = await unLikeCommentApi(commentData?.commentId); // Nếu like rồi thì gọi API unlike
                     // Xoá like khỏi state commentsData ở ArticleDetail
@@ -38,6 +39,7 @@ function LikeCommentButton({ commentData, onLikeComment }) {
                     //     { commentId: commentData?.commentId, userId: auth?.user?.userId, status: 1 },
                     //     'unlike',
                     // );
+                    onLikeComment(commentData, 'unlike');
                 }
             } catch (error) {
                 console.error('Error updating like status', error);

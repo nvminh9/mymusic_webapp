@@ -27,7 +27,6 @@ function ArticleDetail() {
     // State
     const [articleData, setArticleData] = useState(); // Dữ liệu chi tiết bài viết
     const [commentsData, setCommentsData] = useState(); // Dữ liệu bình luận của bài viết từ API (type Map)
-    const [commentTree, setCommentTree] = useState(); // Cây bình luận (type Array)
     const [isOpenCommentInput, SetIsOpenCommentInput] = useState(false); // Đóng/mở input comment
     // const [createCommentStatus, setCreateCommentStatus] = useState(); // For Loading Comment Animation
     const [isOpenArticleOptions, setIsOpenArticleOptions] = useState(false); // đóng/mở Article options
@@ -117,10 +116,12 @@ function ArticleDetail() {
                     setArticleData(res?.data);
                 }, 200);
                 // setArticleData(res?.data);
+                // Set state bình luận của bài viết
                 // Thêm isLikedByAuthor vào từng bình luận trong res và Set State commentsData
-                // addIsCommentLikedByAuthor(res?.data);
-                // set bình luận của bài viết
-                setCommentsData({ comments: res?.data?.comments, commentCount: res?.data?.commentCount });
+                setCommentsData({
+                    comments: recursiveAddIsLikedByAuthor(res?.data?.comments, res?.data),
+                    commentCount: res?.data?.commentCount,
+                });
                 // set document title
                 document.title = `${res?.data?.textContent} | ${res?.data?.User?.userName}`;
             } catch (error) {
@@ -173,28 +174,8 @@ function ArticleDetail() {
     const handleResetCommentsData = (newReplyComment) => {
         let replyComment = newReplyComment;
         replyComment.replies = {}; // Khởi tạo replies rỗng
-        // console.log('replyComment', replyComment);
-        // Tìm bình luận cha và thêm vào replies
-        // newComments
-        // let newComments = commentsData.comments.map((oldComment) => {
-        //     // Kiểm tra nếu là bình luận cha
-        //     if (oldComment.commentId === replyComment.parentCommentId) {
-        //         // Thêm bình luận con vào đầu replies[]
-        //         return {
-        //             ...oldComment,
-        //             replies: [replyComment, ...oldComment.replies],
-        //         };
-        //     } else {
-        //         return oldComment;
-        //     }
-        // });
-        // console.log('newComments', newComments);
-        //
-        // setCommentsData((prev) => ({
-        //     comments: [...newComments],
-        //     commentCount: prev?.commentCount + 1,
-        // }));
-        //
+        replyComment.likes = {}; // Khởi tạo likes rỗng
+        // Set lại state commentsData
         setCommentsData((prev) => {
             let newComments = prev.comments;
             let newReplyCommentMap = {};
@@ -202,8 +183,8 @@ function ArticleDetail() {
             newReplyCommentMap[replyComment.commentId] = replyComment;
             // Thêm vào replies của comment cha tương ứng
             newComments[replyComment.parentCommentId].replies = {
-                ...newComments[replyComment.parentCommentId].replies,
                 ...newReplyCommentMap,
+                ...newComments[replyComment.parentCommentId].replies,
             };
             // return kết quả
             return {
@@ -216,14 +197,21 @@ function ArticleDetail() {
     // Handle Reset Comments Data ** CHO ARTICLE ** (Callback) (Tạm thời, có thể sẽ hợp thành 1 hàm reset commentsData duy nhất)
     // Hàm này thực hiện cập nhật lại state commentsData để BÌNH LUẬN CHA được tạo hiện ra giao diện
     const handleResetCommentsDataOfArticle = (newReplyComment) => {
-        // console.log('Bình luận cha');
-        // Nếu là bình luận cha thì thêm vào đầu danh sách
+        // Thêm bình luận cha vào danh sách
         let newComment = newReplyComment;
-        newComment.replies = []; // Khởi tạo mảng replies rỗng
-        setCommentsData((prev) => ({
-            comments: [newComment, ...prev?.comments],
-            commentCount: prev?.commentCount + 1,
-        }));
+        newComment.replies = {}; // Khởi tạo replies rỗng
+        newComment.likes = {}; // Khởi tạo likes rỗng
+        // Set state commentsData
+        setCommentsData((prev) => {
+            let newCommentMap = {};
+            // Tạo map cho comment
+            newCommentMap[newComment.commentId] = newComment;
+            // return kết quả
+            return {
+                comments: { ...newCommentMap, ...prev?.comments },
+                commentCount: prev?.commentCount + 1,
+            };
+        });
     };
     // Handle lấy thông tin của bình luận được trả lời
     const handleGetRespondedComment = ({ parentCommentId, respondedCommentId }) => {
@@ -231,42 +219,44 @@ function ArticleDetail() {
         // Tìm bình luận cha với parentCommentId truyền vào
         // Sau đó tìm bình luận nào có id là respondedCommentId trong replies của bình luận cha đó
         // return bình luận tìm thấy
-        // const parentComment = commentsData?.comments?.find((comment) => comment.commentId === parentCommentId);
-        // const respondedComment = parentComment?.replies?.find((comment) => comment.commentId === respondedCommentId);
-        // console.log('respondedComment', respondedComment);
-        // return respondedComment;
     };
     // *** PHẦN DELETE COMMENT ***
     // Handle Reset Comments Data (Callback) khi có bình luận nào bị XÓA
-    // Đếm toàn bộ số bình luận trong cây bình luận (bao gồm replies)
+    // Đếm toàn bộ số bình luận con (trong replies)
     const countCommentsRecursive = (comment) => {
         let count = 1; // tính chính nó
-        for (const reply of comment.replies || []) {
-            count += countCommentsRecursive(reply);
+        const replies = comment.replies || {};
+        //
+        for (const replyId in replies) {
+            count += countCommentsRecursive(replies[replyId]);
         }
         return count;
     };
     // Hàm xóa bình luận khỏi danh sách bình luận (Đệ quy)
+    // comments (type Map)
     const removeCommentById = (comments, commentId) => {
         let deletedCount = 0;
 
         const recursiveRemove = (commentsList) => {
-            return commentsList
-                .map((comment) => {
-                    if (comment.commentId === commentId) {
-                        deletedCount += countCommentsRecursive(comment);
-                        return null;
-                    }
-
-                    // Nếu có replies thì gọi đệ quy
-                    const updatedReplies = recursiveRemove(comment.replies || []);
-
-                    return {
-                        ...comment,
-                        replies: updatedReplies,
-                    };
-                })
-                .filter(Boolean);
+            const updated = {};
+            //
+            for (const id in commentsList) {
+                const comment = commentsList[id];
+                // Check xem có phải comment cần xóa không
+                if (id === commentId) {
+                    // Tính số lượng comment xóa (cả comment con nếu có)
+                    deletedCount += countCommentsRecursive(comment);
+                    continue; // Bỏ qua comment này (để xóa)
+                }
+                // Đệ quy trong replies
+                const updatedReplies = recursiveRemove(comment.replies || {});
+                updated[id] = {
+                    ...comment,
+                    replies: updatedReplies,
+                };
+            }
+            // return
+            return updated;
         };
 
         const newComments = recursiveRemove(comments);
@@ -289,70 +279,98 @@ function ArticleDetail() {
     // *** PHẦN LIKE COMMENT ***
     // Thêm isLikedByAuthor vào các comment trong commentsData (Đệ quy)
     const recursiveAddIsLikedByAuthor = (comments, articleData) => {
-        return comments.map((comment) => {
-            let isLikedByAuthor = comment.likes.some((like) => like.userId === articleData?.userId);
-            comment.isLikedByAuthor = isLikedByAuthor ? articleData?.User : false;
-            if (comment.replies && comment.replies.length > 0) {
+        const updatedComments = {};
+
+        for (const commentId in comments) {
+            const comment = comments[commentId];
+
+            // likes là object nên cần check từng key
+            const likes = comment.likes || {};
+            const isLiked = Object.values(likes).some((like) => like.userId === articleData?.userId);
+
+            // Gán isLikedByAuthor (nếu có thì là User object, nếu không thì false)
+            comment.isLikedByAuthor = isLiked ? articleData?.User : false;
+
+            // Đệ quy replies
+            if (comment.replies && Object.keys(comment.replies).length > 0) {
                 comment.replies = recursiveAddIsLikedByAuthor(comment.replies, articleData);
             }
-            return comment;
-        });
+
+            updatedComments[commentId] = comment;
+        }
+
+        return updatedComments;
     };
-    // Hàm check xem comment được thích bời người đăng hay không (Được gọi dùng ở useEffect Call API article detail)
-    const addIsCommentLikedByAuthor = (articleData) => {
-        if (!articleData || !articleData?.comments) return;
-        // Thêm isLikedByAuthor vào từng bình luận (cả bình luận trong replies)
-        const updatedComments = recursiveAddIsLikedByAuthor(articleData.comments, articleData);
-        // Set state commentsData
-        setCommentsData({
-            comments: updatedComments,
-            commentCount: articleData?.commentCount,
-        });
-        // console.log(commentsData?.comments);
-    };
-    // Handle Callback thay đổi isLiked
+    // Handle Callback cập nhật thay đổi cho event like
     // Handle thêm/xóa Like cho Comment tương ứng trong State commentsData (Callback) (Chưa coi lại)
     const handleAddLikeComment = (likeCommentData, action) => {
-        // const addIsCommentLikedByAuthor
         // Cập nhật lại state commentsData để thêm like hoặc xóa like của bình luận
         if (action === 'unlike') {
-            // Nếu action là 'unlike', xóa like khỏi bình luận
-            // setCommentsData((prev) => {
-            //     const updatedComments = prev.comments.map((comment) => {
-            //         if (comment.commentId === likeCommentData.commentId) {
-            //             // Xoá like khỏi bình luận
-            //             return {
-            //                 ...comment,
-            //                 likes: comment.likes.filter((like) => like.userId !== likeCommentData.userId),
-            //                 likeCount: comment.likeCount - 1,
-            //             };
-            //         }
-            //         return comment;
-            //     });
-            //     return {
-            //         comments: updatedComments,
-            //         commentCount: prev?.commentCount,
-            //     };
-            // });
+            // Và giảm likeCount của comment, đổi likeStatus thành false
+            // Và đổi isLikedByAuthor thành false nếu là author bấm nút, không thì giữ nguyên
+            setCommentsData((prev) => {
+                let updatedComment = !likeCommentData?.parentCommentId
+                    ? prev?.comments[likeCommentData.commentId]
+                    : prev?.comments[likeCommentData.parentCommentId].replies[likeCommentData.commentId];
+                let updatedComments = prev?.comments;
+                // Check xem phải author article ko và cập nhật tương ứng
+                if (auth?.user?.userId === articleData?.userId) {
+                    updatedComment = {
+                        ...updatedComment,
+                        likeCount: updatedComment?.likeCount - 1,
+                        likeStatus: false,
+                        isLikedByAuthor: false,
+                    };
+                } else {
+                    updatedComment = { ...updatedComment, likeCount: updatedComment?.likeCount - 1, likeStatus: false };
+                }
+                // Tìm và cập nhật comment đó trong commentsData
+                if (!likeCommentData?.parentCommentId) {
+                    updatedComments[likeCommentData?.commentId] = { ...updatedComment };
+                } else {
+                    updatedComments[likeCommentData?.parentCommentId].replies[likeCommentData?.commentId] = {
+                        ...updatedComment,
+                    };
+                }
+                // return kết quả commentsData
+                return {
+                    comments: { ...updatedComments },
+                    commentCount: prev?.commentCount,
+                };
+            });
         } else if (action === 'like') {
-            // Nếu action là 'like', thêm like vào bình luận
-            // setCommentsData((prev) => {
-            //     const updatedComments = prev.comments.map((comment) => {
-            //         if (comment.commentId === likeCommentData.commentId) {
-            //             // Thêm like mới vào bình luận
-            //             return {
-            //                 ...comment,
-            //                 likes: [...comment.likes, likeCommentData],
-            //                 likeCount: comment.likeCount + 1,
-            //             };
-            //         }
-            //         return comment;
-            //     });
-            //     return {
-            //         comments: updatedComments,
-            //         commentCount: prev?.commentCount,
-            //     };
-            // });
+            // Và tăng likeCount của comment, đổi likeStatus thành true
+            // Và đổi isLikedByAuthor thành Object User nếu là author bấm nút, không thì giữ nguyên
+            setCommentsData((prev) => {
+                let updatedComment = !likeCommentData?.parentCommentId
+                    ? prev?.comments[likeCommentData.commentId]
+                    : prev?.comments[likeCommentData.parentCommentId].replies[likeCommentData.commentId];
+                let updatedComments = prev?.comments;
+                // Check xem phải author article ko và cập nhật tương ứng
+                if (auth?.user?.userId === articleData?.userId) {
+                    updatedComment = {
+                        ...updatedComment,
+                        likeCount: updatedComment?.likeCount + 1,
+                        likeStatus: true,
+                        isLikedByAuthor: articleData?.User,
+                    };
+                } else {
+                    updatedComment = { ...updatedComment, likeCount: updatedComment?.likeCount + 1, likeStatus: true };
+                }
+                // Tìm và cập nhật comment đó trong commentsData
+                if (!likeCommentData?.parentCommentId) {
+                    updatedComments[likeCommentData?.commentId] = { ...updatedComment };
+                } else {
+                    updatedComments[likeCommentData?.parentCommentId].replies[likeCommentData?.commentId] = {
+                        ...updatedComment,
+                    };
+                }
+                // return kết quả commentsData
+                return {
+                    comments: { ...updatedComments },
+                    commentCount: prev?.commentCount,
+                };
+            });
         }
         return;
     };

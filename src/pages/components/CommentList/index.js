@@ -47,7 +47,7 @@ function CommentList({ commentListData, onReplyComment, onDeleteComment, getResp
     return (
         <>
             {/* Render Comments */}
-            {commentListData?.comments.length <= 0 ? (
+            {commentTreeMemo?.length <= 0 ? (
                 <span
                     style={{
                         textAlign: 'center',
