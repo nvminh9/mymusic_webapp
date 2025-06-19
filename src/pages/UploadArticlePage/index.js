@@ -338,6 +338,7 @@ function UploadArticlePage() {
                                                 // ref={textContentInput}
                                                 className="text"
                                                 placeholder="Có gì mới?"
+                                                spellCheck="false"
                                                 {...register('textContent', {
                                                     required: 'Chưa nhập nội dung bài viết',
                                                     maxLength: {

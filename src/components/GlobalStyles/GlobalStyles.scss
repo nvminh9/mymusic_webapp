@@ -4841,6 +4841,82 @@ body {
     }
 }
 
+// CSS Share Article Box
+.shareArticleBoxContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    background-color: rgba(18, 18, 18, 0.8);
+    backdrop-filter: blur(1px);
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 999;
+
+    .shareArticleBox {
+        width: 550px;
+        max-width: 100%;
+
+        // Tiêu đề
+        .tabSwitchProfile {
+            background: transparent;
+            backdrop-filter: blur(1px);
+            left: 0;
+            width: 100%;
+            font-family: system-ui;
+            border-bottom: none;
+
+            .profileUserName {
+                span {
+                    font-weight: 500;
+                }
+            }
+            .btnComeBackBox {
+                button {
+                    height: max-content;
+                    max-height: max-content;
+                    width: max-content;
+                    max-width: max-content;
+                    transform: translateX(-10px);
+                }
+            }
+        }
+
+        // Mẫu Article
+        .articleContainer {
+            border-bottom: none;
+            .article {
+                .right {
+                    .middle {
+                        .content {
+                            .text {
+                                color: #ffffff;
+                                font-size: 15px;
+                                font-weight: 400;
+                                font-family: system-ui !important;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Nút Chia sẻ ngay
+        .btnCreate {
+            font-weight: 500 !important;
+            background-color: #1f1f1f !important;
+        }
+        .btnCreate:hover {
+            background-color: #000 !important;
+        }
+        .btnCreate:active {
+            transform: scale(0.95) !important;
+        }
+    }
+}
+
 // CSS User Tag
 // User Tag
 .userTagContainer {

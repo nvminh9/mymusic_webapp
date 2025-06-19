@@ -22,6 +22,7 @@ import CommentInput from '../components/CommentInput';
 import LikeArticleButton from '../components/LikeArticleButton';
 import UserName from '../components/UserName';
 import { message } from 'antd';
+import ShareArticleButton from '../components/ShareArticleButton';
 
 function ArticleDetail() {
     // State
@@ -731,9 +732,16 @@ function ArticleDetail() {
                                                 {commentsData?.commentCount ? commentsData?.commentCount : 0}
                                             </button>
                                             {/* Nút chia sẻ */}
-                                            <button type="button" className="btnShare" id="btnShareID">
-                                                <IoShareSocialOutline /> 0
-                                            </button>
+                                            {articleData ? (
+                                                <ShareArticleButton />
+                                            ) : (
+                                                <>
+                                                    {/* Skeleton Loading */}
+                                                    <button type="button" className="btnShare" id="btnShareID">
+                                                        <IoShareSocialOutline /> 0
+                                                    </button>
+                                                </>
+                                            )}
                                             {/* Nút gửi */}
                                             <button type="button" className="btnSend" id="btnSendID">
                                                 <IoSendOutline /> 0
