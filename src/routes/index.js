@@ -16,6 +16,7 @@ import ListFollower from '~/pages/components/ListFollower';
 import ListFollowing from '~/pages/components/ListFollowing';
 import UploadArticlePage from '~/pages/UploadArticlePage';
 import UploadMusicPage from '~/pages/UploadMusicPage';
+import SharedArticleDetail from '~/pages/SharedArticleDetail';
 
 // Public Routes (Chưa đăng nhập vẫn truy cập được)
 const publicRoutes = [
@@ -40,36 +41,40 @@ const privateRoutes = [
             { path: '', component: HomePage },
             { path: 'feeds', component: FeedPage },
             {
-                path: 'profile/:userName',
+                path: 'profile/:userName', // Trang cá nhân
                 component: ProfilePage,
                 children: [
-                    { path: 'musics', component: ListMusicInProfile },
-                    { path: 'followers', component: ListFollower },
-                    { path: 'following', component: ListFollowing },
+                    { path: 'musics', component: ListMusicInProfile }, // Phần danh sách nhạc đã đăng
+                    { path: 'followers', component: ListFollower }, // Phần danh sách người theo dõi
+                    { path: 'following', component: ListFollowing }, // Phần danh sách đang theo dõi
                 ],
             },
             {
-                path: 'profile/:userName/edit',
+                path: 'profile/:userName/edit', // Trang chỉnh sửa trang cá nhân
                 component: ProfileEditPage,
             },
             {
-                path: 'article/upload',
+                path: 'article/upload', // Trang đăng bài viết
                 component: UploadArticlePage,
             },
             {
-                path: 'article/:articleID',
+                path: 'article/:articleID', // Trang chi tiết bài viết
                 component: ArticleDetail,
             },
             {
-                path: 'playlist/:playlistID',
+                path: 'article/shared/:sharedArticleID', // Trang chi tiết bài chia sẻ
+                component: SharedArticleDetail,
+            },
+            {
+                path: 'playlist/:playlistID', // Trang chi tiết danh sách phát
                 component: PlaylistDetail,
             },
             {
-                path: 'music/upload',
+                path: 'music/upload', // Trang đăng nhạc
                 component: UploadMusicPage,
             },
             {
-                path: 'song/:songID',
+                path: 'song/:songID', // Trang chi tiết nhạc
                 component: SongDetail,
             },
         ],

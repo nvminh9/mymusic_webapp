@@ -16,7 +16,7 @@ import {
     IoShareSocialOutline,
     IoSyncSharp,
 } from 'react-icons/io5';
-import { deleteArticleApi, getArticleApi } from '~/utils/api';
+import { deleteArticleApi, getArticleApi, getSharedArticleApi } from '~/utils/api';
 import CommentList from '../components/CommentList';
 import CommentInput from '../components/CommentInput';
 import LikeArticleButton from '../components/LikeArticleButton';
@@ -24,9 +24,9 @@ import UserName from '../components/UserName';
 import { message } from 'antd';
 import ShareArticleButton from '../components/ShareArticleButton';
 
-function ArticleDetail() {
+function SharedArticleDetail() {
     // State
-    const [articleData, setArticleData] = useState(); // Dữ liệu chi tiết bài viết
+    const [sharedArticleData, setSharedArticleData] = useState(); // Dữ liệu chi tiết bài viết
     const [commentsData, setCommentsData] = useState(); // Dữ liệu bình luận của bài viết từ API (type Map)
     const [isOpenCommentInput, SetIsOpenCommentInput] = useState(false); // Đóng/mở input comment
     // const [createCommentStatus, setCreateCommentStatus] = useState(); // For Loading Comment Animation
@@ -51,7 +51,7 @@ function ArticleDetail() {
     // Message (Ant Design)
     const [messageApi, contextHolder] = message.useMessage();
 
-    // Config Carousel Media (React Slick)
+    // Config Carousel Media (React Slick) (Của bài viết được chia sẻ)
     let sliderRef = useRef(null);
     const next = () => {
         sliderRef.slickNext();
@@ -60,10 +60,10 @@ function ArticleDetail() {
         sliderRef.slickPrev();
     };
     const settings = {
-        dots: articleData?.mediaContent.length > 1 ? true : false,
+        dots: sharedArticleData?.Article?.mediaContent?.length > 1 ? true : false,
         arrows: false,
-        infinite: articleData?.mediaContent.length > 1 ? true : false,
-        draggable: articleData?.mediaContent.length > 1 ? true : false,
+        infinite: sharedArticleData?.Article?.mediaContent?.length > 1 ? true : false,
+        draggable: sharedArticleData?.Article?.mediaContent?.length > 1 ? true : false,
         speed: 500,
         slidesToShow: 1,
         slidesToScroll: 1,
@@ -77,7 +77,7 @@ function ArticleDetail() {
                     slidesToScroll: 1,
                     infinite: true,
                     dots: true,
-                    draggable: articleData?.mediaContent.length > 1 ? true : false,
+                    draggable: sharedArticleData?.Article?.mediaContent?.length > 1 ? true : false,
                 },
             },
             {
@@ -86,7 +86,7 @@ function ArticleDetail() {
                     slidesToShow: 1,
                     slidesToScroll: 1,
                     initialSlide: 2,
-                    draggable: articleData?.mediaContent.length > 1 ? true : false,
+                    draggable: sharedArticleData?.Article?.mediaContent?.length > 1 ? true : false,
                 },
             },
             {
@@ -97,31 +97,32 @@ function ArticleDetail() {
                     slidesToShow: 1,
                     slidesToScroll: 1,
                     initialSlide: 2,
-                    draggable: articleData?.mediaContent.length > 1 ? true : false,
+                    draggable: sharedArticleData?.Article?.mediaContent?.length > 1 ? true : false,
                 },
             },
         ],
     };
 
-    console.log('Rerender ArticleDetail');
+    console.log('Rerender SharedArticleDetail');
 
-    // *** Call API GET ARTICLE DETAIL ***
+    // *** Call API GET SHARED ARTICLE DETAIL ***
     useEffect(() => {
-        const articleID = location.pathname.split('/')[2];
+        const sharedArticleID = location.pathname.split('/')[3];
+        // console.log(sharedArticleID);
         // Call API Get article detail
-        const getArticle = async (articleId) => {
+        const getSharedArticle = async (sharedArticleID) => {
             try {
-                const res = await getArticleApi(articleId);
+                const res = await getSharedArticleApi(sharedArticleID);
                 // set dữ liệu chi tiết bài viết
                 setTimeout(() => {
-                    setArticleData(res?.data);
+                    setSharedArticleData(res?.data);
                 }, 200);
-                // setArticleData(res?.data);
+                // setSharedArticleData(res?.data);
                 // Set state bình luận của bài viết
                 // Thêm isLikedByAuthor vào từng bình luận trong res và Set State commentsData
                 setCommentsData({
-                    comments: recursiveAddIsLikedByAuthor(res?.data?.comments, res?.data),
-                    commentCount: res?.data?.commentCount,
+                    comments: res?.data?.comments ? recursiveAddIsLikedByAuthor(res?.data?.comments, res?.data) : [],
+                    commentCount: res?.data?.commentCount ? res?.data?.commentCount : 0,
                 });
                 // set document title
                 document.title = `${res?.data?.textContent} | ${res?.data?.User?.userName}`;
@@ -129,7 +130,7 @@ function ArticleDetail() {
                 console.log(error);
             }
         };
-        getArticle(articleID);
+        getSharedArticle(sharedArticleID);
     }, []);
 
     // --- HANDLE FUNCTION ---
@@ -279,7 +280,7 @@ function ArticleDetail() {
     };
     // *** PHẦN LIKE COMMENT ***
     // Thêm isLikedByAuthor vào các comment trong commentsData (Đệ quy)
-    const recursiveAddIsLikedByAuthor = (comments, articleData) => {
+    const recursiveAddIsLikedByAuthor = (comments, sharedArticleData) => {
         const updatedComments = {};
 
         for (const commentId in comments) {
@@ -287,14 +288,14 @@ function ArticleDetail() {
 
             // likes là object nên cần check từng key
             const likes = comment.likes || {};
-            const isLiked = Object.values(likes).some((like) => like.userId === articleData?.userId);
+            const isLiked = Object.values(likes).some((like) => like.userId === sharedArticleData?.userId);
 
             // Gán isLikedByAuthor (nếu có thì là User object, nếu không thì false)
-            comment.isLikedByAuthor = isLiked ? articleData?.User : false;
+            comment.isLikedByAuthor = isLiked ? sharedArticleData?.User : false;
 
             // Đệ quy replies
             if (comment.replies && Object.keys(comment.replies).length > 0) {
-                comment.replies = recursiveAddIsLikedByAuthor(comment.replies, articleData);
+                comment.replies = recursiveAddIsLikedByAuthor(comment.replies, sharedArticleData);
             }
 
             updatedComments[commentId] = comment;
@@ -315,7 +316,7 @@ function ArticleDetail() {
                     : prev?.comments[likeCommentData.parentCommentId].replies[likeCommentData.commentId];
                 let updatedComments = prev?.comments;
                 // Check xem phải author article ko và cập nhật tương ứng
-                if (auth?.user?.userId === articleData?.userId) {
+                if (auth?.user?.userId === sharedArticleData?.userId) {
                     updatedComment = {
                         ...updatedComment,
                         likeCount: updatedComment?.likeCount - 1,
@@ -348,12 +349,12 @@ function ArticleDetail() {
                     : prev?.comments[likeCommentData.parentCommentId].replies[likeCommentData.commentId];
                 let updatedComments = prev?.comments;
                 // Check xem phải author article ko và cập nhật tương ứng
-                if (auth?.user?.userId === articleData?.userId) {
+                if (auth?.user?.userId === sharedArticleData?.userId) {
                     updatedComment = {
                         ...updatedComment,
                         likeCount: updatedComment?.likeCount + 1,
                         likeStatus: true,
-                        isLikedByAuthor: articleData?.User,
+                        isLikedByAuthor: sharedArticleData?.User,
                     };
                 } else {
                     updatedComment = { ...updatedComment, likeCount: updatedComment?.likeCount + 1, likeStatus: true };
@@ -475,7 +476,7 @@ function ArticleDetail() {
                             height: 'fit-content',
                         }}
                     >
-                        {articleData ? (
+                        {sharedArticleData ? (
                             <>
                                 <span
                                     style={{
@@ -487,7 +488,7 @@ function ArticleDetail() {
                                         textAlign: 'center',
                                     }}
                                 >
-                                    {articleData?.User?.userName}
+                                    {sharedArticleData?.User?.userName}
                                 </span>
                                 <span
                                     style={{
@@ -499,7 +500,7 @@ function ArticleDetail() {
                                         textAlign: 'center',
                                     }}
                                 >
-                                    {timeAgo(articleData?.createdAt)}
+                                    {timeAgo(sharedArticleData?.createdAt)}
                                 </span>
                             </>
                         ) : (
@@ -509,12 +510,12 @@ function ArticleDetail() {
                     <div className="btnComeBackBox">
                         <button className="btnComeBack tooltip" onClick={() => navigate(-1)}>
                             <VscChevronLeft />
-                            <span class="tooltiptext">Quay lại</span>
+                            <span className="tooltiptext">Quay lại</span>
                         </button>
                     </div>
                 </div>
                 {/* Phần chi tiết bài viết */}
-                {articleData ? (
+                {sharedArticleData ? (
                     <>
                         <div className="articleDetail" ref={articleRef}>
                             {/* Nội dung bài viết */}
@@ -522,12 +523,12 @@ function ArticleDetail() {
                                 <div className="left">
                                     {/* Avatar */}
                                     <div className="userAvatar">
-                                        <Link to={`/profile/${articleData?.User?.userName}`}>
+                                        <Link to={`/profile/${sharedArticleData?.User?.userName}`}>
                                             <img
                                                 src={
-                                                    articleData?.User?.userAvatar
+                                                    sharedArticleData?.User?.userAvatar
                                                         ? process.env.REACT_APP_BACKEND_URL +
-                                                          articleData?.User?.userAvatar
+                                                          sharedArticleData?.User?.userAvatar
                                                         : defaultAvatar
                                                 }
                                             />
@@ -538,7 +539,7 @@ function ArticleDetail() {
                                     <div className="top">
                                         <div className="articleInfo">
                                             {/* User Name */}
-                                            <UserName userName={articleData?.User?.userName} />
+                                            <UserName userName={sharedArticleData?.User?.userName} />
                                             {/* Privacy */}
                                             <span
                                                 style={{
@@ -548,7 +549,7 @@ function ArticleDetail() {
                                                     marginRight: '3px',
                                                 }}
                                             >
-                                                {articleData?.privacy === '0' ? (
+                                                {sharedArticleData?.privacy === '0' ? (
                                                     <IoGlobeOutline style={{ color: 'dimgray' }} />
                                                 ) : (
                                                     <IoLockClosedOutline style={{ color: 'dimgray' }} />
@@ -556,9 +557,9 @@ function ArticleDetail() {
                                             </span>
                                             {/* Created At */}
                                             <span className="createdAt tooltip">
-                                                {timeAgo(articleData?.createdAt)}
-                                                <span class="tooltiptext">
-                                                    {formatTimestamp(articleData?.createdAt)}
+                                                {timeAgo(sharedArticleData?.createdAt)}
+                                                <span className="tooltiptext">
+                                                    {formatTimestamp(sharedArticleData?.createdAt)}
                                                 </span>
                                             </span>
                                         </div>
@@ -580,20 +581,23 @@ function ArticleDetail() {
                                                         bottom: articleOptionsBoxPosition === 'top' ? '100%' : 'auto',
                                                     }}
                                                 >
-                                                    {auth?.user?.userName === articleData?.User?.userName && (
+                                                    {auth?.user?.userName === sharedArticleData?.User?.userName && (
                                                         <div
                                                             className="forAuthUser"
                                                             style={{
                                                                 borderBottom:
-                                                                    auth?.user?.userName !== articleData?.User?.userName
+                                                                    auth?.user?.userName !==
+                                                                    sharedArticleData?.User?.userName
                                                                         ? '0.5px solid #1f1f1f'
                                                                         : 'none',
                                                                 paddingBottom:
-                                                                    auth?.user?.userName !== articleData?.User?.userName
+                                                                    auth?.user?.userName !==
+                                                                    sharedArticleData?.User?.userName
                                                                         ? '8px'
                                                                         : '0px',
                                                                 marginBottom:
-                                                                    auth?.user?.userName !== articleData?.User?.userName
+                                                                    auth?.user?.userName !==
+                                                                    sharedArticleData?.User?.userName
                                                                         ? '8px'
                                                                         : '0px',
                                                             }}
@@ -615,7 +619,7 @@ function ArticleDetail() {
                                                             </button>
                                                         </div>
                                                     )}
-                                                    {auth?.user?.userName !== articleData?.User?.userName && (
+                                                    {auth?.user?.userName !== sharedArticleData?.User?.userName && (
                                                         <>
                                                             {/* Nút chặn người dùng */}
                                                             <button
@@ -641,67 +645,151 @@ function ArticleDetail() {
                                     </div>
                                     <div className="middle">
                                         <div className="content">
-                                            <div className="text">{articleData?.textContent}</div>
-                                            <div className="media">
-                                                {/* Render Carousel Media */}
-                                                {articleData?.mediaContent.length <= 0 ? (
-                                                    <></>
-                                                ) : (
-                                                    <>
-                                                        <div className="carouselMedia">
-                                                            <Slider
-                                                                ref={(slider) => {
-                                                                    sliderRef = slider;
-                                                                }}
-                                                                {...settings}
-                                                            >
-                                                                {articleData?.mediaContent.map((media, index) => (
-                                                                    <Fragment key={index}>
-                                                                        <div className="mediaContainer">
-                                                                            {media.type === 'photo' ? (
-                                                                                <>
-                                                                                    <img
-                                                                                        src={
-                                                                                            process.env
-                                                                                                .REACT_APP_BACKEND_URL +
-                                                                                            media.photoLink
-                                                                                        }
-                                                                                        className="slide-image"
-                                                                                        style={{}}
-                                                                                    />
-                                                                                </>
-                                                                            ) : (
-                                                                                <video
-                                                                                    src={
-                                                                                        process.env
-                                                                                            .REACT_APP_BACKEND_URL +
-                                                                                        media.videoLink
-                                                                                    }
-                                                                                    style={{}}
-                                                                                    playsInline
-                                                                                    controls
-                                                                                />
-                                                                            )}
-                                                                        </div>
-                                                                    </Fragment>
-                                                                ))}
-                                                            </Slider>
-                                                            {articleData?.mediaContent.length >= 2 && (
-                                                                <>
-                                                                    <button
-                                                                        className="btnPrevCarousel"
-                                                                        onClick={previous}
-                                                                    >
-                                                                        <VscChevronLeft />
-                                                                    </button>
-                                                                    <button className="btnNextCarousel" onClick={next}>
-                                                                        <VscChevronRight />
-                                                                    </button>
-                                                                </>
-                                                            )}
+                                            <div className="text">{sharedArticleData?.textContent}</div>
+                                            {/* Article was shared */}
+                                            <div
+                                                className="articleDetail"
+                                                style={{ border: '.5px solid #1f1f1f', borderRadius: '5px' }}
+                                            >
+                                                {/* Nội dung bài viết */}
+                                                <div className="article">
+                                                    <div className="left">
+                                                        {/* Avatar */}
+                                                        <div className="userAvatar">
+                                                            <Link>
+                                                                <img
+                                                                    src={
+                                                                        sharedArticleData?.Article?.User?.userAvatar
+                                                                            ? process.env.REACT_APP_BACKEND_URL +
+                                                                              sharedArticleData?.Article?.User
+                                                                                  ?.userAvatar
+                                                                            : defaultAvatar
+                                                                    }
+                                                                />
+                                                            </Link>
                                                         </div>
-                                                    </>
-                                                )}
+                                                    </div>
+                                                    <div className="right">
+                                                        <div className="top">
+                                                            <div className="articleInfo">
+                                                                {/* User Name */}
+                                                                <Link style={{ textDecoration: 'none' }}>
+                                                                    <span className="userName">
+                                                                        {sharedArticleData?.Article?.User?.userName}
+                                                                    </span>
+                                                                </Link>
+                                                                {/* Privacy */}
+                                                                <span
+                                                                    style={{
+                                                                        display: 'flex',
+                                                                        alignItems: 'center',
+                                                                        justifyContent: 'center',
+                                                                        marginRight: '3px',
+                                                                    }}
+                                                                >
+                                                                    {sharedArticleData?.Article?.privacy === '0' ? (
+                                                                        <IoGlobeOutline style={{ color: 'dimgray' }} />
+                                                                    ) : (
+                                                                        <IoLockClosedOutline
+                                                                            style={{ color: 'dimgray' }}
+                                                                        />
+                                                                    )}
+                                                                </span>
+                                                                {/* Created At */}
+                                                                <span className="createdAt tooltip">
+                                                                    {timeAgo(sharedArticleData?.Article?.createdAt)}
+                                                                    <span className="tooltiptext">
+                                                                        {formatTimestamp(
+                                                                            sharedArticleData?.Article?.createdAt,
+                                                                        )}
+                                                                    </span>
+                                                                </span>
+                                                            </div>
+                                                            <div className="articleOptions">{/*  */}</div>
+                                                        </div>
+                                                        <div className="middle">
+                                                            <div className="content">
+                                                                <div className="text">
+                                                                    {sharedArticleData?.Article?.textContent}
+                                                                </div>
+                                                                <div className="media">
+                                                                    {/* Render Carousel Media */}
+                                                                    {sharedArticleData?.Article?.mediaContent.length <=
+                                                                    0 ? (
+                                                                        <></>
+                                                                    ) : (
+                                                                        <>
+                                                                            <div className="carouselMedia">
+                                                                                <Slider
+                                                                                    ref={(slider) => {
+                                                                                        sliderRef = slider;
+                                                                                    }}
+                                                                                    {...settings}
+                                                                                >
+                                                                                    {sharedArticleData?.Article?.mediaContent.map(
+                                                                                        (media, index) => (
+                                                                                            <Fragment key={index}>
+                                                                                                <div className="mediaContainer">
+                                                                                                    {media.type ===
+                                                                                                    'photo' ? (
+                                                                                                        <>
+                                                                                                            <img
+                                                                                                                src={
+                                                                                                                    process
+                                                                                                                        .env
+                                                                                                                        .REACT_APP_BACKEND_URL +
+                                                                                                                    media.photoLink
+                                                                                                                }
+                                                                                                                className="slide-image"
+                                                                                                                style={{}}
+                                                                                                            />
+                                                                                                        </>
+                                                                                                    ) : (
+                                                                                                        <video
+                                                                                                            src={
+                                                                                                                process
+                                                                                                                    .env
+                                                                                                                    .REACT_APP_BACKEND_URL +
+                                                                                                                media.videoLink
+                                                                                                            }
+                                                                                                            style={{}}
+                                                                                                            playsInline
+                                                                                                            controls
+                                                                                                        />
+                                                                                                    )}
+                                                                                                </div>
+                                                                                            </Fragment>
+                                                                                        ),
+                                                                                    )}
+                                                                                </Slider>
+                                                                                {sharedArticleData?.Article
+                                                                                    ?.mediaContent.length >= 2 && (
+                                                                                    <>
+                                                                                        <button
+                                                                                            className="btnPrevCarousel"
+                                                                                            onClick={previous}
+                                                                                            type="button"
+                                                                                        >
+                                                                                            <VscChevronLeft />
+                                                                                        </button>
+                                                                                        <button
+                                                                                            className="btnNextCarousel"
+                                                                                            onClick={next}
+                                                                                            type="button"
+                                                                                        >
+                                                                                            <VscChevronRight />
+                                                                                        </button>
+                                                                                    </>
+                                                                                )}
+                                                                            </div>
+                                                                        </>
+                                                                    )}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div className="bottom">{/*  */}</div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -709,8 +797,8 @@ function ArticleDetail() {
                                         {/* Các nút tương tác */}
                                         <div className="interactiveButtonBox">
                                             {/* Nút thích bài viết */}
-                                            {articleData ? (
-                                                <LikeArticleButton articleData={articleData} />
+                                            {sharedArticleData ? (
+                                                <LikeArticleButton sharedArticleData={sharedArticleData} />
                                             ) : (
                                                 <>
                                                     {/* Skeleton Loading */}
@@ -732,8 +820,8 @@ function ArticleDetail() {
                                                 {commentsData?.commentCount ? commentsData?.commentCount : 0}
                                             </button>
                                             {/* Nút chia sẻ */}
-                                            {articleData ? (
-                                                <ShareArticleButton articleData={articleData} />
+                                            {sharedArticleData ? (
+                                                <ShareArticleButton sharedArticleData={sharedArticleData} />
                                             ) : (
                                                 <>
                                                     {/* Skeleton Loading */}
@@ -751,7 +839,7 @@ function ArticleDetail() {
                                         {isOpenCommentInput ? (
                                             <CommentInput
                                                 onReplyComment={handleResetCommentsDataOfArticle}
-                                                articleData={articleData}
+                                                sharedArticleData={sharedArticleData}
                                             />
                                         ) : (
                                             <></>
@@ -768,7 +856,7 @@ function ArticleDetail() {
                                             <button
                                                 className="btnDelete"
                                                 onClick={() => {
-                                                    handleBtnDeleteArticle(articleData?.articleId);
+                                                    handleBtnDeleteArticle(sharedArticleData?.articleId);
                                                 }}
                                             >
                                                 Xóa
@@ -827,7 +915,7 @@ function ArticleDetail() {
                     </>
                 )}
                 {/* Các bình luận */}
-                {articleData ? (
+                {sharedArticleData ? (
                     <>
                         <div className="articleComments">
                             {/* Comment List Component */}
@@ -862,4 +950,4 @@ function ArticleDetail() {
     );
 }
 
-export default ArticleDetail;
+export default SharedArticleDetail;

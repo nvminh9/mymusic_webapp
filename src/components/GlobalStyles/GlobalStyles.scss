@@ -4858,6 +4858,7 @@ body {
     .shareArticleBox {
         width: 550px;
         max-width: 100%;
+        margin-top: 5px;
 
         // Tiêu đề
         .tabSwitchProfile {
@@ -4884,18 +4885,49 @@ body {
             }
         }
 
-        // Mẫu Article
+        // Mẫu Article được chia sẻ
         .articleContainer {
             border-bottom: none;
             .article {
                 .right {
                     .middle {
                         .content {
+                            // Nội dung muốn chia sẻ
                             .text {
                                 color: #ffffff;
                                 font-size: 15px;
                                 font-weight: 400;
                                 font-family: system-ui !important;
+                            }
+                            // Bài viết được chia sẻ
+                            .articleDetail {
+                                background-color: #1f1f1f;
+                                border-radius: 5px;
+                                border: 0.5px solid rgba(243, 245, 247, 0.08);
+                                // outline: 1px solid rgba(243, 245, 247, 0.15);
+                                // outline-offset: -1px;
+                                .article {
+                                    .right {
+                                        .middle {
+                                            .content {
+                                                .text {
+                                                    padding-top: 5px;
+                                                    // padding-bottom: 0px;
+                                                }
+                                                // Media của bài viết được chia sẻ
+                                                .media {
+                                                    z-index: 999;
+                                                    .carouselMedia {
+                                                        margin-bottom: 0px;
+                                                        .slick-dots {
+                                                            display: none !important;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -4913,6 +4945,15 @@ body {
         }
         .btnCreate:active {
             transform: scale(0.95) !important;
+        }
+        .btnCreateDisabled {
+            opacity: 0.5 !important;
+        }
+        .btnCreateDisabled:hover {
+            background-color: #1f1f1f !important;
+        }
+        .btnCreateDisabled:active {
+            transform: scale(1) !important;
         }
     }
 }

@@ -1,4 +1,5 @@
 import { IoHeartSharp, IoChatbubbleSharp, IoDocumentTextSharp, IoReader, IoImages, IoFilm } from 'react-icons/io5';
+import { IoIosShareAlt } from 'react-icons/io';
 import { Link } from 'react-router-dom';
 import defaultAvatar from '~/assets/images/avatarDefault.jpg';
 
@@ -32,31 +33,66 @@ function ArticleProfile({ article, user }) {
 
     return (
         <>
-            {/* Article */}
-            <Link to={`/article/${article.articleId}`} className="col l-4 m-4 c-4">
-                <div className="thumbnail">
-                    {article?.mediaContent.length > 0 ? (
-                        <>
-                            {article?.mediaContent?.[0]?.type === 'photo' ? (
+            {article?.Article ? (
+                <>
+                    {/* Shared Article */}
+                    <Link to={`/article/shared/${article.sharedArticleId}`} className="col l-4 m-4 c-4">
+                        <div className="thumbnail">
+                            {article?.Article?.mediaContent?.length > 0 ? (
                                 <>
-                                    <IoImages
-                                        style={{
-                                            position: 'absolute',
-                                            right: '6',
-                                            top: '6',
-                                            color: 'white',
-                                            fontSize: '18px',
-                                        }}
-                                    />
-                                    {/* Hình thumbnail */}
-                                    <img
-                                        src={process.env.REACT_APP_BACKEND_URL + article?.mediaContent?.[0]?.photoLink}
-                                        alt="thumbnail"
-                                    />
+                                    {article?.Article?.mediaContent?.[0]?.type === 'photo' ? (
+                                        <>
+                                            <IoIosShareAlt
+                                                style={{
+                                                    position: 'absolute',
+                                                    right: '6',
+                                                    top: '6',
+                                                    color: 'white',
+                                                    fontSize: '18px',
+                                                }}
+                                            />
+                                            {/* Hình thumbnail */}
+                                            <img
+                                                src={
+                                                    process.env.REACT_APP_BACKEND_URL +
+                                                    article?.Article?.mediaContent?.[0]?.photoLink
+                                                }
+                                                alt="thumbnail"
+                                            />
+                                        </>
+                                    ) : (
+                                        <>
+                                            <IoIosShareAlt
+                                                style={{
+                                                    position: 'absolute',
+                                                    right: '6',
+                                                    top: '6',
+                                                    color: 'white',
+                                                    fontSize: '18px',
+                                                }}
+                                            />
+                                            {/* Video Thumbnail */}
+                                            <video
+                                                src={
+                                                    process.env.REACT_APP_BACKEND_URL +
+                                                    article?.Article?.mediaContent?.[0]?.videoLink
+                                                }
+                                                muted
+                                                loop
+                                                onMouseOver={(e) => {
+                                                    e?.target?.play();
+                                                }}
+                                                onMouseOut={(e) => {
+                                                    e?.target?.pause();
+                                                }}
+                                                alt="thumbnail"
+                                            />
+                                        </>
+                                    )}
                                 </>
                             ) : (
                                 <>
-                                    <IoFilm
+                                    <IoIosShareAlt
                                         style={{
                                             position: 'absolute',
                                             right: '6',
@@ -65,103 +101,237 @@ function ArticleProfile({ article, user }) {
                                             fontSize: '18px',
                                         }}
                                     />
-                                    {/* Video Thumbnail */}
-                                    <video
-                                        src={process.env.REACT_APP_BACKEND_URL + article?.mediaContent?.[0]?.videoLink}
-                                        muted
-                                        loop
-                                        onMouseOver={(e) => {
-                                            e?.target?.play();
+                                    <div
+                                        className=""
+                                        style={{
+                                            height: '100%',
+                                            width: '100%',
+                                            backgroundColor: '#1f1f1f',
+                                            overflow: 'hidden',
+                                            textOverflow: 'ellipsis',
+                                            padding: '6px',
                                         }}
-                                        onMouseOut={(e) => {
-                                            e?.target?.pause();
-                                        }}
-                                        alt="thumbnail"
-                                    />
+                                    >
+                                        <div className="" style={{ display: 'flex', alignItems: 'center' }}>
+                                            {/* Avatar */}
+                                            <img
+                                                src={
+                                                    article?.Article?.User?.userAvatar
+                                                        ? process.env.REACT_APP_BACKEND_URL +
+                                                          article?.Article?.User?.userAvatar
+                                                        : defaultAvatar
+                                                }
+                                                style={{
+                                                    height: '17%',
+                                                    width: '17%',
+                                                    // borderRadius: '50%',
+                                                    // objectFit: 'cover',
+                                                    // objectPosition: 'center',
+                                                }}
+                                            />
+                                            <div className="" style={{ marginLeft: '8px' }}>
+                                                {/* User Name */}
+                                                <span
+                                                    className="userName"
+                                                    style={{
+                                                        color: 'white',
+                                                        fontWeight: '600',
+                                                        fontFamily: 'sans-serif',
+                                                        fontSize: '16px',
+                                                    }}
+                                                >
+                                                    {article?.Article?.User?.userName}
+                                                </span>
+                                                <br />
+                                                <span
+                                                    className="createdAt"
+                                                    style={{
+                                                        color: 'dimgrey',
+                                                        fontWeight: '400',
+                                                        fontFamily: 'sans-serif',
+                                                        fontSize: '13px',
+                                                    }}
+                                                >
+                                                    {timeAgo(article?.Article?.createdAt)}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        {/* Text Content */}
+                                        <span className="textContent">{article?.Article?.textContent}</span>
+                                    </div>
                                 </>
                             )}
-                        </>
-                    ) : (
-                        <>
-                            <IoReader
-                                style={{
-                                    position: 'absolute',
-                                    right: '6',
-                                    top: '6',
-                                    color: 'white',
-                                    fontSize: '18px',
-                                }}
-                            />
-                            <div
-                                className=""
-                                style={{
-                                    height: '100%',
-                                    width: '100%',
-                                    backgroundColor: '#1f1f1f',
-                                    overflow: 'hidden',
-                                    textOverflow: 'ellipsis',
-                                    padding: '6px',
-                                }}
-                            >
-                                <div className="" style={{ display: 'flex', alignItems: 'center' }}>
-                                    {/* Avatar */}
-                                    <img
-                                        src={
-                                            user?.userAvatar
-                                                ? process.env.REACT_APP_BACKEND_URL + user?.userAvatar
-                                                : defaultAvatar
-                                        }
+
+                            {/* Phần hiển thị khi hover vào thumbnail */}
+                            <div className="thumbnailHover">
+                                {/* Lượt thích */}
+                                {/* <IoHeartSharp></IoHeartSharp>{' '}
+                                <span className="likes">{article?.likeCount}</span> */}
+                                {/* Lượt bình luận */}
+                                {/* <IoChatbubbleSharp></IoChatbubbleSharp>{' '}
+                                <span className="comments">{article?.commentCount}</span> */}
+                                {/* Đã chia sẻ lúc nào */}
+                                <span
+                                    className="sharedAt"
+                                    style={{ fontFamily: 'system-ui', fontWeight: '400', fontSize: '13px' }}
+                                >
+                                    Đã chia sẻ {timeAgo(article?.createdAt)}
+                                </span>
+                            </div>
+                        </div>
+                    </Link>
+                </>
+            ) : (
+                <>
+                    {/* Article */}
+                    <Link to={`/article/${article.articleId}`} className="col l-4 m-4 c-4">
+                        <div className="thumbnail">
+                            {article?.mediaContent?.length > 0 ? (
+                                <>
+                                    {article?.mediaContent?.[0]?.type === 'photo' ? (
+                                        <>
+                                            <IoImages
+                                                style={{
+                                                    position: 'absolute',
+                                                    right: '6',
+                                                    top: '6',
+                                                    color: 'white',
+                                                    fontSize: '18px',
+                                                }}
+                                            />
+                                            {/* Hình thumbnail */}
+                                            <img
+                                                src={
+                                                    process.env.REACT_APP_BACKEND_URL +
+                                                    article?.mediaContent?.[0]?.photoLink
+                                                }
+                                                alt="thumbnail"
+                                            />
+                                        </>
+                                    ) : (
+                                        <>
+                                            <IoFilm
+                                                style={{
+                                                    position: 'absolute',
+                                                    right: '6',
+                                                    top: '6',
+                                                    color: 'white',
+                                                    fontSize: '18px',
+                                                }}
+                                            />
+                                            {/* Video Thumbnail */}
+                                            <video
+                                                src={
+                                                    process.env.REACT_APP_BACKEND_URL +
+                                                    article?.mediaContent?.[0]?.videoLink
+                                                }
+                                                muted
+                                                loop
+                                                onMouseOver={(e) => {
+                                                    e?.target?.play();
+                                                }}
+                                                onMouseOut={(e) => {
+                                                    e?.target?.pause();
+                                                }}
+                                                alt="thumbnail"
+                                            />
+                                        </>
+                                    )}
+                                </>
+                            ) : (
+                                <>
+                                    <IoReader
                                         style={{
-                                            height: '17%',
-                                            width: '17%',
-                                            // borderRadius: '50%',
-                                            // objectFit: 'cover',
-                                            // objectPosition: 'center',
+                                            position: 'absolute',
+                                            right: '6',
+                                            top: '6',
+                                            color: 'white',
+                                            fontSize: '18px',
                                         }}
                                     />
-                                    <div className="" style={{ marginLeft: '8px' }}>
-                                        {/* User Name */}
-                                        <span
-                                            className="userName"
-                                            style={{
-                                                color: 'white',
-                                                fontWeight: '600',
-                                                fontFamily: 'sans-serif',
-                                                fontSize: '16px',
-                                            }}
-                                        >
-                                            {user?.userName}
-                                        </span>
-                                        <br />
-                                        <span
-                                            className="createdAt"
-                                            style={{
-                                                color: 'dimgrey',
-                                                fontWeight: '400',
-                                                fontFamily: 'sans-serif',
-                                                fontSize: '13px',
-                                            }}
-                                        >
-                                            {timeAgo(article?.createdAt)}
-                                        </span>
+                                    <div
+                                        className=""
+                                        style={{
+                                            height: '100%',
+                                            width: '100%',
+                                            backgroundColor: '#1f1f1f',
+                                            overflow: 'hidden',
+                                            textOverflow: 'ellipsis',
+                                            padding: '6px',
+                                        }}
+                                    >
+                                        <div className="" style={{ display: 'flex', alignItems: 'center' }}>
+                                            {/* Avatar */}
+                                            <img
+                                                src={
+                                                    article?.User?.userAvatar
+                                                        ? process.env.REACT_APP_BACKEND_URL + article?.User?.userAvatar
+                                                        : defaultAvatar
+                                                }
+                                                style={{
+                                                    height: '17%',
+                                                    width: '17%',
+                                                    // borderRadius: '50%',
+                                                    // objectFit: 'cover',
+                                                    // objectPosition: 'center',
+                                                }}
+                                            />
+                                            <div className="" style={{ marginLeft: '8px' }}>
+                                                {/* User Name */}
+                                                <span
+                                                    className="userName"
+                                                    style={{
+                                                        color: 'white',
+                                                        fontWeight: '600',
+                                                        fontFamily: 'sans-serif',
+                                                        fontSize: '16px',
+                                                    }}
+                                                >
+                                                    {article?.User?.userName}
+                                                </span>
+                                                <br />
+                                                <span
+                                                    className="createdAt"
+                                                    style={{
+                                                        color: 'dimgrey',
+                                                        fontWeight: '400',
+                                                        fontFamily: 'sans-serif',
+                                                        fontSize: '13px',
+                                                    }}
+                                                >
+                                                    {timeAgo(article?.createdAt)}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        {/* Text Content */}
+                                        <span className="textContent">{article?.textContent}</span>
                                     </div>
-                                </div>
-                                {/* Text Content */}
-                                <span className="textContent">{article?.textContent}</span>
-                            </div>
-                        </>
-                    )}
+                                </>
+                            )}
 
-                    {/* Phần hiển thị khi hover vào thumbnail */}
-                    <div className="thumbnailHover">
-                        {/* Lượt thích */}
-                        <IoHeartSharp></IoHeartSharp> <span className="likes">{article?.LikeArticles?.length}</span>
-                        {/* Lượt bình luận */}
-                        <IoChatbubbleSharp></IoChatbubbleSharp>{' '}
-                        <span className="comments">{article?.Comments?.length}</span>
-                    </div>
-                </div>
-            </Link>
+                            {/* Phần hiển thị khi hover vào thumbnail */}
+                            <div className="thumbnailHover">
+                                {/* Lượt thích */}
+                                <IoHeartSharp></IoHeartSharp>{' '}
+                                <span
+                                    className="likes"
+                                    style={{ fontFamily: 'system-ui', fontWeight: '400', fontSize: '13px' }}
+                                >
+                                    {article?.likeCount}
+                                </span>
+                                {/* Lượt bình luận */}
+                                <IoChatbubbleSharp></IoChatbubbleSharp>{' '}
+                                <span
+                                    className="comments"
+                                    style={{ fontFamily: 'system-ui', fontWeight: '400', fontSize: '13px' }}
+                                >
+                                    {article?.commentCount}
+                                </span>
+                            </div>
+                        </div>
+                    </Link>
+                </>
+            )}
         </>
     );
 }

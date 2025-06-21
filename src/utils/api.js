@@ -99,7 +99,7 @@ const createArticleApi = (data) => {
     return axios.post(URL_API, data);
 };
 
-// API Chi tiết bài viết
+// API Chi tiết bài viết (GET)
 const getArticleApi = (articleId) => {
     const URL_API = `/v1/api/article/${articleId}`;
     return axios.get(URL_API);
@@ -153,6 +153,18 @@ const deleteArticleApi = (articleId) => {
     return axios.delete(URL_API);
 };
 
+// API Chia sẻ bài viết (POST)
+const shareArticleApi = (articleId, data) => {
+    const URL_API = `/v1/api/article/${articleId}/share`;
+    return axios.post(URL_API, data);
+};
+
+// API Chi tiết bài chia sẻ (GET)
+const getSharedArticleApi = (sharedArticleId) => {
+    const URL_API = `/v1/api/article/shared/${sharedArticleId}`;
+    return axios.get(URL_API);
+};
+
 export {
     signUpApi,
     signInApi,
@@ -177,4 +189,6 @@ export {
     unLikeCommentApi,
     deleteCommentApi,
     deleteArticleApi,
+    shareArticleApi,
+    getSharedArticleApi,
 };
