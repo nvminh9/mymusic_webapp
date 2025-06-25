@@ -420,7 +420,16 @@ function ShareArticleButton({ articleData }) {
                                                                     </div>
                                                                     <div className="middle">
                                                                         <div className="content">
-                                                                            <div className="text">
+                                                                            <div
+                                                                                className="text"
+                                                                                style={{
+                                                                                    paddingBottom:
+                                                                                        articleData?.mediaContent
+                                                                                            ?.length === 0
+                                                                                            ? '0px'
+                                                                                            : '8px',
+                                                                                }}
+                                                                            >
                                                                                 {articleData?.textContent}
                                                                             </div>
                                                                             <div className="media">
@@ -502,13 +511,13 @@ function ShareArticleButton({ articleData }) {
                                                                             </div>
                                                                         </div>
                                                                     </div>
-                                                                    <div className="bottom">{/*  */}</div>
+                                                                    {/* <div className="bottom"></div> */}
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div className="bottom"></div>
+                                                {/* <div className="bottom"></div> */}
                                             </div>
                                         </div>
                                         {/* Nút Submit Form Create Article */}

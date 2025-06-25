@@ -161,7 +161,7 @@ const shareArticleApi = (articleId, data) => {
 
 // API Chi tiết bài chia sẻ (GET)
 const getSharedArticleApi = (sharedArticleId) => {
-    const URL_API = `/v1/api/article/shared/${sharedArticleId}`;
+    const URL_API = `/v1/api/sharedArticle/${sharedArticleId}`;
     return axios.get(URL_API);
 };
 

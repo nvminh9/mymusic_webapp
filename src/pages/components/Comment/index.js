@@ -270,9 +270,11 @@ function Comment({ comment, onReplyComment, onDeleteComment, getRespondedComment
                                     <div
                                         className="commentOptionsBox"
                                         ref={commentOptionsBoxRef}
-                                        style={{
-                                            bottom: commentOptionsBoxPosition === 'top' ? '100%' : 'auto',
-                                        }}
+                                        style={
+                                            {
+                                                // bottom: commentOptionsBoxPosition === 'top' ? '100%' : 'auto',
+                                            }
+                                        }
                                     >
                                         {auth?.user?.userName === comment?.User?.userName && (
                                             <div
