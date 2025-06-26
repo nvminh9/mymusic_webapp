@@ -165,6 +165,54 @@ const getSharedArticleApi = (sharedArticleId) => {
     return axios.get(URL_API);
 };
 
+// API Xóa bài chia sẻ (DELETE)
+const deleteSharedArticleApi = (sharedArticleId) => {
+    const URL_API = `/v1/api/sharedArticle/${sharedArticleId}`;
+    return axios.delete(URL_API);
+};
+
+// API Thích bài chia sẻ (POST)
+const createLikeSharedArticleApi = (sharedArticleId) => {
+    const URL_API = `/v1/api/sharedArticle/${sharedArticleId}/like`;
+    return axios.post(URL_API);
+};
+
+// API Hủy thích bài viết (PATCH)
+const unLikeSharedArticleApi = (sharedArticleId) => {
+    const URL_API = `/v1/api/sharedArticle/${sharedArticleId}/unlike`;
+    return axios.patch(URL_API);
+};
+
+// API Tạo bình luận bài viết (POST)
+const createCommentSharedArticleApi = (data) => {
+    const URL_API = `/v1/api/commentSharedArticle/create`;
+    return axios.post(URL_API, data);
+};
+
+// API Chi tiết bình luận của bài chia sẻ (GET)
+const getCommentSharedArticleApi = (commentId) => {
+    const URL_API = `/v1/api/commentSharedArticle/${commentId}`;
+    return axios.get(URL_API);
+};
+
+// API Thích bình luận của bài chia sẻ (POST)
+const createLikeCommentSharedArticleApi = (commentId) => {
+    const URL_API = `/v1/api/commentSharedArticle/${commentId}/like`;
+    return axios.post(URL_API);
+};
+
+// API Hủy thích bình luận của bài chia sẻ (PATCH)
+const unLikeCommentSharedArticleApi = (commentId) => {
+    const URL_API = `/v1/api/commentSharedArticle/${commentId}/unlike`;
+    return axios.patch(URL_API);
+};
+
+// API Xóa bình luận của bài chia sẻ (DELETE)
+const deleteCommentSharedArticleApi = (commentId) => {
+    const URL_API = `/v1/api/commentSharedArticle/${commentId}`;
+    return axios.delete(URL_API);
+};
+
 export {
     signUpApi,
     signInApi,
@@ -191,4 +239,12 @@ export {
     deleteArticleApi,
     shareArticleApi,
     getSharedArticleApi,
+    createLikeSharedArticleApi,
+    unLikeSharedArticleApi,
+    createCommentSharedArticleApi,
+    getCommentSharedArticleApi,
+    createLikeCommentSharedArticleApi,
+    unLikeCommentSharedArticleApi,
+    deleteCommentSharedArticleApi,
+    deleteSharedArticleApi,
 };

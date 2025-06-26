@@ -1,4 +1,4 @@
-import { Fragment, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { Fragment, useContext, useEffect, useRef, useState } from 'react';
 import { VscChevronLeft, VscChevronRight, VscEllipsis } from 'react-icons/vsc';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Slider from 'react-slick';
@@ -13,27 +13,24 @@ import {
     IoHeartOutline,
     IoLockClosedOutline,
     IoSendOutline,
-    IoShareSocialOutline,
     IoSyncSharp,
 } from 'react-icons/io5';
-import { deleteArticleApi, getArticleApi, getSharedArticleApi } from '~/utils/api';
+import { deleteSharedArticleApi, getSharedArticleApi } from '~/utils/api';
 import CommentList from '../components/CommentList';
 import CommentInput from '../components/CommentInput';
-import LikeArticleButton from '../components/LikeArticleButton';
 import UserName from '../components/UserName';
 import { message } from 'antd';
-import ShareArticleButton from '../components/ShareArticleButton';
 import LikeSharedArticleButton from '../components/LikeSharedArticleButton';
 
 function SharedArticleDetail() {
     // State
-    const [sharedArticleData, setSharedArticleData] = useState(); // Dữ liệu chi tiết bài viết
-    const [commentsData, setCommentsData] = useState(); // Dữ liệu bình luận của bài viết từ API (type Map)
+    const [sharedArticleData, setSharedArticleData] = useState(); // Dữ liệu chi tiết bài chia sẻ
+    const [commentsData, setCommentsData] = useState(); // Dữ liệu bình luận của bài chia sẻ từ API (type Map)
     const [isOpenCommentInput, SetIsOpenCommentInput] = useState(false); // Đóng/mở input comment
     // const [createCommentStatus, setCreateCommentStatus] = useState(); // For Loading Comment Animation
-    const [isOpenArticleOptions, setIsOpenArticleOptions] = useState(false); // đóng/mở Article options
-    const [articleOptionsBoxPosition, setArticleOptionsBoxPosition] = useState(); // Article options box position
-    const [isOpenDeleteConfirmBox, setIsOpenDeleteConfirmBox] = useState(false); // đóng/mở hộp xác nhận xóa bài viết
+    const [isOpenSharedArticleOptions, setIsOpenSharedArticleOptions] = useState(false); // đóng/mở Shared Article options
+    const [sharedArticleOptionsBoxPosition, setSharedArticleOptionsBoxPosition] = useState(); // Shared Article options box position
+    const [isOpenDeleteConfirmBox, setIsOpenDeleteConfirmBox] = useState(false); // đóng/mở hộp xác nhận xóa bài chia sẻ
 
     // Context
     const { auth } = useContext(AuthContext);
@@ -43,9 +40,9 @@ function SharedArticleDetail() {
     const location = useLocation();
 
     // Ref
-    const articleRef = useRef(null); // ref cho bài viết
-    const articleOptionsButtonRef = useRef(null); // ref cho nút article options
-    const articleOptionsBoxRef = useRef(null); // ref cho article options box
+    const sharedArticleRef = useRef(null); // ref cho bài chia sẻ
+    const sharedArticleOptionsButtonRef = useRef(null); // ref cho nút shared article options
+    const sharedArticleOptionsBoxRef = useRef(null); // ref cho shared article options box
 
     // React Hook Form
 
@@ -114,16 +111,15 @@ function SharedArticleDetail() {
     // *** Call API GET SHARED ARTICLE DETAIL ***
     useEffect(() => {
         const sharedArticleID = location.pathname.split('/')[3];
-        // console.log(sharedArticleID);
-        // Call API Get article detail
+        // Call API Get shared article detail
         const getSharedArticle = async (sharedArticleID) => {
             try {
                 const res = await getSharedArticleApi(sharedArticleID);
-                // set dữ liệu chi tiết bài viết
-                setTimeout(() => {
-                    setSharedArticleData(res?.data);
-                }, 200);
-                // setSharedArticleData(res?.data);
+                // Set dữ liệu chi tiết bài chia sẻ
+                // setTimeout(() => {
+                //     setSharedArticleData(res?.data);
+                // }, 200);
+                setSharedArticleData(res?.data);
                 // Set state bình luận của bài viết
                 // Thêm isLikedByAuthor vào từng bình luận trong res và Set State commentsData
                 setCommentsData({
@@ -131,7 +127,9 @@ function SharedArticleDetail() {
                     commentCount: res?.data?.commentCount ? res?.data?.commentCount : 0,
                 });
                 // set document title
-                document.title = `${res?.data?.textContent} | ${res?.data?.User?.userName}`;
+                document.title = `${res?.data?.sharedTextContent ? res?.data?.sharedTextContent : '...'} | ${
+                    res?.data?.User?.userName
+                }`;
             } catch (error) {
                 console.log(error);
             }
@@ -140,7 +138,7 @@ function SharedArticleDetail() {
     }, []);
 
     // --- HANDLE FUNCTION ---
-    // Format thời gian tạo bài viết
+    // Format thời gian tạo bài chia sẻ
     const timeAgo = (timestamp) => {
         const now = new Date();
         const past = new Date(timestamp);
@@ -162,7 +160,7 @@ function SharedArticleDetail() {
         }
         return 'vừa xong';
     };
-    // Format thời gian tạo bài viết (timestamp) sang định dạng "dd/mm/yyyy HH:MM"
+    // Format thời gian tạo bài chia sẻ (timestamp) sang định dạng "dd/mm/yyyy HH:MM"
     const formatTimestamp = (timestamp) => {
         const date = new Date(timestamp);
 
@@ -202,7 +200,7 @@ function SharedArticleDetail() {
         });
         return;
     };
-    // Handle Reset Comments Data ** CHO ARTICLE ** (Callback) (Tạm thời, có thể sẽ hợp thành 1 hàm reset commentsData duy nhất)
+    // Handle Reset Comments Data ** CHO SHARED ARTICLE ** (Callback) (Tạm thời, có thể sẽ hợp thành 1 hàm reset commentsData duy nhất)
     // Hàm này thực hiện cập nhật lại state commentsData để BÌNH LUẬN CHA được tạo hiện ra giao diện
     const handleResetCommentsDataOfArticle = (newReplyComment) => {
         // Thêm bình luận cha vào danh sách
@@ -310,7 +308,7 @@ function SharedArticleDetail() {
         return updatedComments;
     };
     // Handle Callback cập nhật thay đổi cho event like
-    // Handle thêm/xóa Like cho Comment tương ứng trong State commentsData (Callback) (Chưa coi lại)
+    // Handle thêm/xóa Like cho Comment tương ứng trong State commentsData (Callback)
     const handleAddLikeComment = (likeCommentData, action) => {
         // Cập nhật lại state commentsData để thêm like hoặc xóa like của bình luận
         if (action === 'unlike') {
@@ -383,45 +381,45 @@ function SharedArticleDetail() {
         return;
     };
     // *** PHẦN MENU OPTIONS ***
-    // Handle nút đóng/mở article options
-    const handleToggleArticleOptions = () => {
+    // Handle nút đóng/mở shared article options
+    const handleToggleSharedArticleOptions = () => {
         setTimeout(() => {
-            setIsOpenArticleOptions(!isOpenArticleOptions);
+            setIsOpenSharedArticleOptions(!isOpenSharedArticleOptions);
             // Xác định vị trí hiển thị
             setTimeout(() => {
-                if (articleOptionsButtonRef.current && articleOptionsBoxRef.current) {
-                    const commentOptionsButton = articleOptionsButtonRef.current.getBoundingClientRect();
+                if (sharedArticleOptionsButtonRef.current && sharedArticleOptionsBoxRef.current) {
+                    const commentOptionsButton = sharedArticleOptionsButtonRef.current.getBoundingClientRect();
                     const windowHeight = window.innerHeight;
                     if (commentOptionsButton.bottom > windowHeight / 2) {
-                        setArticleOptionsBoxPosition('top');
+                        setSharedArticleOptionsBoxPosition('top');
                     } else {
-                        setArticleOptionsBoxPosition('bottom');
+                        setSharedArticleOptionsBoxPosition('bottom');
                     }
                 }
             }, 0); // đảm bảo DOM đã render xong
         }, 80);
     };
-    // Đóng Article Options khi click ra ngoài
+    // Đóng Shared Article Options khi click ra ngoài
     useEffect(() => {
-        const handleClickOutsideArticleOptions = (event) => {
-            if (articleOptionsBoxRef.current && !articleOptionsBoxRef.current.contains(event.target)) {
-                setIsOpenArticleOptions(false);
+        const handleClickOutsideSharedArticleOptions = (event) => {
+            if (sharedArticleOptionsBoxRef.current && !sharedArticleOptionsBoxRef.current.contains(event.target)) {
+                setIsOpenSharedArticleOptions(false);
             }
         };
-        document.addEventListener('mousedown', handleClickOutsideArticleOptions);
+        document.addEventListener('mousedown', handleClickOutsideSharedArticleOptions);
         return () => {
-            document.removeEventListener('mousedown', handleClickOutsideArticleOptions);
+            document.removeEventListener('mousedown', handleClickOutsideSharedArticleOptions);
         };
     }, []);
-    // Đóng/mở Hộp xác nhận xóa bài viết
-    const handleToggleDeleteArticle = () => {
-        // Hiển thị hộp xác nhận xóa bài viết
-        setIsOpenArticleOptions(false); // Đóng article options nếu đang mở
+    // Đóng/mở Hộp xác nhận xóa bài chia sẻ
+    const handleToggleDeleteSharedArticle = () => {
+        // Hiển thị hộp xác nhận xóa bài chia sẻ
+        setIsOpenSharedArticleOptions(false); // Đóng shared article options nếu đang mở
         setIsOpenDeleteConfirmBox(!isOpenDeleteConfirmBox);
     };
-    // Handle Button Delete Article
-    const handleBtnDeleteArticle = async (articleId) => {
-        // Xử lý xóa bài viết
+    // Handle Button Delete Shared Article
+    const handleBtnDeleteSharedArticle = async (sharedArticleId) => {
+        // Xử lý xóa bài chia sẻ
         try {
             // Loading ... (Ant Design Message)
             messageApi
@@ -435,12 +433,12 @@ function SharedArticleDetail() {
                     },
                 })
                 .then(async () => {
-                    // Call API Delete Article
-                    const res = await deleteArticleApi(articleId);
-                    if (res?.status === 200 && res?.message === 'Xóa bài viết thành công') {
-                        // Xóa bài viết thành công
+                    // Call API Delete Shared Article
+                    const res = await deleteSharedArticleApi(sharedArticleId);
+                    if (res?.status === 200 && res?.message === 'Xóa bài chia sẻ thành công') {
+                        // Xóa bài chia sẻ thành công
                         message.success({
-                            content: 'Xóa bài viết thành công',
+                            content: 'Xóa bài chia sẻ thành công',
                             duration: 1.5,
                             style: {
                                 color: 'white',
@@ -450,7 +448,7 @@ function SharedArticleDetail() {
                         // Navigate quay về (Tạm thời)
                         navigate(-1);
                     } else {
-                        // Xóa bài viết không thành công
+                        // Xóa bài chia sẻ không thành công
                         message.error({
                             content: 'Có lỗi xảy ra',
                             duration: 1.5,
@@ -462,7 +460,7 @@ function SharedArticleDetail() {
                     }
                 });
         } catch (error) {
-            console.error('Error deleting article:', error);
+            console.error('Error deleting shared article:', error);
             return;
         }
     };
@@ -523,7 +521,7 @@ function SharedArticleDetail() {
                 {/* Phần chi tiết bài viết */}
                 {sharedArticleData ? (
                     <>
-                        <div className="articleDetail" ref={articleRef}>
+                        <div className="articleDetail" ref={sharedArticleRef}>
                             {/* Nội dung bài viết */}
                             <div className="article">
                                 <div className="left">
@@ -569,22 +567,23 @@ function SharedArticleDetail() {
                                                 </span>
                                             </span>
                                         </div>
-                                        <div className="articleOptions" ref={articleOptionsButtonRef}>
+                                        <div className="articleOptions" ref={sharedArticleOptionsButtonRef}>
                                             <button
                                                 className="btnArticleOptions"
                                                 onClick={() => {
-                                                    handleToggleArticleOptions();
+                                                    handleToggleSharedArticleOptions();
                                                 }}
                                             >
                                                 <VscEllipsis></VscEllipsis>
                                             </button>
                                             {/* Menu Article Options */}
-                                            {isOpenArticleOptions && (
+                                            {isOpenSharedArticleOptions && (
                                                 <div
                                                     className="articleOptionsBox"
-                                                    ref={articleOptionsBoxRef}
+                                                    ref={sharedArticleOptionsBoxRef}
                                                     style={{
-                                                        bottom: articleOptionsBoxPosition === 'top' ? '100%' : 'auto',
+                                                        bottom:
+                                                            sharedArticleOptionsBoxPosition === 'top' ? '100%' : 'auto',
                                                     }}
                                                 >
                                                     {auth?.user?.userName === sharedArticleData?.User?.userName && (
@@ -618,7 +617,7 @@ function SharedArticleDetail() {
                                                                 id="btnDeleteArticleID"
                                                                 style={{ color: 'rgb(255, 48, 64)' }}
                                                                 onClick={() => {
-                                                                    handleToggleDeleteArticle();
+                                                                    handleToggleDeleteSharedArticle();
                                                                 }}
                                                             >
                                                                 Xóa <IoCloseCircleOutline />
@@ -885,7 +884,7 @@ function SharedArticleDetail() {
                                             <button
                                                 className="btnDelete"
                                                 onClick={() => {
-                                                    handleBtnDeleteArticle(sharedArticleData?.articleId);
+                                                    handleBtnDeleteSharedArticle(sharedArticleData?.sharedArticleId);
                                                 }}
                                             >
                                                 Xóa

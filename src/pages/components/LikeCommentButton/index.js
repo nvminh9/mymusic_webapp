@@ -1,6 +1,11 @@
 import { useCallback, useContext, useEffect, useState } from 'react';
 import { IoHeart, IoHeartOutline, IoSparklesSharp } from 'react-icons/io5';
-import { createLikeCommentApi, unLikeCommentApi } from '~/utils/api';
+import {
+    createLikeCommentApi,
+    createLikeCommentSharedArticleApi,
+    unLikeCommentApi,
+    unLikeCommentSharedArticleApi,
+} from '~/utils/api';
 import { debounce } from 'lodash';
 import { AuthContext } from '~/context/auth.context';
 
@@ -28,12 +33,21 @@ function LikeCommentButton({ commentData, onLikeComment }) {
         debounce(async (newLiked) => {
             try {
                 if (newLiked) {
-                    const res = await createLikeCommentApi(commentData?.commentId); // Nếu chưa like thì gọi API like
+                    // Nếu thích Comment của SharedArticle
+                    if (commentData?.sharedArticleId) {
+                        const res = await createLikeCommentSharedArticleApi(commentData?.commentId); // Nếu chưa like thì gọi API like
+                    } else {
+                        const res = await createLikeCommentApi(commentData?.commentId); // Nếu chưa like thì gọi API like
+                    }
                     // Thêm like vào state commentsData ở ArticleDetail
                     // onLikeComment({ commentId: commentData?.commentId, userId: auth?.user?.userId, status: 0 }, 'like');
                     onLikeComment(commentData, 'like');
                 } else {
-                    const res = await unLikeCommentApi(commentData?.commentId); // Nếu like rồi thì gọi API unlike
+                    if (commentData?.sharedArticleId) {
+                        const res = await unLikeCommentSharedArticleApi(commentData?.commentId); // Nếu like rồi thì gọi API unlike
+                    } else {
+                        const res = await unLikeCommentApi(commentData?.commentId); // Nếu like rồi thì gọi API unlike
+                    }
                     // Xoá like khỏi state commentsData ở ArticleDetail
                     // onLikeComment(
                     //     { commentId: commentData?.commentId, userId: auth?.user?.userId, status: 1 },

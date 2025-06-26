@@ -4,7 +4,7 @@ import { IoAlertCircleOutline, IoArrowUpSharp, IoSyncSharp } from 'react-icons/i
 import { useLocation, useNavigate } from 'react-router-dom';
 import defaultAvatar from '~/assets/images/avatarDefault.jpg';
 import { AuthContext } from '~/context/auth.context';
-import { createCommentApi, getFollowsApi } from '~/utils/api';
+import { createCommentApi, createCommentSharedArticleApi, getFollowsApi } from '~/utils/api';
 import { debounce } from 'lodash';
 
 // Component CommentInput
@@ -12,7 +12,7 @@ import { debounce } from 'lodash';
 // articleData: Nếu gọi ở ArticleDetail thì truyền data của articleData
 // onReplyComment: hàm reset state danh sách comment (cần truyền)
 // setIsOpenRepliesBox: hàm set state isOpenRepliesBox (truyền khi gọi ở Comment Component)
-function CommentInput({ comment, articleData, onReplyComment, setIsOpenRepliesBox }) {
+function CommentInput({ comment, articleData, sharedArticleData, onReplyComment, setIsOpenRepliesBox }) {
     // State
     const [value, setValue] = useState(); // Nội dung trong textarea
     const [highlightedValue, setHighlightedValue] = useState(); //
@@ -68,24 +68,45 @@ function CommentInput({ comment, articleData, onReplyComment, setIsOpenRepliesBo
         setReplyCommentStatus('pending');
         // Data Prepare
         let replyCommentData = {};
+        // Nếu Component này được gọi ở...
+        // Comment Component
         if (comment) {
-            replyCommentData.articleId = comment?.articleId;
+            if (comment?.articleId) {
+                // Nếu trả lời Comment của Article
+                replyCommentData.articleId = comment?.articleId;
+            } else if (comment?.sharedArticleId) {
+                // Nếu trả lời Comment của Shared Article
+                replyCommentData.sharedArticleId = comment?.sharedArticleId;
+            }
             replyCommentData.content = data.content;
             replyCommentData.parentCommentId =
                 comment?.parentCommentId === null ? comment?.commentId : comment?.parentCommentId; // ID của bình luận cha (Bình luận trả lời bài viết)
             replyCommentData.respondedCommentId = comment?.commentId; // ID của bình luận được trả lời
         }
+        // ArticleDetail Component
         if (articleData) {
             replyCommentData.articleId = articleData?.articleId;
             replyCommentData.content = data.content;
             replyCommentData.parentCommentId = null;
         }
-        //
+        // SharedArticleDetail Component
+        if (sharedArticleData) {
+            replyCommentData.sharedArticleId = sharedArticleData?.sharedArticleId;
+            replyCommentData.content = data.content;
+            replyCommentData.parentCommentId = null;
+        }
+
         setTimeout(async () => {
             // Call API tạo bình luận
             try {
-                const res = await createCommentApi(replyCommentData);
-                // Kiểm tra
+                let res;
+                //  Nếu CommentInput được gọi ở SharedArticleDetail Component
+                if (sharedArticleData || comment?.sharedArticleId) {
+                    res = await createCommentSharedArticleApi(replyCommentData);
+                } else if (articleData || comment?.articleId) {
+                    res = await createCommentApi(replyCommentData);
+                }
+                // Kiểm tra response
                 if (res?.data !== null) {
                     // Gọi callback để cập nhật lại state commentsData ở component cha (component ArticleDetail),
                     // để hiển thị bình luận mới ra luôn
