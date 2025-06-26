@@ -39,33 +39,40 @@ function LikeCommentButton({ commentData, onLikeComment }) {
                     } else {
                         const res = await createLikeCommentApi(commentData?.commentId); // Nếu chưa like thì gọi API like
                     }
-                    // Thêm like vào state commentsData ở ArticleDetail
+                    // Call onLikeComment với 'unlike'
                     // onLikeComment({ commentId: commentData?.commentId, userId: auth?.user?.userId, status: 0 }, 'like');
                     onLikeComment(commentData, 'like');
                 } else {
+                    // Nếu hủy thích Comment của SharedArticle
                     if (commentData?.sharedArticleId) {
                         const res = await unLikeCommentSharedArticleApi(commentData?.commentId); // Nếu like rồi thì gọi API unlike
                     } else {
                         const res = await unLikeCommentApi(commentData?.commentId); // Nếu like rồi thì gọi API unlike
                     }
-                    // Xoá like khỏi state commentsData ở ArticleDetail
-                    // onLikeComment(
-                    //     { commentId: commentData?.commentId, userId: auth?.user?.userId, status: 1 },
-                    //     'unlike',
-                    // );
+                    // Call onLikeComment với 'unlike'
                     onLikeComment(commentData, 'unlike');
                 }
             } catch (error) {
                 console.error('Error updating like status', error);
             }
-        }, 500), // Debounce 500ms
-        [commentData?.commentId],
+        }, 300), // Tạm thời Debounce từ 500ms -> 300ms (do debounce 500ms có thể lỗi, khi test bấm nút like liên tục ở
+        // Comment CON và đóng HỘP XEM Comment CON lại
+        // thì lúc mở ra likeCount sẽ bị lỗi do lúc đóng HỘP thì debounce mời bắt đầu thực hiện)
+        // Debounce càng ít thời gian (ms) thì sẽ càng ít khả năng lỗi nhưng...
+        // sẽ gọi API liên tục khi bấm nút like liên tục (ảnh hưởng đến server)
+        [],
     );
     // Handle nút thích bình luận
     const handleLikeCommentButton = async () => {
         const newLiked = !liked;
         setLiked(newLiked);
         setLikesCount((prev) => prev + (newLiked ? 1 : -1));
+        // // Call onLikeComment (cập nhật likeCount, likeStatus, isLikedByAuthor của bình luận đó trong commentsData)
+        // if (newLiked) {
+        //     onLikeComment(commentData, 'like');
+        // } else {
+        //     onLikeComment(commentData, 'unlike');
+        // }
         // Call API (debounce)
         debouncedLikeComment(newLiked);
     };

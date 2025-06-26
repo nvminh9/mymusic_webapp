@@ -213,6 +213,12 @@ const deleteCommentSharedArticleApi = (commentId) => {
     return axios.delete(URL_API);
 };
 
+// API Lấy dữ liệu của trang Feed (GET)
+const getFeedDataApi = (cursor, limit) => {
+    const URL_API = `/v1/api/feed?cursor=${cursor}&limit=${limit}`;
+    return axios.get(URL_API);
+};
+
 export {
     signUpApi,
     signInApi,
@@ -247,4 +253,5 @@ export {
     unLikeCommentSharedArticleApi,
     deleteCommentSharedArticleApi,
     deleteSharedArticleApi,
+    getFeedDataApi,
 };

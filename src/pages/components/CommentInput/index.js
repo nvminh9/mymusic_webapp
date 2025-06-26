@@ -176,6 +176,14 @@ function CommentInput({ comment, articleData, sharedArticleData, onReplyComment,
                 }, 300);
                 // Set state show suggestions
                 setShowSuggestions(true);
+                //
+                // Scroll vào comment đang mở Hộp suggestions user được mở
+                let offset = 70; // Height của tabSwitchProfile
+                let y =
+                    document.getElementById(`commentID${comment?.commentId}`).getBoundingClientRect().top +
+                    window.scrollY -
+                    offset;
+                window.scrollTo({ top: y, behavior: 'smooth' });
                 return () => {
                     clearTimeout(setSuggestionsTimeout);
                 };

@@ -21,11 +21,11 @@ import LikeArticleButton from '../LikeArticleButton';
 import LikeCommentButton from '../LikeCommentButton';
 import { VscEllipsis } from 'react-icons/vsc';
 import { set } from 'lodash';
-import { deleteCommentApi } from '~/utils/api';
+import { deleteCommentApi, deleteCommentSharedArticleApi } from '~/utils/api';
 
 function Comment({ comment, onReplyComment, onDeleteComment, getRespondedComment, onLikeComment }) {
     // State
-    const [commentData, setCommentData] = useState(comment ? comment : {}); // Data của comment này
+    // const [commentData, setCommentData] = useState(comment ? comment : {}); // Data của comment này
     const [isOpenRepliesBox, setIsOpenRepliesBox] = useState(false); // đóng/mở hộp xem phản hồi
     const [isOpenRepliesInput, setIsOpenRepliesInput] = useState(false); // đóng/mở input nhập phản hồi
     const [isOpenCommentOptions, setIsOpenCommentOptions] = useState(false); // đóng/mở comment options
@@ -124,12 +124,14 @@ function Comment({ comment, onReplyComment, onDeleteComment, getRespondedComment
                         {tag}
                     </UserTag>
                 );
-            } else {
+            } else if (text !== ' ') {
                 return (
-                    <span key={index} style={{ marginLeft: '5px' }}>
+                    <span className="textContent" key={index}>
                         {text}
                     </span>
                 );
+            } else {
+                return <span key={index} style={{ marginRight: '5px' }}></span>;
             }
         });
         //
@@ -176,7 +178,13 @@ function Comment({ comment, onReplyComment, onDeleteComment, getRespondedComment
         // Xử lý xóa bình luận
         try {
             // Call API delete comment
-            const res = await deleteCommentApi(commentId);
+            // Nếu xóa Comment Của Shared Article
+            let res = {};
+            if (comment?.sharedArticleId) {
+                res = await deleteCommentSharedArticleApi(commentId);
+            } else {
+                res = await deleteCommentApi(commentId);
+            }
             // Kiểm tra
             if (res?.status === 200 && res?.message === 'Xóa bình luận thành công') {
                 console.log('Xóa bình luận thành công');
@@ -345,7 +353,11 @@ function Comment({ comment, onReplyComment, onDeleteComment, getRespondedComment
                         <div className="bottom">
                             <div className="interactiveButtonBox">
                                 {/* Nút thích bài viết */}
-                                <LikeCommentButton commentData={comment} onLikeComment={onLikeComment} />
+                                {comment ? (
+                                    <LikeCommentButton commentData={comment} onLikeComment={onLikeComment} />
+                                ) : (
+                                    <></>
+                                )}
                                 {/* Nút bình luận */}
                                 <button
                                     type="button"

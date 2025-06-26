@@ -4359,6 +4359,11 @@ body {
                             padding-bottom: 8px;
                             padding-top: 5px;
                             margin-left: -5px;
+
+                            .textContent {
+                                margin-right: 5px;
+                                margin-left: 5px;
+                            }
                         }
                         .media {
                             .carouselMedia {

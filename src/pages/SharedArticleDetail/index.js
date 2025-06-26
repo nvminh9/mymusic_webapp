@@ -123,8 +123,8 @@ function SharedArticleDetail() {
                 // Set state bình luận của bài viết
                 // Thêm isLikedByAuthor vào từng bình luận trong res và Set State commentsData
                 setCommentsData({
-                    comments: res?.data?.comments ? recursiveAddIsLikedByAuthor(res?.data?.comments, res?.data) : [],
-                    commentCount: res?.data?.commentCount ? res?.data?.commentCount : 0,
+                    comments: recursiveAddIsLikedByAuthor(res?.data?.comments, res?.data),
+                    commentCount: res?.data?.commentCount,
                 });
                 // set document title
                 document.title = `${res?.data?.sharedTextContent ? res?.data?.sharedTextContent : '...'} | ${
