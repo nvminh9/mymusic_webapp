@@ -28,7 +28,7 @@ function ArticleDetail() {
     // State
     const [articleData, setArticleData] = useState(); // Dữ liệu chi tiết bài viết
     const [commentsData, setCommentsData] = useState(); // Dữ liệu bình luận của bài viết từ API (type Map)
-    const [isOpenCommentInput, SetIsOpenCommentInput] = useState(false); // Đóng/mở input comment
+    const [isOpenCommentInput, setIsOpenCommentInput] = useState(false); // Đóng/mở input comment
     // const [createCommentStatus, setCreateCommentStatus] = useState(); // For Loading Comment Animation
     const [isOpenArticleOptions, setIsOpenArticleOptions] = useState(false); // đóng/mở Article options
     const [articleOptionsBoxPosition, setArticleOptionsBoxPosition] = useState(); // Article options box position
@@ -725,7 +725,7 @@ function ArticleDetail() {
                                                 className="btnComment"
                                                 id="btnCommentID"
                                                 onClick={() => {
-                                                    SetIsOpenCommentInput(!isOpenCommentInput);
+                                                    setIsOpenCommentInput(!isOpenCommentInput);
                                                 }}
                                             >
                                                 <IoChatboxOutline />{' '}

@@ -1,33 +1,28 @@
-function FeedItem({ item }) {
-    const { type, data } = item;
-    //
-    if (type === 'article') {
-        return (
-            <h4
-                style={{
-                    display: 'block',
-                    width: '100%',
-                    height: '300px',
-                    color: 'white',
-                    border: '.5px solid #1f1f1f',
-                }}
-            >
-                {type}
-                {data?.articleId}
-                {data?.textContent}
-            </h4>
-        );
-    }
+import Article from '../Article';
 
+function FeedItem({ item }) {
+    // State
+
+    // Context
+
+    // Ref
+
+    const { type, data } = item;
+
+    // Return
+    // Nếu type là Article
+    if (type === 'article') {
+        return <>{data && <Article articleData={data}></Article>}</>;
+    }
+    // Nếu type là Shared Article
     if (type === 'sharedArticle') {
         return (
             <h4
                 style={{
-                    display: 'block',
+                    margin: '0',
                     width: '100%',
-                    height: '300px',
                     color: 'white',
-                    border: '.5px solid #1f1f1f',
+                    borderBottom: '.5px solid #1f1f1f',
                 }}
             >
                 {type}
@@ -36,7 +31,6 @@ function FeedItem({ item }) {
             </h4>
         );
     }
-
     return null;
 }
 

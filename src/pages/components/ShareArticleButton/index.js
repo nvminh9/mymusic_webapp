@@ -298,6 +298,7 @@ function ShareArticleButton({ articleData }) {
                                                             overflowX: 'hidden',
                                                             overflowY: 'auto',
                                                             padding: '1px',
+                                                            paddingRight: '5px',
                                                             margin: '-1px',
                                                         }}
                                                     >
