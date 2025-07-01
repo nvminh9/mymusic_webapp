@@ -9,6 +9,7 @@ import {
     IoBanOutline,
     IoChatboxOutline,
     IoCloseCircleOutline,
+    IoEyeOutline,
     IoGlobeOutline,
     IoHeartOutline,
     IoLockClosedOutline,
@@ -62,8 +63,8 @@ function SharedArticleDetail() {
         dots: false,
         arrows: false,
         infinite: sharedArticleData?.Article?.mediaContent?.length > 1 ? true : false,
-        // draggable: sharedArticleData?.Article?.mediaContent?.length > 1 ? true : false,
-        draggable: false,
+        draggable: sharedArticleData?.Article?.mediaContent?.length > 1 ? true : false,
+        // draggable: false,
         speed: 500,
         slidesToShow: 1,
         slidesToScroll: 1,
@@ -77,8 +78,8 @@ function SharedArticleDetail() {
                     slidesToScroll: 1,
                     infinite: true,
                     dots: true,
-                    // draggable: sharedArticleData?.Article?.mediaContent?.length > 1 ? true : false,
-                    draggable: false,
+                    draggable: sharedArticleData?.Article?.mediaContent?.length > 1 ? true : false,
+                    // draggable: false,
                 },
             },
             {
@@ -87,8 +88,8 @@ function SharedArticleDetail() {
                     slidesToShow: 1,
                     slidesToScroll: 1,
                     initialSlide: 2,
-                    // draggable: sharedArticleData?.Article?.mediaContent?.length > 1 ? true : false,
-                    draggable: false,
+                    draggable: sharedArticleData?.Article?.mediaContent?.length > 1 ? true : false,
+                    // draggable: false,
                 },
             },
             {
@@ -99,8 +100,8 @@ function SharedArticleDetail() {
                     slidesToShow: 1,
                     slidesToScroll: 1,
                     initialSlide: 2,
-                    // draggable: sharedArticleData?.Article?.mediaContent?.length > 1 ? true : false,
-                    draggable: false,
+                    draggable: sharedArticleData?.Article?.mediaContent?.length > 1 ? true : false,
+                    // draggable: false,
                 },
             },
         ],
@@ -650,186 +651,207 @@ function SharedArticleDetail() {
                                     </div>
                                     <div className="middle">
                                         <div className="content">
-                                            <div className="text">{sharedArticleData?.textContent}</div>
+                                            <div className="text">{sharedArticleData?.sharedTextContent}</div>
                                             {/* Article was shared */}
-                                            <Link
-                                                to={`/article/${sharedArticleData?.Article?.articleId}`}
-                                                className="linkToSharedArticle"
-                                                style={{ textDecoration: 'none' }}
+                                            <div
+                                                // className="articleDetail sharedArticleDetail"
+                                                className="articleDetail"
+                                                style={{
+                                                    backgroundColor: '#1f1f1f',
+                                                    border: '0.5px solid rgba(243, 245, 247, 0.08)',
+                                                    borderRadius: '5px',
+                                                    // paddingBottom: '0px',
+                                                    position: 'relative',
+                                                }}
                                             >
-                                                <div
-                                                    className="articleDetail sharedArticleDetail"
-                                                    style={{
-                                                        backgroundColor: '#1f1f1f',
-                                                        border: '0.5px solid rgba(243, 245, 247, 0.08)',
-                                                        borderRadius: '5px',
-                                                        // paddingBottom: '0px',
-                                                    }}
-                                                >
-                                                    {/* Nội dung bài viết */}
-                                                    <div className="article">
-                                                        <div className="left">
-                                                            {/* Avatar */}
-                                                            <div className="userAvatar">
-                                                                <Link
-                                                                    to={`/profile/${sharedArticleData?.Article?.User?.userName}`}
-                                                                >
-                                                                    <img
-                                                                        src={
-                                                                            sharedArticleData?.Article?.User?.userAvatar
-                                                                                ? process.env.REACT_APP_BACKEND_URL +
-                                                                                  sharedArticleData?.Article?.User
-                                                                                      ?.userAvatar
-                                                                                : defaultAvatar
-                                                                        }
-                                                                    />
-                                                                </Link>
-                                                            </div>
+                                                {/* Nội dung bài viết */}
+                                                <div className="article">
+                                                    <div className="left">
+                                                        {/* Avatar */}
+                                                        <div className="userAvatar">
+                                                            <Link
+                                                                to={`/profile/${sharedArticleData?.Article?.User?.userName}`}
+                                                            >
+                                                                <img
+                                                                    src={
+                                                                        sharedArticleData?.Article?.User?.userAvatar
+                                                                            ? process.env.REACT_APP_BACKEND_URL +
+                                                                              sharedArticleData?.Article?.User
+                                                                                  ?.userAvatar
+                                                                            : defaultAvatar
+                                                                    }
+                                                                />
+                                                            </Link>
                                                         </div>
-                                                        <div className="right">
-                                                            <div className="top">
-                                                                <div className="articleInfo">
-                                                                    {/* User Name */}
-                                                                    <UserName
-                                                                        userName={
-                                                                            sharedArticleData?.Article?.User?.userName
-                                                                        }
-                                                                    />
-                                                                    {/* Privacy */}
-                                                                    <span
-                                                                        style={{
-                                                                            display: 'flex',
-                                                                            alignItems: 'center',
-                                                                            justifyContent: 'center',
-                                                                            marginRight: '3px',
-                                                                        }}
-                                                                    >
-                                                                        {sharedArticleData?.Article?.privacy === '0' ? (
-                                                                            <IoGlobeOutline
-                                                                                style={{ color: 'dimgray' }}
-                                                                            />
-                                                                        ) : (
-                                                                            <IoLockClosedOutline
-                                                                                style={{ color: 'dimgray' }}
-                                                                            />
+                                                    </div>
+                                                    <div className="right">
+                                                        <div className="top">
+                                                            <div className="articleInfo">
+                                                                {/* User Name */}
+                                                                <UserName
+                                                                    userName={
+                                                                        sharedArticleData?.Article?.User?.userName
+                                                                    }
+                                                                />
+                                                                {/* Privacy */}
+                                                                <span
+                                                                    style={{
+                                                                        display: 'flex',
+                                                                        alignItems: 'center',
+                                                                        justifyContent: 'center',
+                                                                        marginRight: '3px',
+                                                                    }}
+                                                                >
+                                                                    {sharedArticleData?.Article?.privacy === '0' ? (
+                                                                        <IoGlobeOutline style={{ color: 'dimgray' }} />
+                                                                    ) : (
+                                                                        <IoLockClosedOutline
+                                                                            style={{ color: 'dimgray' }}
+                                                                        />
+                                                                    )}
+                                                                </span>
+                                                                {/* Created At */}
+                                                                <span className="createdAt tooltip">
+                                                                    {timeAgo(sharedArticleData?.Article?.createdAt)}
+                                                                    <span className="tooltiptext">
+                                                                        {formatTimestamp(
+                                                                            sharedArticleData?.Article?.createdAt,
                                                                         )}
                                                                     </span>
-                                                                    {/* Created At */}
-                                                                    <span className="createdAt tooltip">
-                                                                        {timeAgo(sharedArticleData?.Article?.createdAt)}
-                                                                        <span className="tooltiptext">
-                                                                            {formatTimestamp(
-                                                                                sharedArticleData?.Article?.createdAt,
-                                                                            )}
-                                                                        </span>
-                                                                    </span>
-                                                                </div>
-                                                                <div className="articleOptions">{/*  */}</div>
+                                                                </span>
                                                             </div>
-                                                            <div className="middle">
-                                                                <div className="content">
-                                                                    <div
-                                                                        className="text"
-                                                                        style={{
-                                                                            paddingBottom:
-                                                                                sharedArticleData?.Article?.mediaContent
-                                                                                    ?.length === 0
-                                                                                    ? '0px'
-                                                                                    : '8px',
-                                                                        }}
-                                                                    >
-                                                                        {sharedArticleData?.Article?.textContent}
-                                                                    </div>
-                                                                    <div className="media">
-                                                                        {/* Render Carousel Media */}
-                                                                        {sharedArticleData?.Article?.mediaContent
-                                                                            .length <= 0 ? (
-                                                                            <></>
-                                                                        ) : (
-                                                                            <>
-                                                                                <div
-                                                                                    className="carouselMedia"
-                                                                                    style={{
-                                                                                        marginBottom:
-                                                                                            sharedArticleData?.Article
-                                                                                                ?.mediaContent?.length >
-                                                                                            1
-                                                                                                ? '0px'
-                                                                                                : '0px',
+                                                            <div className="articleOptions">{/*  */}</div>
+                                                        </div>
+                                                        <div className="middle">
+                                                            <div className="content">
+                                                                <div
+                                                                    className="text"
+                                                                    style={{
+                                                                        paddingBottom:
+                                                                            sharedArticleData?.Article?.mediaContent
+                                                                                ?.length === 0
+                                                                                ? '0px'
+                                                                                : '8px',
+                                                                    }}
+                                                                >
+                                                                    {sharedArticleData?.Article?.textContent}
+                                                                </div>
+                                                                <div className="media">
+                                                                    {/* Render Carousel Media */}
+                                                                    {sharedArticleData?.Article?.mediaContent.length <=
+                                                                    0 ? (
+                                                                        <></>
+                                                                    ) : (
+                                                                        <>
+                                                                            <div
+                                                                                className="carouselMedia"
+                                                                                style={{
+                                                                                    marginBottom:
+                                                                                        sharedArticleData?.Article
+                                                                                            ?.mediaContent?.length > 1
+                                                                                            ? '0px'
+                                                                                            : '0px',
+                                                                                    cursor:
+                                                                                        sharedArticleData?.Article
+                                                                                            ?.mediaContent?.length > 1
+                                                                                            ? 'grab'
+                                                                                            : 'pointer',
+                                                                                }}
+                                                                                onMouseDown={(e) => {
+                                                                                    e.target.style.cursor =
+                                                                                        sharedArticleData?.Article
+                                                                                            ?.mediaContent?.length > 1
+                                                                                            ? 'grabbing'
+                                                                                            : 'pointer';
+                                                                                }}
+                                                                                onMouseUp={(e) => {
+                                                                                    e.target.style.cursor =
+                                                                                        sharedArticleData?.Article
+                                                                                            ?.mediaContent?.length > 1
+                                                                                            ? 'grab'
+                                                                                            : 'pointer';
+                                                                                }}
+                                                                            >
+                                                                                <Slider
+                                                                                    ref={(slider) => {
+                                                                                        sliderRef = slider;
                                                                                     }}
+                                                                                    {...settings}
                                                                                 >
-                                                                                    <Slider
-                                                                                        ref={(slider) => {
-                                                                                            sliderRef = slider;
-                                                                                        }}
-                                                                                        {...settings}
-                                                                                    >
-                                                                                        {sharedArticleData?.Article?.mediaContent.map(
-                                                                                            (media, index) => (
-                                                                                                <Fragment key={index}>
-                                                                                                    <div className="mediaContainer">
-                                                                                                        {media.type ===
-                                                                                                        'photo' ? (
-                                                                                                            <>
-                                                                                                                <img
-                                                                                                                    src={
-                                                                                                                        process
-                                                                                                                            .env
-                                                                                                                            .REACT_APP_BACKEND_URL +
-                                                                                                                        media.photoLink
-                                                                                                                    }
-                                                                                                                    className="slide-image"
-                                                                                                                    style={{}}
-                                                                                                                />
-                                                                                                            </>
-                                                                                                        ) : (
-                                                                                                            <video
+                                                                                    {sharedArticleData?.Article?.mediaContent.map(
+                                                                                        (media, index) => (
+                                                                                            <Fragment key={index}>
+                                                                                                <div className="mediaContainer">
+                                                                                                    {media.type ===
+                                                                                                    'photo' ? (
+                                                                                                        <>
+                                                                                                            <img
                                                                                                                 src={
                                                                                                                     process
                                                                                                                         .env
                                                                                                                         .REACT_APP_BACKEND_URL +
-                                                                                                                    media.videoLink
+                                                                                                                    media.photoLink
                                                                                                                 }
+                                                                                                                className="slide-image"
                                                                                                                 style={{}}
-                                                                                                                playsInline
-                                                                                                                controls
                                                                                                             />
-                                                                                                        )}
-                                                                                                    </div>
-                                                                                                </Fragment>
-                                                                                            ),
-                                                                                        )}
-                                                                                    </Slider>
-                                                                                    {sharedArticleData?.Article
-                                                                                        ?.mediaContent.length >= 2 && (
-                                                                                        <>
-                                                                                            <button
-                                                                                                className="btnPrevCarousel"
-                                                                                                onClick={previous}
-                                                                                                type="button"
-                                                                                            >
-                                                                                                <VscChevronLeft />
-                                                                                            </button>
-                                                                                            <button
-                                                                                                className="btnNextCarousel"
-                                                                                                onClick={next}
-                                                                                                type="button"
-                                                                                            >
-                                                                                                <VscChevronRight />
-                                                                                            </button>
-                                                                                        </>
+                                                                                                        </>
+                                                                                                    ) : (
+                                                                                                        <video
+                                                                                                            src={
+                                                                                                                process
+                                                                                                                    .env
+                                                                                                                    .REACT_APP_BACKEND_URL +
+                                                                                                                media.videoLink
+                                                                                                            }
+                                                                                                            style={{}}
+                                                                                                            playsInline
+                                                                                                            controls
+                                                                                                        />
+                                                                                                    )}
+                                                                                                </div>
+                                                                                            </Fragment>
+                                                                                        ),
                                                                                     )}
-                                                                                </div>
-                                                                            </>
-                                                                        )}
-                                                                    </div>
+                                                                                </Slider>
+                                                                                {sharedArticleData?.Article
+                                                                                    ?.mediaContent.length >= 2 && (
+                                                                                    <>
+                                                                                        <button
+                                                                                            className="btnPrevCarousel"
+                                                                                            onClick={previous}
+                                                                                            type="button"
+                                                                                        >
+                                                                                            <VscChevronLeft />
+                                                                                        </button>
+                                                                                        <button
+                                                                                            className="btnNextCarousel"
+                                                                                            onClick={next}
+                                                                                            type="button"
+                                                                                        >
+                                                                                            <VscChevronRight />
+                                                                                        </button>
+                                                                                    </>
+                                                                                )}
+                                                                            </div>
+                                                                        </>
+                                                                    )}
                                                                 </div>
                                                             </div>
-                                                            <div className="bottom">{/*  */}</div>
                                                         </div>
+                                                        <div className="bottom">{/*  */}</div>
                                                     </div>
                                                 </div>
-                                            </Link>
+                                                {/* Nút xem chi tiết bài viết được chia sẻ */}
+                                                <button
+                                                    className="btnToArticleDetail"
+                                                    onClick={() => {
+                                                        navigate(`/article/${sharedArticleData?.Article?.articleId}`);
+                                                    }}
+                                                >
+                                                    <IoEyeOutline />
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                     <div className="bottom">

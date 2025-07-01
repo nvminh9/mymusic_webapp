@@ -1,7 +1,7 @@
 import feedsData from '~/database/feeds.json';
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useInfiniteQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import Article from '../components/Article';
 import { getFeedDataApi } from '~/utils/api';
 import FeedItem from '../components/FeedItem';
@@ -30,6 +30,9 @@ function FeedPage() {
     const loadMoreRef = useRef();
 
     // React-query (Tanstack)
+    // useQueryClient
+    const queryClient = useQueryClient();
+    // console.log(queryClient.getQueryData(['feed']));
     // useInfiniteQuery
     const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status, error } = useInfiniteQuery({
         queryKey: ['feed'],
@@ -60,9 +63,123 @@ function FeedPage() {
 
     // Return
     // Nếu là lần tải dữ liệu đầu tiên
-    if (status === 'pending') return <p>Đang tải...</p>;
+    if (status === 'pending')
+        return (
+            <>
+                {/* Skeleton Article */}
+                <div className="articleSkeleton">
+                    {/* Nội dung bài viết */}
+                    <div className="article">
+                        <div className="left">
+                            {/* Avatar */}
+                            <div className="userAvatar"></div>
+                        </div>
+                        <div className="right">
+                            <div className="top">
+                                <div className="articleInfo">
+                                    {/* User Name */}
+                                    <span className="userName"></span>
+                                    {/* Created At */}
+                                    <span className="createdAt tooltip"></span>
+                                </div>
+                            </div>
+                            <div className="middle">
+                                <div className="content">
+                                    <div className="text"></div>
+                                    <div className="media">
+                                        {/* Carousel Media */}
+                                        <div className="carouselMedia">
+                                            <div className="mediaContainer"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="bottom">
+                                {/* Các nút tương tác */}
+                                <div className="interactiveButtonBox"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {/* Skeleton Article */}
+                <div className="articleSkeleton">
+                    {/* Nội dung bài viết */}
+                    <div className="article">
+                        <div className="left">
+                            {/* Avatar */}
+                            <div className="userAvatar"></div>
+                        </div>
+                        <div className="right">
+                            <div className="top">
+                                <div className="articleInfo">
+                                    {/* User Name */}
+                                    <span className="userName"></span>
+                                    {/* Created At */}
+                                    <span className="createdAt tooltip"></span>
+                                </div>
+                            </div>
+                            <div className="middle">
+                                <div className="content">
+                                    <div className="text"></div>
+                                    <div className="media">
+                                        {/* Carousel Media */}
+                                        <div className="carouselMedia">
+                                            <div className="mediaContainer"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="bottom">
+                                {/* Các nút tương tác */}
+                                <div className="interactiveButtonBox"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {/* Skeleton Article */}
+                <div className="articleSkeleton">
+                    {/* Nội dung bài viết */}
+                    <div className="article">
+                        <div className="left">
+                            {/* Avatar */}
+                            <div className="userAvatar"></div>
+                        </div>
+                        <div className="right">
+                            <div className="top">
+                                <div className="articleInfo">
+                                    {/* User Name */}
+                                    <span className="userName"></span>
+                                    {/* Created At */}
+                                    <span className="createdAt tooltip"></span>
+                                </div>
+                            </div>
+                            <div className="middle">
+                                <div className="content">
+                                    <div className="text"></div>
+                                    <div className="media">
+                                        {/* Carousel Media */}
+                                        <div className="carouselMedia">
+                                            <div className="mediaContainer"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="bottom">
+                                {/* Các nút tương tác */}
+                                <div className="interactiveButtonBox"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </>
+        );
     // Nếu tải dữ liệu bị lỗi
-    if (status === 'error') return <p>Lỗi: {error.message}</p>;
+    if (status === 'error')
+        return (
+            <p style={{ display: 'block', color: 'white', width: '100%', height: '200px', textAlign: 'center' }}>
+                Lỗi: {error.message}
+            </p>
+        );
     // Tải dữ liệu thành công
     return (
         <>

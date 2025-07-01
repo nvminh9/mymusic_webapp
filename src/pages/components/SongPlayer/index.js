@@ -35,6 +35,8 @@ function SongPlayer() {
     const btnLikeSong = useRef(null);
     const btnVolumeControl = useRef(null);
 
+    const audioRef = useRef(); // test
+
     // config slider cho carousel thumbnail (React Slick)
     let sliderRef = useRef(null);
     const settings = {
@@ -110,9 +112,9 @@ function SongPlayer() {
     // const videoSrc = `https://ik.imagekit.io/d7q5hnktr/timanhghen.mp4?updatedAt=1734602507871`;
     // const videoHLSRef = useRef(null);
     // var audioHLSFile = `https://mymusic-api-1n5t.onrender.com/music/lutherAudio_master.m3u8`;
-    var audioHLSFile = `http://localhost:3700/v1/api/music/swimmingpool_master.m3u8`;
+    var audioHLSFile = `http://localhost:3700/audio/hls/29751284-2d72-4be5-8b11-a568d7db663d/audioFile-1751338647405-387179682y2mate.com - Obito  CL5 Interlude_320kbps.mp3.hls.m3u8`;
     useEffect(() => {
-        const hls = new Hls();
+        // const hls = new Hls();
         // TẠM THỜI COMMENT LẠI (DO API SONG CHƯA HOÀN THIỆN)
         // if (Hls.isSupported()) {
         //     hls.loadSource(audioHLSFile);
@@ -127,40 +129,47 @@ function SongPlayer() {
     }, []);
 
     // Custom Song Progress Bar (Test)
+    let songLink = `http://localhost:3700/audio/hls/29751284-2d72-4be5-8b11-a568d7db663d/audioFile-1751338647405-387179682y2mate.com - Obito  CL5 Interlude_320kbps.mp3.hls.m3u8`;
     useEffect(() => {
-        var progressBar = document.getElementById('progressBarID');
-        var progressed = document.getElementById('progressedID');
-        var leftTimeBar = document.getElementById('leftTimeBarID');
-        var rightTimeBarID = document.getElementById('rightTimeBarID');
-
-        progressed.style.width =
-            (audioHLSRef.current.currentTime * 100) /
-                (isNaN(audioHLSRef.current.duration) ? 1 : audioHLSRef.current.duration) +
-            '%';
-        audioHLSRef.current.ontimeupdate = function (e) {
-            progressed.style.width = (audioHLSRef.current.currentTime * 100) / audioHLSRef.current.duration + '%';
-            progressBar.onclick = function (e) {
-                audioHLSRef.current.currentTime = (e.offsetX / progressBar.offsetWidth) * audioHLSRef.current.duration;
-            };
-            leftTimeBar.innerText =
-                Math.floor(audioHLSRef.current.currentTime / 60) +
-                ':' +
-                Math.floor(audioHLSRef.current.currentTime % 60);
-            if (isNaN(audioHLSRef.current.duration)) {
-                rightTimeBarID.innerText = '0:0';
-            } else {
-                rightTimeBarID.innerText =
-                    Math.floor(audioHLSRef.current.duration / 60) + ':' + Math.floor(audioHLSRef.current.duration % 60);
-            }
-            if ((audioHLSRef.current.currentTime * 100) / audioHLSRef.current.duration == 100) {
-                setIsPlay(false);
-            }
-            // console.log('audioHLSRef Time: ' + `${audioHLSRef.current.currentTime}`);
-            // console.log('audioHLSRef Duration: ' + `${audioHLSRef.current.duration}`);
-            // console.log(
-            //     'audioHLSRef Percent: ' + `${(audioHLSRef.current.currentTime * 100) / audioHLSRef.current.duration}%`,
-            // );
-        };
+        // var progressBar = document.getElementById('progressBarID');
+        // var progressed = document.getElementById('progressedID');
+        // var leftTimeBar = document.getElementById('leftTimeBarID');
+        // var rightTimeBarID = document.getElementById('rightTimeBarID');
+        // progressed.style.width =
+        //     (audioHLSRef.current.currentTime * 100) /
+        //         (isNaN(audioHLSRef.current.duration) ? 1 : audioHLSRef.current.duration) +
+        //     '%';
+        // audioHLSRef.current.ontimeupdate = function (e) {
+        //     progressed.style.width = (audioHLSRef.current.currentTime * 100) / audioHLSRef.current.duration + '%';
+        //     progressBar.onclick = function (e) {
+        //         audioHLSRef.current.currentTime = (e.offsetX / progressBar.offsetWidth) * audioHLSRef.current.duration;
+        //     };
+        //     leftTimeBar.innerText =
+        //         Math.floor(audioHLSRef.current.currentTime / 60) +
+        //         ':' +
+        //         Math.floor(audioHLSRef.current.currentTime % 60);
+        //     if (isNaN(audioHLSRef.current.duration)) {
+        //         rightTimeBarID.innerText = '0:0';
+        //     } else {
+        //         rightTimeBarID.innerText =
+        //             Math.floor(audioHLSRef.current.duration / 60) + ':' + Math.floor(audioHLSRef.current.duration % 60);
+        //     }
+        //     if ((audioHLSRef.current.currentTime * 100) / audioHLSRef.current.duration == 100) {
+        //         setIsPlay(false);
+        //     }
+        //     // console.log('audioHLSRef Time: ' + `${audioHLSRef.current.currentTime}`);
+        //     // console.log('audioHLSRef Duration: ' + `${audioHLSRef.current.duration}`);
+        //     // console.log(
+        //     //     'audioHLSRef Percent: ' + `${(audioHLSRef.current.currentTime * 100) / audioHLSRef.current.duration}%`,
+        //     // );
+        // };
+        if (Hls.isSupported()) {
+            const hls = new Hls();
+            hls.loadSource(songLink);
+            hls.attachMedia(audioRef.current);
+        } else {
+            audioRef.current.src = songLink; // fallback
+        }
     }, []);
 
     // Config các Keyboard Event
@@ -343,7 +352,8 @@ function SongPlayer() {
                         {/* <video ref={videoHLSRef} id="videoHLS" controls style={{ width: '300px' }}></video> */}
                     </div>
                     {/* Audio Test */}
-                    <audio ref={audioHLSRef} id="audioHLS"></audio>
+                    {/* <audio ref={audioHLSRef} id="audioHLS"></audio> */}
+                    <audio ref={audioRef} id="audioHLS" controls></audio>
                     {/* Progress Bar */}
                     <div className="progressBarContainer">
                         {/* Progress */}

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { IoHeart, IoHeartOutline, IoSparklesSharp } from 'react-icons/io5';
 import { createLikeArticleApi, unLikeArticleApi } from '~/utils/api';
 import { debounce } from 'lodash';
+import { useQueryClient } from '@tanstack/react-query';
 
 // articleData: được truyền khi gọi dùng ở Component ArticleDetail
 function LikeArticleButton({ articleData }) {
@@ -13,6 +14,9 @@ function LikeArticleButton({ articleData }) {
     // Context
 
     // Ref
+
+    // React-query (tanstack)
+    const queryClient = useQueryClient();
 
     // --- HANDLE FUNCTION ---
     // Set likesCount, liked State khi render
@@ -27,8 +31,65 @@ function LikeArticleButton({ articleData }) {
             try {
                 if (newLiked) {
                     const res = await createLikeArticleApi(articleData?.articleId); // Nếu chưa like thì gọi API like
+                    // Cập nhật cache của feed trong query client (React-query)
+                    queryClient.setQueryData(['feed'], (oldData) => {
+                        if (!oldData) {
+                            return oldData;
+                        }
+                        // Tìm article và cập nhật tương ứng
+                        return {
+                            ...oldData,
+                            pages: oldData.pages.map((page) => ({
+                                ...page,
+                                data: page.data.map((feedItem) =>
+                                    //
+                                    (feedItem.data.sharedArticleId ? null : feedItem.data.articleId) ===
+                                    articleData?.articleId
+                                        ? {
+                                              data: {
+                                                  ...feedItem.data,
+                                                  likeStatus: true,
+                                                  likeCount: feedItem.data.likeCount + 1,
+                                              },
+                                              type: feedItem.type,
+                                          }
+                                        : feedItem,
+                                ),
+                            })),
+                        };
+                    });
                 } else {
                     const res = await unLikeArticleApi(articleData?.articleId); // Nếu like rồi thì gọi API unlike
+                    // Cập nhật cache của feed trong query client (React-query)
+                    queryClient.setQueryData(['feed'], (oldData) => {
+                        if (!oldData) {
+                            return oldData;
+                        }
+                        // Tìm article và cập nhật tương ứng
+                        return {
+                            ...oldData,
+                            pages: oldData.pages.map((page) => ({
+                                ...page,
+                                data: page.data.map((feedItem) =>
+                                    //
+                                    (feedItem.data.sharedArticleId ? null : feedItem.data.articleId) ===
+                                    articleData?.articleId
+                                        ? {
+                                              data: {
+                                                  ...feedItem.data,
+                                                  likeStatus: false,
+                                                  likeCount:
+                                                      feedItem.data.likeCount === 0
+                                                          ? feedItem.data.likeCount
+                                                          : feedItem.data.likeCount - 1,
+                                              },
+                                              type: feedItem.type,
+                                          }
+                                        : feedItem,
+                                ),
+                            })),
+                        };
+                    });
                 }
             } catch (error) {
                 console.error('Error updating like status', error);
@@ -43,18 +104,6 @@ function LikeArticleButton({ articleData }) {
         setLikesCount((prev) => prev + (newLiked ? 1 : -1));
         // Call API (debounce)
         debouncedLikeArticle(newLiked);
-        // try {
-        //     // Nếu liked true thì set liked false và ngược lại
-        //     setLiked((prev) => !prev);
-        //     // Nếu đã thích trước đó thì khi bấm sẽ -1 likesCount và ngược lại thì +1
-        //     setLikesCount((prev) => (liked ? prev - 1 : prev + 1));
-        //     // Call API (Debounce)
-        // } catch (error) {
-        //     // rollback nếu lỗi
-        //     setLiked((prev) => !prev);
-        //     setLikesCount((prev) => (liked ? prev + 1 : prev - 1));
-        //     console.error(error);
-        // }
     };
 
     return (

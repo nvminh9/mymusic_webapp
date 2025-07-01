@@ -18,7 +18,6 @@ import {
 } from 'react-icons/io5';
 import LikeArticleButton from '../LikeArticleButton';
 import ShareArticleButton from '../ShareArticleButton';
-import CommentInput from '../CommentInput';
 import { AuthContext } from '~/context/auth.context';
 import defaultAvatar from '~/assets/images/avatarDefault.jpg';
 import { message } from 'antd';
@@ -32,7 +31,7 @@ function Article({ articleData }) {
             ? { comments: articleData?.comments, commentCount: articleData?.commentCount }
             : { comments: {}, commentCount: 0 },
     ); // Dữ liệu bình luận của bài viết từ API (type Map)
-    const [isOpenCommentInput, setIsOpenCommentInput] = useState(false); // Đóng/mở input comment
+    // const [isOpenCommentInput, setIsOpenCommentInput] = useState(false); // Đóng/mở input comment
     // const [createCommentStatus, setCreateCommentStatus] = useState(); // For Loading Comment Animation
     const [isOpenArticleOptions, setIsOpenArticleOptions] = useState(false); // đóng/mở Article options
     const [articleOptionsBoxPosition, setArticleOptionsBoxPosition] = useState(); // Article options box position
@@ -46,7 +45,7 @@ function Article({ articleData }) {
     const articleOptionsButtonRef = useRef(null); // ref cho nút article options
     const articleOptionsBoxRef = useRef(null); // ref cho article options box
 
-    // Navigation
+    // Navigate
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -228,66 +227,6 @@ function Article({ articleData }) {
     };
 
     return (
-        // <div className="article">
-        //     <div className="left">
-        //         {/* Avatar */}
-        //         <div className="userAvatar">
-        //             <Link to={`/profile/${feed.user.userName}`}>
-        //                 <img src={feed.user.avatar} />
-        //             </Link>
-        //         </div>
-        //     </div>
-        //     <div className="right">
-        //         <div className="top">
-        //             <div className="articleInfo">
-        //                 <Link to={`/profile/${feed.user.userName}`} style={{ textDecoration: 'none' }}>
-        //                     <span className="userName">{feed.user.userName}</span>
-        //                 </Link>
-        //                 <span className="createdAt">{feed.feed.createdAt}</span>
-        //             </div>
-        //             <div className="articleOptions">
-        //                 <button className="btnArticleOptions">
-        //                     <VscEllipsis></VscEllipsis>
-        //                 </button>
-        //             </div>
-        //         </div>
-        //         <div className="middle">
-        //             <div className="content">
-        //                 <div className="text">{feed.feed.text}</div>
-        //                 <div className="media">
-        //                     {/* Carousel Media */}
-        //                     <div className="carouselMedia">
-        //                         <Slider
-        //                             ref={(slider) => {
-        //                                 sliderRef = slider;
-        //                             }}
-        //                             {...settings}
-        //                         >
-        //                             {feed.feed.media.map((mediaContent, index) => (
-        //                                 <Fragment key={index}>
-        //                                     <div className="mediaContainer">
-        //                                         <img src={mediaContent.imageUrl} className="slide-image" style={{}} />
-        //                                     </div>
-        //                                 </Fragment>
-        //                             ))}
-        //                         </Slider>
-        //                         {feed.feed.media.length >= 2 && (
-        //                             <>
-        //                                 <button className="btnPrevCarousel" onClick={previous}>
-        //                                     <VscChevronLeft />
-        //                                 </button>
-        //                                 <button className="btnNextCarousel" onClick={next}>
-        //                                     <VscChevronRight />
-        //                                 </button>
-        //                             </>
-        //                         )}
-        //                     </div>
-        //                 </div>
-        //             </div>
-        //         </div>
-        //         <div className="bottom"></div>
-        //     </div>
-        // </div>
         <>
             {/* Nội dung bài viết */}
             <div className="articleDetailPage">
@@ -425,7 +364,25 @@ function Article({ articleData }) {
                                             <></>
                                         ) : (
                                             <>
-                                                <div className="carouselMedia">
+                                                <div
+                                                    className="carouselMedia"
+                                                    style={{
+                                                        marginBottom:
+                                                            articleData?.mediaContent.length > 1 ? '14px' : '0px',
+                                                        cursor:
+                                                            articleData?.mediaContent.length > 1 ? 'grab' : 'pointer',
+                                                    }}
+                                                    onMouseDown={(e) => {
+                                                        e.target.style.cursor =
+                                                            articleData?.mediaContent.length > 1
+                                                                ? 'grabbing'
+                                                                : 'pointer';
+                                                    }}
+                                                    onMouseUp={(e) => {
+                                                        e.target.style.cursor =
+                                                            articleData?.mediaContent.length > 1 ? 'grab' : 'pointer';
+                                                    }}
+                                                >
                                                     <Slider
                                                         ref={(slider) => {
                                                             sliderRef = slider;

@@ -265,7 +265,7 @@ function UploadArticlePage() {
                 {/* Thanh chuyển tab */}
                 <div className="tabSwitchProfile">
                     <div className="profileUserName">
-                        <span>Tạo bài viết mới</span>
+                        <span style={{ fontFamily: 'system-ui' }}>Tạo bài viết mới</span>
                     </div>
                     <div className="btnComeBackBox">
                         <button className="btnComeBack tooltip" onClick={() => navigate(-1)}>

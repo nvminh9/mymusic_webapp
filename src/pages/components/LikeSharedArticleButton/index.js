@@ -7,6 +7,7 @@ import {
     unLikeSharedArticleApi,
 } from '~/utils/api';
 import { debounce } from 'lodash';
+import { useQueryClient } from '@tanstack/react-query';
 
 // sharedArticleData: được truyền khi gọi dùng ở Component SharedArticleDetail
 function LikeSharedArticleButton({ sharedArticleData }) {
@@ -18,6 +19,9 @@ function LikeSharedArticleButton({ sharedArticleData }) {
     // Context
 
     // Ref
+
+    // React-query (tanstack)
+    const queryClient = useQueryClient();
 
     // --- HANDLE FUNCTION ---
     // Set likesCount, liked State khi render
@@ -32,8 +36,61 @@ function LikeSharedArticleButton({ sharedArticleData }) {
             try {
                 if (newLiked) {
                     const res = await createLikeSharedArticleApi(sharedArticleData?.sharedArticleId); // Nếu chưa like thì gọi API like
+                    // Cập nhật cache của feed trong query client (React-query)
+                    queryClient.setQueryData(['feed'], (oldData) => {
+                        if (!oldData) {
+                            return oldData;
+                        }
+                        // Tìm sharedArticle và cập nhật tương ứng
+                        return {
+                            ...oldData,
+                            pages: oldData.pages.map((page) => ({
+                                ...page,
+                                data: page.data.map((feedItem) =>
+                                    feedItem.data.sharedArticleId === sharedArticleData?.sharedArticleId
+                                        ? {
+                                              data: {
+                                                  ...feedItem.data,
+                                                  likeStatus: true,
+                                                  likeCount: feedItem.data.likeCount + 1,
+                                              },
+                                              type: feedItem.type,
+                                          }
+                                        : feedItem,
+                                ),
+                            })),
+                        };
+                    });
                 } else {
                     const res = await unLikeSharedArticleApi(sharedArticleData?.sharedArticleId); // Nếu like rồi thì gọi API unlike
+                    // Cập nhật cache của feed trong query client (React-query)
+                    queryClient.setQueryData(['feed'], (oldData) => {
+                        if (!oldData) {
+                            return oldData;
+                        }
+                        // Tìm sharedArticle và cập nhật tương ứng
+                        return {
+                            ...oldData,
+                            pages: oldData.pages.map((page) => ({
+                                ...page,
+                                data: page.data.map((feedItem) =>
+                                    feedItem.data.sharedArticleId === sharedArticleData?.sharedArticleId
+                                        ? {
+                                              data: {
+                                                  ...feedItem.data,
+                                                  likeStatus: false,
+                                                  likeCount:
+                                                      feedItem.data.likeCount === 0
+                                                          ? feedItem.data.likeCount
+                                                          : feedItem.data.likeCount - 1,
+                                              },
+                                              type: feedItem.type,
+                                          }
+                                        : feedItem,
+                                ),
+                            })),
+                        };
+                    });
                 }
             } catch (error) {
                 console.error('Error updating like status', error);
@@ -48,18 +105,6 @@ function LikeSharedArticleButton({ sharedArticleData }) {
         setLikesCount((prev) => prev + (newLiked ? 1 : -1));
         // Call API (debounce)
         debouncedLikeSharedArticle(newLiked);
-        // try {
-        //     // Nếu liked true thì set liked false và ngược lại
-        //     setLiked((prev) => !prev);
-        //     // Nếu đã thích trước đó thì khi bấm sẽ -1 likesCount và ngược lại thì +1
-        //     setLikesCount((prev) => (liked ? prev - 1 : prev + 1));
-        //     // Call API (Debounce)
-        // } catch (error) {
-        //     // rollback nếu lỗi
-        //     setLiked((prev) => !prev);
-        //     setLikesCount((prev) => (liked ? prev + 1 : prev - 1));
-        //     console.error(error);
-        // }
     };
 
     return (

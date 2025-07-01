@@ -2455,6 +2455,30 @@ body {
     }
 }
 
+// CSS Feed Item
+// Feed Item Article
+.feedItemArticle {
+    text-decoration: none;
+}
+.feedItemArticle:hover {
+    // cursor: pointer;
+}
+.feedItemArticle:active {
+    // background-color: #000;
+    transition: ease-out 0.2s;
+}
+// Feed Item Shared Article
+.feedItemSharedArticle {
+    text-decoration: none;
+}
+.feedItemSharedArticle:hover {
+    // cursor: pointer;
+}
+.feedItemSharedArticle:active {
+    // background-color: #000;
+    transition: ease-out 0.2s;
+}
+
 // CSS Loading Animation
 .loadingAnimation {
     color: white;
@@ -3673,7 +3697,7 @@ body {
                             width: max-content;
                             max-width: max-content;
                             box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
-                            z-index: 999;
+                            z-index: 10;
                             height: max-content;
                             button {
                                 display: flex;
@@ -4064,6 +4088,30 @@ body {
                     }
                 }
             }
+        }
+
+        // Nút xem bài viết được chia sẻ
+        .btnToArticleDetail {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            border-radius: 50%;
+            color: #ffffff;
+            background-color: rgba(18, 18, 18, 0.8);
+            backdrop-filter: blur(15px);
+            cursor: pointer;
+            transition: ease-out 0.2s;
+            padding: 8px;
+            position: absolute;
+            right: 10px;
+            bottom: 10px;
+        }
+        .btnToArticleDetail:hover {
+            background-color: #2e2e2e;
+        }
+        .btnToArticleDetail:active {
+            background-color: #000;
         }
     }
     // Các bình luận
@@ -5364,6 +5412,8 @@ body {
             }
         }
     }
+
+    //
 
     // CSS Profile Page
     .tabSwitchProfile {

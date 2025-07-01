@@ -1,34 +1,47 @@
+import { useLocation, useNavigate } from 'react-router-dom';
 import Article from '../Article';
+import SharedArticle from '../SharedArticle';
 
 function FeedItem({ item }) {
     // State
 
     // Context
 
+    // Navigate
+    const navigate = useNavigate();
+    const location = useLocation();
+
     // Ref
 
     const { type, data } = item;
 
+    // console.log(item);
+
     // Return
     // Nếu type là Article
     if (type === 'article') {
-        return <>{data && <Article articleData={data}></Article>}</>;
+        return (
+            <div
+                className="feedItemArticle"
+                // onClick={() => {
+                //     navigate(`/article/${data?.articleId}`);
+                // }}
+            >
+                {data && <Article articleData={data}></Article>}
+            </div>
+        );
     }
     // Nếu type là Shared Article
     if (type === 'sharedArticle') {
         return (
-            <h4
-                style={{
-                    margin: '0',
-                    width: '100%',
-                    color: 'white',
-                    borderBottom: '.5px solid #1f1f1f',
-                }}
+            <div
+                className="feedItemSharedArticle"
+                // onClick={() => {
+                //     navigate(`/article/${data?.articleId}`);
+                // }}
             >
-                {type}
-                {data?.sharedArticleId}
-                {data?.sharedTextContent}
-            </h4>
+                {data && <SharedArticle sharedArticleData={data}></SharedArticle>}
+            </div>
         );
     }
     return null;
