@@ -1,8 +1,7 @@
-import { Fragment, useState } from 'react';
+import { Fragment, useLayoutEffect, useState } from 'react';
 import CircumIcon from '@klarr-agency/circum-icons-react';
 import Slider from 'react-slick';
 import { useRef, useEffect } from 'react';
-import { VscChevronLeft, VscChevronRight } from 'react-icons/vsc';
 import Hls from 'hls.js';
 import {
     IoPlaySharp,
@@ -18,23 +17,24 @@ import {
 } from 'react-icons/io5';
 import swimmingPool from '~/assets/videos/swimmingPool.mp4';
 import { Link } from 'react-router-dom';
-// import Component
 import VideoAmbilight from '../VideoAmbilight';
 import ImageAmbilight from '../ImageAmbilight';
-// hết import Component
+import { getSongDataApi } from '~/utils/api';
 
 function SongPlayer() {
-    // State (useState)
+    // State
     var [isPlay, setIsPlay] = useState();
     const [isSongLiked, setIsSongLiked] = useState();
     var [isSongMuted, setIsSongMuted] = useState();
     const [isSongPlayerMaximized, setIsSongPlayerMaximized] = useState(false);
+    // const [songData, setSongData] = useState();
 
-    // Ref (useRef)
+    // Context
+
+    // Ref
     const audioHLSRef = useRef(null);
     const btnLikeSong = useRef(null);
     const btnVolumeControl = useRef(null);
-
     const audioRef = useRef(); // test
 
     // config slider cho carousel thumbnail (React Slick)
@@ -103,6 +103,7 @@ function SongPlayer() {
         songName.style.transform = 'transformX("0px")';
     };
 
+    // --- HANDLE FUNCTION ---
     // Test HLS
     // test với api file m3u8 trên mạng
     // const videoSrc = 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8';
@@ -112,7 +113,7 @@ function SongPlayer() {
     // const videoSrc = `https://ik.imagekit.io/d7q5hnktr/timanhghen.mp4?updatedAt=1734602507871`;
     // const videoHLSRef = useRef(null);
     // var audioHLSFile = `https://mymusic-api-1n5t.onrender.com/music/lutherAudio_master.m3u8`;
-    var audioHLSFile = `http://localhost:3700/audio/hls/29751284-2d72-4be5-8b11-a568d7db663d/audioFile-1751338647405-387179682y2mate.com - Obito  CL5 Interlude_320kbps.mp3.hls.m3u8`;
+    // var audioHLSFile = `http://localhost:3700/audio/hls/29751284-2d72-4be5-8b11-a568d7db663d/audioFile-1751338647405-387179682y2mate.com - Obito  CL5 Interlude_320kbps.mp3.hls.m3u8`;
     useEffect(() => {
         // const hls = new Hls();
         // TẠM THỜI COMMENT LẠI (DO API SONG CHƯA HOÀN THIỆN)
@@ -127,10 +128,60 @@ function SongPlayer() {
         //     }
         // }
     }, []);
-
-    // Custom Song Progress Bar (Test)
-    let songLink = `http://localhost:3700/audio/hls/29751284-2d72-4be5-8b11-a568d7db663d/audioFile-1751338647405-387179682y2mate.com - Obito  CL5 Interlude_320kbps.mp3.hls.m3u8`;
+    // Handle load audio source
     useEffect(() => {
+        // Call API Get Song and Serve Audio Source
+        let songId = `29751284-2d72-4be5-8b11-a568d7db663d`;
+        const getSong = async (songId) => {
+            try {
+                const res = await getSongDataApi(songId);
+                // Kiểm tra
+                if (res?.status === 200 && res?.message === 'Dữ liệu của bài nhạc') {
+                    // Nếu trình duyệt hỗ trợ natively (Safari)
+                    if (audioRef.current.canPlayType('application/vnd.apple.mpegurl')) {
+                        audioRef.current.src = res?.data?.songLink
+                            ? process.env.REACT_APP_BACKEND_URL + res?.data?.songLink
+                            : '';
+                    } else if (Hls.isSupported()) {
+                        const hls = new Hls();
+
+                        hls.loadSource(
+                            res?.data?.songLink ? process.env.REACT_APP_BACKEND_URL + res?.data?.songLink : '',
+                        );
+                        hls.attachMedia(audioRef.current);
+
+                        hls.on(Hls.Events.ERROR, function (event, data) {
+                            console.error('HLS.js error:', data);
+                        });
+
+                        return () => {
+                            hls.destroy();
+                        };
+                    } else {
+                        audioRef.current.src = res?.data?.songLink
+                            ? process.env.REACT_APP_BACKEND_URL + res?.data?.songLink
+                            : ''; // fallback
+                        console.error('HLS is not supported in this browser');
+                    }
+                } else {
+                    console.log('Không tìm thấy bài nhạc');
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        getSong(songId);
+
+        // Phần kiểm tra và nạp audio source
+        // if (Hls.isSupported()) {
+        //     const hls = new Hls();
+        //     hls.loadSource(songLink);
+        //     hls.attachMedia(audioRef.current);
+        // } else {
+        //     audioRef.current.src = songLink; // fallback
+        // }
+
+        // Phần tạo Custom Controls
         // var progressBar = document.getElementById('progressBarID');
         // var progressed = document.getElementById('progressedID');
         // var leftTimeBar = document.getElementById('leftTimeBarID');
@@ -163,16 +214,8 @@ function SongPlayer() {
         //     //     'audioHLSRef Percent: ' + `${(audioHLSRef.current.currentTime * 100) / audioHLSRef.current.duration}%`,
         //     // );
         // };
-        if (Hls.isSupported()) {
-            const hls = new Hls();
-            hls.loadSource(songLink);
-            hls.attachMedia(audioRef.current);
-        } else {
-            audioRef.current.src = songLink; // fallback
-        }
     }, []);
-
-    // Config các Keyboard Event
+    // *** Config các Keyboard Event ***
     useEffect(() => {
         document.body.onkeyup = function (e) {
             // if (e.key == ' ' || e.code == 'Space' || e.keyCode == 32) {
@@ -203,8 +246,7 @@ function SongPlayer() {
             // }
         };
     }, []);
-
-    // Function for Top Controls Bar
+    // *** Function for Top Controls Bar ***
     // Phóng to / thu nhỏ trình phát nhạc
     const handleMaximizeMinimizeSongPlayer = () => {
         let middleContainer = document.getElementById('middleContainerID');
@@ -221,8 +263,7 @@ function SongPlayer() {
     };
     // Bật / tắt chế độ hình trong hình
     const handlePicInPicSongPlayer = () => {};
-
-    // Function for Song Controls Bar
+    // *** Function for Song Controls Bar ***
     // Nút phát/dừng nhạc
     const handlePlayPauseSong = () => {
         if (isPlay) {

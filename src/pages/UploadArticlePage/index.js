@@ -278,7 +278,7 @@ function UploadArticlePage() {
                 <div className="feedPage">
                     {/* Ant Design Message */}
                     {contextHolder}
-                    <div className="articleContainer">
+                    <div className="articleContainer" style={{ borderBottom: 'none' }}>
                         {/* Form Upload Article */}
                         <form className="uploadArticleForm" onSubmit={handleSubmit(onSubmit)} method="POST" noValidate>
                             {/* Mẫu bài viết để nhập */}

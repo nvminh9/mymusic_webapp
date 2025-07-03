@@ -95,7 +95,7 @@ function LeftContainer() {
     useEffect(() => {}, []);
 
     return (
-        <div id="leftContainerID" className="col l-3 m-0 c-0 leftContainer">
+        <div id="leftContainerID" className="col l-3 m-0 c-0 leftContainer" style={{ opacity: '0' }}>
             <div className="top">
                 <div className="logo">
                     <Link
@@ -107,7 +107,7 @@ function LeftContainer() {
                             height: 'fit-content',
                         }}
                     >
-                        <img src={logo} />
+                        <img src={logo} style={{ opacity: '0' }} />
                     </Link>
                 </div>
                 <div className="search">
