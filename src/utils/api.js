@@ -225,6 +225,12 @@ const getSongDataApi = (songId) => {
     return axios.get(URL_API);
 };
 
+// API Lấy dữ liệu của các bài nhạc của user đăng (GET)
+const getUserSongsDataApi = (userId) => {
+    const URL_API = `/v1/api/music/${userId}`;
+    return axios.get(URL_API);
+};
+
 export {
     signUpApi,
     signInApi,
@@ -261,4 +267,5 @@ export {
     deleteSharedArticleApi,
     getFeedDataApi,
     getSongDataApi,
+    getUserSongsDataApi,
 };

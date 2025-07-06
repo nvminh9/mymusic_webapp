@@ -2,26 +2,43 @@
 import { useState, useEffect, useRef } from 'react';
 import Hls from 'hls.js';
 import noContentImage from '~/assets/images/no_content.jpg';
+import { useMusicPlayerContext } from '~/context/musicPlayer.context';
 
-export function useMusicPlayer(initialPlaylist, isInteracted) {
+export function useMusicPlayer() {
     // State
-    const [playlist, setPlaylist] = useState(initialPlaylist); // Array Object
-    const [currentIndex, setCurrentIndex] = useState(0); // Index của bài đang nghe
-    const [isPlaying, setIsPlaying] = useState(false);
-    const [isShuffle, setIsShuffle] = useState(false);
-    const [isRepeatOne, setIsRepeatOne] = useState(false);
-    const [isRepeatAll, setIsRepeatAll] = useState(false);
-    const [volume, setVolume] = useState(1); // 1: max volume
-    const [currentTime, setCurrentTime] = useState(0);
-    const [duration, setDuration] = useState(0);
-    const [isSongMuted, setIsSongMuted] = useState(false);
+
+    // Context
+    const {
+        playlist,
+        setPlaylist,
+        currentIndex,
+        setCurrentIndex,
+        isPlaying,
+        setIsPlaying,
+        isShuffle,
+        setIsShuffle,
+        isRepeatOne,
+        setIsRepeatOne,
+        isRepeatAll,
+        setIsRepeatAll,
+        volume,
+        setVolume,
+        currentTime,
+        setCurrentTime,
+        duration,
+        setDuration,
+        isSongMuted,
+        setIsSongMuted,
+        isInteracted,
+        setIsInteracted,
+    } = useMusicPlayerContext();
 
     // Ref
     const audioRef = useRef(null);
     const hlsRef = useRef(null);
 
     // Current Song
-    const currentSong = playlist[currentIndex];
+    const currentSong = playlist?.[currentIndex];
 
     // Thumbnails data
     const thumbnails = currentSong?.songVideo
@@ -107,6 +124,7 @@ export function useMusicPlayer(initialPlaylist, isInteracted) {
         } else if (isShuffle) {
             let randomIndex = getRandomIndexFromPlaylist();
             setCurrentIndex(randomIndex);
+            // console.log(randomIndex);
         } else {
             setIsPlaying(false);
         }
@@ -118,6 +136,10 @@ export function useMusicPlayer(initialPlaylist, isInteracted) {
         if (isPlaying) {
             audioRef.current.pause();
             setIsPlaying(false);
+            //
+            const oldmpKey = JSON.parse(localStorage.getItem('mpKey') || '');
+            const newmpKey = `false@${oldmpKey?.split('@')[1]}`;
+            localStorage.setItem('mpKey', newmpKey);
         } else {
             // audioRef.current.play();
             // setIsPlaying(true);

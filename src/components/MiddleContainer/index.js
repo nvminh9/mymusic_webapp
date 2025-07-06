@@ -10,7 +10,11 @@ function MiddleContainer({ children }) {
     return (
         <>
             <div className="col l-3 m-0 c-0"></div>
-            <div id="middleContainerID" className="col l-6 m-12 c-12 middleContainer" style={{ opacity: '0' }}>
+            <div
+                id="middleContainerID"
+                className="col l-6 m-12 c-12 middleContainer"
+                //  style={{ opacity: '0' }}
+            >
                 {/* Thanh chuyển tab */}
                 <div className="tabSwitchBar">
                     <Link

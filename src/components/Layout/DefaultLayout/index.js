@@ -7,12 +7,14 @@ import { getAuthUserInfoApi } from '~/utils/api';
 import logo from '~/assets/images/logoWhiteTransparent.png';
 import { IoBowlingBallOutline } from 'react-icons/io5';
 import { useNavigate } from 'react-router-dom';
+import { useMusicPlayerContext } from '~/context/musicPlayer.context';
 
 function DefaultLayout({ children }) {
     // State (useState)
 
     // Context (useContext)
     const { auth, setAuth, isFirstLoading, setIsFirstLoading } = useContext(AuthContext);
+    const { setIsInteracted } = useMusicPlayerContext();
 
     // Navigation
     const navigate = useNavigate();
@@ -35,7 +37,12 @@ function DefaultLayout({ children }) {
 
     return (
         <>
-            <div className="grid wide wrapper">
+            <div
+                className="grid wide wrapper"
+                onClick={() => {
+                    setIsInteracted(true);
+                }}
+            >
                 <div className="row container">
                     {/* Check If App First Loading */}
                     {isFirstLoading === true ? (

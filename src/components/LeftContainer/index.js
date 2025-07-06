@@ -1,4 +1,4 @@
-import logo from '~/assets/images/logoWhiteTransparent.png';
+import logo from '~/assets/images/logoWhiteTransparent_noR.png';
 import avatarTest2 from '~/assets/images/avatarTest2.jpg';
 import avatarDefault from '~/assets/images/avatarDefault.jpg';
 import coverPlaylistTest from '~/assets/images/0054a59f216f1ffcecf0def0621a8fa2.jpg';
@@ -12,18 +12,23 @@ import CircumIcon from '@klarr-agency/circum-icons-react';
 import { VscChevronDown, VscAdd, VscChevronUp, VscClose, VscLibrary, VscMusic, VscHistory } from 'react-icons/vsc';
 import { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { getAuthUserInfoApi } from '~/utils/api';
+import { getAuthUserInfoApi, getSongDataApi, getUserSongsDataApi } from '~/utils/api';
 import { AuthContext } from '~/context/auth.context';
+import { useMusicPlayerContext } from '~/context/musicPlayer.context';
+import MusicCard from '~/pages/components/MusicCard';
 
 function LeftContainer() {
-    // State (useState)
+    // State
     const [isOpenPlayList, setIsOpenPlayList] = useState(false);
     const [isOpenHistoryListen, setIsOpenHistoryListen] = useState(false);
     const [isOpenMySong, setIsOpenMySong] = useState(false);
+    const [mySongsData, setMySongsData] = useState(); // Data my songs
 
-    // Context (useContext)
+    // Context
     const { auth } = useContext(AuthContext);
+    const { playlist, setPlaylist, setCurrentIndex, setIsPlaying } = useMusicPlayerContext();
 
+    // --- HANDLE FUNCTION ---
     // Đóng / Mở Playlist
     const btnExpandPlaylist = () => {
         let mainPlaylistLeftContainerID = document.getElementById('mainPlaylistLeftContainerID');
@@ -78,24 +83,57 @@ function LeftContainer() {
             }
         }
     };
-
     // Đóng / Mở My Song
     const btnExpandMySong = () => {
         let mainMySong = document.getElementById('mainMySongID');
         if (!isOpenMySong) {
-            mainMySong.style.height = '400px';
+            // 80px
+            if (mySongsData?.length > 0) {
+                let height = 80 * mySongsData?.length + 42;
+                mainMySong.style.height = `${height}px`;
+            } else {
+                mainMySong.style.height = `122px`;
+            }
+            // mainMySong.style.height = '400px';
             setIsOpenMySong(true);
         } else {
             mainMySong.style.height = '0px';
             setIsOpenMySong(false);
         }
     };
-
-    // Lấy thông tin người dùng đang đăng nhập (Auth User)
-    useEffect(() => {}, []);
+    // Lấy dữ liệu
+    useEffect(() => {
+        // Call API Get User Songs (Auth User)
+        const getUserSongsData = async (userId) => {
+            //
+            const res = await getUserSongsDataApi(userId);
+            // Set state mySongsData
+            setMySongsData(res?.data);
+        };
+        getUserSongsData(auth?.user?.userId);
+    }, []);
+    // // Test handlePlay
+    // const handlePlay = async (e) => {
+    //     try {
+    //         // Call API Get Song Data
+    //         const res = await getSongDataApi('29751284-2d72-4be5-8b11-a568d7db663d');
+    //         // Set Music Player Context
+    //         setPlaylist((prev) => {
+    //             return prev?.length > 0 ? [...prev, { ...res?.data }] : [{ ...res?.data }];
+    //         });
+    //         setCurrentIndex(playlist?.length && playlist?.length > 0 ? playlist?.length : 0);
+    //         setIsPlaying(true);
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // };
 
     return (
-        <div id="leftContainerID" className="col l-3 m-0 c-0 leftContainer" style={{ opacity: '0' }}>
+        <div
+            id="leftContainerID"
+            className="col l-3 m-0 c-0 leftContainer"
+            //  style={{ opacity: '0' }}
+        >
             <div className="top">
                 <div className="logo">
                     <Link
@@ -107,7 +145,11 @@ function LeftContainer() {
                             height: 'fit-content',
                         }}
                     >
-                        <img src={logo} style={{ opacity: '0' }} />
+                        <img
+                            src={logo}
+                            //
+                            style={{ opacity: '0' }}
+                        />
                     </Link>
                 </div>
                 <div className="search">
@@ -313,26 +355,32 @@ function LeftContainer() {
                     </div>
                     <div id="mainMySongID" className="main">
                         <div className="backTop"></div>
-                        {/* Each Item */}
-                        <button className="btnPlaylist">
-                            <div className="coverImage">
-                                <img src={coverMySongTest} />
-                            </div>
-                            <div className="info">
-                                <span className="name">wonder</span>
-                                <span className="quantity">minhngo</span>
-                            </div>
-                        </button>
-                        {/* Each Item */}
-                        <button className="btnPlaylist">
-                            <div className="coverImage">
-                                <img src={coverMySongTest2} />
-                            </div>
-                            <div className="info">
-                                <span className="name">GRINDING</span>
-                                <span className="quantity">minhngo</span>
-                            </div>
-                        </button>
+                        {mySongsData && mySongsData?.length > 0 ? (
+                            <>
+                                {mySongsData?.map((song) => (
+                                    <MusicCard songData={song} typeMusicCard={'LeftContainer'} />
+                                ))}
+                            </>
+                        ) : (
+                            <>
+                                {/* Each Item */}
+                                <button className="btnPlaylist">
+                                    <span
+                                        style={{
+                                            display: 'block',
+                                            width: '100%',
+                                            color: 'white',
+                                            fontFamily: 'system-ui',
+                                            fontSize: '14px',
+                                            fontWeight: '400',
+                                            textAlign: 'center',
+                                        }}
+                                    >
+                                        Chưa có bài nhạc
+                                    </span>
+                                </button>
+                            </>
+                        )}
                     </div>
                 </div>
             </div>

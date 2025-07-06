@@ -1085,6 +1085,10 @@ body {
                         border-radius: 8px;
                     }
 
+                    .btnDisabled {
+                        opacity: 0.3;
+                    }
+
                     .volumeControl {
                         position: absolute;
                         background-color: #1f1f1f;
@@ -1136,6 +1140,9 @@ body {
                         .btnShuffle:active {
                             background-color: #000;
                             transform: scale(0.7);
+                        }
+                        .btnShuffleDisabled {
+                            opacity: 0.3;
                         }
                     }
                     // Button Previous Song
@@ -1252,6 +1259,9 @@ body {
                         .btnRepeat:active {
                             background-color: #000;
                             transform: scale(0.7);
+                        }
+                        .btnRepeatDisabled {
+                            opacity: 0.3;
                         }
                     }
                     // Button Volume Control

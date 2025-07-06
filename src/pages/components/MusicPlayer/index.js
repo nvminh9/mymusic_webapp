@@ -18,21 +18,17 @@ import ImageAmbilight from '../ImageAmbilight';
 import VideoAmbilight from '../VideoAmbilight';
 import { Link } from 'react-router-dom';
 import { useMusicPlayer } from '~/hooks/useMusicPlayer';
-
-const playlist = localStorage?.getItem('pl')
-    ? JSON.parse(localStorage?.getItem('pl'))
-    : {
-          songs: [],
-          currentIndex: 0,
-          isShuffle: false,
-          isRepeatOne: false,
-          isRepeatAll: true,
-      };
+import { useMusicPlayerContext } from '~/context/musicPlayer.context';
 
 // isInteracted: true khi người dùng đã tương tác với trang (click vào đâu đó) để tránh autoplay gây lỗi
-function MusicPlayer({ isInteracted, playlist }) {
+function MusicPlayer() {
     // State
     const [isMusicPlayerMaximized, setIsMusicPlayerMaximized] = useState(false);
+
+    const { playlist, musicPlayerKey } = useMusicPlayerContext();
+    // console.log(playlist);
+    console.log(musicPlayerKey);
+    // console.log(JSON.parse(localStorage.getItem('mpKey')).split('@')[1] !== musicPlayerKey)
 
     // useMusicPlayer (Custom Hook)
     const {
@@ -58,7 +54,7 @@ function MusicPlayer({ isInteracted, playlist }) {
         handleEnded,
         handleBtnVolume,
         thumbnails,
-    } = useMusicPlayer(playlist?.songs ? playlist?.songs : [], isInteracted);
+    } = useMusicPlayer();
 
     // Config Slider Carousel Thumbnail (React Slick)
     let sliderRef = useRef(null);
@@ -242,37 +238,47 @@ function MusicPlayer({ isInteracted, playlist }) {
                     <div className="controlsContainer">
                         <div className="controls">
                             <div className="btnVolumeControlContainer">
-                                <div className="volumeControl">
-                                    <input
-                                        type="range"
-                                        min="0"
-                                        max="1"
-                                        step="0.01"
-                                        value={audioRef?.current?.volume !== 0 ? volume : 0}
-                                        onChange={handleVolumeChange}
-                                    />
-                                </div>
+                                {/* Volume Control */}
+                                {!playlist?.length || playlist?.length < 1 ? (
+                                    <></>
+                                ) : (
+                                    <div className="volumeControl">
+                                        <input
+                                            type="range"
+                                            min="0"
+                                            max="1"
+                                            step="0.01"
+                                            value={audioRef?.current?.volume !== 0 ? volume : 0}
+                                            onChange={handleVolumeChange}
+                                        />
+                                    </div>
+                                )}
                                 <button
-                                    className="btnVolumeControl"
+                                    className={`btnVolumeControl ${
+                                        !playlist?.length || playlist?.length < 1 ? 'btnDisabled' : ''
+                                    }`}
                                     onClick={() => {
                                         handleBtnVolume();
                                     }}
+                                    disabled={!playlist?.length || playlist?.length < 1 ? true : false}
                                 >
                                     {isSongMuted ? <IoVolumeMuteSharp /> : <IoVolumeHighSharp />}
                                 </button>
                             </div>
                             <div className="btnShuffleContainer">
                                 <button
-                                    className="btnShuffle"
+                                    className={`btnShuffle ${
+                                        !playlist?.length || playlist?.length < 1 ? 'btnShuffleDisabled' : ''
+                                    }`}
                                     onClick={() => {
                                         shuffle();
-                                        // console.log('currentIndex', currentSong);
                                     }}
                                     style={{
-                                        backgroundColor: isShuffle ? '#ffffff' : 'transparent',
+                                        backgroundColor: isShuffle ? '#ffffff' : '',
                                         color: isShuffle ? '#000' : '#ffffff',
                                         position: 'relative',
                                     }}
+                                    disabled={!playlist?.length || playlist?.length < 1 ? true : false}
                                 >
                                     <IoShuffleSharp />
                                     {isShuffle && (
@@ -299,29 +305,50 @@ function MusicPlayer({ isInteracted, playlist }) {
                                 </button>
                             </div>
                             <div className="btnPreviousSongContainer">
-                                <button className="btnPreviousSong" onClick={previous}>
+                                <button
+                                    className={`btnPreviousSong ${
+                                        !playlist?.length || playlist?.length < 1 ? 'btnDisabled' : ''
+                                    }`}
+                                    onClick={previous}
+                                    disabled={!playlist?.length || playlist?.length < 1 ? true : false}
+                                >
                                     <IoPlaySkipBackSharp />
                                 </button>
                             </div>
                             <div className="btnPlayContainer">
-                                <button className="btnPlay" onClick={togglePlay}>
+                                <button
+                                    className={`btnPlay ${
+                                        !playlist?.length || playlist?.length < 1 ? 'btnDisabled' : ''
+                                    }`}
+                                    onClick={togglePlay}
+                                    disabled={!playlist?.length || playlist?.length < 1 ? true : false}
+                                >
                                     {isPlaying ? <IoPauseSharp /> : <IoPlaySharp />}
                                 </button>
                             </div>
                             <div className="btnNextSongContainer">
-                                <button className="btnNextSong" onClick={next}>
+                                <button
+                                    className={`btnNextSong ${
+                                        !playlist?.length || playlist?.length < 1 ? 'btnDisabled' : ''
+                                    }`}
+                                    onClick={next}
+                                    disabled={!playlist?.length || playlist?.length < 1 ? true : false}
+                                >
                                     <IoPlaySkipForwardSharp />
                                 </button>
                             </div>
                             <div className="btnRepeatContainer">
                                 <button
-                                    className="btnRepeat"
+                                    className={`btnRepeat ${
+                                        !playlist?.length || playlist?.length < 1 ? 'btnRepeatDisabled' : ''
+                                    }`}
                                     onClick={() => setIsRepeatOne(!isRepeatOne)}
                                     style={{
-                                        backgroundColor: isRepeatOne ? '#ffffff' : 'transparent',
+                                        backgroundColor: isRepeatOne ? '#ffffff' : '',
                                         color: isRepeatOne ? '#000' : '#ffffff',
                                         position: 'relative',
                                     }}
+                                    disabled={!playlist?.length || playlist?.length < 1 ? true : false}
                                 >
                                     {isRepeatOne && (
                                         <span
@@ -349,7 +376,12 @@ function MusicPlayer({ isInteracted, playlist }) {
                                 </button>
                             </div>
                             <div className="btnLikeSongContainer">
-                                <button className="btnLikeSong">
+                                <button
+                                    className={`btnLikeSong ${
+                                        !playlist?.length || playlist?.length < 1 ? 'btnDisabled' : ''
+                                    }`}
+                                    disabled={!playlist?.length || playlist?.length < 1 ? true : false}
+                                >
                                     <IoSparklesSharp
                                         className="sparkles"
                                         style={{ transform: 'translate(-11px, -7px)' }}
@@ -364,6 +396,55 @@ function MusicPlayer({ isInteracted, playlist }) {
                         </div>
                     </div>
                 </div>
+                {/* Music Player đang phát ở Tab khác */}
+                {localStorage.getItem('mpKey') !== null ? (
+                    <>
+                        {JSON.parse(localStorage.getItem('mpKey')).split('@')[0] === 'true' &&
+                            JSON.parse(localStorage.getItem('mpKey')).split('@')[1] !==
+                                musicPlayerKey.split('@')[1] && (
+                                <div
+                                    className="musicPlayerBlocked"
+                                    style={{
+                                        backgroundColor: 'rgba(18, 18, 18, 0.8)',
+                                        backdropFilter: 'blur(15px)',
+                                        color: 'white',
+                                        position: 'absolute',
+                                        top: '0',
+                                        bottom: '0',
+                                        width: '100%',
+                                        zIndex: '99',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        fontFamily: 'system-ui',
+                                    }}
+                                >
+                                    <span>Trình phát nhạc đang chạy ở tab khác.</span>
+                                </div>
+                            )}
+                    </>
+                ) : (
+                    <></>
+                )}
+                {/* <div
+                    className="musicPlayerBlocked"
+                    style={{
+                        backgroundColor: 'rgba(18, 18, 18, 0.8)',
+                        backdropFilter: 'blur(15px)',
+                        color: 'white',
+                        position: 'absolute',
+                        top: '0',
+                        bottom: '0',
+                        width: '100%',
+                        zIndex: '99',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontFamily: 'system-ui',
+                    }}
+                >
+                    <span>Trình phát nhạc đang chạy ở tab khác.</span>
+                </div> */}
             </div>
         </Fragment>
     );
