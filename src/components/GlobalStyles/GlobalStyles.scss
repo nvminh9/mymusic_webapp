@@ -1369,6 +1369,97 @@ body {
                 }
             }
         }
+
+        // Phần Blocked
+        .musicPlayerBlocked {
+            background-color: rgba(18, 18, 18, 0.8);
+            backdrop-filter: blur(15px);
+            color: white;
+            position: absolute;
+            top: 0px;
+            bottom: 0px;
+            width: 100%;
+            z-index: 99;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: system-ui;
+        }
+        .boxContainer {
+            display: flex;
+            justify-content: space-between;
+            height: 33px;
+            --boxSize: 5px;
+            --gutter: 3px;
+            width: calc((var(--boxSize) + var(--gutter)) * 5);
+            margin-left: 36%;
+            margin-bottom: 13px;
+        }
+
+        .box {
+            transform: scaleY(0.4);
+            height: 100%;
+            width: var(--boxSize);
+            background: #ffffff80;
+            animation-duration: 1.2s;
+            animation-timing-function: ease-in-out;
+            animation-iteration-count: infinite;
+            border-radius: 8px;
+        }
+
+        .box1 {
+            animation-name: quiet;
+        }
+
+        .box2 {
+            animation-name: normal;
+        }
+
+        .box3 {
+            animation-name: quiet;
+        }
+
+        .box4 {
+            animation-name: loud;
+        }
+
+        .box5 {
+            animation-name: quiet;
+        }
+    }
+    @keyframes quiet {
+        25% {
+            transform: scaleY(0.6);
+        }
+        50% {
+            transform: scaleY(0.4);
+        }
+        75% {
+            transform: scaleY(0.8);
+        }
+    }
+
+    @keyframes normal {
+        25% {
+            transform: scaleY(1);
+        }
+        50% {
+            transform: scaleY(0.4);
+        }
+        75% {
+            transform: scaleY(0.6);
+        }
+    }
+    @keyframes loud {
+        25% {
+            transform: scaleY(1);
+        }
+        50% {
+            transform: scaleY(0.4);
+        }
+        75% {
+            transform: scaleY(1.2);
+        }
     }
 }
 

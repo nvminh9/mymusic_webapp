@@ -20,25 +20,14 @@ import { Link } from 'react-router-dom';
 import { useMusicPlayer } from '~/hooks/useMusicPlayer';
 import { useMusicPlayerContext } from '~/context/musicPlayer.context';
 
-// isInteracted: true khi người dùng đã tương tác với trang (click vào đâu đó) để tránh autoplay gây lỗi
 function MusicPlayer() {
     // State
     const [isMusicPlayerMaximized, setIsMusicPlayerMaximized] = useState(false);
 
-    const { playlist, musicPlayerKey } = useMusicPlayerContext();
-    // console.log(playlist);
-    console.log(musicPlayerKey);
-    // console.log(JSON.parse(localStorage.getItem('mpKey')).split('@')[1] !== musicPlayerKey)
-
-    // useMusicPlayer (Custom Hook)
+    // Context
     const {
-        audioRef,
-        currentSong,
+        playlist,
         isPlaying,
-        togglePlay,
-        next,
-        previous,
-        shuffle,
         isShuffle,
         setIsRepeatOne,
         isRepeatOne,
@@ -47,13 +36,24 @@ function MusicPlayer() {
         volume,
         currentTime,
         duration,
+        isSongMuted,
+        isBlocked,
+    } = useMusicPlayerContext();
+
+    // useMusicPlayer (Custom Hook)
+    const {
+        audioRef,
+        currentSong,
+        thumbnails,
+        togglePlay,
+        next,
+        previous,
+        shuffle,
         handleVolumeChange,
         handleSeek,
         formatTime,
-        isSongMuted,
         handleEnded,
         handleBtnVolume,
-        thumbnails,
     } = useMusicPlayer();
 
     // Config Slider Carousel Thumbnail (React Slick)
@@ -397,54 +397,24 @@ function MusicPlayer() {
                     </div>
                 </div>
                 {/* Music Player đang phát ở Tab khác */}
-                {localStorage.getItem('mpKey') !== null ? (
-                    <>
-                        {JSON.parse(localStorage.getItem('mpKey')).split('@')[0] === 'true' &&
-                            JSON.parse(localStorage.getItem('mpKey')).split('@')[1] !==
-                                musicPlayerKey.split('@')[1] && (
-                                <div
-                                    className="musicPlayerBlocked"
-                                    style={{
-                                        backgroundColor: 'rgba(18, 18, 18, 0.8)',
-                                        backdropFilter: 'blur(15px)',
-                                        color: 'white',
-                                        position: 'absolute',
-                                        top: '0',
-                                        bottom: '0',
-                                        width: '100%',
-                                        zIndex: '99',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        fontFamily: 'system-ui',
-                                    }}
-                                >
-                                    <span>Trình phát nhạc đang chạy ở tab khác.</span>
+                {isBlocked && (
+                    <div className="musicPlayerBlocked">
+                        <div>
+                            <div style={{ width: '100%' }}>
+                                <div class="boxContainer">
+                                    <div class="box box1"></div>
+                                    <div class="box box2"></div>
+                                    <div class="box box3"></div>
+                                    <div class="box box4"></div>
+                                    <div class="box box5"></div>
                                 </div>
-                            )}
-                    </>
-                ) : (
-                    <></>
+                            </div>
+                            <span style={{ display: 'block', width: '100%', color: '#ffffff' }}>
+                                Đang phát trên tab khác...
+                            </span>
+                        </div>
+                    </div>
                 )}
-                {/* <div
-                    className="musicPlayerBlocked"
-                    style={{
-                        backgroundColor: 'rgba(18, 18, 18, 0.8)',
-                        backdropFilter: 'blur(15px)',
-                        color: 'white',
-                        position: 'absolute',
-                        top: '0',
-                        bottom: '0',
-                        width: '100%',
-                        zIndex: '99',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontFamily: 'system-ui',
-                    }}
-                >
-                    <span>Trình phát nhạc đang chạy ở tab khác.</span>
-                </div> */}
             </div>
         </Fragment>
     );

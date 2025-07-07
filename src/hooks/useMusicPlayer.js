@@ -4,6 +4,9 @@ import Hls from 'hls.js';
 import noContentImage from '~/assets/images/no_content.jpg';
 import { useMusicPlayerContext } from '~/context/musicPlayer.context';
 
+// BroadcastChannel
+const channel = new BroadcastChannel('music-player');
+
 export function useMusicPlayer() {
     // State
 
@@ -31,6 +34,8 @@ export function useMusicPlayer() {
         setIsSongMuted,
         isInteracted,
         setIsInteracted,
+        isBlocked,
+        setIsBlocked,
     } = useMusicPlayerContext();
 
     // Ref
@@ -112,6 +117,37 @@ export function useMusicPlayer() {
             audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
         };
     }, []);
+    // Gửi message cho channel "music-player" khi phát/dừng nhạc
+    useEffect(() => {
+        if (isPlaying) {
+            channel.postMessage({ type: 'PLAY', senderId: window.name });
+        }
+        if (!isPlaying) {
+            channel.postMessage({ type: 'PAUSE', senderId: window.name });
+        }
+    }, [isPlaying]);
+    // Nghe các message từ tab khác
+    useEffect(() => {
+        const handleMessage = (event) => {
+            if (event.data.type === 'PLAY' && event.data.senderId !== window.name) {
+                // Có tab khác đang phát thì dừng tab hiện tại
+                setIsPlaying(false);
+                if (audioRef.current) {
+                    audioRef.current.pause();
+                }
+                // Set isBlocked true
+                setIsBlocked(true);
+            }
+            if (event.data.type === 'PAUSE') {
+                // Set isBlocked false
+                setIsBlocked(false);
+            }
+        };
+        // Nếu tab đang phát, chưa dừng mà bị đóng
+        window.onunload = function () {};
+        channel.addEventListener('message', handleMessage);
+        return () => channel.removeEventListener('message', handleMessage);
+    }, []);
     // Handle khi hết bài
     const handleEnded = () => {
         if (isRepeatOne) {
@@ -136,10 +172,6 @@ export function useMusicPlayer() {
         if (isPlaying) {
             audioRef.current.pause();
             setIsPlaying(false);
-            //
-            const oldmpKey = JSON.parse(localStorage.getItem('mpKey') || '');
-            const newmpKey = `false@${oldmpKey?.split('@')[1]}`;
-            localStorage.setItem('mpKey', newmpKey);
         } else {
             // audioRef.current.play();
             // setIsPlaying(true);
@@ -259,5 +291,6 @@ export function useMusicPlayer() {
         handleBtnVolume,
         isSongMuted,
         thumbnails,
+        isBlocked,
     };
 }
