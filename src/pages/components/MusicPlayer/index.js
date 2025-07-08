@@ -38,6 +38,7 @@ function MusicPlayer() {
         duration,
         isSongMuted,
         isBlocked,
+        currentIndex,
     } = useMusicPlayerContext();
 
     // useMusicPlayer (Custom Hook)
@@ -219,7 +220,7 @@ function MusicPlayer() {
                             max={duration}
                             value={currentTime}
                             onChange={handleSeek}
-                            style={{ accentColor: '#ffffff', margin: '0px' }}
+                            style={{ accentColor: '#ffffff', margin: '0px', cursor: 'pointer' }}
                         />
                         {/* Time */}
                         <div className="timeBar">
@@ -268,7 +269,7 @@ function MusicPlayer() {
                             <div className="btnShuffleContainer">
                                 <button
                                     className={`btnShuffle ${
-                                        !playlist?.length || playlist?.length < 1 ? 'btnShuffleDisabled' : ''
+                                        !playlist?.length || playlist?.length < 1 ? 'btnDisabled' : ''
                                     }`}
                                     onClick={() => {
                                         shuffle();
@@ -307,10 +308,14 @@ function MusicPlayer() {
                             <div className="btnPreviousSongContainer">
                                 <button
                                     className={`btnPreviousSong ${
-                                        !playlist?.length || playlist?.length < 1 ? 'btnDisabled' : ''
+                                        !playlist?.length || playlist?.length < 1 || currentIndex === 0
+                                            ? 'btnDisabled'
+                                            : ''
                                     }`}
                                     onClick={previous}
-                                    disabled={!playlist?.length || playlist?.length < 1 ? true : false}
+                                    disabled={
+                                        !playlist?.length || playlist?.length < 1 || currentIndex === 0 ? true : false
+                                    }
                                 >
                                     <IoPlaySkipBackSharp />
                                 </button>
@@ -329,10 +334,20 @@ function MusicPlayer() {
                             <div className="btnNextSongContainer">
                                 <button
                                     className={`btnNextSong ${
-                                        !playlist?.length || playlist?.length < 1 ? 'btnDisabled' : ''
+                                        !playlist?.length ||
+                                        playlist?.length < 1 ||
+                                        currentIndex === playlist?.length - 1
+                                            ? 'btnDisabled'
+                                            : ''
                                     }`}
                                     onClick={next}
-                                    disabled={!playlist?.length || playlist?.length < 1 ? true : false}
+                                    disabled={
+                                        !playlist?.length ||
+                                        playlist?.length < 1 ||
+                                        currentIndex === playlist?.length - 1
+                                            ? true
+                                            : false
+                                    }
                                 >
                                     <IoPlaySkipForwardSharp />
                                 </button>
@@ -340,7 +355,7 @@ function MusicPlayer() {
                             <div className="btnRepeatContainer">
                                 <button
                                     className={`btnRepeat ${
-                                        !playlist?.length || playlist?.length < 1 ? 'btnRepeatDisabled' : ''
+                                        !playlist?.length || playlist?.length < 1 ? 'btnDisabled' : ''
                                     }`}
                                     onClick={() => setIsRepeatOne(!isRepeatOne)}
                                     style={{

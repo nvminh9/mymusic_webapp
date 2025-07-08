@@ -144,7 +144,13 @@ export function useMusicPlayer() {
             }
         };
         // Nếu tab đang phát, chưa dừng mà bị đóng
-        window.onunload = function () {};
+        window.onunload = function () {
+            // Local Storage (Lưu bài cuối cùng đang nghe trước khi tắt)
+            // let playlistTemp = playlist;
+            // if (playlistTemp) {
+            //     localStorage.setItem('pl', JSON.stringify([{ ...playlistTemp?.pop() }]));
+            // }
+        };
         channel.addEventListener('message', handleMessage);
         return () => channel.removeEventListener('message', handleMessage);
     }, []);

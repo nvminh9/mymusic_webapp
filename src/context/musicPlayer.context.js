@@ -5,8 +5,18 @@ const MusicPlayerContext = createContext();
 
 export const MusicPlayerProvider = ({ children }) => {
     // State
-    const [playlist, setPlaylist] = useState(JSON.parse(localStorage?.getItem('pl')) || []); // Array Object Song
-    const [currentIndex, setCurrentIndex] = useState(JSON.parse(localStorage?.getItem('pl')) ? 0 : null); // Index của bài đang nghe (null nếu chưa có bài nào)
+    const [playlist, setPlaylist] = useState(
+        localStorage?.getItem('pl') && localStorage?.getItem('pl') !== ''
+            ? JSON.parse(localStorage?.getItem('pl'))
+            : [],
+    ); // Array Object Song
+    const [currentIndex, setCurrentIndex] = useState(
+        localStorage?.getItem('pl') &&
+            localStorage?.getItem('pl') !== '' &&
+            JSON.parse(localStorage?.getItem('pl'))?.[0]
+            ? 0
+            : null,
+    ); // Index của bài đang nghe (null nếu chưa có bài nào, 0 khi reload lại trang)
     const [isBlocked, setIsBlocked] = useState(false);
     const [isPlaying, setIsPlaying] = useState(false);
     const [isShuffle, setIsShuffle] = useState(false);

@@ -16,6 +16,7 @@ import { getAuthUserInfoApi, getSongDataApi, getUserSongsDataApi } from '~/utils
 import { AuthContext } from '~/context/auth.context';
 import { useMusicPlayerContext } from '~/context/musicPlayer.context';
 import MusicCard from '~/pages/components/MusicCard';
+import MyMusicList from '~/pages/components/MyMusicList';
 
 function LeftContainer() {
     // State
@@ -88,8 +89,11 @@ function LeftContainer() {
         let mainMySong = document.getElementById('mainMySongID');
         if (!isOpenMySong) {
             // 80px
-            if (mySongsData?.length > 0) {
+            if (mySongsData?.length > 0 && mySongsData?.length < 5) {
                 let height = 80 * mySongsData?.length + 42;
+                mainMySong.style.height = `${height}px`;
+            } else if (mySongsData?.length >= 5) {
+                let height = 80 * 4.5 + 42;
                 mainMySong.style.height = `${height}px`;
             } else {
                 mainMySong.style.height = `122px`;
@@ -102,6 +106,7 @@ function LeftContainer() {
         }
     };
     // Lấy dữ liệu
+    // Call API Get User Songs (Auth User)
     useEffect(() => {
         // Call API Get User Songs (Auth User)
         const getUserSongsData = async (userId) => {
@@ -111,7 +116,7 @@ function LeftContainer() {
             setMySongsData(res?.data);
         };
         getUserSongsData(auth?.user?.userId);
-    }, []);
+    }, [isOpenMySong]);
     // // Test handlePlay
     // const handlePlay = async (e) => {
     //     try {
@@ -355,32 +360,8 @@ function LeftContainer() {
                     </div>
                     <div id="mainMySongID" className="main">
                         <div className="backTop"></div>
-                        {mySongsData && mySongsData?.length > 0 ? (
-                            <>
-                                {mySongsData?.map((song) => (
-                                    <MusicCard songData={song} typeMusicCard={'LeftContainer'} />
-                                ))}
-                            </>
-                        ) : (
-                            <>
-                                {/* Each Item */}
-                                <button className="btnPlaylist">
-                                    <span
-                                        style={{
-                                            display: 'block',
-                                            width: '100%',
-                                            color: 'white',
-                                            fontFamily: 'system-ui',
-                                            fontSize: '14px',
-                                            fontWeight: '400',
-                                            textAlign: 'center',
-                                        }}
-                                    >
-                                        Chưa có bài nhạc
-                                    </span>
-                                </button>
-                            </>
-                        )}
+                        {/* List my music */}
+                        {mySongsData && <MyMusicList mySongsData={mySongsData} typeMyMusicList={'LeftContainer'} />}
                     </div>
                 </div>
             </div>
