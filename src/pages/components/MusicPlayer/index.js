@@ -11,6 +11,7 @@ import {
     IoVolumeMuteSharp,
     IoHeartSharp,
     IoSparklesSharp,
+    IoRefreshSharp,
 } from 'react-icons/io5';
 import CircumIcon from '@klarr-agency/circum-icons-react';
 import Slider from 'react-slick';
@@ -137,7 +138,7 @@ function MusicPlayer() {
             <div className="songPlayer">
                 {/* top */}
                 <div className="top">
-                    <span className="title">Song Player</span>
+                    <span className="title">Music Player</span>
                     <div className="options">
                         {/* Nút phóng to / thu nhỏ trình phát nhạc */}
                         <button className="btnFullSreen tooltip" onClick={handleMaximizeMinimizeMusicPlayer}>
@@ -215,12 +216,16 @@ function MusicPlayer() {
                     <div className="progressBarContainer">
                         {/* Progress */}
                         <input
+                            className="progressBar"
                             type="range"
                             min="0"
                             max={duration}
                             value={currentTime}
                             onChange={handleSeek}
-                            style={{ accentColor: '#ffffff', margin: '0px', cursor: 'pointer' }}
+                            style={{
+                                margin: '0px',
+                                cursor: !playlist?.length || playlist?.length < 1 ? 'not-allowed' : 'pointer',
+                            }}
                         />
                         {/* Time */}
                         <div className="timeBar">
@@ -245,6 +250,7 @@ function MusicPlayer() {
                                 ) : (
                                     <div className="volumeControl">
                                         <input
+                                            className="volumeControlRange"
                                             type="range"
                                             min="0"
                                             max="1"
@@ -269,7 +275,7 @@ function MusicPlayer() {
                             <div className="btnShuffleContainer">
                                 <button
                                     className={`btnShuffle ${
-                                        !playlist?.length || playlist?.length < 1 ? 'btnDisabled' : ''
+                                        !playlist?.length || playlist?.length <= 1 ? 'btnDisabled' : ''
                                     }`}
                                     onClick={() => {
                                         shuffle();
@@ -279,7 +285,7 @@ function MusicPlayer() {
                                         color: isShuffle ? '#000' : '#ffffff',
                                         position: 'relative',
                                     }}
-                                    disabled={!playlist?.length || playlist?.length < 1 ? true : false}
+                                    disabled={!playlist?.length || playlist?.length <= 1 ? true : false}
                                 >
                                     <IoShuffleSharp />
                                     {isShuffle && (
@@ -328,7 +334,9 @@ function MusicPlayer() {
                                     onClick={togglePlay}
                                     disabled={!playlist?.length || playlist?.length < 1 ? true : false}
                                 >
-                                    {isPlaying ? <IoPauseSharp /> : <IoPlaySharp />}
+                                    {isPlaying && <IoPauseSharp />}
+                                    {!isPlaying && <IoPlaySharp />}
+                                    {/* {!isPlaying && currentTime === duration && <IoRefreshSharp />} */}
                                 </button>
                             </div>
                             <div className="btnNextSongContainer">

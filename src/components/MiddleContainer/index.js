@@ -13,7 +13,7 @@ function MiddleContainer({ children }) {
             <div
                 id="middleContainerID"
                 className="col l-6 m-12 c-12 middleContainer"
-                style={{ opacity: '0' }}
+                // style={{ opacity: '0' }}
                 //
             >
                 {/* Thanh chuyển tab */}

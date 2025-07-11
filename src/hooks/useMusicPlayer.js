@@ -117,6 +117,19 @@ export function useMusicPlayer() {
             audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
         };
     }, []);
+    // Cập nhật CSS biến --progress theo thời gian (phần đã phát của bài nhạc)
+    useEffect(() => {
+        const input = document.querySelector('.progressBar');
+        if (input) {
+            const progress = (currentTime / duration) * 100 || 0;
+            input.style.setProperty('--progress', progress);
+        }
+        // const input = document.querySelector('.progress-bar');
+        // if (input) {
+        //     const percentage = (currentTime / duration) * 100 || 0;
+        //     input.style.background = `linear-gradient(to right, #ff4d4d 0%, #ff4d4d ${percentage}%, #e0e0e0 ${percentage}%, #e0e0e0 100%)`;
+        // }
+    }, [currentTime, duration]);
     // Gửi message cho channel "music-player" khi phát/dừng nhạc
     useEffect(() => {
         if (isPlaying) {
@@ -216,7 +229,7 @@ export function useMusicPlayer() {
             // Kết quả
             return randomIndex;
         } else {
-            return;
+            return currentIndex;
         }
     };
     const shuffle = () => {
@@ -261,6 +274,7 @@ export function useMusicPlayer() {
     // Hàm xử lý việc tua bài nhạc
     const handleSeek = (e) => {
         const time = parseFloat(e.target.value);
+        // const time = Number(e.target.value);
         audioRef.current.currentTime = time;
         setCurrentTime(time);
     };
