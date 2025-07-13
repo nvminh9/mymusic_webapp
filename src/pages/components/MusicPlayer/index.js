@@ -187,15 +187,18 @@ function MusicPlayer() {
                     </div>
                     {/* Song Info */}
                     <div className="songInfo">
-                        <div className="name">
-                            <span
-                                id="songNameID"
-                                onMouseOver={activeSongNameMarquee}
-                                onMouseLeave={turnOffSongNameMarquee}
-                            >
-                                {currentSong?.name || 'Không có bài nhạc'}
-                            </span>
-                        </div>
+                        {/* Name */}
+                        {currentSong && (
+                            <div className="name">
+                                <span
+                                    id="songNameID"
+                                    onMouseOver={activeSongNameMarquee}
+                                    onMouseLeave={turnOffSongNameMarquee}
+                                >
+                                    {currentSong?.name || ''}
+                                </span>
+                            </div>
+                        )}
                         <div className="artist">
                             <Link to={`/profile/${currentSong?.User?.userName}`} style={{ textDecoration: 'none' }}>
                                 <span>{currentSong?.User?.userName || ''}</span>

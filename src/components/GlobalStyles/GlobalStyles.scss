@@ -3665,13 +3665,19 @@ body {
     height: auto;
     .uploadMusicForm {
         display: block;
+        position: relative;
         // Thanh progress
         .progressBox {
-            margin: 12px;
-            padding: 5px;
+            margin: 0px;
+            padding: 17px;
             border-radius: 7px;
             background-color: rgba(18, 18, 18, 0.8);
             backdrop-filter: blur(15px);
+            // position: sticky;
+            // width: 100%;
+            // top: 58.4px;
+            // left: 0;
+            // right: 0;
             // background-color: pink;
             .stepProgressBar {
                 height: 5px;
@@ -3790,6 +3796,265 @@ body {
                 -webkit-line-clamp: 2;
                 overflow: hidden;
                 text-overflow: ellipsis;
+            }
+        }
+        // Add Image Box
+        .addMoreContentContainer {
+            display: grid;
+            border: 0.5px solid #1f1f1f;
+            border-radius: 20px;
+            padding: 10px;
+
+            // Hộp thêm ảnh / video
+            .addMediaBox {
+                background-color: #1f1f1f;
+                width: 100%;
+                margin-top: 10px;
+                border-radius: 13px;
+                padding: 10px;
+                display: grid;
+                // Tiêu đề
+                .title {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    color: #ffffff;
+                    font-size: 15px;
+                    font-weight: 400;
+                    font-family: sans-serif;
+                    margin: 0px;
+                    margin-bottom: 10px;
+                    // Nút thêm ảnh/video
+                    .btnAddMedia {
+                        svg {
+                            font-size: 16px;
+                            color: #ffffff80;
+                        }
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        background-color: transparent;
+                        color: #ffffff80;
+                        font-family: system-ui;
+                        font-size: 15px;
+                        font-weight: 400;
+                        gap: 5px;
+                        padding: 5px 10px;
+                        cursor: pointer;
+                        border: 1.5px dashed #ffffff80;
+                        border-radius: 5px;
+                        transition: ease-out 0.2s;
+                        user-select: none;
+                    }
+                    .btnAddMedia:hover {
+                        border: 1.5px dashed #ffffff;
+                        color: #ffffff;
+
+                        svg {
+                            color: #ffffff;
+                        }
+                    }
+                    .btnAddMedia:active {
+                        background-color: #000;
+                    }
+                    // Nút đóng hộp
+                    .btnCloseAddMediaBox {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        padding: 8px;
+                        background-color: transparent;
+                        border: none;
+                        border-radius: 5px;
+                        color: #ffffff;
+                        cursor: pointer;
+                    }
+                    .btnCloseAddMediaBox:hover {
+                        background-color: #2e2e2e;
+                    }
+                    .btnCloseAddMediaBox:active {
+                        background-color: red;
+                    }
+                }
+                // Phần hiển thị các ảnh/video đã chọn
+                .mediaListContainer {
+                    display: flex;
+                    align-items: center;
+                    justify-content: start;
+                    position: relative;
+                    overflow-y: hidden;
+                    overflow-x: auto;
+                    scroll-behavior: smooth;
+                    border-radius: 6px;
+                    transition: ease-out 0.2s;
+                    border: 1.5px dashed transparent;
+                    // Danh sách xem trước mediaList
+                    .mediaList {
+                        display: flex;
+                        align-items: center;
+                        overflow-y: hidden;
+                        overflow-x: auto;
+                        scroll-behavior: smooth;
+                        // Div bao ảnh/video
+                        .previewMediaFilesContainer {
+                            position: relative;
+                            height: 150px;
+                            min-height: 150px;
+                            max-height: 150px;
+                            width: 100%;
+                            margin-right: 5px;
+                            // margin-bottom: 5px;
+                            border-radius: 3px;
+                            // Button Remove
+                            .btnRemove {
+                                position: absolute;
+                                top: 2px;
+                                right: 2px;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                padding: 3px 5px;
+                                background-color: rgba(18, 18, 18, 0.35);
+                                border: none;
+                                border-radius: 3px;
+                                color: #ffffff;
+                                cursor: pointer;
+                                transition: ease-out 0.2s;
+                            }
+                            .btnRemove:hover {
+                                background-color: rgba(18, 18, 18, 0.65);
+                                backdrop-filter: blur(5px);
+                            }
+                            .btnRemove:active {
+                                background-color: red;
+                            }
+                            // Ảnh
+                            img {
+                                height: 100%;
+                                outline: 1px solid rgba(243, 245, 247, 0.15);
+                                outline-offset: -1px;
+                                border-radius: 5px;
+                            }
+                            // Video
+                            video {
+                                height: 100%;
+                                outline: 1px solid rgba(243, 245, 247, 0.15);
+                                outline-offset: -1px;
+                                border-radius: 3px;
+                            }
+                        }
+                    }
+                    .mediaList::-webkit-scrollbar {
+                        height: 8px;
+                    }
+                    .mediaList::-webkit-scrollbar-track {
+                        background-color: transparent;
+                    }
+                    .mediaList::-webkit-scrollbar-thumb {
+                        border-radius: 3px;
+                        // background-color: rgba(18, 18, 18, 0.8);
+                    }
+                    .mediaList::-webkit-scrollbar-thumb:hover {
+                        // background-color: rgb(14, 14, 14);
+                    }
+                }
+            }
+
+            // Các chức năng thêm nội dung cho bài viết
+            .addMoreContent {
+                width: 100%;
+                background-color: transparent;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                // padding: 10px;
+
+                .title {
+                    color: #ffffff;
+                    display: block;
+                    font-family: system-ui;
+                    font-size: 13px;
+                    font-weight: 500;
+                    margin: 0px;
+                }
+
+                .contentOptions {
+                    // width: 50%;
+
+                    button {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        padding: 8px;
+                        background-color: transparent;
+                        border: none;
+                        border-radius: 10px;
+                        color: #ffffff;
+                        font-size: 16px;
+                        cursor: pointer;
+                        transition: ease-out 0.2s;
+                    }
+                    button:hover {
+                        background-color: #1f1f1f;
+                    }
+                    button:active {
+                        background-color: #000;
+                    }
+                    button:active svg {
+                        transition: ease-out 0.2s;
+                        transform: scale(0.95);
+                    }
+                }
+            }
+        }
+        // Ô nhập tên
+        .nameField {
+            margin: 24px 17px;
+            .title {
+                display: block;
+                color: white;
+                font-size: 17px;
+                font-weight: 400;
+                margin: 0;
+                margin-bottom: 12px;
+                text-align: left;
+            }
+            .inputNameMusic {
+                width: 100%;
+                font-family: system-ui;
+                font-size: 16px;
+                font-weight: 400;
+                background-color: transparent;
+                border: 0.5px solid #1f1f1f;
+                border-radius: 20px;
+                padding: 15px 10px;
+                color: #ffffff;
+            }
+        }
+        // Ô nhập hình ảnh cho nhạc
+        .songImageField {
+            margin: 24px 17px;
+            .title {
+                display: block;
+                color: white;
+                font-size: 17px;
+                font-weight: 400;
+                margin: 0;
+                margin-bottom: 12px;
+                text-align: left;
+            }
+        }
+        // Ô nhập video cho nhạc
+        .songVideoField {
+            margin: 24px 17px;
+            .title {
+                display: block;
+                color: white;
+                font-size: 17px;
+                font-weight: 400;
+                margin: 0;
+                margin-bottom: 12px;
+                text-align: left;
             }
         }
     }
