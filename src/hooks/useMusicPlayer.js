@@ -156,13 +156,14 @@ export function useMusicPlayer() {
                 setIsBlocked(false);
             }
         };
-        // Nếu tab đang phát, chưa dừng mà bị đóng
+        // Sự kiện trước khi đóng tab
         window.onunload = function () {
             // Local Storage (Lưu bài cuối cùng đang nghe trước khi tắt)
             // let playlistTemp = playlist;
             // if (playlistTemp) {
             //     localStorage.setItem('pl', JSON.stringify([{ ...playlistTemp?.pop() }]));
             // }
+            setIsPlaying(false);
         };
         channel.addEventListener('message', handleMessage);
         return () => channel.removeEventListener('message', handleMessage);

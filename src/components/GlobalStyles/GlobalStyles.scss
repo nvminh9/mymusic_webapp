@@ -4057,6 +4057,99 @@ body {
                 text-align: left;
             }
         }
+        // Custom Audio Control for test audio
+        .customControl {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            width: 100%;
+            .btnPlay {
+                // width: 60px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border: none;
+                border-radius: 8px;
+                background: none;
+                color: #ffffff;
+                padding: 8px;
+                font-size: 18px;
+                cursor: pointer;
+                transition: ease-out 0.2s;
+            }
+            .btnPlay:hover {
+                background-color: #2e2e2e;
+            }
+            .btnPlay:active {
+                background-color: #000;
+                transform: scale(0.7);
+            }
+            // Progress bar của custom control cho test audio
+            .progress {
+                display: flex;
+                width: 100%;
+                // thanh tải
+                .testAudioProgressBar {
+                    -webkit-appearance: none;
+                    appearance: none;
+                    width: 100%;
+                    // height: 6px;
+                    border-radius: 5px;
+                    outline: none;
+                    cursor: pointer;
+                    background: transparent;
+                }
+                /* Track (nền progress) */
+                .testAudioProgressBar::-webkit-slider-runnable-track {
+                    background: linear-gradient(
+                        to right,
+                        #ffffffe6 0%,
+                        #ffffffe6 calc(var(--testAudioProgress) * 1%),
+                        #777777aa calc(var(--testAudioProgress) * 1%),
+                        #777777aa 100%
+                    );
+                    height: 7px;
+                    border-radius: 5px;
+                }
+                /* Thumb (nút kéo) */
+                .testAudioProgressBar::-webkit-slider-thumb {
+                    -webkit-appearance: none;
+                    appearance: none;
+                    width: 14px;
+                    height: 14px;
+                    background: #ffffffe6;
+                    backdrop-filter: blur(1px);
+                    border-radius: 50%;
+                    margin-top: -4px;
+                    cursor: pointer;
+                    opacity: 0;
+                }
+                .testAudioProgressBar::-webkit-slider-thumb:hover {
+                    opacity: 1;
+                }
+                /* Firefox */
+                .testAudioProgressBar::-moz-range-track {
+                    background: #777777aa;
+                    height: 6px;
+                    border-radius: 5px;
+                }
+                .testAudioProgressBar::-moz-range-thumb {
+                    width: 14px;
+                    height: 14px;
+                    background: #ffffffe6;
+                    border-radius: 50%;
+                    cursor: pointer;
+                }
+            }
+            .durationAndCurrentTime {
+                display: block;
+                color: #ffffff;
+                font-family: system-ui;
+                font-size: 13px;
+                font-weight: 500;
+            }
+        }
     }
 }
 

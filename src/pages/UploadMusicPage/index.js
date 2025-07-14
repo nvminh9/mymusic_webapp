@@ -16,6 +16,8 @@ import {
     IoEyeOffOutline,
     IoEyeOutline,
     IoImages,
+    IoPauseSharp,
+    IoPlaySharp,
 } from 'react-icons/io5';
 import { VscChevronLeft } from 'react-icons/vsc';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
@@ -31,19 +33,25 @@ function UploadMusicPage() {
     const [previewVideoFile, setPreviewVideoFile] = useState(); // Link Preview File Video
     const [isOpenAddImageBox, setIsOpenAddImageBox] = useState(false);
     const [isOpenAddVideoBox, setIsOpenAddVideoBox] = useState(false);
+    const [isOpenAudioBox, setIsOpenAudioBox] = useState(false);
     const [isAudioFileNotValid, setIsAudioFileNotValid] = useState(false);
     const [isAudioFileEmpty, setIsAudioFileEmpty] = useState(false);
+    const [isPlaying, setIsPlaying] = useState(false);
+    const [currentTime, setCurrentTime] = useState(0);
+    const [duration, setDuration] = useState(0);
 
     // Context
 
     // Ref
     const addImageBoxRef = useRef(null); // Hộp thêm image
     const addVideoBoxRef = useRef(null); // Hộp thêm video
+    const audioBoxRef = useRef(null); // Hộp chứa audio nghe thử
     const addAudioInputRef = useRef(null);
     const addImageInputRef = useRef(null);
     const addVideoInputRef = useRef(null);
     const imageListRef = useRef(null);
     const videoListRef = useRef(null);
+    const testAudioRef = useRef(null);
 
     // Navigate
     const navigate = useNavigate();
@@ -164,10 +172,74 @@ function UploadMusicPage() {
             return;
         }
     };
+    // Cập nhật thời gian của bài nhạc và metadata
+    useEffect(() => {
+        const audio = testAudioRef.current;
+        if (!audio) return;
+        //
+        const handleTimeUpdate = () => setCurrentTime(audio.currentTime);
+        const handleLoadedMetadata = () => {
+            setIsPlaying(false);
+            setCurrentTime(0);
+            setDuration(audio.duration);
+        };
+        //
+        audio.addEventListener('timeupdate', handleTimeUpdate);
+        audio.addEventListener('loadedmetadata', handleLoadedMetadata);
+        //
+        return () => {
+            audio.removeEventListener('timeupdate', handleTimeUpdate);
+            audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
+        };
+    }, [previewAudioFile, formStep]);
+    // Cập nhật CSS biến --testAudioProgress theo thời gian (phần đã phát của bài nhạc)
+    useEffect(() => {
+        const input = document.querySelector('.testAudioProgressBar');
+        if (input) {
+            const progress = (currentTime / duration) * 100 || 0;
+            input.style.setProperty('--testAudioProgress', progress);
+        }
+    }, [currentTime, duration, previewAudioFile, formStep, isOpenAudioBox]);
+    // Hàm xử lý việc tua bài nhạc
+    const handleSeek = (e) => {
+        const time = parseFloat(e.target.value);
+        // const time = Number(e.target.value);
+        testAudioRef.current.currentTime = time;
+        setCurrentTime(time);
+    };
+    // Hanlde play/pause song
+    const togglePlay = async () => {
+        if (!testAudioRef.current) return;
+        //
+        if (isPlaying) {
+            testAudioRef.current.pause();
+            setIsPlaying(false);
+        } else {
+            // audioRef.current.play();
+            // setIsPlaying(true);
+            try {
+                await testAudioRef.current.play();
+                setIsPlaying(true);
+            } catch (error) {
+                console.error('Autoplay blocked or error playing audio:', error);
+            }
+        }
+    };
+    // Handle khi hết bài
+    const handleEnded = () => {
+        setIsPlaying(false);
+    };
     // Đổi bytes sang mb
     const bytesToMB = (bytes) => {
         if (typeof bytes !== 'number' || isNaN(bytes)) return 0;
         return (bytes / (1024 * 1024)).toFixed(2);
+    };
+    // Hàm format thời gian của bài hát
+    const formatTime = (sec) => {
+        if (isNaN(sec)) return '00:00';
+        const m = Math.floor(sec / 60);
+        const s = Math.floor(sec % 60);
+        return `${m < 10 ? '0' + m : m}:${s < 10 ? '0' + s : s}`;
     };
 
     return (
@@ -196,6 +268,17 @@ function UploadMusicPage() {
                         method="POST"
                         noValidate
                     >
+                        {/* Audio Tag Hidden */}
+                        <audio
+                            ref={testAudioRef}
+                            src={previewAudioFile}
+                            controls
+                            controlsList="noplaybackrate nodownload"
+                            onEnded={() => {
+                                handleEnded();
+                            }}
+                            style={{ display: 'none' }}
+                        />
                         {/* Step 0 */}
                         {formStep === 0 && (
                             <>
@@ -283,7 +366,7 @@ function UploadMusicPage() {
                                                     style={{
                                                         color: '#dfdfdf',
                                                         fontFamily: 'system-ui',
-                                                        fontWeight: '400',
+                                                        fontWeight: '600',
                                                     }}
                                                 >
                                                     Kéo và thả tệp âm thanh vào đây
@@ -301,41 +384,61 @@ function UploadMusicPage() {
                                                 </span>
                                                 {/* Định dạng tệp không hợp lệ */}
                                                 {isAudioFileNotValid ? (
-                                                    <span
-                                                        className="fileName"
+                                                    <div
+                                                        className="errorMessage"
                                                         style={{
+                                                            // background: 'rgb(255 204 51 / 50%)',
+                                                            background: 'rgb(233 20 41 / 50%)',
+                                                            width: 'fit-content',
+                                                            padding: '6px',
+                                                            paddingRight: '7px',
+                                                            color: '#ffffff',
+                                                            fontSize: '14px',
+                                                            fontWeight: '400',
+                                                            fontFamily: 'system-ui',
+                                                            margin: '0px auto',
+                                                            marginTop: '11px',
+                                                            borderRadius: '20px',
                                                             display: 'flex',
                                                             alignItems: 'center',
                                                             justifyContent: 'center',
                                                             gap: '5px',
-                                                            fontSize: '14px',
-                                                            fontWeight: '400',
-                                                            margin: '0px auto',
-                                                            marginTop: '5px',
                                                         }}
                                                     >
-                                                        <IoAlertCircleOutline style={{ color: '#d63031' }} /> Định dạng
-                                                        tệp không hợp lệ
-                                                    </span>
+                                                        <IoAlertCircleOutline />{' '}
+                                                        <span style={{ marginBottom: '1px' }}>
+                                                            Định dạng tệp không hợp lệ
+                                                        </span>
+                                                    </div>
                                                 ) : (
                                                     <>
                                                         {isAudioFileEmpty ? (
-                                                            <span
-                                                                className="fileName"
+                                                            <div
+                                                                className="errorMessage"
                                                                 style={{
+                                                                    background: 'rgb(255 204 51 / 50%)',
+                                                                    // background: 'rgb(233 20 41 / 50%)',
+                                                                    width: 'fit-content',
+                                                                    padding: '6px',
+                                                                    paddingRight: '7px',
+                                                                    color: '#ffffff',
+                                                                    fontSize: '14px',
+                                                                    fontWeight: '400',
+                                                                    fontFamily: 'system-ui',
+                                                                    margin: '0px auto',
+                                                                    marginTop: '11px',
+                                                                    borderRadius: '20px',
                                                                     display: 'flex',
                                                                     alignItems: 'center',
                                                                     justifyContent: 'center',
                                                                     gap: '5px',
-                                                                    fontSize: '14px',
-                                                                    fontWeight: '400',
-                                                                    margin: '0px auto',
-                                                                    marginTop: '5px',
                                                                 }}
                                                             >
-                                                                <IoAlertCircleOutline style={{ color: '#ffc107' }} />{' '}
-                                                                Chưa chọn tệp nào
-                                                            </span>
+                                                                <IoAlertCircleOutline />{' '}
+                                                                <span style={{ marginBottom: '1px' }}>
+                                                                    Chưa chọn tệp nào
+                                                                </span>
+                                                            </div>
                                                         ) : (
                                                             <></>
                                                         )}
@@ -374,7 +477,11 @@ function UploadMusicPage() {
                                             <button
                                                 className="btnReturnPreviousStep"
                                                 type="button"
-                                                onClick={() => setFormStep(formStep - 1)}
+                                                onClick={() => {
+                                                    setFormStep(formStep - 1);
+                                                    setIsPlaying(false);
+                                                    testAudioRef.current.pause();
+                                                }}
                                             >
                                                 <IoChevronBackSharp />
                                             </button>
@@ -411,22 +518,123 @@ function UploadMusicPage() {
                                 </div>
                                 {/* Music Info Fields */}
                                 {/* Preview Music */}
-                                <div
+                                {/* <div
                                     style={{
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
                                         margin: '0px 17px',
-                                        // backgroundColor: '#f1f3f4',
-                                        borderRadius: '6px',
+                                        backgroundColor: 'transparent',
+                                        border: '0.5px solid #1f1f1f',
+                                        borderRadius: '20px',
+                                        userSelect: 'none',
                                     }}
                                 >
-                                    {/* <audio
-                                        src={previewAudioFile}
-                                        controls
-                                        controlsList="noplaybackrate nodownload"
-                                        style={{ width: '100%' }}
-                                    /> */}
+                                    <div className="areaDropFile">
+                                        <IoDocumentSharp />
+                                    </div>
+                                    <span className="fileName">{audioFile?.name}</span>
+                                    <span className="fileName">Kích thước: {bytesToMB(audioFile?.size)} MB</span>
+                                    <audio src={previewAudioFile} controls controlsList="noplaybackrate nodownload" />
+                                </div> */}
+                                <div className="songVideoField">
+                                    <span className="title">Tệp âm thanh</span>
+                                    <div className="addMoreContentContainer">
+                                        <div className="addMoreContent">
+                                            <span
+                                                className="title"
+                                                style={{
+                                                    height: '100%',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    gap: '5px',
+                                                }}
+                                            >
+                                                <IoDocumentSharp />
+                                                <span
+                                                    style={{
+                                                        display: '-webkit-box',
+                                                        WebkitBoxOrient: 'vertical',
+                                                        WebkitLineClamp: '1',
+                                                        overflow: 'hidden',
+                                                        textOverflow: 'ellipsis',
+                                                    }}
+                                                >
+                                                    {audioFile?.name}
+                                                </span>
+                                                <span style={{ color: '#777' }}>({bytesToMB(audioFile?.size)} MB)</span>
+                                            </span>
+                                            <div className="contentOptions">
+                                                {/* Nút mở hộp audio */}
+                                                <button
+                                                    type="button"
+                                                    className="btnOpenAddMediaBox"
+                                                    onClick={() => {
+                                                        // Nếu isOpenAudioBox true thì sẽ được đóng lại
+                                                        // Trước khi đóng thì tắt nhạc
+                                                        if (isOpenAudioBox) {
+                                                            testAudioRef.current.pause();
+                                                            setIsPlaying(false);
+                                                        }
+                                                        setIsOpenAudioBox(!isOpenAudioBox);
+                                                        // setTimeout(() => {
+                                                        //     audioBoxRef?.current?.scrollIntoView({
+                                                        //         behavior: 'smooth',
+                                                        //     });
+                                                        // }, 150);
+                                                    }}
+                                                >
+                                                    {isOpenAudioBox ? <IoChevronUpSharp /> : <IoChevronDownSharp />}
+                                                </button>
+                                            </div>
+                                        </div>
+                                        {/* Hộp Audio */}
+                                        {isOpenAudioBox ? (
+                                            <>
+                                                <div className="addMediaBox" ref={audioBoxRef}>
+                                                    <div className="mediaListContainer" id="videoListContainerID">
+                                                        {/* Custom Control */}
+                                                        <div className="customControl">
+                                                            <button
+                                                                className="btnPlay"
+                                                                type="button"
+                                                                onClick={togglePlay}
+                                                            >
+                                                                {isPlaying ? <IoPauseSharp /> : <IoPlaySharp />}
+                                                            </button>
+                                                            <div className="progress">
+                                                                {/* Progress */}
+                                                                <input
+                                                                    className="testAudioProgressBar"
+                                                                    type="range"
+                                                                    min="0"
+                                                                    max={duration}
+                                                                    value={currentTime}
+                                                                    onChange={handleSeek}
+                                                                    style={
+                                                                        {
+                                                                            // margin: '0px',
+                                                                            // cursor:
+                                                                            //     !playlist?.length || playlist?.length < 1
+                                                                            //         ? 'not-allowed'
+                                                                            //         : 'pointer',
+                                                                        }
+                                                                    }
+                                                                />
+                                                            </div>
+                                                            {/* Duration and current time */}
+                                                            <span className="durationAndCurrentTime">
+                                                                {formatTime(currentTime)}/{formatTime(duration)}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </>
+                                        ) : (
+                                            <></>
+                                        )}
+                                    </div>
                                 </div>
                                 {/* Name */}
                                 <div className="nameField">
@@ -469,7 +677,8 @@ function UploadMusicPage() {
                                                 gap: '5px',
                                             }}
                                         >
-                                            <IoAlertCircleOutline /> {errors.name?.message}
+                                            <IoAlertCircleOutline />{' '}
+                                            <span style={{ marginBottom: '1px' }}>{errors.name?.message}</span>
                                         </div>
                                     ) : (
                                         <></>
@@ -825,7 +1034,11 @@ function UploadMusicPage() {
                                             <button
                                                 className="btnReturnPreviousStep"
                                                 type="button"
-                                                onClick={() => setFormStep(formStep - 1)}
+                                                onClick={() => {
+                                                    setFormStep(formStep - 1);
+                                                    setIsPlaying(false);
+                                                    testAudioRef.current.pause();
+                                                }}
                                             >
                                                 <IoChevronBackSharp />
                                             </button>
