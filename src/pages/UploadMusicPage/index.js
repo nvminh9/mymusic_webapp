@@ -1,5 +1,5 @@
 import { message } from 'antd';
-import { useState, useEffect, Fragment, useRef } from 'react';
+import { useState, useEffect, Fragment, useRef, useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import {
     IoAddSharp,
@@ -15,12 +15,27 @@ import {
     IoDocumentSharp,
     IoEyeOffOutline,
     IoEyeOutline,
+    IoHeartSharp,
     IoImages,
     IoPauseSharp,
     IoPlaySharp,
+    IoPlaySkipBackSharp,
+    IoPlaySkipForwardSharp,
+    IoRepeatSharp,
+    IoShuffleSharp,
+    IoSparklesSharp,
+    IoVolumeHighSharp,
+    IoVolumeMuteSharp,
 } from 'react-icons/io5';
 import { VscChevronLeft } from 'react-icons/vsc';
+import CircumIcon from '@klarr-agency/circum-icons-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { AuthContext } from '~/context/auth.context';
+import { uploadMusicApi } from '~/utils/api';
+import ImageAmbilight from '../components/ImageAmbilight';
+import VideoAmbilight from '../components/VideoAmbilight';
+import Slider from 'react-slick';
+import noContentImage from '~/assets/images/no_content.jpg';
 
 function UploadMusicPage() {
     // State
@@ -41,6 +56,7 @@ function UploadMusicPage() {
     const [duration, setDuration] = useState(0);
 
     // Context
+    const { auth } = useContext(AuthContext);
 
     // Ref
     const addImageBoxRef = useRef(null); // Hộp thêm image
@@ -65,6 +81,62 @@ function UploadMusicPage() {
     // Message (Ant Design)
     const [messageApi, contextHolder] = message.useMessage();
 
+    // Config Slider Carousel Thumbnail (React Slick)
+    let sliderRef = useRef(null);
+    const settings = {
+        dots: (previewImageFile && previewVideoFile) || (!previewImageFile && previewVideoFile) ? true : false,
+        arrows: false,
+        infinite: (previewImageFile && previewVideoFile) || (!previewImageFile && previewVideoFile) ? true : false,
+        draggable: (previewImageFile && previewVideoFile) || (!previewImageFile && previewVideoFile) ? true : false,
+        speed: 500,
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        initialSlide: 0,
+        accessibility: false,
+        // adaptiveHeight: true,
+        responsive: [
+            {
+                breakpoint: 1024,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1,
+                    infinite: true,
+                    dots: true,
+                    draggable:
+                        (previewImageFile && previewVideoFile) || (!previewImageFile && previewVideoFile)
+                            ? true
+                            : false,
+                },
+            },
+            {
+                breakpoint: 600,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1,
+                    initialSlide: 2,
+                    draggable:
+                        (previewImageFile && previewVideoFile) || (!previewImageFile && previewVideoFile)
+                            ? true
+                            : false,
+                },
+            },
+            {
+                breakpoint: 480,
+                settings: {
+                    // slidesToShow: 1,
+                    // slidesToScroll: 1,
+                    slidesToShow: 1,
+                    slidesToScroll: 1,
+                    initialSlide: 2,
+                    draggable:
+                        (previewImageFile && previewVideoFile) || (!previewImageFile && previewVideoFile)
+                            ? true
+                            : false,
+                },
+            },
+        ],
+    };
+
     // --- HANDLE FUNCTIONS ---
     // Handle submit form upload music
     const onSubmit = async (data) => {
@@ -81,7 +153,56 @@ function UploadMusicPage() {
         // Đến bước tiếp theo
         if (formStep < 2) {
             setFormStep(formStep + 1);
+            setIsPlaying(false);
+            testAudioRef.current.pause();
             return;
+        }
+        // Nếu là bước cuối thì thực hiện đăng bài nhạc
+        if (formStep === 2) {
+            const { name } = data;
+            // Form Data
+            const formData = new FormData();
+            if (name) formData.append('name', name);
+            if (audioFile) formData.append('audioAndMediaFiles', audioFile);
+            if (imageFile) formData.append('audioAndMediaFiles', imageFile);
+            if (videoFile) formData.append('audioAndMediaFiles', videoFile);
+            // Loading ... (Ant Design Message)
+            messageApi
+                .open({
+                    type: 'loading',
+                    content: 'Đang xử lý ...',
+                    duration: 1.5,
+                    style: {
+                        color: 'white',
+                        marginTop: '58.4px',
+                    },
+                })
+                .then(async () => {
+                    const res = await uploadMusicApi(formData);
+                    if (res?.status === 200 && res?.message === 'Lưu bài nhạc thành công') {
+                        // Tạo bài nhạc thành công
+                        message.success({
+                            content: 'Đã đăng tải bài nhạc',
+                            duration: 1.5,
+                            style: {
+                                color: 'white',
+                                marginTop: '58.4px',
+                            },
+                        });
+                        // Navigate về trang cá nhân
+                        navigate(`/profile/${auth?.user?.userName}`);
+                    } else {
+                        // Tạo bài nhạc không thành công
+                        message.error({
+                            content: 'Có lỗi xảy ra',
+                            duration: 1.5,
+                            style: {
+                                color: 'white',
+                                marginTop: '58.4px',
+                            },
+                        });
+                    }
+                });
         }
     };
     // Handle onchange upload audio file
@@ -277,7 +398,7 @@ function UploadMusicPage() {
                             onEnded={() => {
                                 handleEnded();
                             }}
-                            style={{ display: 'none' }}
+                            style={{ display: 'none', opacity: '0', width: '0', height: '0' }}
                         />
                         {/* Step 0 */}
                         {formStep === 0 && (
@@ -518,25 +639,6 @@ function UploadMusicPage() {
                                 </div>
                                 {/* Music Info Fields */}
                                 {/* Preview Music */}
-                                {/* <div
-                                    style={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        margin: '0px 17px',
-                                        backgroundColor: 'transparent',
-                                        border: '0.5px solid #1f1f1f',
-                                        borderRadius: '20px',
-                                        userSelect: 'none',
-                                    }}
-                                >
-                                    <div className="areaDropFile">
-                                        <IoDocumentSharp />
-                                    </div>
-                                    <span className="fileName">{audioFile?.name}</span>
-                                    <span className="fileName">Kích thước: {bytesToMB(audioFile?.size)} MB</span>
-                                    <audio src={previewAudioFile} controls controlsList="noplaybackrate nodownload" />
-                                </div> */}
                                 <div className="songVideoField">
                                     <span className="title">Tệp âm thanh</span>
                                     <div className="addMoreContentContainer">
@@ -980,6 +1082,10 @@ function UploadMusicPage() {
                                                                             src={previewVideoFile}
                                                                             playsInline
                                                                             controls
+                                                                            controlsList="noplaybackrate nodownload"
+                                                                            muted
+                                                                            disablePictureInPicture
+                                                                            disableRemotePlayback
                                                                             preload="false"
                                                                         />
                                                                         <button
@@ -1045,7 +1151,7 @@ function UploadMusicPage() {
                                         </div>
                                         <div className="right">
                                             <span className="step">Bước 3/3</span>
-                                            <span>Bước 3</span>
+                                            <span>Kiểm tra</span>
                                         </div>
                                         {/* Button Submit */}
                                         {formStep < 2 ? (
@@ -1071,6 +1177,264 @@ function UploadMusicPage() {
                                                 )}
                                             </>
                                         )}
+                                    </div>
+                                </div>
+                                {/* Song Player Sample */}
+                                <div style={{ overflow: 'hidden', padding: '17px' }}>
+                                    <span
+                                        style={{
+                                            color: 'rgb(119, 119, 119)',
+                                            fontFamily: 'system-ui',
+                                            fontSize: '13px',
+                                            fontWeight: '500',
+                                            display: 'block',
+                                            textAlign: 'center',
+                                            paddingBottom: '10px',
+                                        }}
+                                    >
+                                        Dưới đây là bản xem thử để kiểm tra lại thông tin của bài nhạc
+                                    </span>
+                                    <div
+                                        className="songPlayer"
+                                        style={{
+                                            overflow: 'hidden',
+                                            border: '0.5px solid transparent',
+                                            borderRadius: '20px',
+                                            boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
+                                            background: '#1f1f1f',
+                                            paddingBottom: '52.5px',
+                                        }}
+                                    >
+                                        {/* top */}
+                                        <div className="top">
+                                            <span className="title" style={{ margin: '0' }}></span>
+                                            <div className="options">
+                                                {/* Nút phóng to / thu nhỏ trình phát nhạc */}
+                                                <button
+                                                    type="button"
+                                                    className="btnFullSreen tooltip"
+                                                    style={{ opacity: '0.3', cursor: 'not-allowed' }}
+                                                    disabled
+                                                >
+                                                    <CircumIcon name="maximize_1" />
+                                                    <span class="tooltiptext">Phóng to</span>
+                                                </button>
+                                                {/* Nút chế độ hình trong hình */}
+                                                <button
+                                                    type="button"
+                                                    className="btnPicInPic tooltip"
+                                                    style={{ opacity: '0.3', cursor: 'not-allowed' }}
+                                                    disabled
+                                                >
+                                                    <CircumIcon name="minimize_2" />
+                                                    <span class="tooltiptext">Trình phát thu nhỏ</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        {/* middle */}
+                                        <div className="middle">
+                                            {/* topBack */}
+                                            <div className="topBack"></div>
+                                            {/* Thumbnail */}
+                                            <div className="carouselThumbnail">
+                                                <Slider
+                                                    ref={(slider) => {
+                                                        sliderRef = slider;
+                                                    }}
+                                                    {...settings}
+                                                >
+                                                    {/* Song Image */}
+                                                    {!previewImageFile && (
+                                                        <div className="thumbnail">
+                                                            <ImageAmbilight imageSrc={noContentImage}></ImageAmbilight>
+                                                        </div>
+                                                    )}
+                                                    {previewImageFile && (
+                                                        <div className="thumbnail">
+                                                            <ImageAmbilight
+                                                                imageSrc={previewImageFile}
+                                                            ></ImageAmbilight>
+                                                        </div>
+                                                    )}
+                                                    {/* Song Video */}
+                                                    {previewVideoFile && (
+                                                        <div className="thumbnail">
+                                                            <VideoAmbilight
+                                                                videoSrc={previewVideoFile}
+                                                            ></VideoAmbilight>
+                                                        </div>
+                                                    )}
+                                                </Slider>
+                                            </div>
+                                            {/* Song Info */}
+                                            <div className="songInfo">
+                                                {/* Name */}
+                                                <div className="name">
+                                                    <span
+                                                        id="songNameID"
+                                                        // onMouseOver={activeSongNameMarquee}
+                                                        // onMouseLeave={turnOffSongNameMarquee}
+                                                    >
+                                                        {watch('name') || ''}
+                                                    </span>
+                                                </div>
+                                                <div className="artist">
+                                                    <Link
+                                                        to={`/profile/${auth?.user?.userName}`}
+                                                        style={{ textDecoration: 'none' }}
+                                                    >
+                                                        <span>{auth?.user?.userName || ''}</span>
+                                                    </Link>
+                                                </div>
+                                            </div>
+                                            {/* Audio */}
+                                            {/* <audio
+                                                ref={audioRef}
+                                                onEnded={() => {
+                                                    handleEnded();
+                                                }}
+                                                controls={false}
+                                                preload="auto"
+                                            /> */}
+                                            {/* Progress Bar */}
+                                            <div
+                                                className="progressBarContainer progress"
+                                                style={{ marginBottom: '30px', display: 'grid' }}
+                                            >
+                                                {/* Progress */}
+                                                <input
+                                                    className="progressBar testAudioProgressBar"
+                                                    type="range"
+                                                    min="0"
+                                                    max={duration}
+                                                    value={currentTime}
+                                                    onChange={handleSeek}
+                                                    style={{
+                                                        margin: '0px',
+                                                        // cursor:
+                                                        //     !playlist?.length || playlist?.length < 1
+                                                        //         ? 'not-allowed'
+                                                        //         : 'pointer',
+                                                    }}
+                                                />
+                                                {/* Time */}
+                                                <div className="timeBar">
+                                                    <div className="left" id="leftTimeBarID">
+                                                        {formatTime(currentTime)}
+                                                    </div>
+                                                    <div className="right" id="rightTimeBarID">
+                                                        {formatTime(duration)}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {/* bottom */}
+                                        <div
+                                            className="bottom"
+                                            style={{
+                                                position: 'absolute',
+                                            }}
+                                        >
+                                            {/* Controls */}
+                                            <div className="controlsContainer">
+                                                <div className="controls">
+                                                    <div className="btnVolumeControlContainer">
+                                                        {/* Volume Control */}
+                                                        <button
+                                                            type="button"
+                                                            className={`btnVolumeControl btnDisabled`}
+                                                            // onClick={() => {
+                                                            //     handleBtnVolume();
+                                                            // }}
+                                                            disabled
+                                                        >
+                                                            <IoVolumeHighSharp />
+                                                        </button>
+                                                    </div>
+                                                    <div className="btnShuffleContainer">
+                                                        <button
+                                                            type="button"
+                                                            className={`btnShuffle btnDisabled`}
+                                                            // onClick={() => {
+                                                            //     shuffle();
+                                                            // }}
+                                                            style={{
+                                                                // backgroundColor: isShuffle ? '#ffffff' : '',
+                                                                // color: isShuffle ? '#000' : '#ffffff',
+                                                                position: 'relative',
+                                                            }}
+                                                            disabled
+                                                        >
+                                                            <IoShuffleSharp />
+                                                        </button>
+                                                    </div>
+                                                    <div className="btnPreviousSongContainer">
+                                                        <button
+                                                            type="button"
+                                                            className={`btnPreviousSong btnDisabled`}
+                                                            // onClick={previous}
+                                                            disabled
+                                                        >
+                                                            <IoPlaySkipBackSharp />
+                                                        </button>
+                                                    </div>
+                                                    <div className="btnPlayContainer">
+                                                        <button
+                                                            type="button"
+                                                            className={`btnPlay`}
+                                                            onClick={togglePlay}
+                                                        >
+                                                            {isPlaying && <IoPauseSharp />}
+                                                            {!isPlaying && <IoPlaySharp />}
+                                                            {/* {!isPlaying && currentTime === duration && <IoRefreshSharp />} */}
+                                                        </button>
+                                                    </div>
+                                                    <div className="btnNextSongContainer">
+                                                        <button
+                                                            type="button"
+                                                            className={`btnNextSong btnDisabled`}
+                                                            // onClick={next}
+                                                            disabled
+                                                        >
+                                                            <IoPlaySkipForwardSharp />
+                                                        </button>
+                                                    </div>
+                                                    <div className="btnRepeatContainer">
+                                                        <button
+                                                            type="button"
+                                                            className={`btnRepeat btnDisabled`}
+                                                            // onClick={() => setIsRepeatOne(!isRepeatOne)}
+                                                            style={{
+                                                                // backgroundColor: isRepeatOne ? '#ffffff' : '',
+                                                                // color: isRepeatOne ? '#000' : '#ffffff',
+                                                                position: 'relative',
+                                                            }}
+                                                            disabled
+                                                        >
+                                                            <IoRepeatSharp />
+                                                        </button>
+                                                    </div>
+                                                    <div className="btnLikeSongContainer">
+                                                        <button
+                                                            type="button"
+                                                            className={`btnLikeSong btnDisabled`}
+                                                            disabled
+                                                        >
+                                                            <IoSparklesSharp
+                                                                className="sparkles"
+                                                                style={{ transform: 'translate(-11px, -7px)' }}
+                                                            />
+                                                            <IoHeartSharp />
+                                                            <IoSparklesSharp
+                                                                className="sparkles"
+                                                                style={{ transform: 'translate(8px, 6px)' }}
+                                                            />
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {/* Music Player đang phát ở Tab khác */}
                                     </div>
                                 </div>
                             </>

@@ -219,6 +219,12 @@ const getFeedDataApi = (cursor, limit) => {
     return axios.get(URL_API);
 };
 
+// API Đăng tải bài nhạc (POST)
+const uploadMusicApi = (data) => {
+    const URL_API = `/v1/api/music/upload`;
+    return axios.post(URL_API, data);
+};
+
 // API Lấy dữ liệu của bài nhạc (GET)
 const getSongDataApi = (songId) => {
     const URL_API = `/v1/api/music?s=${songId}`;
@@ -266,6 +272,7 @@ export {
     deleteCommentSharedArticleApi,
     deleteSharedArticleApi,
     getFeedDataApi,
+    uploadMusicApi,
     getSongDataApi,
     getUserSongsDataApi,
 };
