@@ -77,40 +77,40 @@ function Carousel({ slides }) {
                                 to={slide.type === 'playlist' ? `playlist/playlistID` : `song/songID`}
                                 style={{ textDecoration: 'none' }}
                             >
-                                <div
-                                    className="carouselItem"
-                                    style={{
-                                        display: 'grid',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                    }}
-                                >
-                                    <img
-                                        src={slide.img}
-                                        className="slide-image"
-                                        style={{
-                                            height: '150px',
-                                            width: '150px',
-                                            objectFit: 'cover',
-                                            objectPosition: 'center',
-                                            // border: '.5px solid rgba(18, 18, 18, 0.8)',
-                                        }}
-                                    />
+                                <div className="carouselItem">
+                                    <div>
+                                        <img
+                                            src={slide.img}
+                                            className="slide-image"
+                                            style={{
+                                                height: '154px',
+                                                width: '100%',
+                                                objectFit: 'cover',
+                                                objectPosition: 'center',
+                                                borderRadius: '5px',
+                                                outline: '1px solid rgba(135, 135, 135, 0.15)',
+                                                outlineOffset: '-1px',
+                                                boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
+                                                // border: '.5px solid rgba(18, 18, 18, 0.8)',
+                                            }}
+                                        />
+                                    </div>
                                     <div
                                         className="info"
                                         style={{
                                             display: 'grid',
                                             alignItems: 'center',
+                                            gap: '2px',
+                                            paddingTop: '12px',
                                         }}
                                     >
                                         <span
                                             className="info1"
                                             style={{
                                                 color: '#ffffff',
-                                                paddingBottom: '1px',
-                                                paddingTop: '5px',
+                                                fontFamily: 'system-ui',
                                                 fontSize: '14px',
-                                                fontWeight: '400',
+                                                fontWeight: '500',
                                                 width: '115px',
                                                 display: '-webkit-box',
                                                 WebkitBoxOrient: 'vertical',
@@ -125,8 +125,9 @@ function Carousel({ slides }) {
                                             className="info2"
                                             style={{
                                                 color: 'rgba(119, 119, 119, 0.6666666667)',
-                                                fontSize: '14px',
-                                                fontWeight: '300',
+                                                fontFamily: 'system-ui',
+                                                fontSize: '12px',
+                                                fontWeight: '500',
                                                 width: '115px',
                                                 display: '-webkit-box',
                                                 WebkitBoxOrient: 'vertical',

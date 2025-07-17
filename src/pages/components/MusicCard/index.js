@@ -44,6 +44,7 @@ function MusicCard({ songData, typeMusicCard }) {
                                     ? process.env.REACT_APP_BACKEND_URL + songData?.songImage
                                     : noContentImage
                             }
+                            draggable="false"
                         />
                     </div>
                     <div className="info">

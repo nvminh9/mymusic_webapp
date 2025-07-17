@@ -94,7 +94,19 @@ const VideoAmbilight = ({ videoSrc }) => {
                         />
                     </IKContext> */}
                 </div>
-                <canvas id="ambilight" ref={canvasRef} />
+                <div
+                    style={{
+                        position: 'absolute',
+                        top: '0',
+                        left: '0',
+                        right: '0',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    }}
+                >
+                    <canvas id="ambilight" ref={canvasRef} />
+                </div>
             </div>
         </div>
     );

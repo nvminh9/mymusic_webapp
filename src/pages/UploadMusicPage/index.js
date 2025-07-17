@@ -4,8 +4,10 @@ import { useForm } from 'react-hook-form';
 import {
     IoAddSharp,
     IoAlertCircleOutline,
+    IoAlertSharp,
     IoArrowUpSharp,
     IoCheckmarkCircleOutline,
+    IoCheckmarkSharp,
     IoChevronBackSharp,
     IoChevronDownSharp,
     IoChevronUpSharp,
@@ -24,6 +26,7 @@ import {
     IoRepeatSharp,
     IoShuffleSharp,
     IoSparklesSharp,
+    IoSyncSharp,
     IoVolumeHighSharp,
     IoVolumeMuteSharp,
 } from 'react-icons/io5';
@@ -54,6 +57,7 @@ function UploadMusicPage() {
     const [isPlaying, setIsPlaying] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
+    const [uploadProgressStatus, setUploadProgressStatus] = useState();
 
     // Context
     const { auth } = useContext(AuthContext);
@@ -166,43 +170,73 @@ function UploadMusicPage() {
             if (audioFile) formData.append('audioAndMediaFiles', audioFile);
             if (imageFile) formData.append('audioAndMediaFiles', imageFile);
             if (videoFile) formData.append('audioAndMediaFiles', videoFile);
-            // Loading ... (Ant Design Message)
-            messageApi
-                .open({
-                    type: 'loading',
-                    content: 'Đang xử lý ...',
+            // Start Upload
+            try {
+                // Set Upload Progress Status
+                setUploadProgressStatus({
+                    status: 'pending',
+                    isLoading: true,
+                });
+                // Call API Upload Music
+                const res = await uploadMusicApi(formData);
+                if (res?.status === 200 && res?.message === 'Lưu bài nhạc thành công') {
+                    // Nếu tạo thành công
+                    setUploadProgressStatus({
+                        status: 'success',
+                        isLoading: true, // true để tránh trường hợp người dùng bấm thêm lần nữa trước khi navigate
+                    });
+                    // Tạo bài nhạc thành công
+                    message.success({
+                        content: 'Đã đăng tải bài nhạc',
+                        duration: 1.5,
+                        style: {
+                            color: 'white',
+                            marginTop: '58.4px',
+                        },
+                    });
+                    // Navigate về trang cá nhân
+                    const navigateToProfileTimeout = setTimeout(() => {
+                        navigate(`/profile/${auth?.user?.userName}/musics`);
+                    }, 600);
+                    // return
+                    return () => {
+                        clearTimeout(navigateToProfileTimeout);
+                    };
+                } else {
+                    // Nếu tạo không thành công (có thể bị lỗi ở service hoặc file quá lớn)
+                    setUploadProgressStatus({
+                        status: 'fail',
+                        isLoading: false,
+                    });
+                    // Tạo bài nhạc không thành công
+                    message.error({
+                        content: 'Đăng không thành công, hãy thử tải lại trang',
+                        duration: 1.5,
+                        style: {
+                            color: 'white',
+                            marginTop: '58.4px',
+                        },
+                    });
+                    // return
+                    return;
+                }
+            } catch (error) {
+                // Nếu có lỗi xảy ra
+                setUploadProgressStatus({
+                    status: 'error',
+                    isLoading: false,
+                });
+                // Tạo bài nhạc không thành công
+                message.error({
+                    content: 'Có lỗi xảy ra, hãy thử tải lại trang',
                     duration: 1.5,
                     style: {
                         color: 'white',
                         marginTop: '58.4px',
                     },
-                })
-                .then(async () => {
-                    const res = await uploadMusicApi(formData);
-                    if (res?.status === 200 && res?.message === 'Lưu bài nhạc thành công') {
-                        // Tạo bài nhạc thành công
-                        message.success({
-                            content: 'Đã đăng tải bài nhạc',
-                            duration: 1.5,
-                            style: {
-                                color: 'white',
-                                marginTop: '58.4px',
-                            },
-                        });
-                        // Navigate về trang cá nhân
-                        navigate(`/profile/${auth?.user?.userName}`);
-                    } else {
-                        // Tạo bài nhạc không thành công
-                        message.error({
-                            content: 'Có lỗi xảy ra',
-                            duration: 1.5,
-                            style: {
-                                color: 'white',
-                                marginTop: '58.4px',
-                            },
-                        });
-                    }
                 });
+                console.log(error);
+            }
         }
     };
     // Handle onchange upload audio file
@@ -415,29 +449,9 @@ function UploadMusicPage() {
                                             <span>Tải nhạc lên</span>
                                         </div>
                                         {/* Button Submit */}
-                                        {formStep < 2 ? (
-                                            <button className="btnNextStep" type="submit" id="btnNextStepID">
-                                                Tiếp theo
-                                            </button>
-                                        ) : (
-                                            <>
-                                                {formStep === 2 ? (
-                                                    <button className="btnNextStep" type="submit" id="btnNextStepID">
-                                                        oArrowUpSharp/ Đăng
-                                                    </button>
-                                                ) : (
-                                                    <button
-                                                        className="btnNextStep"
-                                                        type="submit"
-                                                        id="btnNextStepID"
-                                                        style={{ fontWeight: '400' }}
-                                                        onClick={() => {
-                                                            navigate('/signin');
-                                                        }}
-                                                    >{`Chuyển tới trang đăng nhập`}</button>
-                                                )}
-                                            </>
-                                        )}
+                                        <button className="btnNextStep" type="submit" id="btnNextStepID">
+                                            Tiếp theo
+                                        </button>
                                     </div>
                                 </div>
                                 {/* Audio Upload Box */}
@@ -612,29 +626,9 @@ function UploadMusicPage() {
                                             <span>Chi tiết</span>
                                         </div>
                                         {/* Button Submit */}
-                                        {formStep < 2 ? (
-                                            <button className="btnNextStep" type="submit" id="btnNextStepID">
-                                                Tiếp theo
-                                            </button>
-                                        ) : (
-                                            <>
-                                                {formStep === 2 ? (
-                                                    <button className="btnNextStep" type="submit" id="btnNextStepID">
-                                                        <IoArrowUpSharp /> Đăng
-                                                    </button>
-                                                ) : (
-                                                    <button
-                                                        className="btnNextStep"
-                                                        type="submit"
-                                                        id="btnNextStepID"
-                                                        style={{ fontWeight: '400' }}
-                                                        onClick={() => {
-                                                            navigate('/signin');
-                                                        }}
-                                                    >{`Chuyển tới trang đăng nhập`}</button>
-                                                )}
-                                            </>
-                                        )}
+                                        <button className="btnNextStep" type="submit" id="btnNextStepID">
+                                            Tiếp theo
+                                        </button>
                                     </div>
                                 </div>
                                 {/* Music Info Fields */}
@@ -1154,29 +1148,51 @@ function UploadMusicPage() {
                                             <span>Kiểm tra</span>
                                         </div>
                                         {/* Button Submit */}
-                                        {formStep < 2 ? (
-                                            <button className="btnNextStep" type="submit" id="btnNextStepID">
-                                                Tiếp theo
-                                            </button>
-                                        ) : (
-                                            <>
-                                                {formStep === 2 ? (
-                                                    <button className="btnNextStep" type="submit" id="btnNextStepID">
-                                                        <IoArrowUpSharp /> Đăng
-                                                    </button>
-                                                ) : (
-                                                    <button
-                                                        className="btnNextStep"
-                                                        type="submit"
-                                                        id="btnNextStepID"
-                                                        style={{ fontWeight: '400' }}
-                                                        onClick={() => {
-                                                            navigate('/signin');
-                                                        }}
-                                                    >{`Chuyển tới trang đăng nhập`}</button>
-                                                )}
-                                            </>
-                                        )}
+                                        <button
+                                            className="btnNextStep"
+                                            type="submit"
+                                            id="btnNextStepID"
+                                            disabled={uploadProgressStatus?.isLoading}
+                                            style={{
+                                                opacity: uploadProgressStatus?.isLoading ? '0.3' : '',
+                                                cursor: uploadProgressStatus?.isLoading ? 'not-allowed' : '',
+                                            }}
+                                        >
+                                            {/* Nếu chưa bấm */}
+                                            {!uploadProgressStatus && (
+                                                <>
+                                                    <IoArrowUpSharp /> Đăng
+                                                </>
+                                            )}
+                                            {/* Đang xử lý */}
+                                            {uploadProgressStatus?.status === 'pending' && (
+                                                <>
+                                                    <IoSyncSharp
+                                                        className="loadingAnimation"
+                                                        style={{ color: '#ffffff', width: '15px', height: '15px' }}
+                                                    />{' '}
+                                                    Đang đăng
+                                                </>
+                                            )}
+                                            {/* Thành công */}
+                                            {uploadProgressStatus?.status === 'success' && (
+                                                <>
+                                                    <IoCheckmarkSharp /> Đã đăng
+                                                </>
+                                            )}
+                                            {/* Không thành công */}
+                                            {uploadProgressStatus?.status === 'fail' && (
+                                                <>
+                                                    <IoAlertSharp /> Đăng không thành công{' '}
+                                                </>
+                                            )}
+                                            {/* Lỗi */}
+                                            {uploadProgressStatus?.status === 'error' && (
+                                                <>
+                                                    <IoAlertSharp /> Có lỗi xảy ra
+                                                </>
+                                            )}
+                                        </button>
                                     </div>
                                 </div>
                                 {/* Song Player Sample */}
@@ -1192,7 +1208,7 @@ function UploadMusicPage() {
                                             paddingBottom: '10px',
                                         }}
                                     >
-                                        Dưới đây là bản xem thử để kiểm tra lại thông tin của bài nhạc
+                                        Dưới đây là bản xem thử giúp bạn kiểm tra lại thông tin của bài nhạc
                                     </span>
                                     <div
                                         className="songPlayer"

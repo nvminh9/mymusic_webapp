@@ -153,7 +153,7 @@ function LeftContainer() {
                         <img
                             src={logo}
                             //
-                            style={{ opacity: '0' }}
+                            // style={{ opacity: '0' }}
                         />
                     </Link>
                 </div>
@@ -169,7 +169,7 @@ function LeftContainer() {
                     <div className="avatar">
                         <Link
                             to={`/profile/${auth?.user?.userName}`}
-                            style={{ textDecoration: 'none', height: '100%', width: '100%' }}
+                            style={{ textDecoration: 'none', height: '100%' }}
                         >
                             <img
                                 src={
@@ -177,6 +177,7 @@ function LeftContainer() {
                                         ? process.env.REACT_APP_BACKEND_URL + auth?.user?.userAvatar
                                         : avatarDefault
                                 }
+                                draggable="false"
                             />
                         </Link>
                     </div>
@@ -207,7 +208,7 @@ function LeftContainer() {
                         {/* Each Item */}
                         <button className="btnPlaylist">
                             <div className="coverImage">
-                                <img src={coverPlaylistTest} />
+                                <img src={coverPlaylistTest} draggable="false" />
                             </div>
                             <div className="info">
                                 <span className="name">workout music</span>

@@ -193,7 +193,7 @@ function HomePage() {
                 >
                     {slides.map((slide, index) => (
                         <Fragment key={index}>
-                            <div>
+                            <div style={{ padding: '8px' }}>
                                 <img
                                     src={slide.img}
                                     className="slide-image"
@@ -202,6 +202,7 @@ function HomePage() {
                                         width: '100%',
                                         objectFit: 'cover',
                                         objectPosition: 'center',
+                                        borderRadius: '8px',
                                     }}
                                 />
                             </div>
@@ -236,13 +237,39 @@ function HomePage() {
                 </div>
                 <Carousel slides={dataSongByGenre}></Carousel>
             </div>
-            <div style={{ padding: '8px' }}>
-                <h1>
-                    <span style={{ background: '#1f1f1f', color: 'whitesmoke' }}>Hello</span> World!
-                </h1>
-                <h1>
-                    Hello <span style={{ background: '#1f1f1f', color: 'whitesmoke' }}>mymusic</span>!
-                </h1>
+            <div style={{ padding: '8px', display: 'flex', overflow: 'auto', width: 'max-content' }}>
+                <div style={{ width: 'max-content' }}>
+                    <h1>
+                        <span style={{ background: '#1f1f1f', color: 'whitesmoke' }}>Hello</span> World!
+                    </h1>
+                    <h1>
+                        Hello <span style={{ background: '#1f1f1f', color: 'whitesmoke' }}>mymusic</span>!
+                    </h1>
+                </div>
+                <div style={{ width: 'max-content' }}>
+                    <h1>
+                        <span style={{ background: '#1f1f1f', color: 'whitesmoke' }}>Hello</span> World!
+                    </h1>
+                    <h1>
+                        Hello <span style={{ background: '#1f1f1f', color: 'whitesmoke' }}>mymusic</span>!
+                    </h1>
+                </div>
+                <div style={{ width: 'max-content' }}>
+                    <h1>
+                        <span style={{ background: '#1f1f1f', color: 'whitesmoke' }}>Hello</span> World!
+                    </h1>
+                    <h1>
+                        Hello <span style={{ background: '#1f1f1f', color: 'whitesmoke' }}>mymusic</span>!
+                    </h1>
+                </div>
+                <div style={{ width: 'max-content' }}>
+                    <h1>
+                        <span style={{ background: '#1f1f1f', color: 'whitesmoke' }}>Hello</span> World!
+                    </h1>
+                    <h1>
+                        Hello <span style={{ background: '#1f1f1f', color: 'whitesmoke' }}>mymusic</span>!
+                    </h1>
+                </div>
             </div>
         </div>
     );
