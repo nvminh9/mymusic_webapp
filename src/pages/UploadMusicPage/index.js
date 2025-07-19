@@ -889,6 +889,7 @@ function UploadMusicPage() {
                                                                 height: '100%',
                                                                 borderRadius: '6px',
                                                                 opacity: '0',
+                                                                zIndex: '2',
                                                             }}
                                                         />
                                                         {/* Danh sách ảnh đã thêm */}

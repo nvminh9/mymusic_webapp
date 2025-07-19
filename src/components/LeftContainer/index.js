@@ -1,112 +1,166 @@
 import logo from '~/assets/images/logoWhiteTransparent_noR.png';
-import avatarTest2 from '~/assets/images/avatarTest2.jpg';
 import avatarDefault from '~/assets/images/avatarDefault.jpg';
-import coverPlaylistTest from '~/assets/images/0054a59f216f1ffcecf0def0621a8fa2.jpg';
-import coverPlaylistTest2 from '~/assets/images/studyCover.jpg';
-import coverPlaylistTest3 from '~/assets/images/relaxMusicCover.jpg';
-import coverSongTest from '~/assets/images/timanhghen.jpg';
-import coverSongTest2 from '~/assets/images/getmoney.jpg';
-import coverMySongTest from '~/assets/images/d125db5a3cac269c33f2314b318163a2.jpg';
-import coverMySongTest2 from '~/assets/images/339dba2a2e19e5440dafb92b60a6e66b.jpg';
 import CircumIcon from '@klarr-agency/circum-icons-react';
 import { VscChevronDown, VscAdd, VscChevronUp, VscClose, VscLibrary, VscMusic, VscHistory } from 'react-icons/vsc';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getAuthUserInfoApi, getSongDataApi, getUserSongsDataApi } from '~/utils/api';
 import { AuthContext } from '~/context/auth.context';
 import { useMusicPlayerContext } from '~/context/musicPlayer.context';
-import MusicCard from '~/pages/components/MusicCard';
 import MyMusicList from '~/pages/components/MyMusicList';
+import ListenHistoryList from '~/pages/components/ListenHistoryList';
+import PlaylistList from '~/pages/components/PlaylistList';
 
 function LeftContainer() {
     // State
     const [isOpenPlayList, setIsOpenPlayList] = useState(false);
     const [isOpenHistoryListen, setIsOpenHistoryListen] = useState(false);
     const [isOpenMySong, setIsOpenMySong] = useState(false);
+    const [playlistData, setPlaylistData] = useState(); // Data playlist
+    const [listenHistoryData, setListenHistoryData] = useState(); // Data listen history
     const [mySongsData, setMySongsData] = useState(); // Data my songs
 
     // Context
     const { auth } = useContext(AuthContext);
     const { playlist, setPlaylist, setCurrentIndex, setIsPlaying } = useMusicPlayerContext();
 
+    // Ref
+    const playlistRef = useRef(null);
+    const listenHistoryRef = useRef(null);
+    const mySongsRef = useRef(null);
+    const mainPlaylistRef = useRef(null);
+    const mainListenHistoryRef = useRef(null);
+    const mainMySongRef = useRef(null);
+
     // --- HANDLE FUNCTION ---
     // Đóng / Mở Playlist
     const btnExpandPlaylist = () => {
-        let mainPlaylistLeftContainerID = document.getElementById('mainPlaylistLeftContainerID');
+        // 80px (height của playlist card ngang)
+        let height = 80 * (playlistData?.length >= 5 ? 4.5 : playlistData?.length) + 42 + 1;
+        let mainListenHistoryHeight = 80 * (listenHistoryData?.length >= 5 ? 4.5 : listenHistoryData?.length) + 42 + 1;
         if (!isOpenPlayList) {
-            if (isOpenHistoryListen) {
-                document.getElementById('historyListenID').style.transform = 'translateY(358px)';
-                document.getElementById('mySongID').style.transform = 'translateY(716px)';
-                mainPlaylistLeftContainerID.style.height = '400px';
-                setIsOpenPlayList(true);
+            if (playlistData?.length > 0 && playlistData?.length < 5) {
+                mainPlaylistRef.current.style.height = `${height}px`;
+                if (!isOpenHistoryListen) {
+                    listenHistoryRef.current.style.transform = `translateY(${height - 42}px)`;
+                    mySongsRef.current.style.transform = `translateY(${height - 42}px)`;
+                } else {
+                    listenHistoryRef.current.style.transform = `translateY(${height - 42}px)`;
+                    mySongsRef.current.style.transform = `translateY(${
+                        mainListenHistoryHeight - 42 + (height - 42)
+                    }px)`;
+                }
+            } else if (playlistData?.length >= 5) {
+                mainPlaylistRef.current.style.height = `${height}px`;
+                if (!isOpenHistoryListen) {
+                    listenHistoryRef.current.style.transform = `translateY(${height - 42}px)`;
+                    mySongsRef.current.style.transform = `translateY(${height - 42}px)`;
+                } else {
+                    listenHistoryRef.current.style.transform = `translateY(${height - 42}px)`;
+                    mySongsRef.current.style.transform = `translateY(${
+                        mainListenHistoryHeight - 42 + (height - 42)
+                    }px)`;
+                }
             } else {
-                document.getElementById('historyListenID').style.transform = 'translateY(358px)';
-                document.getElementById('mySongID').style.transform = 'translateY(358px)';
-                mainPlaylistLeftContainerID.style.height = '400px';
-                setIsOpenPlayList(true);
+                mainPlaylistRef.current.style.height = `123px`;
+                if (!isOpenHistoryListen) {
+                    listenHistoryRef.current.style.transform = `translateY(81px)`;
+                    mySongsRef.current.style.transform = `translateY(81px)`;
+                } else {
+                    listenHistoryRef.current.style.transform = `translateY(81px)`;
+                    mySongsRef.current.style.transform = `translateY(${81 + 81}px)`;
+                }
             }
+            setIsOpenPlayList(true);
         } else {
-            if (isOpenHistoryListen) {
-                mainPlaylistLeftContainerID.style.height = '0px';
-                document.getElementById('historyListenID').style.transform = 'translateY(0px)';
-                document.getElementById('mySongID').style.transform = 'translateY(358px)';
-                setIsOpenPlayList(false);
+            mainPlaylistRef.current.style.height = '0px';
+            if (!isOpenHistoryListen) {
+                listenHistoryRef.current.style.transform = `translateY(0px)`;
+                mySongsRef.current.style.transform = `translateY(0px)`;
             } else {
-                mainPlaylistLeftContainerID.style.height = '0px';
-                document.getElementById('historyListenID').style.transform = 'translateY(0px)';
-                document.getElementById('mySongID').style.transform = 'translateY(0px)';
-                setIsOpenPlayList(false);
+                listenHistoryRef.current.style.transform = `translateY(0px)`;
+                if (playlistData?.length > 0) {
+                    mySongsRef.current.style.transform = `translateY(${mainListenHistoryHeight - 42}px)`;
+                } else {
+                    mySongsRef.current.style.transform = `translateY(${81}px)`;
+                }
             }
+            setIsOpenPlayList(false);
         }
     };
     // Đóng / Mở History Listen
     const btnExpandHistoryListen = () => {
-        let mainHistoryListen = document.getElementById('mainHistoryListenID');
+        // 80px (height của music card ngang)
+        let height = 80 * (listenHistoryData?.length >= 5 ? 4.5 : listenHistoryData?.length) + 42 + 1;
+        let mainPlaylistHeight = 80 * (playlistData?.length >= 5 ? 4.5 : playlistData?.length) + 42 + 1;
         if (!isOpenHistoryListen) {
-            if (isOpenPlayList) {
-                mainHistoryListen.style.height = '400px';
-                document.getElementById('mySongID').style.transform = 'translateY(716px)';
-                setIsOpenHistoryListen(true);
+            if (listenHistoryData?.length > 0 && listenHistoryData?.length < 5) {
+                mainListenHistoryRef.current.style.height = `${height}px`;
+                if (!isOpenPlayList) {
+                    mySongsRef.current.style.transform = `translateY(${height - 42}px)`;
+                } else {
+                    mySongsRef.current.style.transform = `translateY(${mainPlaylistHeight - 42 + (height - 42)}px)`;
+                }
+            } else if (listenHistoryData?.length >= 5) {
+                mainListenHistoryRef.current.style.height = `${height}px`;
+                if (!isOpenPlayList) {
+                    mySongsRef.current.style.transform = `translateY(${height - 42}px)`;
+                } else {
+                    mySongsRef.current.style.transform = `translateY(${mainPlaylistHeight - 42 + (height - 42)}px)`;
+                }
             } else {
-                mainHistoryListen.style.height = '400px';
-                document.getElementById('mySongID').style.transform = 'translateY(358px)';
-                setIsOpenHistoryListen(true);
+                mainListenHistoryRef.current.style.height = `123px`;
+                if (!isOpenPlayList) {
+                    mySongsRef.current.style.transform = `translateY(81px)`;
+                } else {
+                    mySongsRef.current.style.transform = `translateY(${81 + 81}px)`;
+                }
             }
+            setIsOpenHistoryListen(true);
         } else {
-            if (isOpenPlayList) {
-                mainHistoryListen.style.height = '0px';
-                document.getElementById('mySongID').style.transform = 'translateY(358px)';
-                setIsOpenHistoryListen(false);
+            mainListenHistoryRef.current.style.height = '0px';
+            if (!isOpenPlayList) {
+                mySongsRef.current.style.transform = `translateY(0px)`;
             } else {
-                mainHistoryListen.style.height = '0px';
-                document.getElementById('mySongID').style.transform = 'translateY(0px)';
-                setIsOpenHistoryListen(false);
+                if (listenHistoryData?.length > 0) {
+                    mySongsRef.current.style.transform = `translateY(${mainPlaylistHeight - 42}px)`;
+                } else {
+                    mySongsRef.current.style.transform = `translateY(${81}px)`;
+                }
             }
+            setIsOpenHistoryListen(false);
         }
     };
     // Đóng / Mở My Song
     const btnExpandMySong = () => {
-        let mainMySong = document.getElementById('mainMySongID');
         if (!isOpenMySong) {
-            // 80px
+            // 80px (height của music card ngang)
+            let height = 80 * (mySongsData?.length >= 5 ? 4.5 : mySongsData?.length) + 42 + 1;
             if (mySongsData?.length > 0 && mySongsData?.length < 5) {
-                let height = 80 * mySongsData?.length + 42;
-                mainMySong.style.height = `${height}px`;
+                mainMySongRef.current.style.height = `${height}px`;
             } else if (mySongsData?.length >= 5) {
-                let height = 80 * 4.5 + 42;
-                mainMySong.style.height = `${height}px`;
+                mainMySongRef.current.style.height = `${height}px`;
             } else {
-                mainMySong.style.height = `122px`;
+                mainMySongRef.current.style.height = `123px`;
             }
-            // mainMySong.style.height = '400px';
             setIsOpenMySong(true);
         } else {
-            mainMySong.style.height = '0px';
+            mainMySongRef.current.style.height = '0px';
             setIsOpenMySong(false);
         }
     };
     // Lấy dữ liệu
-    // Call API Get User Songs (Auth User)
+    // Call API Get List Playlist
+    useEffect(() => {
+        //
+        // setPlaylistData(mySongsData);
+    }, [isOpenPlayList]);
+    // Call API Get Listen History
+    useEffect(() => {
+        //
+        // setListenHistoryData(mySongsData);
+    }, [isOpenHistoryListen]);
+    // Call API Get User Songs
     useEffect(() => {
         // Call API Get User Songs (Auth User)
         const getUserSongsData = async (userId) => {
@@ -188,7 +242,7 @@ function LeftContainer() {
                     </div>
                 </div>
                 {/* Playlist */}
-                <div id="playListID" className="playlist">
+                <div ref={playlistRef} id="playListID" className="mySong">
                     <div className="top">
                         <span className="title">
                             <VscLibrary style={{ marginRight: '5px' }} />
@@ -203,102 +257,14 @@ function LeftContainer() {
                             </button>
                         </div>
                     </div>
-                    <div id="mainPlaylistLeftContainerID" className="main">
+                    <div ref={mainPlaylistRef} id="mainPlaylistLeftContainerID" className="main">
                         <div className="backTop"></div>
-                        {/* Each Item */}
-                        <button className="btnPlaylist">
-                            <div className="coverImage">
-                                <img src={coverPlaylistTest} draggable="false" />
-                            </div>
-                            <div className="info">
-                                <span className="name">workout music</span>
-                                <span className="quantity">10 bài hát</span>
-                            </div>
-                        </button>
-                        {/* Each Item */}
-                        <button className="btnPlaylist">
-                            <div className="coverImage">
-                                <img src={coverPlaylistTest2} />
-                            </div>
-                            <div className="info">
-                                <span className="name">study music</span>
-                                <span className="quantity">15 bài hát</span>
-                            </div>
-                        </button>
-                        {/* Each Item */}
-                        <button className="btnPlaylist">
-                            <div className="coverImage">
-                                <img src={coverPlaylistTest3} />
-                            </div>
-                            <div className="info">
-                                <span className="name">relax music</span>
-                                <span className="quantity">20 bài hát</span>
-                            </div>
-                        </button>
-                        {/* Each Item */}
-                        <button className="btnPlaylist">
-                            <div className="coverImage">
-                                <img src={coverPlaylistTest} />
-                            </div>
-                            <div className="info">
-                                <span className="name">workout music</span>
-                                <span className="quantity">10 bài hát</span>
-                            </div>
-                        </button>
-                        {/* Each Item */}
-                        <button className="btnPlaylist">
-                            <div className="coverImage">
-                                <img src={coverPlaylistTest2} />
-                            </div>
-                            <div className="info">
-                                <span className="name">study music</span>
-                                <span className="quantity">15 bài hát</span>
-                            </div>
-                        </button>
-                        {/* Each Item */}
-                        <button className="btnPlaylist">
-                            <div className="coverImage">
-                                <img src={coverPlaylistTest3} />
-                            </div>
-                            <div className="info">
-                                <span className="name">relax music</span>
-                                <span className="quantity">20 bài hát</span>
-                            </div>
-                        </button>
-                        {/* Each Item */}
-                        <button className="btnPlaylist">
-                            <div className="coverImage">
-                                <img src={coverPlaylistTest} />
-                            </div>
-                            <div className="info">
-                                <span className="name">workout music</span>
-                                <span className="quantity">10 bài hát</span>
-                            </div>
-                        </button>
-                        {/* Each Item */}
-                        <button className="btnPlaylist">
-                            <div className="coverImage">
-                                <img src={coverPlaylistTest2} />
-                            </div>
-                            <div className="info">
-                                <span className="name">study music</span>
-                                <span className="quantity">15 bài hát</span>
-                            </div>
-                        </button>
-                        {/* Each Item */}
-                        <button className="btnPlaylist">
-                            <div className="coverImage">
-                                <img src={coverPlaylistTest3} />
-                            </div>
-                            <div className="info">
-                                <span className="name">relax music</span>
-                                <span className="quantity">20 bài hát</span>
-                            </div>
-                        </button>
+                        {/* Playlist list */}
+                        <PlaylistList playlistsData={playlistData} typePlaylistList={'LeftContainer'} />
                     </div>
                 </div>
                 {/* History Listen */}
-                <div id="historyListenID" className="historyListen">
+                <div ref={listenHistoryRef} id="historyListenID" className="mySong">
                     <div className="top">
                         <span className="title">
                             <VscHistory style={{ marginRight: '5px' }} />
@@ -310,44 +276,14 @@ function LeftContainer() {
                             </button>
                         </div>
                     </div>
-                    <div id="mainHistoryListenID" className="main">
+                    <div ref={mainListenHistoryRef} id="mainHistoryListenID" className="main">
                         <div className="backTop"></div>
-                        {/* Each Item */}
-                        <button className="btnPlaylist">
-                            <div className="coverImage">
-                                <img src={coverSongTest} />
-                            </div>
-                            <div className="info">
-                                <span className="name">
-                                    TIM ANH GHEN (ft. LVK, Dangrangto, TeuYungBoy) [prod. by rev, sleepat6pm]
-                                </span>
-                                <span className="quantity">Wxrdie</span>
-                            </div>
-                            <div className="btnRemoveBox">
-                                <button className="btnRemove">
-                                    <VscClose />
-                                </button>
-                            </div>
-                        </button>
-                        {/* Each Item */}
-                        <button className="btnPlaylist">
-                            <div className="coverImage">
-                                <img src={coverSongTest2} />
-                            </div>
-                            <div className="info">
-                                <span className="name">GET MONEY (ft. Thai VG) [prod. by Marlykid]</span>
-                                <span className="quantity">Wxrdie</span>
-                            </div>
-                            <div className="btnRemoveBox">
-                                <button className="btnRemove">
-                                    <VscClose />
-                                </button>
-                            </div>
-                        </button>
+                        {/* Listen history list */}
+                        <ListenHistoryList listenHistoryData={listenHistoryData} typeMyMusicList={'LeftContainer'} />
                     </div>
                 </div>
                 {/* My Song */}
-                <div id="mySongID" className="mySong">
+                <div ref={mySongsRef} id="mySongID" className="mySong">
                     <div className="top">
                         <span className="title">
                             <VscMusic style={{ marginRight: '5px' }} />
@@ -359,10 +295,10 @@ function LeftContainer() {
                             </button>
                         </div>
                     </div>
-                    <div id="mainMySongID" className="main">
+                    <div ref={mainMySongRef} id="mainMySongID" className="main">
                         <div className="backTop"></div>
-                        {/* List my music */}
-                        {mySongsData && <MyMusicList mySongsData={mySongsData} typeMyMusicList={'LeftContainer'} />}
+                        {/* My music list */}
+                        <MyMusicList mySongsData={mySongsData} typeMyMusicList={'LeftContainer'} />
                     </div>
                 </div>
             </div>

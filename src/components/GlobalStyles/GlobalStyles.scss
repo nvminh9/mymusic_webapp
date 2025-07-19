@@ -137,9 +137,11 @@ body {
                 img {
                     height: 63.2px;
                     width: 63.2px;
-                    outline: 1px solid rgba(243, 245, 247, 0.15);
-                    border-radius: 5px;
+                    // outline: 1px solid rgba(243, 245, 247, 0.15);
+                    // outline-offset: -1px;
+                    outline: rgba(135, 135, 135, 0.15) solid 1px;
                     outline-offset: -1px;
+                    border-radius: 5px;
                     object-fit: cover;
                     cursor: pointer;
                     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
@@ -156,7 +158,8 @@ body {
                 span {
                     color: #ffffff;
                     font-size: 16px;
-                    font-weight: 400;
+                    font-weight: 500;
+                    font-family: system-ui;
                     cursor: pointer;
                     transition: ease-in 0.2s;
                     width: 105px;
@@ -193,7 +196,8 @@ body {
                     display: flex;
                     align-items: center;
                     font-size: 18px;
-                    font-weight: 500;
+                    font-weight: 700;
+                    font-family: system-ui;
                     color: #ffffff;
                 }
                 .options {
@@ -205,6 +209,7 @@ body {
                         align-items: center;
                         background-color: transparent;
                         border: 0.5px solid transparent;
+                        border-radius: 5px;
                         color: #ffffff;
                         padding: 5px;
                         transition: ease-out 0.2s;
@@ -221,6 +226,7 @@ body {
                         align-items: center;
                         background-color: transparent;
                         border: 0.5px solid transparent;
+                        border-radius: 5px;
                         color: #ffffff;
                         padding: 5px;
                         transition: ease-out 0.2s;
@@ -351,7 +357,8 @@ body {
                     display: flex;
                     align-items: center;
                     font-size: 18px;
-                    font-weight: 500;
+                    font-weight: 700;
+                    font-family: system-ui;
                     color: #ffffff;
                 }
                 .options {
@@ -363,6 +370,7 @@ body {
                         align-items: center;
                         background-color: transparent;
                         border: 0.5px solid transparent;
+                        border-radius: 5px;
                         color: #ffffff;
                         padding: 5px;
                         transition: ease-out 0.2s;
@@ -535,7 +543,8 @@ body {
                     display: flex;
                     align-items: center;
                     font-size: 18px;
-                    font-weight: 500;
+                    font-weight: 700;
+                    font-family: system-ui;
                     color: #ffffff;
                 }
                 .options {
@@ -547,6 +556,7 @@ body {
                         align-items: center;
                         background-color: transparent;
                         border: 0.5px solid transparent;
+                        border-radius: 5px;
                         color: #ffffff;
                         padding: 5px;
                         transition: ease-out 0.2s;
@@ -617,9 +627,11 @@ body {
                             // border: 0.5px solid #1f1f1f;
                             height: 63.2px;
                             width: 63.2px;
-                            outline: 1px solid rgba(243, 245, 247, 0.15);
-                            border-radius: 5px;
+                            // outline: 1px solid rgba(243, 245, 247, 0.15);
+                            // outline-offset: -1px;
+                            outline: rgba(135, 135, 135, 0.15) solid 1px;
                             outline-offset: -1px;
+                            border-radius: 5px;
                             object-fit: cover;
                             cursor: pointer;
                             box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
@@ -654,7 +666,7 @@ body {
                             width: 100%;
                         }
                         .name:hover {
-                            text-decoration: underline;
+                            // text-decoration: underline;
                         }
                         .quantity {
                             display: flex;
@@ -3972,6 +3984,7 @@ body {
                                 color: #ffffff;
                                 cursor: pointer;
                                 transition: ease-out 0.2s;
+                                z-index: 3;
                             }
                             .btnRemove:hover {
                                 background-color: rgba(18, 18, 18, 0.65);
@@ -6145,7 +6158,7 @@ body {
         object-position: center center;
         z-index: 2;
         border-radius: 5px;
-        // outline: 1px solid rgba(243, 245, 247, 0.15);
+        // outline: rgba(135, 135, 135, 0.15) solid 1px;
         // outline-offset: -1px;
     }
 

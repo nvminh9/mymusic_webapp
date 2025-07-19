@@ -216,30 +216,32 @@ function MusicPlayer() {
                         preload="auto"
                     />
                     {/* Progress Bar */}
-                    <div className="progressBarContainer">
-                        {/* Progress */}
-                        <input
-                            className="progressBar"
-                            type="range"
-                            min="0"
-                            max={duration}
-                            value={currentTime}
-                            onChange={handleSeek}
-                            style={{
-                                margin: '0px',
-                                cursor: !playlist?.length || playlist?.length < 1 ? 'not-allowed' : 'pointer',
-                            }}
-                        />
-                        {/* Time */}
-                        <div className="timeBar">
-                            <div className="left" id="leftTimeBarID">
-                                {formatTime(currentTime)}
-                            </div>
-                            <div className="right" id="rightTimeBarID">
-                                {formatTime(duration)}
+                    {currentSong && (
+                        <div className="progressBarContainer">
+                            {/* Progress */}
+                            <input
+                                className="progressBar"
+                                type="range"
+                                min="0"
+                                max={duration}
+                                value={currentTime}
+                                onChange={handleSeek}
+                                style={{
+                                    margin: '0px',
+                                    cursor: !playlist?.length || playlist?.length < 1 ? 'not-allowed' : 'pointer',
+                                }}
+                            />
+                            {/* Time */}
+                            <div className="timeBar">
+                                <div className="left" id="leftTimeBarID">
+                                    {formatTime(currentTime)}
+                                </div>
+                                <div className="right" id="rightTimeBarID">
+                                    {formatTime(duration)}
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    )}
                 </div>
                 {/* bottom */}
                 <div className="bottom">

@@ -1,20 +1,20 @@
-import MusicCard from '../MusicCard';
+import PlaylistCard from '../PlaylistCard';
 
-function MyMusicList({ mySongsData, typeMyMusicList }) {
+function PlaylistList({ playlistsData, typePlaylistList }) {
     // State
 
     // Context
 
     // --- HANDLE FUNCTION ---
 
-    if (typeMyMusicList === 'LeftContainer') {
+    if (typePlaylistList === 'LeftContainer') {
         return (
             <>
                 {/* List my music */}
-                {mySongsData && mySongsData?.length > 0 ? (
+                {playlistsData && playlistsData?.length > 0 ? (
                     <>
-                        {mySongsData?.map((song) => (
-                            <MusicCard songData={song} typeMusicCard={'LeftContainer'} />
+                        {playlistsData?.map((playlist) => (
+                            <PlaylistCard playlistData={playlist} typePlaylistCard={'LeftContainer'} />
                         ))}
                     </>
                 ) : (
@@ -32,7 +32,7 @@ function MyMusicList({ mySongsData, typeMyMusicList }) {
                                     textAlign: 'center',
                                 }}
                             >
-                                Chưa có bài nhạc
+                                Chưa có danh sách phát
                             </span>
                         </button>
                     </>
@@ -44,4 +44,4 @@ function MyMusicList({ mySongsData, typeMyMusicList }) {
     return <></>;
 }
 
-export default MyMusicList;
+export default PlaylistList;
