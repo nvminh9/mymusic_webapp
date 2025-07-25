@@ -237,6 +237,30 @@ const getUserSongsDataApi = (userId) => {
     return axios.get(URL_API);
 };
 
+// API Tạo danh sách phát (POST)
+const createPlaylistApi = (data) => {
+    const URL_API = `/v1/api/playlist/create`;
+    return axios.post(URL_API, data);
+};
+
+// API Lấy dữ liệu của danh sách phát (GET)
+const getPlaylistDataApi = (playlistId) => {
+    const URL_API = `/v1/api/playlist?p=${playlistId}`;
+    return axios.get(URL_API);
+};
+
+// API Lấy các danh sách phát của user (GET)
+const getListPlaylistOfUserDataApi = (userId) => {
+    const URL_API = `/v1/api/playlist/${userId}`;
+    return axios.get(URL_API);
+};
+
+// API Lấy dữ liệu của lịch sử nghe (GET)
+const getListeningHistoryDataApi = (page, limit) => {
+    const URL_API = `/v1/api/listeningHistory/data?page=${page}&limit=${limit}`;
+    return axios.get(URL_API);
+};
+
 export {
     signUpApi,
     signInApi,
@@ -275,4 +299,8 @@ export {
     uploadMusicApi,
     getSongDataApi,
     getUserSongsDataApi,
+    createPlaylistApi,
+    getPlaylistDataApi,
+    getListPlaylistOfUserDataApi,
+    getListeningHistoryDataApi,
 };

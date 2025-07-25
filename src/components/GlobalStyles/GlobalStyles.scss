@@ -13,7 +13,7 @@ html {
 
 body {
     font-family: 'Funnel Sans', sans-serif;
-    // font-family: 'system-ui';
+    // font-family: system-ui;
     text-rendering: optimizeSpeed;
     height: 100%;
     width: auto;
@@ -573,6 +573,7 @@ body {
                         align-items: center;
                         background-color: transparent;
                         border: 0.5px solid transparent;
+                        border-radius: 5px;
                         color: #ffffff;
                         padding: 5px;
                         transition: ease-out 0.2s;
@@ -651,8 +652,9 @@ body {
                             // align-items: center;
                             // justify-content: left;
                             color: #ffffff;
+                            font-family: system-ui;
                             font-size: 16px;
-                            font-weight: 400;
+                            font-weight: 500;
                             // padding-bottom: 4px;
                             cursor: pointer;
                             transition: ease-out 0.2s;
@@ -697,9 +699,11 @@ body {
 .middleContainer {
     position: relative;
     padding-top: 58.4px; // chừa cho phần thanh chuyển tab
+    // padding-top: 66.4px; // chừa cho phần thanh chuyển tab
     background-color: #121212;
 
     // Thanh chuyển tab ở middleContainer
+    // CSS Tab switch trên PC
     .tabSwitchBar {
         display: flex;
         align-items: center;
@@ -711,9 +715,8 @@ body {
         top: 0;
         width: 50%;
         z-index: 99;
-
         .btnHomePage {
-            font-family: 'Funnel Sans', sans-serif;
+            font-family: system-ui;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -728,7 +731,7 @@ body {
             span {
                 color: #ffffff;
                 font-size: 16px;
-                font-weight: 400;
+                font-weight: 500;
                 display: block;
             }
         }
@@ -739,7 +742,7 @@ body {
             background-color: #000;
         }
         .btnFeedPage {
-            font-family: 'Funnel Sans', sans-serif;
+            font-family: system-ui;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -754,7 +757,7 @@ body {
             span {
                 color: #ffffff;
                 font-size: 16px;
-                font-weight: 400;
+                font-weight: 500;
                 display: block;
             }
         }
@@ -817,10 +820,106 @@ body {
                 color: #000;
             }
         }
-
         .actived {
             border: none;
             border-bottom: 3px solid #ffffff;
+        }
+    }
+    // CSS Tab switch trên điện thoại
+    .tabSwitchBarOnPhone {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 58.4px;
+        position: fixed;
+        top: 0;
+        width: 50%;
+        z-index: 99;
+        padding: 8px;
+        padding-bottom: 0px;
+        .left {
+            display: flex;
+            gap: 8px;
+        }
+        .right {
+            //
+        }
+        a {
+            text-decoration: none;
+        }
+        button {
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
+            width: max-content;
+            height: 100%;
+            border: none;
+            border-radius: 25px;
+            padding: 13.2px;
+            cursor: pointer;
+            background-color: rgba(18, 18, 18, 0.8);
+            backdrop-filter: blur(15px);
+            transition: ease-out 0.2s;
+            color: #ffffff;
+            span {
+                font-family: system-ui;
+                font-size: 16px;
+                font-weight: 500;
+                display: block;
+            }
+        }
+        button:hover {
+            background-color: #1f1f1f;
+        }
+        button:active {
+            // background-color: #000;
+        }
+        .actived {
+            background-color: #ffffffdb;
+            backdrop-filter: blur(15px);
+            color: #000;
+        }
+        .actived:hover {
+            background-color: #ffffffdb;
+        }
+        .btnComeBack {
+            border-radius: 50%;
+            background-color: rgb(255 255 255 / 70%);
+            backdrop-filter: blur(2px);
+            color: #000;
+            font-size: 16px;
+            // padding: 0;
+        }
+        .btnComeBack:hover {
+            background-color: #ffffffdb;
+        }
+        // Tooltip
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            // border-bottom: 1px dotted black;
+        }
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 80px;
+            background-color: #000;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px 0;
+            transition: ease-out 0.1s;
+
+            /* Position the tooltip */
+            position: absolute;
+            z-index: 99;
+            top: 100%;
+            left: 50%;
+            margin-top: 5px;
+            margin-left: -40px; /* Use half of the width (80/2 = 40), to center the tooltip */
+        }
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            transition: ease-out 0.1s;
         }
     }
 }

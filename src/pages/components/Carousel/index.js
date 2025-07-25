@@ -8,9 +8,19 @@ import aptBanner from '~/assets/images/643564536.jpg';
 import { VscChevronLeft, VscChevronRight } from 'react-icons/vsc';
 import { useRef } from 'react';
 import { Fragment } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 function Carousel({ slides }) {
+    // State
+
+    // Context
+
+    // Ref
+
+    // Navigate
+    const navigate = useNavigate();
+    const location = useLocation();
+
     // config carousel (React Slick)
     let sliderRef = useRef(null);
     const next = () => {
@@ -73,8 +83,8 @@ function Carousel({ slides }) {
                 >
                     {slides.map((slide, index) => (
                         <Fragment key={index}>
-                            <Link
-                                to={slide.type === 'playlist' ? `playlist/playlistID` : `song/songID`}
+                            {/* <Link
+                                // to={slide.type === 'playlist' ? `playlist/playlistID` : `song/songID`}
                                 style={{ textDecoration: 'none' }}
                             >
                                 <div className="carouselItem">
@@ -140,7 +150,75 @@ function Carousel({ slides }) {
                                         </span>
                                     </div>
                                 </div>
-                            </Link>
+                            </Link> */}
+                            <div
+                                className="carouselItem"
+                                onClick={() => {
+                                    navigate(slide.type === 'playlist' ? `playlist/playlistID` : `song/songID`);
+                                }}
+                            >
+                                <div>
+                                    <img
+                                        src={slide.img}
+                                        className="slide-image"
+                                        style={{
+                                            height: '154px',
+                                            width: '100%',
+                                            objectFit: 'cover',
+                                            objectPosition: 'center',
+                                            borderRadius: '5px',
+                                            outline: '1px solid rgba(135, 135, 135, 0.15)',
+                                            outlineOffset: '-1px',
+                                            boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
+                                            // border: '.5px solid rgba(18, 18, 18, 0.8)',
+                                        }}
+                                    />
+                                </div>
+                                <div
+                                    className="info"
+                                    style={{
+                                        display: 'grid',
+                                        alignItems: 'center',
+                                        gap: '2px',
+                                        paddingTop: '12px',
+                                    }}
+                                >
+                                    <span
+                                        className="info1"
+                                        style={{
+                                            color: '#ffffff',
+                                            fontFamily: 'system-ui',
+                                            fontSize: '14px',
+                                            fontWeight: '500',
+                                            width: '115px',
+                                            display: '-webkit-box',
+                                            WebkitBoxOrient: 'vertical',
+                                            WebkitLineClamp: '1',
+                                            overflow: 'hidden',
+                                            textOverflow: 'ellipsis',
+                                        }}
+                                    >
+                                        {slide.info1}
+                                    </span>
+                                    <span
+                                        className="info2"
+                                        style={{
+                                            color: 'rgba(119, 119, 119, 0.6666666667)',
+                                            fontFamily: 'system-ui',
+                                            fontSize: '12px',
+                                            fontWeight: '500',
+                                            width: '115px',
+                                            display: '-webkit-box',
+                                            WebkitBoxOrient: 'vertical',
+                                            WebkitLineClamp: '1',
+                                            overflow: 'hidden',
+                                            textOverflow: 'ellipsis',
+                                        }}
+                                    >
+                                        {slide.info2}
+                                    </span>
+                                </div>
+                            </div>
                         </Fragment>
                     ))}
                 </Slider>

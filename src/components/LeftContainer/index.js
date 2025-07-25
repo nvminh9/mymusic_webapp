@@ -4,7 +4,7 @@ import CircumIcon from '@klarr-agency/circum-icons-react';
 import { VscChevronDown, VscAdd, VscChevronUp, VscClose, VscLibrary, VscMusic, VscHistory } from 'react-icons/vsc';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { getAuthUserInfoApi, getSongDataApi, getUserSongsDataApi } from '~/utils/api';
+import { getAuthUserInfoApi, getListPlaylistOfUserDataApi, getSongDataApi, getUserSongsDataApi } from '~/utils/api';
 import { AuthContext } from '~/context/auth.context';
 import { useMusicPlayerContext } from '~/context/musicPlayer.context';
 import MyMusicList from '~/pages/components/MyMusicList';
@@ -18,6 +18,7 @@ function LeftContainer() {
     const [isOpenMySong, setIsOpenMySong] = useState(false);
     const [playlistData, setPlaylistData] = useState(); // Data playlist
     const [listenHistoryData, setListenHistoryData] = useState(); // Data listen history
+    const [listenHistoryListKey, setListenHistoryListKey] = useState(Date.now()); // Để reset listen history data khi mở
     const [mySongsData, setMySongsData] = useState(); // Data my songs
 
     // Context
@@ -36,8 +37,13 @@ function LeftContainer() {
     // Đóng / Mở Playlist
     const btnExpandPlaylist = () => {
         // 80px (height của playlist card ngang)
-        let height = 80 * (playlistData?.length >= 5 ? 4.5 : playlistData?.length) + 42 + 1;
-        let mainListenHistoryHeight = 80 * (listenHistoryData?.length >= 5 ? 4.5 : listenHistoryData?.length) + 42 + 1;
+        let height = playlistData?.length
+            ? 80 * (playlistData?.length >= 5 ? 4.5 : playlistData?.length) + 42 + 1
+            : 123;
+        // let mainListenHistoryHeight = listenHistoryData?.length
+        //     ? 80 * (listenHistoryData?.length >= 5 ? 4.5 : listenHistoryData?.length) + 42 + 1
+        //     : 123;
+        let mainListenHistoryHeight = 400;
         if (!isOpenPlayList) {
             if (playlistData?.length > 0 && playlistData?.length < 5) {
                 mainPlaylistRef.current.style.height = `${height}px`;
@@ -68,7 +74,7 @@ function LeftContainer() {
                     mySongsRef.current.style.transform = `translateY(81px)`;
                 } else {
                     listenHistoryRef.current.style.transform = `translateY(81px)`;
-                    mySongsRef.current.style.transform = `translateY(${81 + 81}px)`;
+                    mySongsRef.current.style.transform = `translateY(${mainListenHistoryHeight - 42 + 81}px)`;
                 }
             }
             setIsOpenPlayList(true);
@@ -82,7 +88,8 @@ function LeftContainer() {
                 if (playlistData?.length > 0) {
                     mySongsRef.current.style.transform = `translateY(${mainListenHistoryHeight - 42}px)`;
                 } else {
-                    mySongsRef.current.style.transform = `translateY(${81}px)`;
+                    // mySongsRef.current.style.transform = `translateY(${81}px)`;
+                    mySongsRef.current.style.transform = `translateY(${mainListenHistoryHeight - 42}px)`;
                 }
             }
             setIsOpenPlayList(false);
@@ -91,42 +98,56 @@ function LeftContainer() {
     // Đóng / Mở History Listen
     const btnExpandHistoryListen = () => {
         // 80px (height của music card ngang)
-        let height = 80 * (listenHistoryData?.length >= 5 ? 4.5 : listenHistoryData?.length) + 42 + 1;
-        let mainPlaylistHeight = 80 * (playlistData?.length >= 5 ? 4.5 : playlistData?.length) + 42 + 1;
+        // let height = listenHistoryData?.length
+        //     ? 80 * (listenHistoryData?.length >= 5 ? 4.5 : listenHistoryData?.length) + 42 + 1
+        //     : 123;
+        let height = 400;
+        let mainPlaylistHeight = playlistData?.length
+            ? 80 * (playlistData?.length >= 5 ? 4.5 : playlistData?.length) + 42 + 1
+            : 123;
         if (!isOpenHistoryListen) {
-            if (listenHistoryData?.length > 0 && listenHistoryData?.length < 5) {
-                mainListenHistoryRef.current.style.height = `${height}px`;
-                if (!isOpenPlayList) {
-                    mySongsRef.current.style.transform = `translateY(${height - 42}px)`;
-                } else {
-                    mySongsRef.current.style.transform = `translateY(${mainPlaylistHeight - 42 + (height - 42)}px)`;
-                }
-            } else if (listenHistoryData?.length >= 5) {
-                mainListenHistoryRef.current.style.height = `${height}px`;
-                if (!isOpenPlayList) {
-                    mySongsRef.current.style.transform = `translateY(${height - 42}px)`;
-                } else {
-                    mySongsRef.current.style.transform = `translateY(${mainPlaylistHeight - 42 + (height - 42)}px)`;
-                }
+            // if (listenHistoryData?.length > 0 && listenHistoryData?.length < 5) {
+            //     mainListenHistoryRef.current.style.height = `${height}px`;
+            //     if (!isOpenPlayList) {
+            //         mySongsRef.current.style.transform = `translateY(${height - 42}px)`;
+            //     } else {
+            //         mySongsRef.current.style.transform = `translateY(${mainPlaylistHeight - 42 + (height - 42)}px)`;
+            //     }
+            // } else if (listenHistoryData?.length >= 5) {
+            //     mainListenHistoryRef.current.style.height = `${height}px`;
+            //     if (!isOpenPlayList) {
+            //         mySongsRef.current.style.transform = `translateY(${height - 42}px)`;
+            //     } else {
+            //         mySongsRef.current.style.transform = `translateY(${mainPlaylistHeight - 42 + (height - 42)}px)`;
+            //     }
+            // } else {
+            //     mainListenHistoryRef.current.style.height = `123px`;
+            //     if (!isOpenPlayList) {
+            //         mySongsRef.current.style.transform = `translateY(81px)`;
+            //     } else {
+            //         mySongsRef.current.style.transform = `translateY(${mainPlaylistHeight - 42 + 81}px)`;
+            //     }
+            // }
+            mainListenHistoryRef.current.style.height = `${height}px`;
+            if (!isOpenPlayList) {
+                mySongsRef.current.style.transform = `translateY(${height - 42}px)`;
             } else {
-                mainListenHistoryRef.current.style.height = `123px`;
-                if (!isOpenPlayList) {
-                    mySongsRef.current.style.transform = `translateY(81px)`;
-                } else {
-                    mySongsRef.current.style.transform = `translateY(${81 + 81}px)`;
-                }
+                mySongsRef.current.style.transform = `translateY(${mainPlaylistHeight + height - 84}px)`;
             }
+            // Khi mở lại listen history list, reset key để remount và data được reload
+            setListenHistoryListKey(Date.now());
             setIsOpenHistoryListen(true);
         } else {
             mainListenHistoryRef.current.style.height = '0px';
             if (!isOpenPlayList) {
                 mySongsRef.current.style.transform = `translateY(0px)`;
             } else {
-                if (listenHistoryData?.length > 0) {
-                    mySongsRef.current.style.transform = `translateY(${mainPlaylistHeight - 42}px)`;
-                } else {
-                    mySongsRef.current.style.transform = `translateY(${81}px)`;
-                }
+                // if (listenHistoryData?.length > 0) {
+                //     mySongsRef.current.style.transform = `translateY(${mainPlaylistHeight - 42}px)`;
+                // } else {
+                //     mySongsRef.current.style.transform = `translateY(${mainPlaylistHeight - 42}px)`;
+                // }
+                mySongsRef.current.style.transform = `translateY(${mainPlaylistHeight - 42}px)`;
             }
             setIsOpenHistoryListen(false);
         }
@@ -152,14 +173,18 @@ function LeftContainer() {
     // Lấy dữ liệu
     // Call API Get List Playlist
     useEffect(() => {
-        //
-        // setPlaylistData(mySongsData);
+        // Call API Get List Playlist Of User (Auth User)
+        const getListPlaylistOfUser = async (userId) => {
+            const res = await getListPlaylistOfUserDataApi(userId);
+            // Set state mySongsData
+            setPlaylistData(res?.data);
+        };
+        getListPlaylistOfUser(auth?.user?.userId);
     }, [isOpenPlayList]);
     // Call API Get Listen History
-    useEffect(() => {
-        //
-        // setListenHistoryData(mySongsData);
-    }, [isOpenHistoryListen]);
+    // useEffect(() => {
+    //     //
+    // }, [isOpenHistoryListen]);
     // Call API Get User Songs
     useEffect(() => {
         // Call API Get User Songs (Auth User)
@@ -279,7 +304,9 @@ function LeftContainer() {
                     <div ref={mainListenHistoryRef} id="mainHistoryListenID" className="main">
                         <div className="backTop"></div>
                         {/* Listen history list */}
-                        <ListenHistoryList listenHistoryData={listenHistoryData} typeMyMusicList={'LeftContainer'} />
+                        {isOpenHistoryListen && (
+                            <ListenHistoryList key={listenHistoryListKey} typeMyMusicList={'LeftContainer'} />
+                        )}
                     </div>
                 </div>
                 {/* My Song */}

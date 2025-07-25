@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { IoChevronBackSharp } from 'react-icons/io5';
 import { VscChevronLeft } from 'react-icons/vsc';
 import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 
@@ -16,7 +17,7 @@ function MiddleContainer({ children }) {
                 // style={{ opacity: '0' }}
                 //
             >
-                {/* Thanh chuyển tab */}
+                {/* Thanh chuyển tab cũ */}
                 <div className="tabSwitchBar">
                     <Link
                         to="/"
@@ -73,6 +74,33 @@ function MiddleContainer({ children }) {
                         </button>
                     </div>
                 </div>
+                {/* Thanh chuyển tab mới */}
+                {/* <div className="tabSwitchBar">
+                    <div className="left">
+                        <Link to="/">
+                            <button
+                                id="1"
+                                className={['btnHomePage', location.pathname === '/' ? 'actived' : ''].join(' ')}
+                            >
+                                <span>Trang chủ</span>
+                            </button>
+                        </Link>
+                        <Link to="/feeds">
+                            <button
+                                id="2"
+                                className={['btnFeedPage', location.pathname === '/feeds' ? 'actived' : ''].join(' ')}
+                            >
+                                <span>Bài đăng</span>
+                            </button>
+                        </Link>
+                    </div>
+                    <div className="right">
+                        <button className="btnComeBack tooltip" onClick={() => navigate(-1)}>
+                            <VscChevronLeft />
+                            <span class="tooltiptext">Quay lại</span>
+                        </button>
+                    </div>
+                </div> */}
                 {children}
             </div>
             <div className="col l-3 m-0 c-0"></div>

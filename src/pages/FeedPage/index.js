@@ -40,6 +40,7 @@ function FeedPage() {
         getNextPageParam: (lastPage) => lastPage?.nextCursor ?? null,
     });
     const allItems = data?.pages.flatMap((page) => page.data) || [];
+    // console.log(data);
     // console.log(allItems);
 
     // --- HANDLE FUNCTION ---

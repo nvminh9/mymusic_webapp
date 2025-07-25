@@ -1,3 +1,4 @@
+import { useLocation, useNavigate } from 'react-router-dom';
 import noContentImage from '~/assets/images/no_content.jpg';
 import { useMusicPlayerContext } from '~/context/musicPlayer.context';
 import { getSongDataApi } from '~/utils/api';
@@ -7,6 +8,12 @@ function PlaylistCard({ playlistData, typePlaylistCard }) {
 
     // Context
     // const { playlist, setPlaylist, setCurrentIndex, setIsPlaying } = useMusicPlayerContext();
+
+    // Ref
+
+    // Navigate
+    const navigate = useNavigate();
+    const location = useLocation();
 
     // --- HANDLE FUNCTION ---
     // Test handlePlay
@@ -33,18 +40,23 @@ function PlaylistCard({ playlistData, typePlaylistCard }) {
                 {/* Each Item */}
                 <button
                     className="btnPlaylist"
-                    // onClick={() => {
-                    //     handlePlay();
-                    // }}
+                    onClick={() => {
+                        navigate(`playlist/${playlistData?.playlistId}`);
+                    }}
                 >
                     <div className="coverImage">
                         <img
                             src={
-                                playlistData?.songImage
-                                    ? process.env.REACT_APP_BACKEND_URL + playlistData?.songImage
+                                playlistData?.coverImage
+                                    ? process.env.REACT_APP_BACKEND_URL + playlistData?.coverImage
                                     : noContentImage
                             }
                             draggable="false"
+                            style={{
+                                boxShadow:
+                                    'rgb(50 50 50) -3px 0px 0px 0px, rgb(50 50 50 / 50%) -6px 0px, rgba(50, 50, 50, 0.2) -9px 0px',
+                                marginLeft: '9px',
+                            }}
                         />
                     </div>
                     <div className="info">
