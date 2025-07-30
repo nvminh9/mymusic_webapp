@@ -17,6 +17,7 @@ import ListFollowing from '~/pages/components/ListFollowing';
 import UploadArticlePage from '~/pages/UploadArticlePage';
 import UploadMusicPage from '~/pages/UploadMusicPage';
 import SharedArticleDetail from '~/pages/SharedArticleDetail';
+import CreatePlaylistPage from '~/pages/CreatePlaylistPage';
 
 // Public Routes (Chưa đăng nhập vẫn truy cập được)
 const publicRoutes = [
@@ -64,6 +65,10 @@ const privateRoutes = [
             {
                 path: 'article/shared/:sharedArticleID', // Trang chi tiết bài chia sẻ
                 component: SharedArticleDetail,
+            },
+            {
+                path: 'playlist/create', // Trang tạo danh sách phát
+                component: CreatePlaylistPage,
             },
             {
                 path: 'playlist/:playlistID', // Trang chi tiết danh sách phát

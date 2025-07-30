@@ -3,7 +3,7 @@ import avatarDefault from '~/assets/images/avatarDefault.jpg';
 import CircumIcon from '@klarr-agency/circum-icons-react';
 import { VscChevronDown, VscAdd, VscChevronUp, VscClose, VscLibrary, VscMusic, VscHistory } from 'react-icons/vsc';
 import { useContext, useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { getAuthUserInfoApi, getListPlaylistOfUserDataApi, getSongDataApi, getUserSongsDataApi } from '~/utils/api';
 import { AuthContext } from '~/context/auth.context';
 import { useMusicPlayerContext } from '~/context/musicPlayer.context';
@@ -32,6 +32,10 @@ function LeftContainer() {
     const mainPlaylistRef = useRef(null);
     const mainListenHistoryRef = useRef(null);
     const mainMySongRef = useRef(null);
+
+    // Navigation
+    const navigate = useNavigate();
+    const location = useLocation();
 
     // --- HANDLE FUNCTION ---
     // Đóng / Mở Playlist
@@ -277,8 +281,17 @@ function LeftContainer() {
                             <button className="btnExpand" onClick={btnExpandPlaylist}>
                                 {isOpenPlayList ? <VscChevronUp /> : <VscChevronDown />}
                             </button>
-                            <button className="btnAdd">
+                            <button
+                                className="btnAdd"
+                                onClick={() => {
+                                    // Navigate sang trang tạo danh sách phát
+                                    if (location?.pathname !== `/playlist/create`) {
+                                        navigate(`/playlist/create`);
+                                    }
+                                }}
+                            >
                                 <VscAdd />
+                                <span className="btnAddText">Tạo</span>
                             </button>
                         </div>
                     </div>

@@ -18,7 +18,67 @@ function MiddleContainer({ children }) {
                 //
             >
                 {/* Thanh chuyển tab cũ */}
-                <div className="tabSwitchBar">
+                {location?.pathname === '/' || location?.pathname === '/feeds' ? (
+                    <div className="tabSwitchBar">
+                        <Link
+                            to="/"
+                            style={{
+                                fontFamily: '"Funnel Sans", sans-serif',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                height: '100%',
+                                backgroundColor: 'transparent',
+                                border: 'none',
+                                cursor: 'pointer',
+                                transition: 'ease-out 0.2s',
+                                width: '50%',
+                                margin: '0px',
+                                textDecoration: 'none',
+                            }}
+                        >
+                            <button
+                                id="1"
+                                className={['btnHomePage', location.pathname === '/' ? 'actived' : ''].join(' ')}
+                            >
+                                <span>Trang chủ</span>
+                            </button>
+                        </Link>
+                        <Link
+                            to="/feeds"
+                            style={{
+                                fontFamily: '"Funnel Sans", sans-serif',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                height: '100%',
+                                backgroundColor: 'transparent',
+                                border: 'none',
+                                cursor: 'pointer',
+                                transition: 'ease-out 0.2s',
+                                width: '50%',
+                                margin: '0px',
+                                textDecoration: 'none',
+                            }}
+                        >
+                            <button
+                                id="2"
+                                className={['btnFeedPage', location.pathname === '/feeds' ? 'actived' : ''].join(' ')}
+                            >
+                                <span>Bài đăng</span>
+                            </button>
+                        </Link>
+                        <div className="btnComeBackBox">
+                            <button className="btnComeBack tooltip" onClick={() => navigate(-1)}>
+                                <VscChevronLeft />
+                                <span class="tooltiptext">Quay lại</span>
+                            </button>
+                        </div>
+                    </div>
+                ) : (
+                    <></>
+                )}
+                {/* <div className="tabSwitchBar">
                     <Link
                         to="/"
                         style={{
@@ -73,7 +133,7 @@ function MiddleContainer({ children }) {
                             <span class="tooltiptext">Quay lại</span>
                         </button>
                     </div>
-                </div>
+                </div> */}
                 {/* Thanh chuyển tab mới */}
                 {/* <div className="tabSwitchBar">
                     <div className="left">

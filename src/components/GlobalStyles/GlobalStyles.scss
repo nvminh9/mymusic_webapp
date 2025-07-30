@@ -578,8 +578,25 @@ body {
                         padding: 5px;
                         transition: ease-out 0.2s;
                         cursor: pointer;
+                        .btnAddText {
+                            font-family: sans-serif;
+                            font-size: 13px;
+                            font-weight: 600;
+                            width: 0px;
+                            height: 0px;
+                            margin-bottom: -2px;
+                            overflow: hidden;
+                            transition: ease-out 0.2s;
+                        }
+                    }
+                    .btnAdd:hover .btnAddText {
+                        // width: max-content;
+                        width: 24px;
+                        height: max-content;
+                        transition: ease-out 0.2s;
                     }
                     .btnAdd:hover {
+                        gap: 3px;
                         background-color: #1f1f1f;
                     }
                     .btnAdd:active {
@@ -3023,7 +3040,7 @@ body {
         span {
             color: #ffffff;
             font-size: 16px;
-            font-weight: 400;
+            font-weight: 500;
         }
     }
 
@@ -4377,6 +4394,492 @@ body {
                 border-radius: 50%;
                 cursor: pointer;
             }
+        }
+    }
+}
+
+// CSS Create Playlist Page
+.createPlaylistPage {
+    width: 100%;
+    .createPlaylistContainer {
+        width: 100%;
+        .top {
+            width: 100%;
+            //
+            .playlistInfo {
+                display: flex;
+                align-items: center;
+                gap: 15px;
+                padding: 20px;
+                padding-top: 25px;
+                //
+                .coverImage {
+                    //
+                    .areaUploadCoverImageFileContainer {
+                        position: relative;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        width: 285px;
+                        height: 285px;
+                        outline: rgba(135, 135, 135, 0.15) dotted 3px;
+                        outline-offset: -1px;
+                        background: transparent;
+                        border-radius: 10px;
+                        .areaUploadCoverImageFile {
+                            width: max-content;
+                            height: max-content;
+                            text-align: center;
+                        }
+                        .title {
+                            // color: #ffffffa3;
+                            color: #dfdfdf80;
+                            font-family: system-ui;
+                            font-size: 15px;
+                            font-weight: 500;
+                            display: grid;
+                            align-items: center;
+                            justify-content: center;
+                            margin-bottom: 10px;
+                            gap: 5px;
+                            svg {
+                                font-size: 55px;
+                                margin: 0 auto;
+                            }
+                        }
+                        .labelInputCoverImageFile {
+                            position: relative;
+                            font-family: system-ui;
+                            font-size: 14px;
+                            font-weight: 500;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            gap: 5px;
+                            width: fit-content;
+                            background-color: #dfdfdf;
+                            color: #000;
+                            box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+                            border: 2px solid transparent;
+                            border-radius: 10px;
+                            padding: 4px 10px;
+                            cursor: pointer;
+                            transition: ease-out 0.2s;
+                            -webkit-user-select: none;
+                            user-select: none;
+                            // z-index: 3;
+                            margin: 0 auto;
+                        }
+                        .labelInputCoverImageFile:hover {
+                            background-color: #c2c0c0;
+                        }
+                        .inputCoverImageFile {
+                            background-color: transparent;
+                            position: absolute;
+                            border: none;
+                            border-radius: 5px;
+                            top: 2px;
+                            bottom: 2px;
+                            left: 2px;
+                            right: 2px;
+                            opacity: 0;
+                            cursor: pointer;
+                        }
+                    }
+                    // Preview Cover Image Container
+                    .previewCoverImageContainer {
+                        position: relative;
+                        .btnDeleteCoverImage {
+                            position: absolute;
+                            top: 4px;
+                            right: 4px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            padding: 3px;
+                            background-color: rgba(18, 18, 18, 0.35);
+                            border: none;
+                            border-radius: 50%;
+                            color: #ffffff;
+                            cursor: pointer;
+                            transition: ease-out 0.2s;
+                            z-index: 3;
+                            svg {
+                                background-color: transparent;
+                                color: #ffffff;
+                            }
+                        }
+                        .btnDeleteCoverImage:hover {
+                            background-color: rgba(18, 18, 18, 0.65);
+                            backdrop-filter: blur(5px);
+                        }
+                        .btnDeleteCoverImage:active {
+                            background-color: red;
+                        }
+                    }
+                }
+                .info {
+                    position: relative;
+                    width: 100%;
+                    height: 285px;
+                    padding-top: 10px;
+                    overflow: hidden;
+                    span {
+                        display: block;
+                        font-family: system-ui;
+                        color: #ffffff;
+                        font-weight: 600;
+                    }
+                    .type {
+                        font-size: 13px;
+                        color: #ffffffa3;
+                        select {
+                            background: #1f1f1f;
+                            color: #fff;
+                            cursor: pointer;
+                            border-radius: 10px;
+                            border: 0.5px solid transparent;
+                            font-family: system-ui;
+                            font-size: 13px;
+                            font-weight: 500;
+                            padding: 1px;
+                            margin-right: 5px;
+                        }
+                    }
+                    .name {
+                        font-size: 28px;
+                        line-height: 39.6px;
+                        margin-bottom: 5px;
+                        display: flex;
+                        align-items: center;
+                        gap: 5px;
+                        position: relative;
+                        svg {
+                            font-size: 28px;
+                        }
+                        .nameInput {
+                            font-family: system-ui;
+                            font-size: 28px;
+                            font-weight: 600;
+                            line-height: 39.6px;
+                            background-color: transparent;
+                            border: 0.5px solid transparent;
+                            color: #ffffff;
+                            height: max-content;
+                            max-height: max-content;
+                            width: max-content;
+                            transition: ease-out 0.2s;
+                            cursor: pointer;
+                        }
+                        .nameInput:focus {
+                            outline: none;
+                        }
+                        .nameInput:hover {
+                            border-bottom: 0.5px solid #ffffffa3;
+                        }
+                        .labelNameInput {
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            cursor: pointer;
+                            padding: 3px;
+                            background-color: transparent;
+                            border-radius: 10px;
+                            transition: ease-out 0.2s;
+                            position: absolute;
+                            right: 0;
+                        }
+                        .labelNameInput:hover {
+                            background-color: #1f1f1f;
+                        }
+                        .labelNameInput:active {
+                            background-color: #000;
+                        }
+                    }
+                    .owner {
+                        // position: relative;
+                        display: flex;
+                        align-items: center;
+                        gap: 5px;
+                        margin-bottom: 7px;
+                        overflow-y: hidden;
+                        overflow-x: auto;
+                        scrollbar-width: none;
+                        width: 92.5%;
+                        .btnOwner {
+                            border: 0.5px solid #1f1f1f;
+                            border-radius: 15px;
+                            background-color: #171717;
+                            // box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+                            padding: 5px;
+                            margin: 0;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            gap: 5px;
+                            color: #ffffff;
+                            font-family: system-ui;
+                            // font-size: 13px;
+                            font-weight: 500;
+                            cursor: pointer;
+                            transition: ease-out 0.2s;
+                            position: relative;
+                            img {
+                                height: 18px;
+                                width: 18px;
+                                outline: rgba(135, 135, 135, 0.15) solid 1px;
+                                outline-offset: -1px;
+                                border-radius: 50%;
+                                object-fit: cover;
+                                user-select: none;
+                            }
+                        }
+                        .btnOwner:hover {
+                            background-color: #1f1f1f;
+                        }
+                        // Highlight Animation
+                        .highlight {
+                            animation: highlightAnimation 1s ease-out;
+                        }
+                        @keyframes highlightAnimation {
+                            0% {
+                                // background-color: #d63031;
+                                background-color: #1f1f1f;
+                            }
+
+                            50% {
+                                // background-color: #fd79a8;
+                                background-color: #444;
+                                // transform: translate(-9px, -7px);
+                            }
+
+                            100% {
+                                background-color: transparent;
+                            }
+                        }
+                        .btnDeleteUserTag {
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            height: 18px;
+                            width: 18px;
+                            padding: 3px;
+                            color: #ffffff;
+                            outline: rgba(135, 135, 135, 0.15) solid 1px;
+                            outline-offset: -1px;
+                            background-color: transparent;
+                            border: none;
+                            border-radius: 50%;
+                            object-fit: cover;
+                            user-select: none;
+                            cursor: pointer;
+                            transition: ease-out 0.2s;
+                        }
+                        .btnDeleteUserTag:hover {
+                            background-color: rgb(233 20 41 / 50%);
+                        }
+                        .btnDeleteUserTag:active {
+                            background-color: #000;
+                        }
+                        .btnAddUserTagsContainer {
+                            position: absolute;
+                            right: 0;
+                            z-index: 4;
+                            .btnAddUserTags {
+                                position: relative;
+                                background-color: rgba(18, 18, 18, 0.8);
+                                backdrop-filter: blur(15px);
+                            }
+                            .btnAddUserTags:hover {
+                                background-color: #1f1f1f;
+                            }
+                            .btnAddUserTags:active {
+                                background-color: #000;
+                            }
+                        }
+                    }
+                    .detail {
+                        display: flex;
+                        align-items: center;
+                        gap: 5px;
+                        color: #ffffffa3;
+                        font-size: 13px;
+                        span {
+                            color: #ffffffa3;
+                        }
+                    }
+                    .playlistControls {
+                        display: flex;
+                        align-items: center;
+                        gap: 10px;
+                        position: absolute;
+                        bottom: 0;
+                        left: 0;
+                        .btnPlayPlaylist {
+                            font-family: system-ui;
+                            font-size: 14px;
+                            font-weight: 500;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            gap: 5px;
+                            width: fit-content;
+                            // background-color: #000;
+                            // color: #ffffff;
+                            background-color: #dfdfdf;
+                            color: #000;
+                            box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+                            border: 2px solid transparent;
+                            border-radius: 10px;
+                            padding: 4px 10px;
+                            cursor: pointer;
+                            transition: ease-out 0.2s;
+                            // z-index: 9;
+                            -webkit-user-select: none;
+                            user-select: none;
+                        }
+                        .btnPlayPlaylist:hover {
+                            background-color: #c2c0c0;
+                        }
+                    }
+                }
+            }
+        }
+        .middle {
+            .listMusicContainer {
+                padding: 20px;
+                .listMusic {
+                    //
+                    width: 100%;
+                    // Head
+                    .headListMusic {
+                        width: 100%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        gap: 5px;
+                        margin-bottom: 10px;
+                        padding: 8px 10px;
+                        border-bottom: 0.5px solid #1f1f1f;
+                        background-color: rgba(18, 18, 18, 0.8);
+                        backdrop-filter: blur(15px);
+                        position: sticky;
+                        top: 57.6px;
+                        z-index: 1;
+                        transition: ease-out 0.2s;
+                        span {
+                            display: flex;
+                            align-items: center;
+                            font-family: system-ui;
+                            font-size: 15px;
+                            font-weight: 500;
+                            color: #ffffffa3;
+                        }
+                        .number {
+                            width: 9%;
+                            justify-content: left;
+                        }
+                        .music {
+                            width: 82%;
+                        }
+                        .time {
+                            width: 9%;
+                            justify-content: right;
+                        }
+                    }
+                    // Body
+                    .bodyListMusic {
+                        width: 100%;
+                        .btnPlaylist {
+                            display: flex;
+                            align-items: center;
+                            justify-content: space-between;
+                            gap: 5px;
+                            border: none;
+                            border-radius: 10px;
+                            background-color: transparent;
+                            width: 100%;
+                            padding: 8px 10px;
+                            margin: 0;
+                            transition: ease-out 0.2s;
+                            cursor: pointer;
+                            span {
+                                display: flex;
+                                align-items: center;
+                                font-family: system-ui;
+                                font-size: 15px;
+                                font-weight: 500;
+                                color: #ffffffa3;
+                            }
+                            .number {
+                                width: 9%;
+                                justify-content: left;
+                                position: relative;
+                                .numberIcon {
+                                    font-size: 14px;
+                                    font-weight: 500;
+                                }
+                                .playIcon {
+                                    color: #ffffff;
+                                    position: absolute;
+                                    left: 0;
+                                    top: 0;
+                                    bottom: 0;
+                                    opacity: 0;
+                                }
+                            }
+                            .music {
+                                width: 82%;
+                                display: flex;
+                                align-items: center;
+                                overflow-y: hidden;
+                                overflow-x: auto;
+                                scrollbar-width: none;
+                                gap: 8px;
+                                img {
+                                    height: 45px;
+                                    width: 45px;
+                                    outline: rgba(135, 135, 135, 0.15) solid 1px;
+                                    outline-offset: -1px;
+                                    border-radius: 5px;
+                                    object-fit: cover;
+                                    cursor: pointer;
+                                    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+                                }
+                                .info {
+                                    .name {
+                                        color: #ffffff;
+                                    }
+                                    .quantity {
+                                        color: #777777aa;
+                                        font-size: 14px;
+                                        font-weight: 500;
+                                    }
+                                }
+                            }
+                            .time {
+                                width: 9%;
+                                justify-content: right;
+                                color: #777777aa;
+                                font-size: 14px;
+                                font-weight: 500;
+                            }
+                        }
+                        .btnPlaylist:hover {
+                            background-color: #1f1f1f;
+                        }
+                        .btnPlaylist:hover .number .numberIcon {
+                            opacity: 0;
+                        }
+                        .btnPlaylist:hover .number .playIcon {
+                            opacity: 1;
+                        }
+                    }
+                }
+            }
+        }
+        .bottom {
+            //
         }
     }
 }
@@ -6108,8 +6611,8 @@ body {
         padding: 5px;
         // Hình đại diện user trong tag
         .tagAvatar {
-            height: 32px;
-            width: 32px;
+            height: 32px !important;
+            width: 32px !important;
             border: 0.5px solid #1f1f1f;
             border-radius: 50%;
             object-fit: cover;
@@ -6122,9 +6625,9 @@ body {
             display: grid;
 
             .userName {
-                color: #ffffff;
-                font-size: 15px;
-                font-weight: 500;
+                color: #ffffff !important;
+                font-size: 15px !important;
+                font-weight: 500t;
                 height: 100%;
                 cursor: pointer;
                 transition: ease-out 0.2s;
@@ -6137,9 +6640,9 @@ body {
                 max-width: 230px;
             }
             .name {
-                color: #777777aa;
+                color: #777777aa !important;
                 font-weight: 300;
-                font-size: 15px;
+                font-size: 15px !important;
                 height: 100%;
                 cursor: pointer;
                 transition: ease-out 0.2s;
@@ -6154,7 +6657,7 @@ body {
         }
     }
     .tag:hover {
-        background-color: #1f1f1f;
+        background-color: #1f1f1f !important;
     }
 }
 
@@ -6242,7 +6745,7 @@ body {
         // filter: blur(80px) opacity(0.5) saturate(300%);
         filter: blur(35px) opacity(0.2) saturate(300%);
         pointer-events: none;
-        z-index: 1;
+        z-index: 2;
     }
 
     #image {
@@ -6255,7 +6758,7 @@ body {
         width: 300px;
         object-fit: cover;
         object-position: center center;
-        z-index: 2;
+        z-index: 3;
         border-radius: 5px;
         // outline: rgba(135, 135, 135, 0.15) solid 1px;
         // outline-offset: -1px;

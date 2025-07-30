@@ -1,14 +1,14 @@
-import { useContext, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '~/context/auth.context';
 import { getUserProfileInfoApi } from '~/utils/api';
 import defaultAvatar from '~/assets/images/avatarDefault.jpg';
-import { IoSyncSharp } from 'react-icons/io5';
+import { IoCloseSharp, IoSyncSharp } from 'react-icons/io5';
 
 // Cache user data (Tạm thời chưa dùng, để cập nhật data mới nhất của user)
 const userCache = {};
 
-function UserTag({ children, userName }) {
+function UserTag({ children, userName, userTagData, typeUserTag, handleRemoveUserTag }) {
     // State
     const [show, setShow] = useState(false);
     // const [hoverInfoBox, setHoverInfoBox] = useState(false);
@@ -98,7 +98,53 @@ function UserTag({ children, userName }) {
             return count;
         }
     };
+    // Get user data
+    useEffect(() => {
+        // If typeUserTag === 'atCreatePlaylist'
+        // if (typeUserTag === 'atCreatePlaylist') {
+        //     handleFetchUser();
+        // }
+    }, []);
 
+    // typeUserTag === 'atCreatePlaylist'
+    if (typeUserTag === 'atCreatePlaylist') {
+        return (
+            <>
+                {/* Owner */}
+                <button
+                    className="btnOwner"
+                    id={`btnOwnerID${userTagData?.userName}`}
+                    type="button"
+                    style={{
+                        // opacity: '0.8',
+                        background: '#171717',
+                    }}
+                    // disabled
+                >
+                    <img
+                        src={
+                            userTagData?.userAvatar
+                                ? process.env.REACT_APP_BACKEND_URL + userTagData?.userAvatar
+                                : defaultAvatar
+                        }
+                        draggable="false"
+                    />{' '}
+                    {userTagData?.userName}
+                    <button
+                        type="button"
+                        className="btnDeleteUserTag"
+                        onClick={() => {
+                            handleRemoveUserTag(`@${userName}`);
+                        }}
+                    >
+                        <IoCloseSharp />
+                    </button>
+                </button>
+            </>
+        );
+    }
+
+    // Kiểu user tag mặc định
     return (
         <div className="userTagContainer" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
             <Link ref={userTagRef} to={`/profile/${userName}`} className="userTag">

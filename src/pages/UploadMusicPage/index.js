@@ -291,7 +291,9 @@ function UploadMusicPage() {
     const handleRemoveAddImage = (e) => {
         if (previewImageFile) {
             setPreviewImageFile();
-            addImageInputRef.current.value = '';
+            if (addImageInputRef.current) {
+                addImageInputRef.current.value = '';
+            }
             return;
         }
     };

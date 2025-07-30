@@ -1,8 +1,9 @@
+import { IoPlaySharp } from 'react-icons/io5';
 import noContentImage from '~/assets/images/no_content.jpg';
 import { useMusicPlayerContext } from '~/context/musicPlayer.context';
 import { getSongDataApi } from '~/utils/api';
 
-function MusicCard({ songData, typeMusicCard }) {
+function MusicCard({ songData, order, typeMusicCard }) {
     // State
 
     // Context
@@ -27,11 +28,13 @@ function MusicCard({ songData, typeMusicCard }) {
         }
     };
 
+    // Trong LeftContainer
     if (typeMusicCard === 'LeftContainer') {
         return (
             <>
                 {/* Each Item */}
                 <button
+                    type="button"
                     className="btnPlaylist"
                     onClick={() => {
                         handlePlay();
@@ -53,6 +56,35 @@ function MusicCard({ songData, typeMusicCard }) {
                     </div>
                 </button>
             </>
+        );
+    }
+
+    // Trong Playlist
+    if (typeMusicCard === 'Playlist') {
+        return (
+            <button className="btnPlaylist" type="button">
+                <span className="number">
+                    <span className="numberIcon">{order}</span>
+                    <span className="playIcon">
+                        <IoPlaySharp />
+                    </span>
+                </span>
+                <span className="music">
+                    <img
+                        src={
+                            songData?.songImage
+                                ? process.env.REACT_APP_BACKEND_URL + songData?.songImage
+                                : noContentImage
+                        }
+                        draggable="false"
+                    />
+                    <div className="info">
+                        <span className="name">{songData?.name}</span>
+                        <span className="quantity">{songData?.User?.userName}</span>
+                    </div>
+                </span>
+                <span className="time">{songData?.duration ? songData?.duration : 'null'}</span>
+            </button>
         );
     }
 

@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import Hls from 'hls.js';
 import noContentImage from '~/assets/images/no_content.jpg';
 import { useMusicPlayerContext } from '~/context/musicPlayer.context';
+import { createListenHistoryApi } from '~/utils/api';
 
 // BroadcastChannel
 const channel = new BroadcastChannel('music-player');
@@ -74,6 +75,7 @@ export function useMusicPlayer() {
             hlsRef.current.destroy();
         }
         //
+        let saveListenHistoryTimer; // Timer save listening history
         if (Hls.isSupported()) {
             const hls = new Hls();
             hls.loadSource(process.env.REACT_APP_BACKEND_URL + currentSong.songLink);
@@ -83,6 +85,13 @@ export function useMusicPlayer() {
                 if (isInteracted) {
                     audioRef.current.play();
                     setIsPlaying(true);
+                    // Lưu vào lịch sử nghe
+                    if (currentSong) {
+                        saveListenHistoryTimer = setTimeout(() => {
+                            saveListeningHistory(currentSong.songId); // Chỉ gọi nếu nghe > 5s
+                        }, 5000); // Chỉ lưu sau 5 giây nghe
+                        // return () => clearTimeout(saveListenHistoryTimer); // Hủy nếu đổi bài quá nhanh
+                    }
                 }
             });
             hlsRef.current = hls;
@@ -98,6 +107,7 @@ export function useMusicPlayer() {
         }
         //
         return () => {
+            clearTimeout(saveListenHistoryTimer); // Hủy nếu đổi bài quá nhanh
             if (hlsRef.current) hlsRef.current.destroy();
         };
     }, [currentSong]);
@@ -285,6 +295,18 @@ export function useMusicPlayer() {
         const m = Math.floor(sec / 60);
         const s = Math.floor(sec % 60);
         return `${m < 10 ? '0' + m : m}:${s < 10 ? '0' + s : s}`;
+    };
+    // Hàm xử lý lưu vào lịch sử nghe
+    const saveListeningHistory = async (songId) => {
+        try {
+            // Call API Create Listen History
+            const data = { songId };
+            await createListenHistoryApi(data);
+            //
+            return;
+        } catch (error) {
+            console.log('Error save listen history: ', error);
+        }
     };
 
     return {

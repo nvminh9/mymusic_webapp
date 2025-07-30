@@ -1,7 +1,8 @@
 import { useRef, useEffect } from 'react';
 import axios from 'axios';
 
-const ImageAmbilight = ({ imageSrc }) => {
+// style: style cho #image và #imageAmbilight
+const ImageAmbilight = ({ imageSrc, style }) => {
     // config ImageKit.io
     const IMAGEKIT_URL_ENDPOINT = `https://ik.imagekit.io/d7q5hnktr`;
 
@@ -62,8 +63,21 @@ const ImageAmbilight = ({ imageSrc }) => {
                 <div className="aspectRatio">
                     {/* <img id="image" ref={imageRef} src={`${IMAGEKIT_URL_ENDPOINT}/${imageSrc}`} />
                     <img id="imageAmbilight" src={`${IMAGEKIT_URL_ENDPOINT}/${imageSrc}`} /> */}
-                    <img id="image" ref={imageRef} src={imageSrc} />
-                    <img id="imageAmbilight" src={imageSrc} />
+                    <img
+                        id="image"
+                        ref={imageRef}
+                        src={imageSrc}
+                        style={{
+                            ...style,
+                        }}
+                    />
+                    <img
+                        id="imageAmbilight"
+                        src={imageSrc}
+                        style={{
+                            ...style,
+                        }}
+                    />
                 </div>
                 <canvas id="ambilight" ref={canvasRef} />
             </div>

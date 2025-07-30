@@ -255,6 +255,18 @@ const getListPlaylistOfUserDataApi = (userId) => {
     return axios.get(URL_API);
 };
 
+// API Tạo hay thêm bài vào lịch sử nghe (POST)
+const createListenHistoryApi = (data) => {
+    const URL_API = `/v1/api/listeningHistory/create`;
+    return axios.post(URL_API, data);
+};
+
+// API Lấy dữ liệu 1 bài trong lịch sử nghe (GET)
+const getListeningHistoryDetailApi = (id) => {
+    const URL_API = `/v1/api/listeningHistory?id=${id}`;
+    return axios.get(URL_API);
+};
+
 // API Lấy dữ liệu của lịch sử nghe (GET)
 const getListeningHistoryDataApi = (page, limit) => {
     const URL_API = `/v1/api/listeningHistory/data?page=${page}&limit=${limit}`;
@@ -302,5 +314,7 @@ export {
     createPlaylistApi,
     getPlaylistDataApi,
     getListPlaylistOfUserDataApi,
+    createListenHistoryApi,
+    getListeningHistoryDetailApi,
     getListeningHistoryDataApi,
 };
