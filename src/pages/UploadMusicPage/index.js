@@ -39,6 +39,7 @@ import ImageAmbilight from '../components/ImageAmbilight';
 import VideoAmbilight from '../components/VideoAmbilight';
 import Slider from 'react-slick';
 import noContentImage from '~/assets/images/no_content.jpg';
+import { useMusicPlayer } from '~/hooks/useMusicPlayer';
 
 function UploadMusicPage() {
     // State
@@ -142,6 +143,8 @@ function UploadMusicPage() {
     };
 
     // --- HANDLE FUNCTIONS ---
+    // useMusicPlayer
+    const { formatTime } = useMusicPlayer();
     // Handle submit form upload music
     const onSubmit = async (data) => {
         // Chưa chọn file
@@ -164,9 +167,11 @@ function UploadMusicPage() {
         // Nếu là bước cuối thì thực hiện đăng bài nhạc
         if (formStep === 2) {
             const { name } = data;
+            const duration = formatTime(testAudioRef.current.duration);
             // Form Data
             const formData = new FormData();
             if (name) formData.append('name', name);
+            if (duration) formData.append('duration', duration);
             if (audioFile) formData.append('audioAndMediaFiles', audioFile);
             if (imageFile) formData.append('audioAndMediaFiles', imageFile);
             if (videoFile) formData.append('audioAndMediaFiles', videoFile);
@@ -290,6 +295,7 @@ function UploadMusicPage() {
     // Handle remove image
     const handleRemoveAddImage = (e) => {
         if (previewImageFile) {
+            setImageFile();
             setPreviewImageFile();
             if (addImageInputRef.current) {
                 addImageInputRef.current.value = '';
@@ -324,8 +330,11 @@ function UploadMusicPage() {
     // Handle remove video
     const handleRemoveAddVideo = (e) => {
         if (previewVideoFile) {
+            setVideoFile();
             setPreviewVideoFile();
-            addVideoInputRef.current.value = '';
+            if (addVideoInputRef.current) {
+                addVideoInputRef.current.value = '';
+            }
             return;
         }
     };
@@ -391,13 +400,6 @@ function UploadMusicPage() {
         if (typeof bytes !== 'number' || isNaN(bytes)) return 0;
         return (bytes / (1024 * 1024)).toFixed(2);
     };
-    // Hàm format thời gian của bài hát
-    const formatTime = (sec) => {
-        if (isNaN(sec)) return '00:00';
-        const m = Math.floor(sec / 60);
-        const s = Math.floor(sec % 60);
-        return `${m < 10 ? '0' + m : m}:${s < 10 ? '0' + s : s}`;
-    };
 
     return (
         <Fragment>
@@ -425,7 +427,7 @@ function UploadMusicPage() {
                         method="POST"
                         noValidate
                     >
-                        {/* Audio Tag Hidden */}
+                        {/* Audio Tag (Hidden) */}
                         <audio
                             ref={testAudioRef}
                             src={previewAudioFile}
@@ -434,7 +436,8 @@ function UploadMusicPage() {
                             onEnded={() => {
                                 handleEnded();
                             }}
-                            style={{ display: 'none', opacity: '0', width: '0', height: '0' }}
+                            // style={{ display: 'none', opacity: '0', width: '0', height: '0' }}
+                            hidden
                         />
                         {/* Step 0 */}
                         {formStep === 0 && (

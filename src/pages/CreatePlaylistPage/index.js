@@ -175,6 +175,7 @@ function CreatePlaylistPage() {
     // Handle remove cover image
     const handleRemoveCoverImage = (e) => {
         if (previewCoverImageFile) {
+            setCoverImageFile();
             setPreviewCoverImageFile();
             if (addCoverImageInputRef.current) {
                 addCoverImageInputRef.current.value = '';
@@ -655,6 +656,20 @@ function CreatePlaylistPage() {
                                                     <IoAlertSharp /> Có lỗi xảy ra
                                                 </>
                                             )}
+                                        </button>
+                                        {/* Add music */}
+                                        <button
+                                            className="btnPlayPlaylist btnAddMusic"
+                                            type="button"
+                                            // onClick={handleBtnAddMusic}
+                                            style={{
+                                                opacity: '0.3',
+                                                background: '#dfdfdf',
+                                                cursor: 'not-allowed',
+                                            }}
+                                            disabled
+                                        >
+                                            <IoAddSharp /> Thêm
                                         </button>
                                     </div>
                                 </div>

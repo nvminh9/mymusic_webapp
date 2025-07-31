@@ -104,7 +104,11 @@ function UserTag({ children, userName, userTagData, typeUserTag, handleRemoveUse
         // if (typeUserTag === 'atCreatePlaylist') {
         //     handleFetchUser();
         // }
-    }, []);
+        // If typeUserTag === 'atPlaylistDetail'
+        // if (typeUserTag === 'atPlaylistDetail') {
+        //     handleFetchUser();
+        // }
+    }, [userName]);
 
     // typeUserTag === 'atCreatePlaylist'
     if (typeUserTag === 'atCreatePlaylist') {
@@ -141,6 +145,28 @@ function UserTag({ children, userName, userTagData, typeUserTag, handleRemoveUse
                     </button>
                 </button>
             </>
+        );
+    }
+
+    // typeUserTag === 'atPlaylistDetail'
+    if (typeUserTag === 'atPlaylistDetail') {
+        return (
+            <button
+                className="btnOwner"
+                type="button"
+                onClick={() => {
+                    navigate(`/profile/${userTagData?.userName}`);
+                }}
+            >
+                <img
+                    src={
+                        userTagData?.userAvatar
+                            ? process.env.REACT_APP_BACKEND_URL + userTagData?.userAvatar
+                            : defaultAvatar
+                    }
+                />{' '}
+                {userTagData?.userName}
+            </button>
         );
     }
 

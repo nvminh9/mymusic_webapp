@@ -243,6 +243,18 @@ const createPlaylistApi = (data) => {
     return axios.post(URL_API, data);
 };
 
+// API Thêm nhạc vào danh sách phát (POST)
+const addMusicToPlaylistApi = (data) => {
+    const URL_API = `/v1/api/playlist/add`;
+    return axios.post(URL_API, data);
+};
+
+// API Xóa bài hát khỏi danh sách phát (DELETE)
+const removeMusicFromPlaylistApi = (playlistId, songId) => {
+    const URL_API = `/v1/api/playlist/${playlistId}/remove/${songId}`;
+    return axios.delete(URL_API);
+};
+
 // API Lấy dữ liệu của danh sách phát (GET)
 const getPlaylistDataApi = (playlistId) => {
     const URL_API = `/v1/api/playlist?p=${playlistId}`;
@@ -312,6 +324,8 @@ export {
     getSongDataApi,
     getUserSongsDataApi,
     createPlaylistApi,
+    addMusicToPlaylistApi,
+    removeMusicFromPlaylistApi,
     getPlaylistDataApi,
     getListPlaylistOfUserDataApi,
     createListenHistoryApi,

@@ -4883,6 +4883,265 @@ body {
         }
     }
 }
+.addMusicBoxContainer {
+    background-color: rgba(18, 18, 18, 0.8);
+    backdrop-filter: blur(5px);
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 4;
+    .addMusicBox {
+        background-color: #2e2e2e;
+        width: 350px;
+        height: fit-content;
+        border-radius: 20px;
+        .title {
+            position: relative;
+            padding: 8px 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            span {
+                font-family: system-ui;
+                font-size: 15px;
+                font-weight: 500;
+                color: #ffffff;
+            }
+            button {
+                position: absolute;
+                right: 5px;
+                top: 5px;
+                display: flex;
+                align-content: center;
+                justify-content: center;
+                background-color: #2e2e2e;
+                border: none;
+                border-radius: 50%;
+                padding: 5px;
+                color: #ffffff;
+                cursor: pointer;
+                transition: ease-out 0.2s;
+            }
+            button:hover {
+                background-color: rgb(233 20 41 / 50%);
+            }
+            button:active {
+                background-color: #000;
+            }
+        }
+        .mainContainer {
+            padding: 5px;
+            .inputSearchMusic {
+                width: 100%;
+                padding: 7px 10px;
+                background-color: #1f1f1f;
+                color: #ffffff;
+                font-family: system-ui;
+                font-size: 14px;
+                font-weight: 500;
+                border: 0.5px solid #1f1f1f;
+                border-radius: 10px;
+            }
+            .main {
+                height: 380px;
+                width: 100%;
+                overflow-x: hidden;
+                overflow-y: auto;
+                .listenHistory {
+                    margin-top: 10px;
+                    .title {
+                        font-family: system-ui;
+                        font-size: 14px;
+                        font-weight: 500;
+                        // color: #dfdfdf;
+                        color: #777777aa;
+                        justify-content: left;
+                    }
+                    .listenHistoryItem {
+                        position: relative;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                    }
+                }
+                .myMusicList {
+                    transition: ease-out 0.2s;
+                    height: 100px;
+                    overflow: hidden;
+                }
+            }
+            /* width */
+            .main::-webkit-scrollbar {
+                width: 6px;
+            }
+
+            /* Track */
+            .main::-webkit-scrollbar-track {
+                background: transparent;
+            }
+
+            /* Handle */
+            .main::-webkit-scrollbar-thumb {
+                background: #777777aa;
+                backdrop-filter: blur(5px);
+                border-radius: 3px;
+                cursor: pointer;
+            }
+        }
+        // Button Music Card (At Search)
+        .btnPlaylist {
+            font-family: 'Funnel Sans', sans-serif;
+            display: flex;
+            align-items: center;
+            background-color: transparent;
+            border: none;
+            border-radius: 15px;
+            height: max-content;
+            width: 100%;
+            padding: 8px;
+            transition: ease-out 0.2s;
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+
+            .coverImage {
+                display: flex;
+                align-items: center;
+                height: 100%;
+
+                img {
+                    // height: 100%;
+                    // border: 0.5px solid #1f1f1f;
+                    height: 40px;
+                    width: 40px;
+                    // outline: 1px solid rgba(243, 245, 247, 0.15);
+                    // outline-offset: -1px;
+                    outline: rgba(135, 135, 135, 0.15) solid 1px;
+                    outline-offset: -1px;
+                    border-radius: 5px;
+                    object-fit: cover;
+                    cursor: pointer;
+                    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+                    // filter: blur(0.4px);
+                }
+            }
+
+            .info {
+                // display: grid;
+                // align-items: center;
+                padding-left: 8px;
+                width: 75%;
+                height: 100%;
+
+                .name {
+                    // display: flex;
+                    // align-items: center;
+                    // justify-content: left;
+                    color: #ffffff;
+                    font-family: system-ui;
+                    font-size: 16px;
+                    font-weight: 500;
+                    // padding-bottom: 4px;
+                    cursor: pointer;
+                    transition: ease-out 0.2s;
+                    line-height: 25px;
+                    display: -webkit-box;
+                    -webkit-box-orient: vertical;
+                    -webkit-line-clamp: 1;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    text-align: left;
+                    width: 100%;
+                }
+                .name:hover {
+                    // text-decoration: underline;
+                }
+                .quantity {
+                    display: flex;
+                    align-items: center;
+                    justify-content: left;
+                    // color: #b3b3b3;
+                    color: #777777aa;
+                    font-size: 14px;
+                    font-weight: 400;
+                }
+            }
+        }
+        .btnPlaylist:hover {
+            background-color: #1f1f1f;
+        }
+        .btnPlaylist:active {
+            background-color: #000;
+        }
+        .btnAddMusic {
+            position: absolute;
+            right: 8px;
+            font-family: system-ui;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            width: fit-content;
+            background-color: #dfdfdf;
+            color: #000;
+            box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+            border: 2px solid transparent;
+            border-radius: 10px;
+            padding: 4px 10px;
+            cursor: pointer;
+            transition: ease-out 0.2s;
+            -webkit-user-select: none;
+            user-select: none;
+            z-index: 5;
+        }
+        .btnAddMusic:hover {
+            background-color: #c2c0c0;
+        }
+        .btnAddMusic:active {
+            transform: scale(0.97);
+        }
+        .btnRemoveAddMusic {
+            background-color: #1f1f1f;
+            color: #ffffff;
+        }
+        .btnRemoveAddMusic:hover {
+            background-color: #171717;
+        }
+        .btnMoreContainer {
+            width: 100%;
+            display: flex;
+            align-content: center;
+            justify-content: center;
+            .btnMore {
+                background-color: transparent;
+                border: none;
+                font-family: system-ui;
+                font-size: 14px;
+                font-weight: 500;
+                color: #777777aa;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 5px;
+                transition: ease-out 0.2s;
+                cursor: pointer;
+            }
+            .btnMore:hover {
+                color: #dfdfdf;
+            }
+            .btnMore:active svg {
+                margin-top: 2px;
+            }
+        }
+    }
+}
 
 // CSS Component List Article
 .listArticle {
