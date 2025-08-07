@@ -3,6 +3,7 @@
     "version": "0.1.0",
     "private": true,
     "dependencies": {
+        "@react-oauth/google": "^0.12.2",
         "@tanstack/react-query": "^5.81.2",
         "@vscode/codicons": "^0.0.36",
         "antd": "^5.24.4",

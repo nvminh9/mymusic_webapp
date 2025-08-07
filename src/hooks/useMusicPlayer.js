@@ -37,6 +37,10 @@ export function useMusicPlayer() {
         setIsInteracted,
         isBlocked,
         setIsBlocked,
+        isAutoNextSong,
+        setIsAutoNextSong,
+        isLikedSong,
+        setIsLikedSong,
     } = useMusicPlayerContext();
 
     // Ref
@@ -83,14 +87,14 @@ export function useMusicPlayer() {
             // Auto play
             hls.on(Hls.Events.MANIFEST_PARSED, () => {
                 if (isInteracted) {
+                    // Phát
                     audioRef.current.play();
                     setIsPlaying(true);
-                    // Lưu vào lịch sử nghe
                     if (currentSong) {
+                        // Lưu vào lịch sử nghe
                         saveListenHistoryTimer = setTimeout(() => {
                             saveListeningHistory(currentSong.songId); // Chỉ gọi nếu nghe > 5s
                         }, 5000); // Chỉ lưu sau 5 giây nghe
-                        // return () => clearTimeout(saveListenHistoryTimer); // Hủy nếu đổi bài quá nhanh
                     }
                 }
             });
@@ -100,8 +104,15 @@ export function useMusicPlayer() {
             // Auto play
             audioRef.current.addEventListener('loadedmetadata', () => {
                 if (isInteracted) {
+                    // Phát
                     audioRef.current.play();
                     setIsPlaying(true);
+                    if (currentSong) {
+                        // Lưu vào lịch sử nghe
+                        saveListenHistoryTimer = setTimeout(() => {
+                            saveListeningHistory(currentSong.songId); // Chỉ gọi nếu nghe > 5s
+                        }, 5000); // Chỉ lưu sau 5 giây nghe
+                    }
                 }
             });
         }
@@ -181,17 +192,27 @@ export function useMusicPlayer() {
     // Handle khi hết bài
     const handleEnded = () => {
         if (isRepeatOne) {
+            // Lặp lại bài hiện tại
             audioRef.current.currentTime = 0;
             audioRef.current.play();
-        } else if (currentIndex < playlist.length - 1) {
-            setCurrentIndex(currentIndex + 1);
-        } else if (isRepeatAll) {
-            setCurrentIndex(0);
         } else if (isShuffle) {
+            // Trộn thứ tự phát (State playlist)
             let randomIndex = getRandomIndexFromPlaylist();
             setCurrentIndex(randomIndex);
-            // console.log(randomIndex);
+        } else if (currentIndex < playlist.length - 1) {
+            // Chuyển sang bài tiếp theo trong playlist (State playlist)
+            if (!isAutoNextSong) {
+                // Nếu isAutoNextSong tắt thì dừng phát
+                setIsPlaying(false);
+            } else {
+                // Nếu isAutoNextSong bật thì phát bài tiếp theo
+                setCurrentIndex(currentIndex + 1);
+            }
+        } else if (isRepeatAll) {
+            // Lặp lại cả playlist (State playlist)
+            setCurrentIndex(0);
         } else {
+            // Dừng phát
             setIsPlaying(false);
         }
     };
@@ -308,6 +329,11 @@ export function useMusicPlayer() {
             console.log('Error save listen history: ', error);
         }
     };
+    // Hàm xử lý thích bài nhạc
+    const handleLikeSong = async () => {
+        // Set State isLikedSong
+        setIsLikedSong(!isLikedSong);
+    };
 
     return {
         audioRef,
@@ -335,5 +361,6 @@ export function useMusicPlayer() {
         isSongMuted,
         thumbnails,
         isBlocked,
+        handleLikeSong,
     };
 }

@@ -26,6 +26,8 @@ export const MusicPlayerProvider = ({ children }) => {
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
     const [isSongMuted, setIsSongMuted] = useState(false);
+    const [isAutoNextSong, setIsAutoNextSong] = useState(false); // Auto Next Song
+    const [isLikedSong, setIsLikedSong] = useState(false); // Liked Song
     const [isInteracted, setIsInteracted] = useState(false); // isInteracted: true khi người dùng đã tương tác với trang (click vào đâu đó) để tránh autoplay gây lỗi
 
     // --- HANDLE FUNCTION ---
@@ -58,6 +60,10 @@ export const MusicPlayerProvider = ({ children }) => {
                 setIsInteracted,
                 isBlocked,
                 setIsBlocked,
+                isAutoNextSong,
+                setIsAutoNextSong,
+                isLikedSong,
+                setIsLikedSong,
             }}
         >
             {children}

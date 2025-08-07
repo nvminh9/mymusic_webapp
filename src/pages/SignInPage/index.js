@@ -3,10 +3,11 @@ import { IoLogoGoogle, IoChevronBackSharp, IoEyeOffOutline, IoEyeOutline, IoAler
 import { Link, useLocation } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useContext, useEffect, useState } from 'react';
-import { signInApi, signUpApi } from '~/utils/api';
+import { googleLoginApi, signInApi, signUpApi } from '~/utils/api';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '~/context/auth.context';
 import { message } from 'antd';
+import { GoogleLogin } from '@react-oauth/google';
 
 function SignInPage() {
     // State (useState)
@@ -111,9 +112,66 @@ function SignInPage() {
         };
         checkIsSignedIn();
     }, []);
+    // Handle Google Login Success
+    const handleGoogleLoginSuccess = async (credentialResponse) => {
+        // Loading ... (Ant Design)
+        messageApi
+            .open({
+                type: 'loading',
+                content: 'Đang đăng nhập ...',
+                duration: 1.5,
+                style: {
+                    color: 'white',
+                },
+            })
+            .then(async () => {
+                // Call API Google Login
+                const dataGoogleLogin = {
+                    idToken: credentialResponse.credential,
+                    userName: null,
+                };
+                const res = await googleLoginApi(dataGoogleLogin);
+                // Kiểm tra response
+                if (res && res.status === 200 && res.message === 'Đăng nhập thành công') {
+                    setOnSubmitErrorMessage('');
+                    // Lưu token vào localStorage
+                    localStorage.setItem('actk', res.data.accessToken);
+                    // Set valid trong local storage
+                    localStorage.setItem('valid', true);
+                    // Set Auth Context
+                    setAuth({
+                        isAuthenticated: true,
+                        user: res?.data?.user ?? {},
+                    });
+                    message.success({
+                        content: 'Đăng nhập thành công',
+                        duration: 1.5,
+                        style: {
+                            color: 'white',
+                        },
+                    });
+                    // Chuyển hướng đến trang chủ
+                    navigate('/');
+                } else {
+                    // setOnSubmitErrorMessage(res?.message ?? 'Lỗi đăng nhập thất bại');
+                    setOnSubmitErrorMessage('Tài khoản chưa được đăng ký trên mymusic');
+                    // Set valid trong local storage
+                    localStorage.setItem('valid', false);
+                    // Message (Ant design)
+                    message.error({
+                        content: 'Đăng nhập không thành công',
+                        duration: 1.5,
+                        style: {
+                            color: 'white',
+                        },
+                    });
+                }
+            });
+    };
 
     return (
         <>
+            {/* Ant Design */}
             {contextHolder}
             <div className="signInContainer">
                 {/* <img className="logo" src={logo} alt="Logo mymusic" draggable="false" /> */}
@@ -202,10 +260,19 @@ function SignInPage() {
                             <div className="title">
                                 <span>hoặc</span>
                             </div>
-                            <a href="#googleRegis" className="regisMethodGoogle">
+                            {/* <a href="#googleRegis" className="regisMethodGoogle">
                                 <IoLogoGoogle className="logoGoogle" />
                                 <span>Đăng nhập bằng Google</span>
-                            </a>
+                            </a> */}
+                            {/* Google Login */}
+                            <GoogleLogin
+                                onSuccess={handleGoogleLoginSuccess}
+                                onError={() => console.log('Đăng nhập với Google thất bại')}
+                                theme="filled_black"
+                                text="signin_with"
+                                width={'350px'}
+                                shape="pill"
+                            />
                         </div>
                         <span className="toSignUp">
                             Bạn chưa có tài khoản?{' '}

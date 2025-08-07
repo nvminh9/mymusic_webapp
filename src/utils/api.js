@@ -24,6 +24,12 @@ const signInApi = (email, password) => {
     return axios.post(URL_API, data);
 };
 
+// API Đăng nhập / Đăng ký với Google (POST)
+const googleLoginApi = (data) => {
+    const URL_API = '/v1/api/auth/google';
+    return axios.post(URL_API, data);
+};
+
 // API Đăng xuất (GET)
 const signOutApi = () => {
     const URL_API = '/v1/api/auth/signout';
@@ -231,6 +237,18 @@ const getSongDataApi = (songId) => {
     return axios.get(URL_API);
 };
 
+// API Thích bài nhạc (POST)
+const createLikeSongApi = (songId) => {
+    const URL_API = `/v1/api/music/${songId}/like`;
+    return axios.post(URL_API);
+};
+
+// API Hủy thích bài nhạc (PATCH)
+const unLikeSongApi = (songId) => {
+    const URL_API = `/v1/api/music/${songId}/unlike`;
+    return axios.patch(URL_API);
+};
+
 // API Lấy dữ liệu của các bài nhạc của user đăng (GET)
 const getUserSongsDataApi = (userId) => {
     const URL_API = `/v1/api/music/${userId}`;
@@ -288,6 +306,7 @@ const getListeningHistoryDataApi = (page, limit) => {
 export {
     signUpApi,
     signInApi,
+    googleLoginApi,
     signOutApi,
     getAuthUserInfoApi,
     getUserInfoApi,
@@ -322,6 +341,8 @@ export {
     getFeedDataApi,
     uploadMusicApi,
     getSongDataApi,
+    createLikeSongApi,
+    unLikeSongApi,
     getUserSongsDataApi,
     createPlaylistApi,
     addMusicToPlaylistApi,

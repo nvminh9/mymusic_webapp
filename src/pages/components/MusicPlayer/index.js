@@ -12,14 +12,20 @@ import {
     IoHeartSharp,
     IoSparklesSharp,
     IoRefreshSharp,
+    IoHeartOutline,
 } from 'react-icons/io5';
 import CircumIcon from '@klarr-agency/circum-icons-react';
 import Slider from 'react-slick';
 import ImageAmbilight from '../ImageAmbilight';
 import VideoAmbilight from '../VideoAmbilight';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useMusicPlayer } from '~/hooks/useMusicPlayer';
 import { useMusicPlayerContext } from '~/context/musicPlayer.context';
+import { CgPlayListAdd } from 'react-icons/cg';
+import { IoMdShareAlt } from 'react-icons/io';
+import { MdFullscreen, MdFullscreenExit, MdPictureInPictureAlt } from 'react-icons/md';
+import logo from '~/assets/images/logoWhiteTransparent_noR.png';
+import LikeSongButton from '../LikeSongButton';
 
 function MusicPlayer() {
     // State
@@ -28,6 +34,7 @@ function MusicPlayer() {
     // Context
     const {
         playlist,
+        setPlaylist,
         isPlaying,
         isShuffle,
         setIsRepeatOne,
@@ -40,6 +47,10 @@ function MusicPlayer() {
         isSongMuted,
         isBlocked,
         currentIndex,
+        isAutoNextSong,
+        setIsAutoNextSong,
+        isLikedSong,
+        setIsLikedSong,
     } = useMusicPlayerContext();
 
     // useMusicPlayer (Custom Hook)
@@ -56,6 +67,7 @@ function MusicPlayer() {
         formatTime,
         handleEnded,
         handleBtnVolume,
+        handleLikeSong,
     } = useMusicPlayer();
 
     // Config Slider Carousel Thumbnail (React Slick)
@@ -105,6 +117,10 @@ function MusicPlayer() {
         ],
     };
 
+    // Navigation
+    const navigate = useNavigate();
+    const location = useLocation();
+
     // --- HANDLE FUNCTION ---
     // Phóng to / thu nhỏ music player
     const handleMaximizeMinimizeMusicPlayer = () => {
@@ -138,25 +154,34 @@ function MusicPlayer() {
             <div className="songPlayer">
                 {/* top */}
                 <div className="top">
-                    <span className="title">Music Player</span>
+                    <span className="title">
+                        {isMusicPlayerMaximized ? (
+                            <img src={logo} style={{ width: '95px' }} draggable="false" />
+                        ) : (
+                            'Music Player'
+                        )}
+                    </span>
                     <div className="options">
                         {/* Nút phóng to / thu nhỏ trình phát nhạc */}
-                        <button className="btnFullSreen tooltip" onClick={handleMaximizeMinimizeMusicPlayer}>
+                        <button className="btnFullScreen tooltip" onClick={handleMaximizeMinimizeMusicPlayer}>
                             {isMusicPlayerMaximized ? (
                                 <>
-                                    <CircumIcon name="minimize_1" />
+                                    {/* <CircumIcon name="minimize_1" /> */}
+                                    <MdFullscreenExit />
                                     <span class="tooltiptext">Thu nhỏ</span>
                                 </>
                             ) : (
                                 <>
-                                    <CircumIcon name="maximize_1" />
+                                    {/* <CircumIcon name="maximize_1" /> */}
+                                    <MdFullscreen />
                                     <span class="tooltiptext">Phóng to</span>
                                 </>
                             )}
                         </button>
                         {/* Nút chế độ hình trong hình */}
                         <button className="btnPicInPic tooltip">
-                            <CircumIcon name="minimize_2" />
+                            {/* <CircumIcon name="minimize_2" /> */}
+                            <MdPictureInPictureAlt />
                             <span class="tooltiptext">Trình phát thu nhỏ</span>
                         </button>
                     </div>
@@ -200,9 +225,16 @@ function MusicPlayer() {
                             </div>
                         )}
                         <div className="artist">
-                            <Link to={`/profile/${currentSong?.User?.userName}`} style={{ textDecoration: 'none' }}>
+                            <button
+                                type="button"
+                                className="btnArtist"
+                                style={{ textDecoration: 'none' }}
+                                onClick={() => {
+                                    navigate(`/profile/${currentSong?.User?.userName}`);
+                                }}
+                            >
                                 <span>{currentSong?.User?.userName || ''}</span>
-                            </Link>
+                            </button>
                         </div>
                     </div>
                     {/* Audio */}
@@ -242,6 +274,76 @@ function MusicPlayer() {
                             </div>
                         </div>
                     )}
+                    {/* Song Interact Button Box */}
+                    <div className="interactButtonBoxContainer">
+                        <div className="interactButtonBox">
+                            {/* Button Like Song */}
+                            {currentSong && (
+                                <LikeSongButton
+                                    key={currentSong?.songId}
+                                    songData={currentSong}
+                                    playlist={playlist}
+                                    setPlaylist={setPlaylist}
+                                />
+                            )}
+                            {/* Button Add To Playlist */}
+                            <div className="btnLikeSongContainer">
+                                <button
+                                    className={`btnLikeSong ${
+                                        !playlist?.length || playlist?.length < 1 ? 'btnDisabled' : ''
+                                    }`}
+                                    disabled={!playlist?.length || playlist?.length < 1 ? true : false}
+                                    // onClick={() => {
+                                    //     handleLikeSong();
+                                    // }}
+                                    style={{
+                                        borderRadius: '25px',
+                                        gap: '3px',
+                                        padding: '7px 12px',
+                                    }}
+                                >
+                                    <CgPlayListAdd />{' '}
+                                    <span
+                                        style={{
+                                            fontFamily: 'system-ui',
+                                            fontSize: '12px',
+                                            fontWeight: '500',
+                                        }}
+                                    >
+                                        Thêm vào danh sách phát
+                                    </span>
+                                </button>
+                            </div>
+                            {/* Button Share Song */}
+                            <div className="btnLikeSongContainer">
+                                <button
+                                    className={`btnLikeSong ${
+                                        !playlist?.length || playlist?.length < 1 ? 'btnDisabled' : ''
+                                    }`}
+                                    disabled={!playlist?.length || playlist?.length < 1 ? true : false}
+                                    // onClick={() => {
+                                    //     handleLikeSong();
+                                    // }}
+                                    style={{
+                                        borderRadius: '25px',
+                                        gap: '3px',
+                                        padding: '7px 12px',
+                                    }}
+                                >
+                                    <IoMdShareAlt />{' '}
+                                    <span
+                                        style={{
+                                            fontFamily: 'system-ui',
+                                            fontSize: '12px',
+                                            fontWeight: '500',
+                                        }}
+                                    >
+                                        Chia sẻ
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 {/* bottom */}
                 <div className="bottom">
@@ -403,22 +505,18 @@ function MusicPlayer() {
                                     <IoRepeatSharp />
                                 </button>
                             </div>
-                            <div className="btnLikeSongContainer">
+                            <div className="btnAutoNextSongContainer">
                                 <button
-                                    className={`btnLikeSong ${
+                                    className={`btnAutoNextSong ${
                                         !playlist?.length || playlist?.length < 1 ? 'btnDisabled' : ''
                                     }`}
                                     disabled={!playlist?.length || playlist?.length < 1 ? true : false}
+                                    onClick={() => setIsAutoNextSong(!isAutoNextSong)}
                                 >
-                                    <IoSparklesSharp
-                                        className="sparkles"
-                                        style={{ transform: 'translate(-11px, -7px)' }}
-                                    />
-                                    <IoHeartSharp />
-                                    <IoSparklesSharp
-                                        className="sparkles"
-                                        style={{ transform: 'translate(8px, 6px)' }}
-                                    />
+                                    <span className="title">AUTO</span>
+                                    <span className="status" style={{ color: isAutoNextSong ? '#2ecc71' : '#d63031' }}>
+                                        {isAutoNextSong ? 'ON' : 'OFF'}
+                                    </span>
                                 </button>
                             </div>
                         </div>

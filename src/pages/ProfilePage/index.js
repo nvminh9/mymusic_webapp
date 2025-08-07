@@ -211,6 +211,8 @@ function ProfilePage() {
         getUserProfileInfo(userName);
     }, [location.pathname.split('/')[2]]);
 
+    console.log(auth);
+
     return (
         <Fragment>
             {/* Menu Setting */}

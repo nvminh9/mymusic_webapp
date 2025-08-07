@@ -502,10 +502,14 @@ function CreatePlaylistPage() {
                                             disabled
                                         >
                                             <img
-                                                src="http://localhost:3700/image/userAvatar-1744049562031-705794721.png"
+                                                src={
+                                                    auth?.user?.userAvatar
+                                                        ? process.env.REACT_APP_BACKEND_URL + auth?.user?.userAvatar
+                                                        : defaultAvatar
+                                                }
                                                 draggable="false"
                                             />{' '}
-                                            thanhnguyen
+                                            {auth?.user?.userName}
                                         </button>
                                         {/* User Tags (Feat, Colab,...) */}
                                         {/* Render User Tags Added */}

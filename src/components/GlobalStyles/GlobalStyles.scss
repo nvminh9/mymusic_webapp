@@ -802,33 +802,7 @@ body {
                 height: 100%;
                 padding: 5px 10px;
             }
-            .tooltip {
-                position: relative;
-                display: inline-block;
-                // border-bottom: 1px dotted black;
-            }
-            .tooltip .tooltiptext {
-                visibility: hidden;
-                width: 80px;
-                background-color: #000;
-                color: #fff;
-                text-align: center;
-                border-radius: 6px;
-                padding: 5px 0;
-                transition: ease-out 0.1s;
-
-                /* Position the tooltip */
-                position: absolute;
-                z-index: 99;
-                top: 100%;
-                left: 50%;
-                margin-top: 5px;
-                margin-left: -40px; /* Use half of the width (80/2 = 40), to center the tooltip */
-            }
-            .tooltip:hover .tooltiptext {
-                visibility: visible;
-                transition: ease-out 0.1s;
-            }
+            // Tooltip
             .btnComeBack:hover {
                 background-color: #1f1f1f;
             }
@@ -981,8 +955,9 @@ body {
             align-items: center;
             justify-content: center;
             color: #ffffff;
+            font-family: system-ui;
             font-size: 16px;
-            font-weight: 400;
+            font-weight: 500;
             padding: 4px;
         }
 
@@ -998,15 +973,16 @@ body {
                 background-color: #000;
             }
 
-            .btnFullSreen {
+            .btnFullScreen {
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                height: 100%;
-                padding: 4px;
                 background-color: transparent;
-                border: 0.5px solid transparent;
+                border: none;
+                border-radius: 8px;
                 cursor: pointer;
+                padding: 8px;
+                font-size: 20px;
                 color: #ffffff;
                 transition: ease-in 0.2s;
             }
@@ -1014,41 +990,14 @@ body {
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                height: 100%;
-                padding: 4px;
                 background-color: transparent;
-                border: 0.5px solid transparent;
+                border: none;
+                border-radius: 8px;
                 cursor: pointer;
+                padding: 8px;
+                font-size: 20px;
                 color: #ffffff;
                 transition: ease-in 0.2s;
-            }
-            // Tooltip
-            .tooltip {
-                position: relative;
-                display: inline-block;
-                // border-bottom: 1px dotted black;
-            }
-            .tooltip .tooltiptext {
-                visibility: hidden;
-                width: 80px;
-                background-color: #000;
-                color: #fff;
-                text-align: center;
-                border-radius: 6px;
-                padding: 5px 0;
-                transition: ease-out 0.1s;
-
-                /* Position the tooltip */
-                position: absolute;
-                z-index: 99;
-                top: 100%;
-                left: 50%;
-                margin-top: 5px;
-                margin-left: -40px; /* Use half of the width (80/2 = 40), to center the tooltip */
-            }
-            .tooltip:hover .tooltiptext {
-                visibility: visible;
-                transition: ease-out 0.1s;
             }
         }
     }
@@ -1095,6 +1044,7 @@ body {
             width: 100%;
             padding: 10px 0px;
             padding-top: 40px;
+            font-family: system-ui;
 
             .name {
                 width: 300px;
@@ -1110,8 +1060,8 @@ body {
                     display: block;
                     color: #ffffff;
                     white-space: nowrap;
-                    font-size: 18px;
-                    font-weight: 400;
+                    font-size: 17px;
+                    font-weight: 500;
                     position: absolute;
                     cursor: default;
                 }
@@ -1133,12 +1083,20 @@ body {
                     color: rgba(119, 119, 119, 0.6666666667);
                     white-space: nowrap;
                     font-size: 16px;
-                    font-weight: 400;
+                    font-weight: 500;
                     transition: ease-out 0.2s;
                     cursor: pointer;
                 }
                 span:hover {
                     text-decoration: underline;
+                }
+
+                .btnArtist {
+                    font-family: system-ui;
+                    background-color: transparent;
+                    border: none;
+                    padding: 0;
+                    margin: 0;
                 }
             }
             @keyframes songNameMarquee {
@@ -1218,18 +1176,105 @@ body {
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
-                color: #ffffff;
+                // color: #ffffff;
+                // font-family: system-ui;
+                color: #ffffffdd;
                 width: 300px;
                 margin-top: 8px;
                 user-select: none;
 
                 .left {
-                    font-weight: 300;
-                    font-size: 15px;
+                    font-weight: 500;
+                    font-size: 14px;
                 }
                 .right {
-                    font-weight: 300;
-                    font-size: 15px;
+                    font-weight: 500;
+                    font-size: 14px;
+                }
+            }
+        }
+        // Interact Button Box
+        .interactButtonBoxContainer {
+            height: fit-content;
+            width: 100%;
+            display: grid;
+            justify-content: center;
+            background-color: transparent;
+            padding: 10px 0px;
+            padding-top: 15px;
+            .interactButtonBox {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                background-color: transparent;
+                height: 100%;
+                width: 300px;
+                overflow-y: hidden;
+                overflow-x: auto;
+                scrollbar-width: none;
+                // Button Like Song
+                .btnLikeSongContainer {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: fit-content;
+                    height: fit-content;
+
+                    .btnLikeSong {
+                        width: max-content;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        border: 0.5px solid #1f1f1f;
+                        border-radius: 50%;
+                        background: transparent;
+                        color: #ffffff;
+                        padding: 7px;
+                        font-size: 15px;
+                        cursor: pointer;
+                        transition: ease-out 0.2s;
+                        // color: #e84118;
+
+                        .sparkles {
+                            font-size: 8px;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            color: transparent;
+                            transition: ease-out 0.2s;
+                            position: absolute;
+                        }
+                        .sparklesActived {
+                            animation: sparklesAnimation 1s ease-out;
+                        }
+                        @keyframes sparklesAnimation {
+                            0% {
+                                color: #d63031;
+                            }
+
+                            50% {
+                                color: #fd79a8;
+                                // transform: translate(-9px, -7px);
+                            }
+
+                            100% {
+                                color: transparent;
+                            }
+                        }
+                    }
+                    .btnLikeSongActived {
+                        color: #d63031;
+                    }
+                    .btnLikeSong:hover {
+                        background-color: #1f1f1f;
+                    }
+                    .btnLikeSong:active {
+                        background-color: #000;
+                        // transform: scale(0.98);
+                    }
+                    // .btnLikeSong:active .sparkles {
+                    //     color: #d63031;
+                    // }
                 }
             }
         }
@@ -1541,6 +1586,55 @@ body {
                     //     color: #d63031;
                     // }
                 }
+                // Button Auto Next Song
+                .btnAutoNextSongContainer {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: fit-content;
+                    height: fit-content;
+
+                    .btnAutoNextSong {
+                        // width: 60px;
+                        display: grid;
+                        align-items: center;
+                        justify-content: center;
+                        width: 36px;
+                        height: 36px;
+                        border: none;
+                        background: none;
+                        color: #ffffff;
+                        padding: 8px;
+                        font-size: 20px;
+                        cursor: pointer;
+                        transition: ease-out 0.2s;
+                        // color: #e84118;
+                        .title {
+                            font-family: system-ui;
+                            font-size: 9px;
+                            font-weight: 600;
+                        }
+                        .status {
+                            font-family: system-ui;
+                            font-size: 7px;
+                            font-weight: 600;
+                            color: #d63031;
+                        }
+                    }
+                    .btnAutoNextSongActived {
+                        color: #d63031;
+                    }
+                    .btnAutoNextSong:hover {
+                        background-color: #1f1f1f;
+                    }
+                    .btnAutoNextSong:active {
+                        background-color: #000;
+                        transform: scale(0.7);
+                    }
+                    // .btnAutoNextSong:active .sparkles {
+                    //     color: #d63031;
+                    // }
+                }
             }
         }
     }
@@ -1670,13 +1764,17 @@ body {
         align-items: center;
         justify-content: center;
         z-index: 2;
+        width: 350px;
 
         .onSubmitErrorMessage {
             background-color: #e91429;
             margin: 5px 0px;
             margin-top: 0px;
-            border-radius: 2px;
+            border-radius: 25px;
             padding: 10px;
+            width: 100%;
+            font-family: system-ui;
+            font-weight: 600;
 
             span {
                 display: flex;
@@ -1692,6 +1790,7 @@ body {
             display: block;
             text-align: center;
             color: white;
+            font-family: system-ui;
             font-size: 45px;
             font-weight: 700;
             margin: 35px 0px;
@@ -1726,6 +1825,7 @@ body {
 
             .right {
                 width: 80%;
+                font-family: system-ui;
             }
 
             span {
@@ -1760,26 +1860,31 @@ body {
             min-inline-size: 0px;
             overflow-wrap: break-word;
             width: 350px;
+            font-family: system-ui;
             font-size: 14px;
-            font-weight: normal;
+            font-weight: 500;
             margin: 0px 0px;
         }
 
         // Email
         .labelEmail {
             color: white;
+            font-family: system-ui;
             font-size: 15px;
             font-weight: 600;
             margin: 5px 0px;
         }
         .inputEmail {
-            font-family: 'Funnel Sans', sans-serif;
-            padding: 15px 10px;
+            // font-family: 'Funnel Sans', sans-serif;
+            font-family: system-ui;
+            font-weight: 600;
+            // padding: 15px 10px;
+            padding: 12px 10px;
             margin: 5px 0px;
             width: 350px;
             background-color: #121212;
             border: 2px solid #1f1f1f;
-            border-radius: 2px;
+            border-radius: 25px;
             transition: ease-out 0.2s;
             color: white;
         }
@@ -1790,18 +1895,22 @@ body {
         // Password
         .labelPassword {
             color: white;
+            font-family: system-ui;
             font-size: 15px;
             font-weight: 600;
             margin: 5px 0px;
         }
         .inputPassword {
-            font-family: 'Funnel Sans', sans-serif;
-            padding: 15px 10px;
+            // font-family: 'Funnel Sans', sans-serif;
+            font-family: system-ui;
+            font-weight: 600;
+            // padding: 15px 10px;
+            padding: 12px 10px;
             margin: 5px 0px;
             width: 350px;
             background-color: #121212;
             border: 2px solid #1f1f1f;
-            border-radius: 2px;
+            border-radius: 25px;
             transition: ease-out 0.2s;
             color: white;
         }
@@ -1831,18 +1940,21 @@ body {
         // Name
         .labelName {
             color: white;
+            font-family: system-ui;
             font-size: 15px;
             font-weight: 600;
             margin: 5px 0px;
         }
         .inputName {
-            font-family: 'Funnel Sans', sans-serif;
-            padding: 15px 10px;
+            // font-family: 'Funnel Sans', sans-serif;
+            font-family: system-ui;
+            font-weight: 600;
+            padding: 12px 10px;
             margin: 5px 0px;
             width: 350px;
             background-color: #121212;
             border: 2px solid #1f1f1f;
-            border-radius: 2px;
+            border-radius: 25px;
             transition: ease-out 0.2s;
             color: white;
         }
@@ -1853,18 +1965,21 @@ body {
         // User Name
         .labelUserName {
             color: white;
+            font-family: system-ui;
             font-size: 15px;
             font-weight: 600;
             margin: 5px 0px;
         }
         .inputUserName {
-            font-family: 'Funnel Sans', sans-serif;
-            padding: 15px 10px;
+            // font-family: 'Funnel Sans', sans-serif;
+            font-family: system-ui;
+            font-weight: 600;
+            padding: 12px 10px;
             margin: 5px 0px;
             width: 350px;
             background-color: #121212;
             border: 2px solid #1f1f1f;
-            border-radius: 2px;
+            border-radius: 25px;
             transition: ease-out 0.2s;
             color: white;
         }
@@ -1873,14 +1988,15 @@ body {
         }
 
         .btnNextStep {
-            font-family: 'Funnel Sans', sans-serif;
+            // font-family: 'Funnel Sans', sans-serif;
+            font-family: system-ui;
             margin: 5px 0px;
             background-color: #000;
             border: 2px solid transparent;
-            border-radius: 2px;
+            border-radius: 25px;
             color: white;
-            padding: 15px 10px;
-            font-size: 15px;
+            padding: 12px 10px;
+            // font-size: 15px;
             font-weight: 600;
             cursor: pointer;
             transition: ease-out 0.2s;
@@ -1895,18 +2011,21 @@ body {
         // Birth
         .labelBirth {
             color: white;
+            font-family: system-ui;
             font-size: 15px;
             font-weight: 600;
             margin: 5px 0px;
         }
         .inputBirth {
-            font-family: 'Funnel Sans', sans-serif;
-            padding: 15px 10px;
+            // font-family: 'Funnel Sans', sans-serif;
+            font-family: system-ui;
+            font-weight: 600;
+            padding: 12px 10px;
             margin: 5px 0px;
             width: 350px;
             background-color: #121212;
             border: 2px solid #1f1f1f;
-            border-radius: 2px;
+            border-radius: 25px;
             transition: ease-out 0.2s;
             color: white;
         }
@@ -1917,18 +2036,21 @@ body {
         // Gender
         .labelGender {
             color: white;
+            font-family: system-ui;
             font-size: 15px;
             font-weight: 600;
             margin: 5px 0px;
         }
         .inputGender {
-            font-family: 'Funnel Sans', sans-serif;
-            padding: 15px 10px;
+            // font-family: 'Funnel Sans', sans-serif;
+            font-family: system-ui;
+            font-weight: 600;
+            padding: 12px 10px;
             margin: 5px 0px;
             width: 350px;
             background-color: #121212;
             border: 2px solid #1f1f1f;
-            border-radius: 2px;
+            border-radius: 25px;
             transition: ease-out 0.2s;
             color: white;
         }
@@ -1940,12 +2062,14 @@ body {
         .labelGenderOther {
             background-color: #121212;
             border: 2px solid #1f1f1f;
-            border-radius: 2px;
+            border-radius: 25px;
             transition: ease-out 0.2s;
             color: white;
-            font-family: 'Funnel Sans', sans-serif;
+            // font-family: 'Funnel Sans', sans-serif;
+            font-family: system-ui;
+            font-weight: 600;
             font-size: 13px;
-            padding: 15px 10px;
+            padding: 12px 10px;
             width: 34%;
             margin: 5px 0px;
             margin-right: 5px;
@@ -2027,8 +2151,10 @@ body {
 
         .toSignIn {
             margin: 5px 0px;
+            margin-top: 20px;
             color: white;
             text-align: center;
+            font-family: system-ui;
             font-size: 15px;
             color: #777;
         }
@@ -2049,13 +2175,16 @@ body {
         align-items: center;
         justify-content: center;
         z-index: 2;
+        width: 350px;
 
         .onSubmitErrorMessage {
             background-color: #e91429;
             margin: 5px 0px;
             margin-top: 0px;
-            border-radius: 2px;
+            border-radius: 25px;
             padding: 10px;
+            font-family: system-ui;
+            font-weight: 600;
 
             span {
                 display: flex;
@@ -2071,6 +2200,7 @@ body {
             display: block;
             text-align: center;
             color: white;
+            font-family: system-ui;
             font-size: 45px;
             font-weight: 700;
             margin: 35px 0px;
@@ -2082,27 +2212,31 @@ body {
             min-inline-size: 0px;
             overflow-wrap: break-word;
             width: 350px;
+            font-family: system-ui;
             font-size: 14px;
-            font-weight: normal;
+            font-weight: 600;
             margin: 0px 0px;
         }
 
         // Email
         .labelEmail {
             color: white;
+            font-family: system-ui;
             font-size: 15px;
             font-weight: 600;
             margin: 5px 0px;
         }
         .inputEmail {
-            font-family: 'Funnel Sans', sans-serif;
+            // font-family: 'Funnel Sans', sans-serif;
+            font-family: system-ui;
+            font-weight: 600;
             // font-size: 16px;
-            padding: 15px 10px;
+            padding: 12px 10px;
             margin: 5px 0px;
             width: 350px;
             background-color: #121212;
             border: 2px solid #1f1f1f;
-            border-radius: 2px;
+            border-radius: 25px;
             transition: ease-out 0.2s;
             color: white;
         }
@@ -2113,19 +2247,22 @@ body {
         // Password
         .labelPassword {
             color: white;
+            font-family: system-ui;
             font-size: 15px;
             font-weight: 600;
             margin: 5px 0px;
         }
         .inputPassword {
-            font-family: 'Funnel Sans', sans-serif;
+            // font-family: 'Funnel Sans', sans-serif;
+            font-family: system-ui;
+            font-weight: 600;
             // font-size: 16px;
-            padding: 15px 10px;
+            padding: 12px 10px;
             margin: 5px 0px;
             width: 350px;
             background-color: #121212;
             border: 2px solid #1f1f1f;
-            border-radius: 2px;
+            border-radius: 25px;
             transition: ease-out 0.2s;
             color: white;
         }
@@ -2197,14 +2334,15 @@ body {
         }
 
         .btnNextStep {
-            font-family: 'Funnel Sans', sans-serif;
+            // font-family: 'Funnel Sans', sans-serif;
+            font-family: system-ui;
             margin: 5px 0px;
             background-color: #000;
             border: 2px solid transparent;
-            border-radius: 2px;
+            border-radius: 25px;
             color: white;
-            padding: 15px 10px;
-            font-size: 15px;
+            padding: 12px 10px;
+            // font-size: 15px;
             font-weight: 600;
             cursor: pointer;
             transition: ease-out 0.2s;
@@ -2351,8 +2489,10 @@ body {
 
         .toSignUp {
             margin: 5px 0px;
+            margin-top: 20px;
             color: white;
             text-align: center;
+            font-family: system-ui;
             font-size: 15px;
             color: #777;
         }
@@ -3846,6 +3986,7 @@ body {
     .uploadMusicForm {
         display: block;
         position: relative;
+        width: 100%;
         // Thanh progress
         .progressBox {
             margin: 0px;
@@ -3891,6 +4032,7 @@ body {
             right: 0;
             top: 10px;
             font-family: system-ui;
+            font-size: 15px;
             width: max-content;
             max-width: max-content;
             height: max-content;
@@ -4956,10 +5098,10 @@ body {
                     margin-top: 10px;
                     .title {
                         font-family: system-ui;
-                        font-size: 14px;
+                        font-size: 15px;
                         font-weight: 500;
                         // color: #dfdfdf;
-                        color: #777777aa;
+                        color: #ffffff;
                         justify-content: left;
                     }
                     .listenHistoryItem {
@@ -4971,7 +5113,7 @@ body {
                 }
                 .myMusicList {
                     transition: ease-out 0.2s;
-                    height: 100px;
+                    height: 94.6px;
                     overflow: hidden;
                 }
             }
@@ -7034,6 +7176,39 @@ body {
         z-index: 1;
         height: 100%;
     }
+}
+
+// Tooltip
+.tooltip {
+    position: relative;
+    display: inline-block;
+    // border-bottom: 1px dotted black;
+}
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 80px;
+    background-color: #000;
+    font-family: system-ui;
+    font-size: 13px;
+    font-weight: 500;
+    color: #fff;
+    text-align: center;
+    border-radius: 10px;
+    padding: 3px;
+    padding-bottom: 6px;
+    transition: ease-out 0.1s;
+
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 99;
+    top: 100%;
+    left: 50%;
+    margin-top: 5px;
+    margin-left: -40px; /* Use half of the width (80/2 = 40), to center the tooltip */
+}
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    transition: ease-out 0.1s;
 }
 
 /*                           MEDIA QUERY                          */

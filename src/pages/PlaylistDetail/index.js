@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useContext, useEffect, useState } from 'react';
 import { VscChevronLeft } from 'react-icons/vsc';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { addMusicToPlaylistApi, getPlaylistDataApi, removeMusicFromPlaylistApi } from '~/utils/api';
@@ -11,6 +11,7 @@ import UserTag from '../components/UserTag';
 import { useQueryClient } from '@tanstack/react-query';
 import AddMusicBox from '../components/AddMusicBox';
 import { useMusicPlayerContext } from '~/context/musicPlayer.context';
+import { AuthContext } from '~/context/auth.context';
 
 function PlaylistDetail() {
     // State
@@ -19,6 +20,7 @@ function PlaylistDetail() {
     const [addOrRemoveMusicProgress, setAddOrRemoveMusicProgress] = useState();
 
     // Context
+    const { auth } = useContext(AuthContext);
     // React Query
     const queryClient = useQueryClient();
     // Listening History
@@ -202,198 +204,262 @@ function PlaylistDetail() {
         }
     };
     // Handle Play Playlist
-    const handlePlayPlaylist = () => {
-        // Set Playlist
-        setPlaylist(playlistDetailData?.songs);
-        // Set currentIndex
-        setCurrentIndex(0);
+    const handlePlayPlaylist = async () => {
+        try {
+            // playlistId
+            const playlistId = location.pathname.split('/')[2];
+            // Call API Get Playlist (để lấy dữ liệu mới nhất của các bài nhạc)
+            const res = await getPlaylistDataApi(playlistId);
+            // Set state playlistDetailData
+            setPlaylistDetailData(res?.data);
+            // Set Playlist
+            setPlaylist(res?.data?.songs);
+            // Set currentIndex
+            setCurrentIndex(0);
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     return (
         <Fragment>
-            {/* Ant Design Message */}
-            {/* {contextHolder} */}
-            {/* Create Playlist Page */}
-            <div className="createPlaylistPage">
-                {/* Thanh chuyển tab */}
-                <div className="tabSwitchProfile">
-                    <div className="profileUserName">
-                        <span style={{ fontFamily: 'system-ui' }}>Danh sách phát</span>
-                    </div>
-                    <div className="btnComeBackBox">
-                        <button className="btnComeBack tooltip" onClick={() => navigate(-1)}>
-                            <VscChevronLeft />
-                            <span class="tooltiptext">Quay lại</span>
-                        </button>
-                    </div>
-                </div>
-                {/* Create Playlist Container */}
-                <div className="createPlaylistContainer">
-                    <div className="top">
-                        {/* Playlist Info */}
-                        <div className="playlistInfo">
-                            {/* Cover Image */}
-                            <div className="coverImage">
-                                <ImageAmbilight
-                                    imageSrc={
-                                        playlistDetailData?.coverImage
-                                            ? process.env.REACT_APP_BACKEND_URL + playlistDetailData?.coverImage
-                                            : defaultAvatar
-                                    }
-                                    style={{
-                                        width: '285px',
-                                        height: '285px',
-                                        outline: 'rgba(135, 135, 135, 0.15) solid 1px',
-                                        outlineOffset: '-1px',
-                                        borderRadius: '10px',
-                                    }}
-                                />
-                            </div>
-                            {/* Info */}
-                            <div className="info">
-                                {/* Loại */}
-                                <span className="type">
-                                    {playlistDetailData?.type === 'default' ? 'Danh sách phát' : 'Album'}
-                                </span>
-                                {/* Tiêu đề */}
-                                <span className="name">{playlistDetailData?.name}</span>
-                                {/* Owner, Feat, Colab user */}
-                                <span className="owner">
-                                    {/* Owner */}
-                                    {playlistDetailData?.User && (
-                                        <button
-                                            className="btnOwner"
-                                            type="button"
-                                            onClick={() => {
-                                                navigate(`/profile/${playlistDetailData?.User?.userName}`);
-                                            }}
-                                        >
-                                            <img
-                                                src={
-                                                    playlistDetailData?.User?.userAvatar
-                                                        ? process.env.REACT_APP_BACKEND_URL +
-                                                          playlistDetailData?.User?.userAvatar
-                                                        : noContentImage
-                                                }
-                                            />{' '}
-                                            {playlistDetailData?.User?.userName}
-                                        </button>
-                                    )}
-                                    {/* Feat, colab... */}
-                                    {playlistDetailData?.userTagsData?.length > 0 &&
-                                        playlistDetailData?.userTagsData?.map((userTag, index) => {
-                                            if (!userTag) {
-                                                return <></>;
-                                            } else {
-                                                return (
-                                                    <UserTag
-                                                        key={index}
-                                                        userName={userTag?.userName}
-                                                        typeUserTag={'atPlaylistDetail'}
-                                                        userTagData={userTag}
-                                                    ></UserTag>
-                                                );
-                                            }
-                                        })}
-                                </span>
-                                <span className="detail">
-                                    {playlistDetailData?.songs?.length} bài nhạc <span className="spaceSymbol">·</span>{' '}
-                                    <span className="createdAt">{timeAgo(playlistDetailData?.createdAt)}</span>
-                                </span>
-                                <div className="playlistControls">
-                                    {/* Play playlist */}
-                                    <button className="btnPlayPlaylist" type="button" onClick={handlePlayPlaylist}>
-                                        <IoPlaySharp /> Phát tất cả
-                                    </button>
-                                    {/* Add music */}
-                                    <button
-                                        className="btnPlayPlaylist btnOpenAddMusic"
-                                        type="button"
-                                        onClick={handleBtnAddMusic}
-                                    >
-                                        <IoAddSharp /> Thêm
-                                    </button>
-                                </div>
-                            </div>
+            {playlistDetailData === null ? (
+                <div className="createPlaylistPage">
+                    {/* Thanh chuyển tab */}
+                    <div className="tabSwitchProfile">
+                        <div className="profileUserName">
+                            <span style={{ fontFamily: 'system-ui' }}>Danh sách phát</span>
+                        </div>
+                        <div className="btnComeBackBox">
+                            <button className="btnComeBack tooltip" onClick={() => navigate(-1)}>
+                                <VscChevronLeft />
+                                <span class="tooltiptext">Quay lại</span>
+                            </button>
                         </div>
                     </div>
-                    <div className="middle">
-                        {/* List Music */}
-                        <div className="listMusicContainer">
-                            <div className="listMusic">
-                                {/* Head */}
-                                <div className="headListMusic">
-                                    <span className="number">#</span>
-                                    <span className="music">Bài nhạc</span>
-                                    <span className="time">
-                                        <IoTimeOutline />
-                                    </span>
-                                </div>
-                                {/* Body */}
-                                <div className="bodyListMusic">
-                                    {playlistDetailData?.songs ? (
-                                        <>
-                                            {playlistDetailData?.songs?.length > 0 ? (
-                                                playlistDetailData?.songs.map((song, index) => (
-                                                    <MusicCard
-                                                        order={index + 1}
-                                                        songData={song}
-                                                        typeMusicCard={'Playlist'}
-                                                    />
-                                                ))
-                                            ) : (
-                                                <span
-                                                    style={{
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                        justifyContent: 'center',
-                                                        color: '#ffffffa3',
-                                                        fontSize: '14px',
-                                                        fontWeight: '500',
-                                                        fontFamily: 'system-ui',
-                                                        width: '100%',
-                                                        height: '61px',
-                                                        padding: '8px 10px',
+                    {/* Create Playlist Container */}
+                    <div className="createPlaylistContainer">
+                        <span
+                            style={{
+                                display: 'block',
+                                width: '100%',
+                                padding: '40px 0px',
+                                color: '#ffffff',
+                                fontFamily: 'system-ui',
+                                fontSize: '15px',
+                                fontWeight: '600',
+                                textAlign: 'center',
+                            }}
+                        >
+                            Không tìm thấy danh sách phát
+                        </span>
+                    </div>
+                </div>
+            ) : (
+                <>
+                    {/* Ant Design Message */}
+                    {/* {contextHolder} */}
+                    {/* Create Playlist Page */}
+                    <div className="createPlaylistPage">
+                        {/* Thanh chuyển tab */}
+                        <div className="tabSwitchProfile">
+                            <div className="profileUserName">
+                                <span style={{ fontFamily: 'system-ui' }}>Danh sách phát</span>
+                            </div>
+                            <div className="btnComeBackBox">
+                                <button className="btnComeBack tooltip" onClick={() => navigate(-1)}>
+                                    <VscChevronLeft />
+                                    <span class="tooltiptext">Quay lại</span>
+                                </button>
+                            </div>
+                        </div>
+                        {/* Create Playlist Container */}
+                        <div className="createPlaylistContainer">
+                            <div className="top">
+                                {/* Playlist Info */}
+                                <div className="playlistInfo">
+                                    {/* Cover Image */}
+                                    <div className="coverImage">
+                                        <ImageAmbilight
+                                            imageSrc={
+                                                playlistDetailData?.coverImage
+                                                    ? process.env.REACT_APP_BACKEND_URL + playlistDetailData?.coverImage
+                                                    : noContentImage
+                                            }
+                                            style={{
+                                                width: '285px',
+                                                height: '285px',
+                                                outline: 'rgba(135, 135, 135, 0.15) solid 1px',
+                                                outlineOffset: '-1px',
+                                                borderRadius: '10px',
+                                            }}
+                                        />
+                                    </div>
+                                    {/* Info */}
+                                    <div className="info">
+                                        {/* Loại */}
+                                        <span className="type">
+                                            {/* Type */}
+                                            {playlistDetailData?.type === 'default' && 'Danh sách phát'}
+                                            {playlistDetailData?.type === 'album' && 'Album'}
+                                            {/* Privacy */}
+                                            {playlistDetailData?.privacy === '0' ? ' công khai' : ' riêng tư'}
+                                        </span>
+                                        {/* Tiêu đề */}
+                                        <span className="name">{playlistDetailData?.name}</span>
+                                        {/* Owner, Feat, Colab user */}
+                                        <span className="owner">
+                                            {/* Owner */}
+                                            {playlistDetailData?.User && (
+                                                <button
+                                                    className="btnOwner"
+                                                    type="button"
+                                                    onClick={() => {
+                                                        navigate(`/profile/${playlistDetailData?.User?.userName}`);
                                                     }}
                                                 >
-                                                    Chưa thêm bài nhạc nào
-                                                </span>
+                                                    <img
+                                                        src={
+                                                            playlistDetailData?.User?.userAvatar
+                                                                ? process.env.REACT_APP_BACKEND_URL +
+                                                                  playlistDetailData?.User?.userAvatar
+                                                                : defaultAvatar
+                                                        }
+                                                        draggable="false"
+                                                    />{' '}
+                                                    {playlistDetailData?.User?.userName}
+                                                </button>
                                             )}
-                                        </>
-                                    ) : (
-                                        <div
-                                            style={{
-                                                width: '100%',
-                                                height: 'max-content',
-                                                display: 'flex',
-                                                justifyContent: 'center',
-                                                alignItems: 'center',
-                                                padding: '8px',
-                                            }}
-                                        >
-                                            <IoSyncSharp
-                                                className="loadingAnimation"
-                                                style={{ color: 'white', width: '16px', height: '16px' }}
-                                            />
+                                            {/* Feat, colab... */}
+                                            {playlistDetailData?.userTagsData?.length > 0 &&
+                                                playlistDetailData?.userTagsData?.map((userTag, index) => {
+                                                    if (!userTag) {
+                                                        return <></>;
+                                                    } else {
+                                                        return (
+                                                            <UserTag
+                                                                key={index}
+                                                                userName={userTag?.userName}
+                                                                typeUserTag={'atPlaylistDetail'}
+                                                                userTagData={userTag}
+                                                            ></UserTag>
+                                                        );
+                                                    }
+                                                })}
+                                        </span>
+                                        <span className="detail">
+                                            {playlistDetailData?.songs?.length} bài nhạc{' '}
+                                            <span className="spaceSymbol">·</span>{' '}
+                                            <span className="createdAt">{timeAgo(playlistDetailData?.createdAt)}</span>
+                                        </span>
+                                        <div className="playlistControls">
+                                            {/* Play playlist */}
+                                            <button
+                                                className="btnPlayPlaylist"
+                                                type="button"
+                                                onClick={handlePlayPlaylist}
+                                                style={{
+                                                    opacity: playlistDetailData?.songs?.length === 0 ? '0.3' : '1',
+                                                    cursor:
+                                                        playlistDetailData?.songs?.length === 0
+                                                            ? 'not-allowed'
+                                                            : 'pointer',
+                                                }}
+                                                disabled={playlistDetailData?.songs?.length === 0}
+                                            >
+                                                <IoPlaySharp /> Phát tất cả
+                                            </button>
+                                            {/* Add music */}
+                                            <button
+                                                className="btnPlayPlaylist btnOpenAddMusic"
+                                                type="button"
+                                                onClick={handleBtnAddMusic}
+                                            >
+                                                <IoAddSharp /> Tùy chỉnh
+                                            </button>
                                         </div>
-                                    )}
+                                    </div>
                                 </div>
                             </div>
+                            <div className="middle">
+                                {/* List Music */}
+                                <div className="listMusicContainer">
+                                    <div className="listMusic">
+                                        {/* Head */}
+                                        <div className="headListMusic">
+                                            <span className="number">#</span>
+                                            <span className="music">Bài nhạc</span>
+                                            <span className="time">
+                                                <IoTimeOutline />
+                                            </span>
+                                        </div>
+                                        {/* Body */}
+                                        <div className="bodyListMusic">
+                                            {playlistDetailData?.songs ? (
+                                                <>
+                                                    {playlistDetailData?.songs?.length > 0 ? (
+                                                        playlistDetailData?.songs.map((song, index) => (
+                                                            <MusicCard
+                                                                order={index + 1}
+                                                                songData={song}
+                                                                typeMusicCard={'Playlist'}
+                                                            />
+                                                        ))
+                                                    ) : (
+                                                        <span
+                                                            style={{
+                                                                display: 'flex',
+                                                                alignItems: 'center',
+                                                                justifyContent: 'center',
+                                                                color: '#ffffffa3',
+                                                                fontSize: '14px',
+                                                                fontWeight: '500',
+                                                                fontFamily: 'system-ui',
+                                                                width: '100%',
+                                                                height: '61px',
+                                                                padding: '8px 10px',
+                                                            }}
+                                                        >
+                                                            Chưa thêm bài nhạc nào
+                                                        </span>
+                                                    )}
+                                                </>
+                                            ) : (
+                                                <div
+                                                    style={{
+                                                        width: '100%',
+                                                        height: 'max-content',
+                                                        display: 'flex',
+                                                        justifyContent: 'center',
+                                                        alignItems: 'center',
+                                                        padding: '8px',
+                                                    }}
+                                                >
+                                                    <IoSyncSharp
+                                                        className="loadingAnimation"
+                                                        style={{ color: 'white', width: '16px', height: '16px' }}
+                                                    />
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="bottom"></div>
                         </div>
                     </div>
-                    <div className="bottom"></div>
-                </div>
-            </div>
-            {/* Add Music Box */}
-            {isOpenAddMusicBox && (
-                <AddMusicBox
-                    playlistDetailData={playlistDetailData}
-                    setIsOpenAddMusicBox={setIsOpenAddMusicBox}
-                    handleCheckIsSongAdded={handleCheckIsSongAdded}
-                    handleAddMusic={handleAddMusic}
-                    handleRemoveAddMusic={handleRemoveAddMusic}
-                    addOrRemoveMusicProgress={addOrRemoveMusicProgress}
-                />
+                    {/* Add Music Box */}
+                    {isOpenAddMusicBox && (
+                        <AddMusicBox
+                            playlistDetailData={playlistDetailData}
+                            setIsOpenAddMusicBox={setIsOpenAddMusicBox}
+                            handleCheckIsSongAdded={handleCheckIsSongAdded}
+                            handleAddMusic={handleAddMusic}
+                            handleRemoveAddMusic={handleRemoveAddMusic}
+                            addOrRemoveMusicProgress={addOrRemoveMusicProgress}
+                        />
+                    )}
+                </>
             )}
         </Fragment>
     );

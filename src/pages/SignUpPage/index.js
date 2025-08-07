@@ -9,10 +9,12 @@ import {
 } from 'react-icons/io5';
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { useState } from 'react';
-import { signUpApi } from '~/utils/api';
+import { useContext, useState } from 'react';
+import { googleLoginApi, signUpApi } from '~/utils/api';
 import { useNavigate } from 'react-router-dom';
 import { message } from 'antd';
+import { GoogleLogin, useGoogleLogin } from '@react-oauth/google';
+import { AuthContext } from '~/context/auth.context';
 
 function SignUpPage() {
     // State (useState)
@@ -21,11 +23,16 @@ function SignUpPage() {
     const [onSubmitMessage, setOnSubmitMessage] = useState('');
     const [timeLeft, setTimeLeft] = useState(5);
     const [disabledTimeLeft, setDisabledTimeLeft] = useState(true);
+    const [isGoogleLoginOnSuccess, setIsGoogleLoginOnSuccess] = useState(false);
+    const [googleLoginCredential, setGoogleLoginCredential] = useState();
 
     // React Hook Form (Form Sign Up)
     const formSignUp = useForm();
     const { register, handleSubmit, formState, watch } = formSignUp;
     const { errors } = formState;
+
+    // Context (useContext)
+    const { setAuth } = useContext(AuthContext);
 
     // Navigate
     const navigate = useNavigate();
@@ -47,9 +54,70 @@ function SignUpPage() {
     };
     // Handle Submit Form Sign Up
     const onSubmit = async (data) => {
-        console.log('Form submitted', data);
+        // console.log('Form submitted', data);
+        // Google Login
+        if (formStep === 0 && isGoogleLoginOnSuccess) {
+            console.log('Call API Google Login');
+            const { userName } = data;
+            // Loading ... (Ant Design Message)
+            messageApi
+                .open({
+                    type: 'loading',
+                    content: 'Đang xử lý ...',
+                    duration: 1.5,
+                    style: {
+                        color: 'white',
+                    },
+                })
+                .then(async () => {
+                    // Call API Google Login
+                    const dataGoogleLogin = {
+                        idToken: googleLoginCredential,
+                        userName: userName,
+                    };
+                    const res = await googleLoginApi(dataGoogleLogin);
+                    if (res.status === 200 && res.message === 'Đăng nhập thành công') {
+                        message.success({
+                            content: 'Đăng ký thành công',
+                            duration: 1.5,
+                            style: {
+                                color: 'white',
+                            },
+                        });
+                        // Lưu token vào localStorage
+                        localStorage.setItem('actk', res.data.accessToken);
+                        // Set valid trong local storage
+                        localStorage.setItem('valid', true);
+                        // Set Auth Context
+                        // res.data.user.isGoogleLogin = true;
+                        // console.log(res.data.user.isGoogleLogin);
+                        setAuth({
+                            isAuthenticated: true,
+                            user: res?.data?.user ?? {},
+                        });
+                        setOnSubmitMessage('Đăng ký thành công');
+                        setFormStep(3);
+                        // Chuyển hướng đến trang chủ
+                        if (disabledTimeLeft && timeLeft === 5) {
+                            startCountdown(5);
+                        }
+                    } else if (res.status === 401 && res.message === 'Email hoặc mật khẩu chưa chính xác') {
+                        message.error({
+                            content: 'Đăng ký không thành công',
+                            duration: 1.5,
+                            style: {
+                                color: 'white',
+                            },
+                        });
+                        // console.log(typeof res.status);
+                        setOnSubmitMessage(res?.message);
+                        // console.log('>>> Đăng ký thất bại');
+                        // console.log('Email hoặc tên người dùng đã tồn tại');
+                    }
+                });
+        }
         // Đến bước tiếp theo
-        if (formStep < 2) {
+        if (formStep < 2 && !isGoogleLoginOnSuccess) {
             setFormStep(formStep + 1);
         }
         // Nếu là bước cuối thì thực hiện call API sign up
@@ -79,12 +147,12 @@ function SignUpPage() {
                         });
                         setOnSubmitMessage('Đăng ký thành công');
                         setFormStep(3);
-                        console.log('API Sign Up Response:', res);
+                        // console.log('API Sign Up Response:', res);
                         // Chuyển hướng đến trang đăng nhập
                         if (disabledTimeLeft && timeLeft === 5) {
                             startCountdown(5);
                         }
-                    } else if (res.status == 409 && res.message === 'Email hoặc tên người dùng đã tồn tại') {
+                    } else if (res.status === 409 && res.message === 'Email hoặc tên người dùng đã tồn tại') {
                         message.error({
                             content: 'Đăng ký không thành công',
                             duration: 1.5,
@@ -92,8 +160,7 @@ function SignUpPage() {
                                 color: 'white',
                             },
                         });
-                        console.log(typeof res.status);
-
+                        // console.log(typeof res.status);
                         setOnSubmitMessage(res?.message);
                         // console.log('>>> Đăng ký thất bại');
                         // console.log('Email hoặc tên người dùng đã tồn tại');
@@ -111,9 +178,19 @@ function SignUpPage() {
             }, 1000);
         } else {
             setDisabledTimeLeft(false);
-            // Chuyển hướng sang trang đăng nhập
-            navigate('/signin');
+            if (isGoogleLoginOnSuccess) {
+                // Chuyển hướng đến trang chủ
+                navigate('/');
+            } else {
+                // Chuyển hướng sang trang đăng nhập
+                navigate('/signin');
+            }
         }
+    };
+    // Handle Google Login Success
+    const handleGoogleLoginSuccess = async (credentialResponse) => {
+        setIsGoogleLoginOnSuccess(true);
+        setGoogleLoginCredential(credentialResponse.credential);
     };
 
     return (
@@ -123,7 +200,7 @@ function SignUpPage() {
             <div className="signUpContainer">
                 {/* <img className="logo" src={logo} alt="Logo mymusic" draggable="false" /> */}
                 <form className="signUpForm" onSubmit={handleSubmit(onSubmit)} method="POST" noValidate>
-                    <span className="title">Đăng ký</span>
+                    <span className="title">{isGoogleLoginOnSuccess ? 'Hoàn tất' : 'Đăng ký'}</span>
                     {/* On Submit Error Message */}
                     {onSubmitMessage === 'Email hoặc tên người dùng đã tồn tại' ? (
                         <div className="onSubmitErrorMessage">
@@ -146,26 +223,60 @@ function SignUpPage() {
                     {/* Step 0 */}
                     {formStep === 0 && (
                         <>
-                            {/* Email */}
-                            <label className="labelEmail" htmlFor="email">
-                                Địa chỉ email
-                            </label>
-                            <input
-                                className="inputEmail"
-                                id="email"
-                                name="email"
-                                type="email"
-                                placeholder="example@gmail.com"
-                                {...register('email', {
-                                    required: `Vui lòng nhập email`,
-                                    pattern: {
-                                        // value: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
-                                        value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                                        message: `Email này không hợp lệ. Hãy đảm bảo rằng email được nhập dưới dạng example@email.com`,
-                                    },
-                                })}
-                            />
-                            <p className="errorMessage">{errors.email?.message}</p>
+                            {isGoogleLoginOnSuccess ? (
+                                <>
+                                    {/* Tên người dùng */}
+                                    <label className="labelUserName" htmlFor="userName">
+                                        Tên người dùng
+                                    </label>
+                                    <input
+                                        className="inputUserName"
+                                        id="userName"
+                                        name="userName"
+                                        type="text"
+                                        placeholder="Tên này sẽ xuất hiện trên hồ sơ của bạn"
+                                        {...register('userName', {
+                                            required: `Vui lòng nhập tên người dùng`,
+                                            pattern: {
+                                                value: /^[a-zA-Z0-9.]{5,30}$/,
+                                                message: `Tên người dùng phải có từ 5 đến 30 ký tự, chỉ bao gồm chữ cái, số và dấu chấm, không chứa ký tự đặc biệt như @, #, $, %, &, hoặc dấu phẩy`,
+                                            },
+                                            maxLength: {
+                                                value: 500,
+                                                message: `Tên người dùng không được vượt quá 500 ký tự`,
+                                            },
+                                        })}
+                                    />
+                                    <p className="errorMessage">{errors.userName?.message}</p>
+                                </>
+                            ) : (
+                                <>
+                                    {/* Email */}
+                                    <label className="labelEmail" htmlFor="email">
+                                        Địa chỉ email
+                                    </label>
+                                    <input
+                                        className="inputEmail"
+                                        id="email"
+                                        name="email"
+                                        type="email"
+                                        placeholder="example@gmail.com"
+                                        {...register('email', {
+                                            required: `Vui lòng nhập email`,
+                                            pattern: {
+                                                // value: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
+                                                value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                                                message: `Email này không hợp lệ. Hãy đảm bảo rằng email được nhập dưới dạng example@email.com`,
+                                            },
+                                            maxLength: {
+                                                value: 500,
+                                                message: `Email không được vượt quá 500 ký tự`,
+                                            },
+                                        })}
+                                    />
+                                    <p className="errorMessage">{errors.email?.message}</p>
+                                </>
+                            )}
                         </>
                     )}
                     {/* Step 1 */}
@@ -282,6 +393,10 @@ function SignUpPage() {
                                 placeholder="Tên này sẽ xuất hiện trên hồ sơ của bạn"
                                 {...register('userName', {
                                     required: `Vui lòng nhập tên người dùng`,
+                                    pattern: {
+                                        value: /^[a-zA-Z0-9.]{5,30}$/,
+                                        message: `Tên người dùng phải có từ 5 đến 30 ký tự, chỉ bao gồm chữ cái, số và dấu chấm, không chứa ký tự đặc biệt như @, #, $, %, &, hoặc dấu phẩy`,
+                                    },
                                     maxLength: {
                                         value: 500,
                                         message: `Tên người dùng không được vượt quá 500 ký tự`,
@@ -388,9 +503,21 @@ function SignUpPage() {
                     )}
                     {/* Button Submit */}
                     {formStep < 2 ? (
-                        <button className="btnNextStep" type="submit" id="btnNextStepID">
-                            Tiếp theo
-                        </button>
+                        <>
+                            {isGoogleLoginOnSuccess ? (
+                                <>
+                                    <button className="btnNextStep" type="submit" id="btnNextStepID">
+                                        Đăng ký
+                                    </button>
+                                </>
+                            ) : (
+                                <>
+                                    <button className="btnNextStep" type="submit" id="btnNextStepID">
+                                        Tiếp theo
+                                    </button>
+                                </>
+                            )}
+                        </>
                     ) : (
                         <>
                             {formStep === 2 ? (
@@ -406,7 +533,9 @@ function SignUpPage() {
                                     onClick={() => {
                                         navigate('/signin');
                                     }}
-                                >{`Chuyển tới trang đăng nhập (${timeLeft})`}</button>
+                                >{`Chuyển tới trang ${
+                                    isGoogleLoginOnSuccess ? 'chủ' : 'đăng nhập'
+                                } (${timeLeft})`}</button>
                             )}
                         </>
                     )}
@@ -415,16 +544,25 @@ function SignUpPage() {
                         {JSON.stringify(watch(), null, 2)}
                     </pre>
                     {/* Other Sign Up Method */}
-                    {formStep === 0 && (
+                    {formStep === 0 && !isGoogleLoginOnSuccess && (
                         <>
                             <div className="otherRegisMethod">
                                 <div className="title">
                                     <span>hoặc</span>
                                 </div>
-                                <a href="#googleRegis" className="regisMethodGoogle">
+                                {/* <button type="button" className="regisMethodGoogle">
                                     <IoLogoGoogle className="logoGoogle" />
                                     <span>Đăng ký bằng Google</span>
-                                </a>
+                                </button> */}
+                                {/* Google Login */}
+                                <GoogleLogin
+                                    onSuccess={handleGoogleLoginSuccess}
+                                    onError={() => console.log('Đăng nhập với Google thất bại')}
+                                    theme="filled_black"
+                                    text="signup_with"
+                                    width={'350px'}
+                                    shape="pill"
+                                />
                             </div>
                             <span className="toSignIn">
                                 Bạn đã có tài khoản?{' '}
