@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { IoAddSharp, IoAlertSharp, IoArrowUpSharp, IoCheckmarkSharp, IoPlaySharp, IoSyncSharp } from 'react-icons/io5';
+import { useLocation, useNavigate } from 'react-router-dom';
 import noContentImage from '~/assets/images/no_content.jpg';
 import { useMusicPlayerContext } from '~/context/musicPlayer.context';
 import { getSongDataApi } from '~/utils/api';
@@ -9,17 +10,23 @@ import { getSongDataApi } from '~/utils/api';
 // handleRemoveAddMusic: Hàm thực hiện xóa bài khỏi playlist
 function MusicCard({
     songData,
+    listeningHistoryData,
     order,
     typeMusicCard,
     handleCheckIsSongAdded,
     handleAddMusic,
     handleRemoveAddMusic,
     addOrRemoveMusicProgress,
+    handleDeleteListeningHistory,
 }) {
     // State
 
     // Context
     const { playlist, setPlaylist, setCurrentIndex, setIsPlaying } = useMusicPlayerContext();
+
+    // Navigation
+    const navigate = useNavigate();
+    const location = useLocation();
 
     // --- HANDLE FUNCTION ---
     // Test handlePlay
@@ -33,17 +40,17 @@ function MusicCard({
             });
             setCurrentIndex(playlist?.length && playlist?.length > 0 ? playlist?.length : 0);
             setIsPlaying(true);
-            // Local Storage (Bài cuối lúc trước nghe)
-            localStorage.setItem('pl', JSON.stringify([{ ...res?.data }]));
+            // // Local Storage (Bài cuối lúc trước nghe)
+            // localStorage.setItem('pl', JSON.stringify([{ ...res?.data }]));
         } catch (error) {
             console.log(error);
         }
     };
 
-    // Trong LeftContainer
-    if (typeMusicCard === 'LeftContainer') {
+    // Trong LeftContainer (Listen History)
+    if (typeMusicCard === 'LeftContainerListenHistory') {
         return (
-            <>
+            <div className="listenHistoryItem">
                 {/* Each Item */}
                 <button
                     type="button"
@@ -67,7 +74,86 @@ function MusicCard({
                         <span className="quantity">{songData?.User?.userName}</span>
                     </div>
                 </button>
-            </>
+                {/* Button For Info */}
+                <div className="buttonBox" style={{ width: '65%' }}>
+                    <button
+                        className="btnName"
+                        onClick={() => {
+                            navigate(`song/${songData?.songId}`);
+                        }}
+                    >
+                        {songData?.name}
+                    </button>
+                    <button
+                        className="btnQuantity"
+                        onClick={() => {
+                            navigate(`profile/${songData?.User?.userName}`);
+                        }}
+                    >
+                        {songData?.User?.userName}
+                    </button>
+                </div>
+                {/* Button Add / Remove Music */}
+                <button
+                    type="button"
+                    className="btnDeleteListenHistory"
+                    onClick={() => {
+                        handleDeleteListeningHistory(listeningHistoryData?.listeningHistoryId);
+                    }}
+                >
+                    Xóa
+                </button>
+            </div>
+        );
+    }
+
+    // Trong LeftContainer (Âm nhạc của tôi)
+    if (typeMusicCard === 'LeftContainerMyMusic') {
+        return (
+            <div className="listenHistoryItem">
+                {/* Each Item */}
+                <button
+                    type="button"
+                    className="btnPlaylist"
+                    onClick={() => {
+                        handlePlay();
+                    }}
+                >
+                    <div className="coverImage">
+                        <img
+                            src={
+                                songData?.songImage
+                                    ? process.env.REACT_APP_BACKEND_URL + songData?.songImage
+                                    : noContentImage
+                            }
+                            draggable="false"
+                        />
+                    </div>
+                    <div className="info">
+                        <span className="name">{songData?.name}</span>
+                        <span className="quantity">{songData?.User?.userName}</span>
+                    </div>
+                </button>
+                {/* Button For Info */}
+                <div className="buttonBox">
+                    <button
+                        className="btnName"
+                        onClick={() => {
+                            navigate(`song/${songData?.songId}`);
+                        }}
+                    >
+                        {songData?.name}
+                    </button>
+                    <button
+                        className="btnQuantity"
+                        onClick={() => {
+                            navigate(`profile/${songData?.User?.userName}`);
+                        }}
+                    >
+                        {songData?.User?.userName}
+                    </button>
+                </div>
+            </div>
         );
     }
 

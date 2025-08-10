@@ -25,6 +25,7 @@ import { AuthContext } from '~/context/auth.context';
 import { createPlaylistApi, getFollowsApi } from '~/utils/api';
 import { debounce } from 'lodash';
 import UserTag from '../components/UserTag';
+import { useQueryClient } from '@tanstack/react-query';
 
 function CreatePlaylistPage() {
     // State
@@ -55,6 +56,9 @@ function CreatePlaylistPage() {
 
     // Message (Ant Design)
     const [messageApi, contextHolder] = message.useMessage();
+
+    // React Query (Tanstack)
+    const queryClient = useQueryClient();
 
     // --- HANDLE FUNCTION ---
     // Handle on submit form
@@ -100,6 +104,10 @@ function CreatePlaylistPage() {
                         marginTop: '58.4px',
                     },
                 });
+
+                // Refetch data của query key "listPlaylist"
+                queryClient.invalidateQueries(['listPlaylist']);
+
                 // Navigate về
                 // const navigateToProfileTimeout = setTimeout(() => {
                 //     navigate(`/profile/${auth?.user?.userName}/musics`);
@@ -673,7 +681,7 @@ function CreatePlaylistPage() {
                                             }}
                                             disabled
                                         >
-                                            <IoAddSharp /> Thêm
+                                            <IoAddSharp /> Tùy chỉnh
                                         </button>
                                     </div>
                                 </div>

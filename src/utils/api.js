@@ -231,6 +231,12 @@ const uploadMusicApi = (data) => {
     return axios.post(URL_API, data);
 };
 
+// API Xóa bài nhạc (DELETE)
+const deleteMusicApi = (songId) => {
+    const URL_API = `/v1/api/music/${songId}`;
+    return axios.delete(URL_API);
+};
+
 // API Lấy dữ liệu của bài nhạc (GET)
 const getSongDataApi = (songId) => {
     const URL_API = `/v1/api/music?s=${songId}`;
@@ -261,6 +267,12 @@ const createPlaylistApi = (data) => {
     return axios.post(URL_API, data);
 };
 
+// API Xóa danh sách phát (DELETE)
+const deletePlaylistApi = (playlistId) => {
+    const URL_API = `/v1/api/playlist/${playlistId}`;
+    return axios.delete(URL_API);
+};
+
 // API Thêm nhạc vào danh sách phát (POST)
 const addMusicToPlaylistApi = (data) => {
     const URL_API = `/v1/api/playlist/add`;
@@ -289,6 +301,12 @@ const getListPlaylistOfUserDataApi = (userId) => {
 const createListenHistoryApi = (data) => {
     const URL_API = `/v1/api/listeningHistory/create`;
     return axios.post(URL_API, data);
+};
+
+// API Xóa một lịch sử nghe (DELETE)
+const deleteListeningHistoryApi = (listeningHistoryId) => {
+    const URL_API = `/v1/api/listeningHistory/${listeningHistoryId}`;
+    return axios.delete(URL_API);
 };
 
 // API Lấy dữ liệu 1 bài trong lịch sử nghe (GET)
@@ -340,16 +358,19 @@ export {
     deleteSharedArticleApi,
     getFeedDataApi,
     uploadMusicApi,
+    deleteMusicApi,
     getSongDataApi,
     createLikeSongApi,
     unLikeSongApi,
     getUserSongsDataApi,
     createPlaylistApi,
+    deletePlaylistApi,
     addMusicToPlaylistApi,
     removeMusicFromPlaylistApi,
     getPlaylistDataApi,
     getListPlaylistOfUserDataApi,
     createListenHistoryApi,
+    deleteListeningHistoryApi,
     getListeningHistoryDetailApi,
     getListeningHistoryDataApi,
 };

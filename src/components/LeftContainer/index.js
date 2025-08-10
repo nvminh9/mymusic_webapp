@@ -10,6 +10,7 @@ import { useMusicPlayerContext } from '~/context/musicPlayer.context';
 import MyMusicList from '~/pages/components/MyMusicList';
 import ListenHistoryList from '~/pages/components/ListenHistoryList';
 import PlaylistList from '~/pages/components/PlaylistList';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 function LeftContainer() {
     // State
@@ -36,6 +37,9 @@ function LeftContainer() {
     // Navigation
     const navigate = useNavigate();
     const location = useLocation();
+
+    // React Query (Tanstack)
+    const queryClient = useQueryClient();
 
     // --- HANDLE FUNCTION ---
     // Đóng / Mở Playlist
@@ -176,45 +180,45 @@ function LeftContainer() {
     };
     // Lấy dữ liệu
     // Call API Get List Playlist
-    useEffect(() => {
-        // Call API Get List Playlist Of User (Auth User)
-        const getListPlaylistOfUser = async (userId) => {
-            const res = await getListPlaylistOfUserDataApi(userId);
-            // Set state mySongsData
+    const {
+        status,
+        data: listPlaylistData,
+        error,
+    } = useQuery({
+        queryKey: ['listPlaylist'],
+        queryFn: async () => {
+            const res = await getListPlaylistOfUserDataApi(auth?.user?.userId);
             setPlaylistData(res?.data);
-        };
-        getListPlaylistOfUser(auth?.user?.userId);
+            return res?.data;
+        },
+    });
+    useEffect(() => {
+        if (isOpenPlayList === true) {
+            queryClient.invalidateQueries(['listPlaylist']);
+        }
     }, [isOpenPlayList]);
     // Call API Get Listen History
     // useEffect(() => {
     //     //
     // }, [isOpenHistoryListen]);
     // Call API Get User Songs
-    useEffect(() => {
-        // Call API Get User Songs (Auth User)
-        const getUserSongsData = async (userId) => {
-            //
-            const res = await getUserSongsDataApi(userId);
-            // Set state mySongsData
+    const {
+        status: mySongsQueryStatus,
+        data: mySongs,
+        error: mySongsQueryError,
+    } = useQuery({
+        queryKey: ['mySongs'],
+        queryFn: async () => {
+            const res = await getUserSongsDataApi(auth?.user?.userId);
             setMySongsData(res?.data);
-        };
-        getUserSongsData(auth?.user?.userId);
+            return res?.data;
+        },
+    });
+    useEffect(() => {
+        if (isOpenMySong === true) {
+            queryClient.invalidateQueries(['mySongs']);
+        }
     }, [isOpenMySong]);
-    // // Test handlePlay
-    // const handlePlay = async (e) => {
-    //     try {
-    //         // Call API Get Song Data
-    //         const res = await getSongDataApi('29751284-2d72-4be5-8b11-a568d7db663d');
-    //         // Set Music Player Context
-    //         setPlaylist((prev) => {
-    //             return prev?.length > 0 ? [...prev, { ...res?.data }] : [{ ...res?.data }];
-    //         });
-    //         setCurrentIndex(playlist?.length && playlist?.length > 0 ? playlist?.length : 0);
-    //         setIsPlaying(true);
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
-    // };
 
     return (
         <div
@@ -298,7 +302,10 @@ function LeftContainer() {
                     <div ref={mainPlaylistRef} id="mainPlaylistLeftContainerID" className="main">
                         <div className="backTop"></div>
                         {/* Playlist list */}
-                        <PlaylistList playlistsData={playlistData} typePlaylistList={'LeftContainer'} />
+                        <PlaylistList
+                            playlistsData={listPlaylistData ? listPlaylistData : playlistData}
+                            typePlaylistList={'LeftContainer'}
+                        />
                     </div>
                 </div>
                 {/* History Listen */}
@@ -338,7 +345,7 @@ function LeftContainer() {
                     <div ref={mainMySongRef} id="mainMySongID" className="main">
                         <div className="backTop"></div>
                         {/* My music list */}
-                        <MyMusicList mySongsData={mySongsData} typeMyMusicList={'LeftContainer'} />
+                        <MyMusicList mySongsData={mySongs ? mySongs : mySongsData} typeMyMusicList={'LeftContainer'} />
                     </div>
                 </div>
             </div>

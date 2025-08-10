@@ -1,8 +1,8 @@
 import MusicCard from '../MusicCard';
-import { useInfiniteQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import { IoSyncSharp } from 'react-icons/io5';
 import { useInView } from 'react-intersection-observer';
-import { getListeningHistoryDataApi } from '~/utils/api';
+import { deleteListeningHistoryApi, getListeningHistoryDataApi } from '~/utils/api';
 
 const LIMIT = 5;
 
@@ -10,6 +10,9 @@ function ListenHistoryList({ typeMyMusicList }) {
     // State
 
     // Context
+
+    // React Query (Tanstack)
+    const queryClient = useQueryClient();
 
     // --- HANDLE FUNCTION ---
     // Handle Get Listening History Data (useInfinityQuery)
@@ -34,7 +37,22 @@ function ListenHistoryList({ typeMyMusicList }) {
             }
         },
     });
-    // console.log(data); // Check data
+    // Handle Delete One Listening History
+    const handleDeleteListeningHistory = async (listeningHistoryId) => {
+        try {
+            // Call API Delete One Listen History
+            const res = await deleteListeningHistoryApi(listeningHistoryId);
+            // Kiểm tra
+            if (res?.status === 200 && res?.message === 'Xóa lịch sử nghe thành công') {
+                // Cập nhật data của query key "listeningHistory"
+                queryClient.invalidateQueries(['listeningHistory']);
+            } else {
+                console.log('Xóa lịch sử nghe không thành công');
+            }
+        } catch (error) {
+            console.log('Lỗi xóa lịch sử nghe: ', error);
+        }
+    };
 
     // First Load
     if (isLoading) {
@@ -61,7 +79,15 @@ function ListenHistoryList({ typeMyMusicList }) {
                 {data.pages[0]?.data && data.pages[0]?.data?.length > 0 ? (
                     <>
                         {data.pages.map((page) =>
-                            page.data.map((item) => <MusicCard songData={item.Song} typeMusicCard={'LeftContainer'} />),
+                            page.data.map((item) => (
+                                <MusicCard
+                                    key={`${item?.listeningHistoryId}listenHistory`}
+                                    listeningHistoryData={item}
+                                    songData={item.Song}
+                                    typeMusicCard={'LeftContainerListenHistory'}
+                                    handleDeleteListeningHistory={handleDeleteListeningHistory}
+                                />
+                            )),
                         )}
                         {/* Trigger load thêm */}
                         <button

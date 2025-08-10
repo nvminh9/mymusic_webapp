@@ -40,6 +40,8 @@ import VideoAmbilight from '../components/VideoAmbilight';
 import Slider from 'react-slick';
 import noContentImage from '~/assets/images/no_content.jpg';
 import { useMusicPlayer } from '~/hooks/useMusicPlayer';
+import { MdFullscreen, MdPictureInPictureAlt } from 'react-icons/md';
+import { useQueryClient } from '@tanstack/react-query';
 
 function UploadMusicPage() {
     // State
@@ -142,6 +144,9 @@ function UploadMusicPage() {
         ],
     };
 
+    // React Query (Tanstack)
+    const queryClient = useQueryClient();
+
     // --- HANDLE FUNCTIONS ---
     // useMusicPlayer
     const { formatTime } = useMusicPlayer();
@@ -199,6 +204,10 @@ function UploadMusicPage() {
                             marginTop: '58.4px',
                         },
                     });
+
+                    // Refetch data của query key "mySongs"
+                    queryClient.invalidateQueries(['mySongs']);
+
                     // Navigate về trang cá nhân
                     const navigateToProfileTimeout = setTimeout(() => {
                         navigate(`/profile/${auth?.user?.userName}/musics`);
@@ -1228,17 +1237,17 @@ function UploadMusicPage() {
                                         }}
                                     >
                                         {/* top */}
-                                        <div className="top">
+                                        <div className="top" style={{ paddingTop: '0px' }}>
                                             <span className="title" style={{ margin: '0' }}></span>
                                             <div className="options">
                                                 {/* Nút phóng to / thu nhỏ trình phát nhạc */}
                                                 <button
                                                     type="button"
-                                                    className="btnFullSreen tooltip"
+                                                    className="btnFullScreen tooltip"
                                                     style={{ opacity: '0.3', cursor: 'not-allowed' }}
                                                     disabled
                                                 >
-                                                    <CircumIcon name="maximize_1" />
+                                                    <MdFullscreen />
                                                     <span class="tooltiptext">Phóng to</span>
                                                 </button>
                                                 {/* Nút chế độ hình trong hình */}
@@ -1248,7 +1257,7 @@ function UploadMusicPage() {
                                                     style={{ opacity: '0.3', cursor: 'not-allowed' }}
                                                     disabled
                                                 >
-                                                    <CircumIcon name="minimize_2" />
+                                                    <MdPictureInPictureAlt />
                                                     <span class="tooltiptext">Trình phát thu nhỏ</span>
                                                 </button>
                                             </div>

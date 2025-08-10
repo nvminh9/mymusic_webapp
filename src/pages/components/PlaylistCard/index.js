@@ -36,7 +36,7 @@ function PlaylistCard({ playlistData, typePlaylistCard }) {
 
     if (typePlaylistCard === 'LeftContainer') {
         return (
-            <>
+            <div className="listenHistoryItem">
                 {/* Each Item */}
                 <button
                     className="btnPlaylist"
@@ -64,7 +64,26 @@ function PlaylistCard({ playlistData, typePlaylistCard }) {
                         <span className="quantity">{playlistData?.User?.userName}</span>
                     </div>
                 </button>
-            </>
+                {/* Button For Info */}
+                <div className="buttonBox" style={{ paddingLeft: '16px' }}>
+                    <button
+                        className="btnName"
+                        onClick={() => {
+                            navigate(`playlist/${playlistData?.playlistId}`);
+                        }}
+                    >
+                        {playlistData?.name}
+                    </button>
+                    <button
+                        className="btnQuantity"
+                        onClick={() => {
+                            navigate(`profile/${playlistData?.User?.userName}`);
+                        }}
+                    >
+                        {playlistData?.User?.userName}
+                    </button>
+                </div>
+            </div>
         );
     }
 

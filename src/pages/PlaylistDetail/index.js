@@ -9,14 +9,14 @@ import noContentImage from '~/assets/images/no_content.jpg';
 import defaultAvatar from '~/assets/images/avatarDefault.jpg';
 import UserTag from '../components/UserTag';
 import { useQueryClient } from '@tanstack/react-query';
-import AddMusicBox from '../components/AddMusicBox';
 import { useMusicPlayerContext } from '~/context/musicPlayer.context';
 import { AuthContext } from '~/context/auth.context';
+import CustomPlaylistBox from '../components/CustomPlaylistBox';
 
 function PlaylistDetail() {
     // State
     const [playlistDetailData, setPlaylistDetailData] = useState();
-    const [isOpenAddMusicBox, setIsOpenAddMusicBox] = useState(false);
+    const [isOpenCustomBox, setIsOpenCustomBox] = useState(false);
     const [addOrRemoveMusicProgress, setAddOrRemoveMusicProgress] = useState();
 
     // Context
@@ -88,7 +88,7 @@ function PlaylistDetail() {
     // Handle Button Add Music
     const handleBtnAddMusic = () => {
         //
-        setIsOpenAddMusicBox(!isOpenAddMusicBox);
+        setIsOpenCustomBox(!isOpenCustomBox);
     };
     // Handle Check nếu bài hát đã được thêm rồi
     const handleCheckIsSongAdded = (songData) => {
@@ -449,10 +449,11 @@ function PlaylistDetail() {
                         </div>
                     </div>
                     {/* Add Music Box */}
-                    {isOpenAddMusicBox && (
-                        <AddMusicBox
+                    {auth?.user?.userName === playlistDetailData?.User?.userName && isOpenCustomBox && (
+                        <CustomPlaylistBox
+                            key={`${playlistDetailData?.playlistId}playlistDetail`}
                             playlistDetailData={playlistDetailData}
-                            setIsOpenAddMusicBox={setIsOpenAddMusicBox}
+                            setIsOpenCustomBox={setIsOpenCustomBox}
                             handleCheckIsSongAdded={handleCheckIsSongAdded}
                             handleAddMusic={handleAddMusic}
                             handleRemoveAddMusic={handleRemoveAddMusic}

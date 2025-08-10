@@ -95,6 +95,8 @@ export function useMusicPlayer() {
                         saveListenHistoryTimer = setTimeout(() => {
                             saveListeningHistory(currentSong.songId); // Chỉ gọi nếu nghe > 5s
                         }, 5000); // Chỉ lưu sau 5 giây nghe
+                        // Local Storage (Bài cuối lúc trước nghe)
+                        localStorage.setItem('pl', JSON.stringify([{ ...currentSong }]));
                     }
                 }
             });
@@ -112,6 +114,8 @@ export function useMusicPlayer() {
                         saveListenHistoryTimer = setTimeout(() => {
                             saveListeningHistory(currentSong.songId); // Chỉ gọi nếu nghe > 5s
                         }, 5000); // Chỉ lưu sau 5 giây nghe
+                        // Local Storage (Bài cuối lúc trước nghe)
+                        localStorage.setItem('pl', JSON.stringify([{ ...currentSong }]));
                     }
                 }
             });

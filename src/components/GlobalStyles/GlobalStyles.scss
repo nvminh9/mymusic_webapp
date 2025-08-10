@@ -620,7 +620,67 @@ body {
                 transition: ease-in 0.2s;
                 position: relative;
                 z-index: 0;
-
+                // listeningHistoryItem
+                .listenHistoryItem {
+                    position: relative;
+                    display: flex;
+                    align-items: center;
+                    // Button
+                    .buttonBox {
+                        position: absolute;
+                        top: 8px;
+                        // bottom: 8px;
+                        left: 71.2px;
+                        padding-left: 8px;
+                        z-index: 5;
+                        background-color: transparent;
+                    }
+                    .btnName {
+                        // display: flex;
+                        // align-items: center;
+                        // justify-content: left;
+                        background-color: transparent;
+                        padding: 0;
+                        margin: 0;
+                        color: #ffffff;
+                        border: none;
+                        font-family: system-ui;
+                        font-size: 16px;
+                        font-weight: 500;
+                        // padding-bottom: 4px;
+                        cursor: pointer;
+                        transition: ease-out 0.2s;
+                        line-height: 25px;
+                        display: -webkit-box;
+                        -webkit-box-orient: vertical;
+                        -webkit-line-clamp: 1;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        text-align: left;
+                        width: 100%;
+                    }
+                    .btnName:hover {
+                        text-decoration: underline;
+                    }
+                    .btnQuantity {
+                        // display: flex;
+                        // align-items: center;
+                        // justify-content: left;
+                        // color: #b3b3b3;
+                        color: #777777aa;
+                        background-color: transparent;
+                        padding: 0;
+                        margin: 0;
+                        border: none;
+                        font-family: system-ui;
+                        font-size: 14px;
+                        font-weight: 500;
+                        cursor: pointer;
+                    }
+                    .btnQuantity:hover {
+                        text-decoration: underline;
+                    }
+                }
                 .btnPlaylist {
                     font-family: 'Funnel Sans', sans-serif;
                     display: flex;
@@ -658,10 +718,12 @@ body {
                     }
 
                     .info {
+                        position: relative;
                         // display: grid;
                         // align-items: center;
                         padding-left: 8px;
-                        width: 75%;
+                        // width: 75%;
+                        width: 65%;
                         height: 100%;
 
                         .name {
@@ -683,11 +745,13 @@ body {
                             text-overflow: ellipsis;
                             text-align: left;
                             width: 100%;
+                            opacity: 0;
                         }
                         .name:hover {
                             // text-decoration: underline;
                         }
                         .quantity {
+                            position: relative;
                             display: flex;
                             align-items: center;
                             justify-content: left;
@@ -695,6 +759,13 @@ body {
                             color: #777777aa;
                             font-size: 14px;
                             font-weight: 400;
+                            opacity: 0;
+                        }
+                        .quantity:hover {
+                            text-decoration: underline;
+                        }
+                        .quantity:active {
+                            color: white;
                         }
                     }
                 }
@@ -703,6 +774,37 @@ body {
                 }
                 .btnPlaylist:active {
                     background-color: #000;
+                }
+                //
+                .btnDeleteListenHistory {
+                    position: absolute;
+                    right: 8px;
+                    font-family: system-ui;
+                    font-size: 14px;
+                    font-weight: 500;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 5px;
+                    width: fit-content;
+                    background-color: transparent;
+                    color: #777777aa;
+                    // box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+                    border: 0.5px solid #777777aa;
+                    border-radius: 10px;
+                    padding: 4px 10px;
+                    cursor: pointer;
+                    transition: ease-out 0.2s;
+                    -webkit-user-select: none;
+                    user-select: none;
+                    z-index: 5;
+                }
+                .btnDeleteListenHistory:hover {
+                    color: #e91429;
+                    border: 0.5px solid #e91429;
+                }
+                .btnDeleteListenHistory:active {
+                    transform: scale(0.97);
                 }
             }
         }
@@ -1212,6 +1314,7 @@ body {
                 overflow-y: hidden;
                 overflow-x: auto;
                 scrollbar-width: none;
+                scroll-behavior: smooth;
                 // Button Like Song
                 .btnLikeSongContainer {
                     display: flex;
@@ -4359,6 +4462,9 @@ body {
                 padding: 15px 10px;
                 color: #ffffff;
             }
+            .inputNameMusic:focus {
+                outline: none;
+            }
         }
         // Ô nhập hình ảnh cho nhạc
         .songImageField {
@@ -4747,6 +4853,7 @@ body {
                         overflow-y: hidden;
                         overflow-x: auto;
                         scrollbar-width: none;
+                        scroll-behavior: smooth;
                         width: 92.5%;
                         .btnOwner {
                             border: 0.5px solid #1f1f1f;
@@ -4977,6 +5084,7 @@ body {
                                 overflow-y: hidden;
                                 overflow-x: auto;
                                 scrollbar-width: none;
+                                scroll-behavior: smooth;
                                 gap: 8px;
                                 img {
                                     height: 45px;
@@ -5053,6 +5161,13 @@ body {
                 font-size: 15px;
                 font-weight: 500;
                 color: #ffffff;
+                display: -webkit-box;
+                -webkit-box-orient: vertical;
+                -webkit-line-clamp: 1;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                width: 90%;
+                text-align: center;
             }
             button {
                 position: absolute;
@@ -5078,9 +5193,52 @@ body {
         }
         .mainContainer {
             padding: 5px;
+            .navigateBar {
+                width: 100%;
+                height: max-content;
+                overflow-y: hidden;
+                overflow-x: auto;
+                scrollbar-width: none;
+                scroll-behavior: smooth;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding-top: 5px;
+                padding-bottom: 10px;
+                z-index: 7;
+                border-bottom: 0.5px solid #ffffff26;
+                button {
+                    font-family: system-ui;
+                    font-size: 14px;
+                    font-weight: 500;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 5px;
+                    width: max-content;
+                    background-color: #1f1f1f;
+                    color: #dfdfdf;
+                    // box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+                    border: 2px solid transparent;
+                    border-radius: 10px;
+                    padding: 4px 10px;
+                    cursor: pointer;
+                    transition: ease-out 0.2s;
+                    -webkit-user-select: none;
+                    user-select: none;
+                    z-index: 5;
+                }
+                button:hover {
+                    background-color: #171717;
+                }
+                button:active {
+                    // transform: scale(0.97);
+                }
+            }
             .inputSearchMusic {
                 width: 100%;
                 padding: 7px 10px;
+                margin-top: 10px;
                 background-color: #1f1f1f;
                 color: #ffffff;
                 font-family: system-ui;
@@ -5116,6 +5274,130 @@ body {
                     height: 94.6px;
                     overflow: hidden;
                 }
+                // Chỉnh sửa thông tin bài nhạc
+                .songImageContainer {
+                    width: 100%;
+                    display: grid;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 10px;
+                    padding: 10px;
+                    .songImageDropArea {
+                        position: relative;
+                        background-color: transparent;
+                        width: 150px;
+                        height: 150px;
+                        outline: rgba(135, 135, 135, 0.15) dotted 3px;
+                        outline-offset: -1px;
+                        border-radius: 10px;
+                        margin: 0 auto;
+                        background-position: center;
+                        background-size: cover;
+                    }
+                    .inputSongImageFile {
+                        position: absolute;
+                        top: 0;
+                        bottom: 0;
+                        left: 0;
+                        right: 0;
+                        border-radius: 10px;
+                        opacity: 0;
+                    }
+                    .note {
+                        font-family: system-ui;
+                        font-size: 11px;
+                        font-weight: 500;
+                        color: #777777aa;
+                        text-align: center;
+                    }
+                    .btnRemoveContainer {
+                        width: max-content;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        gap: 10px;
+                        margin: 0 auto;
+                    }
+                    .btnRemove {
+                        font-family: system-ui;
+                        font-size: 14px;
+                        font-weight: 500;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        gap: 5px;
+                        width: max-content;
+                        background-color: #1f1f1f;
+                        color: #dfdfdf;
+                        border: 2px solid transparent;
+                        border-radius: 10px;
+                        padding: 4px 10px;
+                        cursor: pointer;
+                        transition: ease-out 0.2s;
+                        -webkit-user-select: none;
+                        user-select: none;
+                    }
+                    .btnRemove:hover {
+                        background-color: #171717;
+                    }
+                }
+                .songNameContainer {
+                    .title {
+                        display: flex;
+                        align-items: center;
+                        justify-content: left;
+                        font-family: system-ui;
+                        font-size: 14px;
+                        font-weight: 500;
+                        color: #ffffff;
+                    }
+                    .inputSongName {
+                        width: 100%;
+                        font-family: system-ui;
+                        font-size: 14px;
+                        font-weight: 500;
+                        background-color: transparent;
+                        border: 0.5px solid #777777aa;
+                        border-radius: 20px;
+                        padding: 10px;
+                        color: #ffffff;
+                    }
+                    .inputSongName:focus {
+                        outline: none;
+                    }
+                }
+                .btnChangeSongInfoContainer {
+                    position: absolute;
+                    border-radius: 10px;
+                    bottom: 5px;
+                    right: 5px;
+                    .btnChangeSongInfo {
+                        font-family: system-ui;
+                        font-size: 14px;
+                        font-weight: 500;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        gap: 5px;
+                        width: max-content;
+                        background-color: #dfdfdf;
+                        color: #1f1f1f;
+                        border: 2px solid transparent;
+                        border-radius: 10px;
+                        padding: 4px 10px;
+                        cursor: pointer;
+                        transition: ease-out 0.2s;
+                        -webkit-user-select: none;
+                        user-select: none;
+                        // box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+                    }
+                    .btnChangeSongInfo:hover {
+                        background-color: #ffffff;
+                    }
+                    .btnChangeSongInfo:active {
+                        transform: scale(0.97);
+                    }
+                }
             }
             /* width */
             .main::-webkit-scrollbar {
@@ -5133,6 +5415,47 @@ body {
                 backdrop-filter: blur(5px);
                 border-radius: 3px;
                 cursor: pointer;
+            }
+
+            // Setting
+            .settingItemContainer {
+                padding: 0px 5px;
+                .settingItem {
+                    padding: 15px 0px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    border-bottom: 0.5px solid rgb(119 119 119 / 20%);
+                    span {
+                        font-family: system-ui;
+                        font-size: 14px;
+                        font-weight: 500;
+                        color: #ffffff;
+                    }
+                    .btnDeletePlaylist {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        gap: 5px;
+                        background-color: transparent;
+                        border: 0.5px solid #e91429;
+                        color: #e91429;
+                        font-family: system-ui;
+                        font-size: 14px;
+                        font-weight: 500;
+                        padding: 4px 10px;
+                        padding-bottom: 5px;
+                        border-radius: 10px;
+                        transition: ease-out 0.2s;
+                        cursor: pointer;
+                    }
+                    .btnDeletePlaylist:hover {
+                        background-color: #444;
+                    }
+                    .btnDeletePlaylist:active {
+                        transform: scale(0.96);
+                    }
+                }
             }
         }
         // Button Music Card (At Search)
