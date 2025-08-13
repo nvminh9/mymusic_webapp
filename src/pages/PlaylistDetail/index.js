@@ -26,7 +26,7 @@ function PlaylistDetail() {
     // Listening History
     const listenHistoryData = queryClient.getQueryData(['listeningHistory']);
     // useMusicPlayerContext
-    const { setPlaylist, setCurrentIndex } = useMusicPlayerContext();
+    const { setPlaylist, setCurrentIndex, setTypeMusicPlayer } = useMusicPlayerContext();
 
     // Ref
 
@@ -216,6 +216,7 @@ function PlaylistDetail() {
             setPlaylist(res?.data?.songs);
             // Set currentIndex
             setCurrentIndex(0);
+            setTypeMusicPlayer({ type: 'playlist', data: res?.data });
         } catch (error) {
             console.log(error);
         }

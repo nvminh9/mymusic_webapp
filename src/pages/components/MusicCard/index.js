@@ -3,6 +3,7 @@ import { IoAddSharp, IoAlertSharp, IoArrowUpSharp, IoCheckmarkSharp, IoPlaySharp
 import { useLocation, useNavigate } from 'react-router-dom';
 import noContentImage from '~/assets/images/no_content.jpg';
 import { useMusicPlayerContext } from '~/context/musicPlayer.context';
+import { useMusicPlayer } from '~/hooks/useMusicPlayer';
 import { getSongDataApi } from '~/utils/api';
 
 // handleCheckIsSongAdded: Hàm kiểm tra xem bài đã có trong playlist chưa (return true hoặc false)
@@ -22,7 +23,10 @@ function MusicCard({
     // State
 
     // Context
-    const { playlist, setPlaylist, setCurrentIndex, setIsPlaying } = useMusicPlayerContext();
+    const { playlist, setPlaylist, setCurrentIndex, setIsPlaying, setTypeMusicPlayer } = useMusicPlayerContext();
+
+    // useMusicPlayer (Custom Hook)
+    const { currentSong } = useMusicPlayer();
 
     // Navigation
     const navigate = useNavigate();
@@ -31,6 +35,12 @@ function MusicCard({
     // --- HANDLE FUNCTION ---
     // Test handlePlay
     const handlePlay = async (e) => {
+        // Trong playlist ở Music Player
+        if (typeMusicCard === 'MusicPlayerPlaylist') {
+            setCurrentIndex(order - 1);
+            return;
+        }
+
         try {
             // Call API Get Song Data
             const res = await getSongDataApi(songData?.songId);
@@ -40,8 +50,7 @@ function MusicCard({
             });
             setCurrentIndex(playlist?.length && playlist?.length > 0 ? playlist?.length : 0);
             setIsPlaying(true);
-            // // Local Storage (Bài cuối lúc trước nghe)
-            // localStorage.setItem('pl', JSON.stringify([{ ...res?.data }]));
+            setTypeMusicPlayer({ type: 'song' });
         } catch (error) {
             console.log(error);
         }
@@ -243,6 +252,63 @@ function MusicCard({
                         </button>
                     </>
                 )}
+            </>
+        );
+    }
+
+    // Trong playlist ở Music Player
+    if (typeMusicCard === 'MusicPlayerPlaylist') {
+        return (
+            <>
+                {/* Button Song */}
+                <button
+                    className="btnPlaylist"
+                    type="button"
+                    onClick={() => {
+                        handlePlay();
+                    }}
+                    style={{
+                        backgroundColor: songData?.songId === currentSong?.songId ? '#1f1f1f' : '',
+                    }}
+                >
+                    <span className="number">
+                        <span className="numberIcon">{order}</span>
+                        <span className="playIcon">
+                            <IoPlaySharp />
+                        </span>
+                    </span>
+                    <span className="music">
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <img
+                                src={
+                                    songData?.songImage
+                                        ? process.env.REACT_APP_BACKEND_URL + songData?.songImage
+                                        : noContentImage
+                                }
+                                draggable="false"
+                            />
+                        </div>
+                        <div className="info">
+                            <span className="name">{songData?.name}</span>
+                            <span className="quantity">{songData?.User?.userName}</span>
+                        </div>
+                    </span>
+                    <span className="time">
+                        {songData?.songId === currentSong?.songId ? (
+                            <div style={{ width: '100%' }}>
+                                <div class="boxContainer boxContainerSmall">
+                                    <div class="box box1"></div>
+                                    <div class="box box2"></div>
+                                    <div class="box box3"></div>
+                                    <div class="box box4"></div>
+                                    <div class="box box5"></div>
+                                </div>
+                            </div>
+                        ) : (
+                            songData?.duration
+                        )}
+                    </span>
+                </button>
             </>
         );
     }

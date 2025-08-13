@@ -231,6 +231,12 @@ const uploadMusicApi = (data) => {
     return axios.post(URL_API, data);
 };
 
+// API Cập nhật bài nhạc (PATCH)
+const updateSongApi = (songId, data) => {
+    const URL_API = `/v1/api/music/${songId}/update`;
+    return axios.patch(URL_API, data);
+};
+
 // API Xóa bài nhạc (DELETE)
 const deleteMusicApi = (songId) => {
     const URL_API = `/v1/api/music/${songId}`;
@@ -358,6 +364,7 @@ export {
     deleteSharedArticleApi,
     getFeedDataApi,
     uploadMusicApi,
+    updateSongApi,
     deleteMusicApi,
     getSongDataApi,
     createLikeSongApi,

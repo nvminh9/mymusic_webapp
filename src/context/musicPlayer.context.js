@@ -29,6 +29,7 @@ export const MusicPlayerProvider = ({ children }) => {
     const [isAutoNextSong, setIsAutoNextSong] = useState(false); // Auto Next Song
     const [isLikedSong, setIsLikedSong] = useState(false); // Liked Song
     const [isInteracted, setIsInteracted] = useState(false); // isInteracted: true khi người dùng đã tương tác với trang (click vào đâu đó) để tránh autoplay gây lỗi
+    const [typeMusicPlayer, setTypeMusicPlayer] = useState({ type: 'song' }); // Xác định loại mà Music Player đang phát là song hay playlist (hiện tại sẽ để init là 'song', do lưu local là Song của lần nghe cuối trước khi thoát)
 
     // --- HANDLE FUNCTION ---
     useEffect(() => {}, []);
@@ -64,6 +65,8 @@ export const MusicPlayerProvider = ({ children }) => {
                 setIsAutoNextSong,
                 isLikedSong,
                 setIsLikedSong,
+                typeMusicPlayer,
+                setTypeMusicPlayer,
             }}
         >
             {children}

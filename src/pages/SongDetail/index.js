@@ -26,6 +26,7 @@ function SongDetail() {
     const [songDetailData, setSongDetailData] = useState();
     const [isOpenCustomBox, setIsOpenCustomBox] = useState(false);
     const [addOrRemoveMusicProgress, setAddOrRemoveMusicProgress] = useState();
+    const [changedCount, setChangedCount] = useState();
 
     // Context
     const { auth } = useContext(AuthContext);
@@ -48,6 +49,23 @@ function SongDetail() {
     useEffect(() => {
         // songId
         const songId = location.pathname.split('/')[2];
+
+        // // Tìm song detail trong query data "mySongs"
+        // const mySongs = queryClient.getQueryData(['mySongs']);
+        // const songDetail = mySongs?.find((song) => song.songId === songId);
+        // // Nếu có thì set state song detail data
+        // if (songDetail) {
+        //     setSongDetailData(songDetail);
+        // } else {
+        //     // Call API Get Song Detail
+        //     const getSongData = async (songId) => {
+        //         const res = await getSongDataApi(songId);
+        //         // Set state songDetailData
+        //         setSongDetailData(res?.data);
+        //     };
+        //     getSongData(songId);
+        // }
+
         // Call API Get Song Detail
         const getSongData = async (songId) => {
             const res = await getSongDataApi(songId);
@@ -55,7 +73,7 @@ function SongDetail() {
             setSongDetailData(res?.data);
         };
         getSongData(songId);
-    }, [location.pathname.split('/')[2]]);
+    }, [location.pathname.split('/')[2], changedCount]);
     // Format thời gian tạo sang ago
     const timeAgo = (timestamp) => {
         const now = new Date();
@@ -116,6 +134,8 @@ function SongDetail() {
     const handleOpenSetting = () => {
         setIsOpenCustomBox(true);
     };
+
+    console.log(songDetailData?.changedCount);
 
     return (
         <Fragment>
@@ -196,7 +216,7 @@ function SongDetail() {
                                         {/* Loại */}
                                         <span className="type">
                                             {/* Type */}
-                                            Bài nhạc
+                                            Bài nhạc {songDetailData?.changedCount > 0 && `(đã chỉnh sửa)`}
                                             {/* Privacy */}
                                             {songDetailData?.privacy
                                                 ? songDetailData?.privacy === '0'
@@ -278,6 +298,7 @@ function SongDetail() {
                             key={`${songDetailData?.songId}songDetail`}
                             songDetailData={songDetailData}
                             setIsOpenCustomBox={setIsOpenCustomBox}
+                            setChangedCount={setChangedCount}
                         />
                     )}
                 </>

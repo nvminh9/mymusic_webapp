@@ -13,6 +13,8 @@ import {
     IoSparklesSharp,
     IoRefreshSharp,
     IoHeartOutline,
+    IoChevronUpSharp,
+    IoChevronDownSharp,
 } from 'react-icons/io5';
 import CircumIcon from '@klarr-agency/circum-icons-react';
 import Slider from 'react-slick';
@@ -21,11 +23,12 @@ import VideoAmbilight from '../VideoAmbilight';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useMusicPlayer } from '~/hooks/useMusicPlayer';
 import { useMusicPlayerContext } from '~/context/musicPlayer.context';
-import { CgPlayListAdd } from 'react-icons/cg';
+import { CgPlayList, CgPlayListAdd } from 'react-icons/cg';
 import { IoMdShareAlt } from 'react-icons/io';
 import { MdFullscreen, MdFullscreenExit, MdPictureInPictureAlt } from 'react-icons/md';
 import logo from '~/assets/images/logoWhiteTransparent_noR.png';
 import LikeSongButton from '../LikeSongButton';
+import Playlist from '../Playlist';
 
 function MusicPlayer() {
     // State
@@ -51,6 +54,7 @@ function MusicPlayer() {
         setIsAutoNextSong,
         isLikedSong,
         setIsLikedSong,
+        typeMusicPlayer,
     } = useMusicPlayerContext();
 
     // useMusicPlayer (Custom Hook)
@@ -187,7 +191,7 @@ function MusicPlayer() {
                     </div>
                 </div>
                 {/* middle */}
-                <div className="middle">
+                <div className="middle" id="middleMusicPlayerID">
                     {/* topBack */}
                     <div className="topBack"></div>
                     {/* Thumbnail */}
@@ -219,6 +223,9 @@ function MusicPlayer() {
                                     id="songNameID"
                                     onMouseOver={activeSongNameMarquee}
                                     onMouseLeave={turnOffSongNameMarquee}
+                                    onClick={() => {
+                                        navigate(`/song/${currentSong?.songId}`);
+                                    }}
                                 >
                                     {currentSong?.name || ''}
                                 </span>
@@ -344,6 +351,10 @@ function MusicPlayer() {
                             </div>
                         </div>
                     </div>
+                    {/* Playlist */}
+                    {typeMusicPlayer?.type === 'playlist' && (
+                        <Playlist data={typeMusicPlayer} currentIndex={currentIndex} type={'musicPlayer'} />
+                    )}
                 </div>
                 {/* bottom */}
                 <div className="bottom">
