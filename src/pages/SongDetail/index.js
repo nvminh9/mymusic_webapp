@@ -71,6 +71,8 @@ function SongDetail() {
             const res = await getSongDataApi(songId);
             // Set state songDetailData
             setSongDetailData(res?.data);
+            // Đổi title trang
+            document.title = `${res?.data?.name} | mymusic: Music from everyone`;
         };
         getSongData(songId);
     }, [location.pathname.split('/')[2], changedCount]);
@@ -134,8 +136,6 @@ function SongDetail() {
     const handleOpenSetting = () => {
         setIsOpenCustomBox(true);
     };
-
-    console.log(songDetailData?.changedCount);
 
     return (
         <Fragment>

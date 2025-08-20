@@ -224,7 +224,9 @@ function MusicPlayer() {
                                     onMouseOver={activeSongNameMarquee}
                                     onMouseLeave={turnOffSongNameMarquee}
                                     onClick={() => {
-                                        navigate(`/song/${currentSong?.songId}`);
+                                        if (location.pathname.split('/')[2] !== currentSong?.songId) {
+                                            navigate(`/song/${currentSong?.songId}`);
+                                        }
                                     }}
                                 >
                                     {currentSong?.name || ''}
@@ -237,7 +239,9 @@ function MusicPlayer() {
                                 className="btnArtist"
                                 style={{ textDecoration: 'none' }}
                                 onClick={() => {
-                                    navigate(`/profile/${currentSong?.User?.userName}`);
+                                    if (location.pathname.split('/')[2] !== currentSong?.User?.userName) {
+                                        navigate(`/profile/${currentSong?.User?.userName}`);
+                                    }
                                 }}
                             >
                                 <span>{currentSong?.User?.userName || ''}</span>

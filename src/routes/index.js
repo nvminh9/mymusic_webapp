@@ -18,6 +18,7 @@ import UploadArticlePage from '~/pages/UploadArticlePage';
 import UploadMusicPage from '~/pages/UploadMusicPage';
 import SharedArticleDetail from '~/pages/SharedArticleDetail';
 import CreatePlaylistPage from '~/pages/CreatePlaylistPage';
+import SearchPage from '~/pages/SearchPage';
 
 // Public Routes (Chưa đăng nhập vẫn truy cập được)
 const publicRoutes = [
@@ -81,6 +82,10 @@ const privateRoutes = [
             {
                 path: 'song/:songID', // Trang chi tiết nhạc
                 component: SongDetail,
+            },
+            {
+                path: 'search', // Trang tìm kiếm
+                component: SearchPage,
             },
         ],
     },

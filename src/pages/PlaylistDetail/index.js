@@ -43,6 +43,8 @@ function PlaylistDetail() {
             const res = await getPlaylistDataApi(playlistId);
             // Set state playlistDetailData
             setPlaylistDetailData(res?.data);
+            // Đổi title trang
+            document.title = `${res?.data?.name} | Playlist`;
         };
         getPlaylistData(playlistId);
     }, [location.pathname.split('/')[2]]);
@@ -305,6 +307,8 @@ function PlaylistDetail() {
                                             {playlistDetailData?.type === 'album' && 'Album'}
                                             {/* Privacy */}
                                             {playlistDetailData?.privacy === '0' ? ' công khai' : ' riêng tư'}
+                                            {/* Is Changed */}
+                                            {playlistDetailData?.changedCount > 0 && ` (đã chỉnh sửa)`}
                                         </span>
                                         {/* Tiêu đề */}
                                         <span className="name">{playlistDetailData?.name}</span>
@@ -454,6 +458,7 @@ function PlaylistDetail() {
                         <CustomPlaylistBox
                             key={`${playlistDetailData?.playlistId}playlistDetail`}
                             playlistDetailData={playlistDetailData}
+                            setPlaylistDetailData={setPlaylistDetailData}
                             setIsOpenCustomBox={setIsOpenCustomBox}
                             handleCheckIsSongAdded={handleCheckIsSongAdded}
                             handleAddMusic={handleAddMusic}

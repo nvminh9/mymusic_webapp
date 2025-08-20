@@ -291,7 +291,7 @@ function CustomSongBox({ songDetailData, setIsOpenCustomBox, setChangedCount }) 
                     {/* Main */}
                     <div className="mainContainer">
                         <div className="navigateBar">
-                            {/* Add / undo add music button */}
+                            {/* Edit info button */}
                             <div className="btnContainer">
                                 <button
                                     type="button"

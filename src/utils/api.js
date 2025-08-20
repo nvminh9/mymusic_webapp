@@ -273,6 +273,12 @@ const createPlaylistApi = (data) => {
     return axios.post(URL_API, data);
 };
 
+// API Cập nhật danh sách phát (PATCH)
+const updatePlaylistApi = (playlistId, data) => {
+    const URL_API = `/v1/api/playlist/${playlistId}/update`;
+    return axios.patch(URL_API, data);
+};
+
 // API Xóa danh sách phát (DELETE)
 const deletePlaylistApi = (playlistId) => {
     const URL_API = `/v1/api/playlist/${playlistId}`;
@@ -327,6 +333,25 @@ const getListeningHistoryDataApi = (page, limit) => {
     return axios.get(URL_API);
 };
 
+// API Lấy kết quả tìm kiếm (GET)
+// types (string): article,song,user (các object mà kết quả trả về)
+const getSearchResultDataApi = (q, types, limit, authUserId) => {
+    const URL_API = `/v1/api/search?q=${q}&types=${types}&limit=${limit}&authUserId=${authUserId}`;
+    return axios.get(URL_API);
+};
+
+// API Lấy gợi ý từ khóa tìm kiếm (Autocomplete) (GET)
+const getSearchAutocompleteApi = (q, limit) => {
+    const URL_API = `/v1/api/search/autocomplete?q=${q}&limit=${limit}`;
+    return axios.get(URL_API);
+};
+
+// API Lấy lịch sử tìm kiếm (GET)
+const getSearchHistoryDataApi = (page, limit) => {
+    const URL_API = `/v1/api/search/history?page=${page}&limit=${limit}`;
+    return axios.get(URL_API);
+};
+
 export {
     signUpApi,
     signInApi,
@@ -371,6 +396,7 @@ export {
     unLikeSongApi,
     getUserSongsDataApi,
     createPlaylistApi,
+    updatePlaylistApi,
     deletePlaylistApi,
     addMusicToPlaylistApi,
     removeMusicFromPlaylistApi,
@@ -380,4 +406,7 @@ export {
     deleteListeningHistoryApi,
     getListeningHistoryDetailApi,
     getListeningHistoryDataApi,
+    getSearchResultDataApi,
+    getSearchAutocompleteApi,
+    getSearchHistoryDataApi,
 };

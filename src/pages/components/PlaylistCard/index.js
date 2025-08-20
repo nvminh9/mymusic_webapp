@@ -41,7 +41,9 @@ function PlaylistCard({ playlistData, typePlaylistCard }) {
                 <button
                     className="btnPlaylist"
                     onClick={() => {
-                        navigate(`playlist/${playlistData?.playlistId}`);
+                        if (location.pathname.split('/')[2] !== playlistData?.playlistId) {
+                            navigate(`/playlist/${playlistData?.playlistId}`);
+                        }
                     }}
                 >
                     <div className="coverImage">
@@ -69,7 +71,9 @@ function PlaylistCard({ playlistData, typePlaylistCard }) {
                     <button
                         className="btnName"
                         onClick={() => {
-                            navigate(`playlist/${playlistData?.playlistId}`);
+                            if (location.pathname.split('/')[2] !== playlistData?.playlistId) {
+                                navigate(`/playlist/${playlistData?.playlistId}`);
+                            }
                         }}
                     >
                         {playlistData?.name}
@@ -77,7 +81,9 @@ function PlaylistCard({ playlistData, typePlaylistCard }) {
                     <button
                         className="btnQuantity"
                         onClick={() => {
-                            navigate(`profile/${playlistData?.User?.userName}`);
+                            if (location.pathname.split('/')[2] !== playlistData?.User?.userName) {
+                                navigate(`/profile/${playlistData?.User?.userName}`);
+                            }
                         }}
                     >
                         {playlistData?.User?.userName}

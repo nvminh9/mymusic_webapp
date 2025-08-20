@@ -96,7 +96,7 @@ body {
             .btnOpenSearch {
                 background-color: transparent;
                 border: 0.5px solid transparent;
-                // border-radius: 4px;
+                border-radius: 8px;
                 padding: 4px;
                 display: flex;
                 align-items: center;
@@ -3444,7 +3444,8 @@ body {
 
     .profileUserName {
         height: 100%;
-        width: 96%;
+        // width: 96%;
+        width: 100%;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -3461,6 +3462,8 @@ body {
         align-items: center;
         justify-content: center;
         height: 100%;
+        position: absolute;
+        right: 0;
 
         .btnComeBack {
             display: flex;
@@ -7714,6 +7717,162 @@ body {
         width: 100%;
         z-index: 1;
         height: 100%;
+    }
+}
+
+// CSS Search Page
+.searchPage {
+    //
+    .searchFormContainer {
+        position: relative;
+    }
+    .searchForm {
+        background-color: transparent;
+        display: flex;
+        align-items: center;
+        border: 0.5px solid #1f1f1f;
+        border-radius: 20px;
+        padding: 5px;
+        .searchInputContainer {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            .searchInput {
+                width: 300px;
+                border: none;
+                // border-radius: 15px;
+                padding: 4px 8px;
+                background-color: transparent;
+                color: #ffffff;
+                font-family: system-ui;
+                font-size: 14px;
+                font-weight: 400;
+            }
+            .searchInput:focus {
+                outline: none;
+            }
+        }
+        .btnSearchContainer {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            .btnSearch {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background-color: #ffffff;
+                border: 0.5px solid transparent;
+                border-radius: 15px;
+                padding: 4px 8px;
+                color: #000;
+                font-family: system-ui;
+                font-size: 14px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: ease-out 0.2s;
+                user-select: none;
+            }
+            .btnSearch:hover {
+                background-color: #ffffffdb;
+            }
+            .btnSearch:active {
+                transform: scale(0.99);
+            }
+        }
+    }
+    .searchAutocompleteContainer {
+        position: absolute;
+        top: 112%;
+        left: 0;
+        right: 0;
+        background-color: #1f1f1f;
+        padding: 5px;
+        border-radius: 20px;
+        height: 360px;
+        overflow-x: hidden;
+        overflow-y: auto;
+        .searchAutocompleteItem {
+            background-color: transparent;
+            border-radius: 15px;
+            padding: 6px 8px;
+            cursor: pointer;
+            transition: ease-out 0.2s;
+            .searchAutocompleteKeyword {
+                display: flex;
+                align-items: center;
+                justify-content: left;
+                gap: 8px;
+                font-family: system-ui;
+                font-size: 14px;
+                font-weight: 500;
+                color: #ffffff;
+            }
+        }
+        .searchAutocompleteItem:hover {
+            background-color: #2e2e2e;
+        }
+    }
+}
+.searchHistoryContainer {
+    padding: 10px;
+    .title {
+        span {
+            font-family: system-ui;
+            font-size: 18px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+    }
+    .searchHistory {
+        // padding: 10px;
+        padding-top: 10px;
+        .searchHistoryItem {
+            position: relative;
+            display: flex;
+            align-items: center;
+            background-color: transparent;
+            padding: 10px;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: ease-out 0.2s;
+            span {
+                font-family: system-ui;
+                font-size: 14px;
+                font-weight: 500;
+                color: #777;
+                display: flex;
+                align-items: center;
+                justify-content: left;
+                gap: 8px;
+            }
+            svg {
+                margin-top: 1px;
+            }
+            .searchedAt {
+                background-color: #777777aa;
+                backdrop-filter: blur(3px);
+                font-size: 12px;
+                color: #dfdfdf;
+                padding: 5px;
+                border-radius: 11px;
+                user-select: none;
+            }
+            .btnDeleteSearchHistory {
+                background-color: transparent;
+                border-radius: 7px;
+                cursor: pointer;
+                transition: ease-out 0.2s;
+            }
+            .btnDeleteSearchHistory:hover {
+                background-color: #d63031;
+            }
+            .btnDeleteSearchHistory:active {
+                background-color: #d63031aa;
+            }
+        }
+        .searchHistoryItem:hover {
+            background-color: #171717;
+        }
     }
 }
 

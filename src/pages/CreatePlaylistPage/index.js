@@ -1,5 +1,5 @@
 import { message } from 'antd';
-import { Fragment, useCallback, useContext, useRef, useState } from 'react';
+import { Fragment, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { VscChevronLeft } from 'react-icons/vsc';
 import { useLocation, useNavigate } from 'react-router-dom';
 import ImageAmbilight from '../components/ImageAmbilight';
@@ -61,6 +61,10 @@ function CreatePlaylistPage() {
     const queryClient = useQueryClient();
 
     // --- HANDLE FUNCTION ---
+    useEffect(() => {
+        // Đổi title trang
+        document.title = 'Create Playlist | mymusic: Music from everyone';
+    }, []);
     // Handle on submit form
     const onSubmit = async (data) => {
         //
@@ -113,7 +117,8 @@ function CreatePlaylistPage() {
                 //     navigate(`/profile/${auth?.user?.userName}/musics`);
                 // }, 600);
                 const navigateTimeout = setTimeout(() => {
-                    navigate(-1);
+                    navigate(`/playlist/${res?.data?.playlistId}`);
+                    // navigate(-1);
                 }, 600);
                 // return
                 return () => {

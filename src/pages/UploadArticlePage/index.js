@@ -157,6 +157,10 @@ function UploadArticlePage() {
     };
 
     // --- HANDLE FUNCTIONS ---
+    useEffect(() => {
+        // Đổi title trang
+        document.title = 'Post Article | mymusic: Music from everyone';
+    }, []);
     // Handle Submit Form Upload Article
     const onSubmit = async (data) => {
         const { privacy, textContent } = data;

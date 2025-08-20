@@ -119,8 +119,8 @@ function Article({ articleData }) {
             { label: 'phút', seconds: 60 },
             { label: 'giây', seconds: 1 },
         ];
-        // Nếu đã quá 1 tuần thì return chi tiết
-        if (seconds >= intervals[2].seconds) {
+        // Nếu đã quá 6 tháng thì return chi tiết
+        if (seconds >= intervals[1].seconds * 6) {
             return formatTimestamp(timestamp);
         }
         for (let i = 0; i < intervals.length; i++) {

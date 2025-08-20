@@ -23,7 +23,8 @@ function MusicCard({
     // State
 
     // Context
-    const { playlist, setPlaylist, setCurrentIndex, setIsPlaying, setTypeMusicPlayer } = useMusicPlayerContext();
+    const { playlist, setPlaylist, setCurrentIndex, isPlaying, setIsPlaying, setTypeMusicPlayer } =
+        useMusicPlayerContext();
 
     // useMusicPlayer (Custom Hook)
     const { currentSong } = useMusicPlayer();
@@ -88,7 +89,9 @@ function MusicCard({
                     <button
                         className="btnName"
                         onClick={() => {
-                            navigate(`song/${songData?.songId}`);
+                            if (location.pathname.split('/')[2] !== songData?.songId) {
+                                navigate(`/song/${songData?.songId}`);
+                            }
                         }}
                     >
                         {songData?.name}
@@ -96,7 +99,9 @@ function MusicCard({
                     <button
                         className="btnQuantity"
                         onClick={() => {
-                            navigate(`profile/${songData?.User?.userName}`);
+                            if (location.pathname.split('/')[2] !== songData?.User?.userName) {
+                                navigate(`/profile/${songData?.User?.userName}`);
+                            }
                         }}
                     >
                         {songData?.User?.userName}
@@ -148,7 +153,9 @@ function MusicCard({
                     <button
                         className="btnName"
                         onClick={() => {
-                            navigate(`song/${songData?.songId}`);
+                            if (location.pathname.split('/')[2] !== songData?.songId) {
+                                navigate(`/song/${songData?.songId}`);
+                            }
                         }}
                     >
                         {songData?.name}
@@ -156,7 +163,9 @@ function MusicCard({
                     <button
                         className="btnQuantity"
                         onClick={() => {
-                            navigate(`profile/${songData?.User?.userName}`);
+                            if (location.pathname.split('/')[2] !== songData?.User?.userName) {
+                                navigate(`/profile/${songData?.User?.userName}`);
+                            }
                         }}
                     >
                         {songData?.User?.userName}
@@ -294,7 +303,7 @@ function MusicCard({
                         </div>
                     </span>
                     <span className="time">
-                        {songData?.songId === currentSong?.songId ? (
+                        {songData?.songId === currentSong?.songId && isPlaying ? (
                             <div style={{ width: '100%' }}>
                                 <div class="boxContainer boxContainerSmall">
                                     <div class="box box1"></div>

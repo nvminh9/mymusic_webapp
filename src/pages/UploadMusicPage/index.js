@@ -147,9 +147,14 @@ function UploadMusicPage() {
     // React Query (Tanstack)
     const queryClient = useQueryClient();
 
-    // --- HANDLE FUNCTIONS ---
     // useMusicPlayer
     const { formatTime } = useMusicPlayer();
+
+    // --- HANDLE FUNCTIONS ---
+    useEffect(() => {
+        // Đổi title trang
+        document.title = `Upload Music | mymusic: Music from everyone`;
+    }, []);
     // Handle submit form upload music
     const onSubmit = async (data) => {
         // Chưa chọn file

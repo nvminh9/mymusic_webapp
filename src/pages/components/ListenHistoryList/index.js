@@ -76,9 +76,9 @@ function ListenHistoryList({ typeMyMusicList }) {
         return (
             <>
                 {/* List Listening History */}
-                {data.pages[0]?.data && data.pages[0]?.data?.length > 0 ? (
+                {data?.pages[0]?.data && data?.pages[0]?.data?.length > 0 ? (
                     <>
-                        {data.pages.map((page) =>
+                        {data?.pages.map((page) =>
                             page.data.map((item) => (
                                 <MusicCard
                                     key={`${item?.listeningHistoryId}listenHistory`}

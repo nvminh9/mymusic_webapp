@@ -245,8 +245,15 @@ function LeftContainer() {
                     </Link>
                 </div>
                 <div className="search">
-                    <button className="btnOpenSearch">
+                    <button
+                        className="btnOpenSearch tooltip"
+                        onClick={() => {
+                            navigate(`/search`);
+                        }}
+                    >
                         <CircumIcon name="search" />
+                        {/* Tooltip Text */}
+                        {/* <span class="tooltiptext">Tìm kiếm</span> */}
                     </button>
                 </div>
             </div>

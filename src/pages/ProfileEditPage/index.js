@@ -35,6 +35,8 @@ function ProfileEditPage() {
     // --- HANDLE FUNCTION ---
     // Old User Data for User Gender
     useEffect(() => {
+        // Đổi title trang
+        document.title = 'Edit Profile | mymusic: Music from everyone';
         // check if username is different auth userName
         if (!(auth?.user?.userName === location.pathname.split('/')[2])) {
             return navigate(-1);

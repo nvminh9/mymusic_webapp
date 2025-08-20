@@ -167,7 +167,17 @@ function LikeSongButton({ songData, playlist, setPlaylist }) {
                         className={`sparkles ${liked ? 'sparklesActived' : ''}`}
                         style={{ transform: 'translate(-11px, -7px)' }}
                     />
-                    {liked ? <IoHeartSharp style={{ color: '#d63031' }} /> : <IoHeartOutline />}
+                    {liked ? (
+                        <>
+                            <IoHeartSharp style={{ color: '#d63031' }} />
+                            {/* {likesCount} */}
+                        </>
+                    ) : (
+                        <>
+                            <IoHeartOutline />
+                            {/* {likesCount} */}
+                        </>
+                    )}
                     <IoSparklesSharp
                         className={`sparkles ${liked ? 'sparklesActived' : ''}`}
                         style={{ transform: 'translate(8px, 6px)' }}
