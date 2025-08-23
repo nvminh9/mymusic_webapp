@@ -248,7 +248,9 @@ function LeftContainer() {
                     <button
                         className="btnOpenSearch tooltip"
                         onClick={() => {
-                            navigate(`/search`);
+                            if (location.pathname.split('/')[1] !== 'search') {
+                                navigate(`/search`);
+                            }
                         }}
                     >
                         <CircumIcon name="search" />

@@ -14,7 +14,11 @@ function PlaylistList({ playlistsData, typePlaylistList }) {
                 {playlistsData && playlistsData?.length > 0 ? (
                     <>
                         {playlistsData?.map((playlist) => (
-                            <PlaylistCard playlistData={playlist} typePlaylistCard={'LeftContainer'} />
+                            <PlaylistCard
+                                key={playlist.playlistId}
+                                playlistData={playlist}
+                                typePlaylistCard={'LeftContainer'}
+                            />
                         ))}
                     </>
                 ) : (

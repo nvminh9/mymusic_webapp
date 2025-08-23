@@ -106,7 +106,7 @@ function SearchInput({ placeholder = 'Tìm kiếm...', onSearch = () => {} }) {
         setSelectedIndex(-1);
         onSearch(suggestion.title, suggestion);
     };
-    // Handle search submission
+    // Handle button search
     const handleSearch = () => {
         if (query.trim()) {
             setShowSuggestions(false);
@@ -146,12 +146,7 @@ function SearchInput({ placeholder = 'Tìm kiếm...', onSearch = () => {} }) {
         <Fragment>
             <div ref={containerRef} className="searchFormContainer">
                 {/* Search Form */}
-                <form
-                    className="searchForm"
-                    // onSubmit={handleSubmit(onSubmit)}
-                    method="POST"
-                    noValidate
-                >
+                <div className="searchForm" method="POST" noValidate>
                     {/* Input Search */}
                     <div className="searchInputContainer">
                         <input
@@ -175,7 +170,7 @@ function SearchInput({ placeholder = 'Tìm kiếm...', onSearch = () => {} }) {
                     </div>
                     {/* Button Submit */}
                     <div className="btnSearchContainer">
-                        <button className="btnSearch" onClick={handleSearch}>
+                        <button type="button" className="btnSearch" onClick={handleSearch}>
                             Tìm kiếm
                         </button>
                     </div>
@@ -199,7 +194,7 @@ function SearchInput({ placeholder = 'Tìm kiếm...', onSearch = () => {} }) {
                             <IoSyncSharp className="loadingAnimation" style={{ color: 'white', fontSize: '15px' }} />
                         </div>
                     )}
-                </form>
+                </div>
 
                 {/* Suggestions Dropdown */}
                 {showSuggestions && suggestions.length > 0 && (

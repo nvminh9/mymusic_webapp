@@ -1,7 +1,18 @@
 import { useState } from 'react';
-import { IoAddSharp, IoAlertSharp, IoArrowUpSharp, IoCheckmarkSharp, IoPlaySharp, IoSyncSharp } from 'react-icons/io5';
+import {
+    IoAddSharp,
+    IoAlertSharp,
+    IoArrowUpSharp,
+    IoCheckmarkSharp,
+    IoHeartSharp,
+    IoMusicalNotes,
+    IoPlay,
+    IoPlaySharp,
+    IoSyncSharp,
+} from 'react-icons/io5';
 import { useLocation, useNavigate } from 'react-router-dom';
 import noContentImage from '~/assets/images/no_content.jpg';
+import defaultAvatar from '~/assets/images/avatarDefault.jpg';
 import { useMusicPlayerContext } from '~/context/musicPlayer.context';
 import { useMusicPlayer } from '~/hooks/useMusicPlayer';
 import { getSongDataApi } from '~/utils/api';
@@ -318,6 +329,66 @@ function MusicCard({
                         )}
                     </span>
                 </button>
+            </>
+        );
+    }
+
+    // Trong Search Result
+    if (typeMusicCard === 'SearchResult') {
+        return (
+            <>
+                <div className="col l-4 m-4 c-6 searchItemSong">
+                    {/* Image */}
+                    <div
+                        className="songImageContainer"
+                        onClick={() => {
+                            navigate(`/song/${songData?.songId}`);
+                        }}
+                    >
+                        {/* User Info */}
+                        <div className="userInfo">
+                            <img
+                                className="avatar"
+                                src={
+                                    songData?.User?.userAvatar
+                                        ? process.env.REACT_APP_BACKEND_URL + songData?.User?.userAvatar
+                                        : defaultAvatar
+                                }
+                            />
+                            <span className="userName">{songData?.User?.userName}</span>
+                        </div>
+                        <img
+                            className="songImage"
+                            src={
+                                songData?.songImage
+                                    ? process.env.REACT_APP_BACKEND_URL + songData?.songImage
+                                    : noContentImage
+                            }
+                            draggable="false"
+                        />
+                        {/* Icon Music */}
+                        <IoMusicalNotes />
+                        {/* Phần hiển thị khi hover vào thumbnail */}
+                        <div className="thumbnailHoverContainer">
+                            {/* Song Name */}
+                            <span className="songName">{songData?.name}</span>
+                            <div className="thumbnailHover">
+                                {/* Lượt thích */}
+                                <IoHeartSharp></IoHeartSharp>{' '}
+                                <span
+                                    className="likes"
+                                    style={{ fontFamily: 'system-ui', fontWeight: '400', fontSize: '13px' }}
+                                >
+                                    {songData?.likeCount}
+                                </span>
+                            </div>
+                        </div>
+                        {/* Created At */}
+                        <button type="button" className="btnPlay" onClick={handlePlay}>
+                            <IoPlay />
+                        </button>
+                    </div>
+                </div>
             </>
         );
     }

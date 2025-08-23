@@ -1,6 +1,7 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { IoCloseOutline, IoSyncSharp, IoTimeOutline } from 'react-icons/io5';
 import { useInView } from 'react-intersection-observer';
+import { useSearchParams } from 'react-router-dom';
 import { getSearchHistoryDataApi } from '~/utils/api';
 
 const LIMIT = 10;
@@ -11,6 +12,9 @@ function SearchHistory() {
     // Context
 
     // Ref
+
+    // Navigation
+    const [searchParams, setSearchParams] = useSearchParams();
 
     // --- HANDLE FUNCTION ---
     // Handle Get Search History Data (useInfinityQuery)
@@ -89,7 +93,14 @@ function SearchHistory() {
                             <>
                                 {data?.pages.map((page) =>
                                     page.data.map((item) => (
-                                        <div className="searchHistoryItem">
+                                        <div
+                                            key={item.searchHistoryId}
+                                            className="searchHistoryItem"
+                                            onClick={() => {
+                                                // Set Search Params
+                                                setSearchParams((prev) => ({ ...prev, q: item.keyword }));
+                                            }}
+                                        >
                                             <span>
                                                 <IoTimeOutline /> {item.keyword}
                                             </span>

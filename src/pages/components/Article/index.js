@@ -23,7 +23,7 @@ import defaultAvatar from '~/assets/images/avatarDefault.jpg';
 import { message } from 'antd';
 import { deleteArticleApi } from '~/utils/api';
 
-function Article({ articleData }) {
+function Article({ articleData, type }) {
     // State
     // const [articleData, setArticleData] = useState(); // Dữ liệu chi tiết bài viết
     const [commentsData, setCommentsData] = useState(
@@ -229,6 +229,11 @@ function Article({ articleData }) {
             return;
         }
     };
+
+    // type === 'mediumArticleCard'
+    if (type === 'mediumArticleCard') {
+        return <></>;
+    }
 
     return (
         <>

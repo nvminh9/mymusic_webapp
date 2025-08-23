@@ -3748,6 +3748,10 @@ body {
             align-items: center;
             justify-content: start;
             border-bottom: 0.5px solid #1f1f1f;
+            position: sticky;
+            top: 57.6px;
+            background-color: #121212;
+            z-index: 5;
 
             // Nút chuyển qua tab coi bài viết
             .btnToArticle {
@@ -7810,6 +7814,417 @@ body {
         }
         .searchAutocompleteItem:hover {
             background-color: #2e2e2e;
+        }
+    }
+    // Kết quả tìm kiếm
+    .main {
+        .searchResult {
+            .navigationBar {
+                width: 100%;
+                height: max-content;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                overflow-y: hidden;
+                overflow-x: auto;
+                scroll-behavior: smooth;
+                scrollbar-width: none;
+                padding: 10px;
+                background-color: #121212;
+                position: sticky;
+                top: 58px;
+                z-index: 9;
+                button {
+                    font-family: system-ui;
+                    font-size: 14px;
+                    font-weight: 500;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 5px;
+                    width: max-content;
+                    background-color: #1f1f1f;
+                    color: #dfdfdf;
+                    // box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+                    border: 2px solid transparent;
+                    border-radius: 10px;
+                    padding: 4px 10px;
+                    cursor: pointer;
+                    transition: ease-out 0.2s;
+                    -webkit-user-select: none;
+                    user-select: none;
+                    z-index: 5;
+                }
+                button:hover {
+                    background-color: #171717;
+                }
+                button:active {
+                    // transform: scale(0.97);
+                }
+            }
+            // Result Content
+            .resultContent {
+                padding: 10px;
+                padding-top: 0px;
+                .row {
+                    margin: 0;
+                    margin-right: -10px;
+                }
+                // Item Article
+                .searchItemArticle {
+                    height: 302.39px;
+                    padding: 0px 10px 10px 0px;
+                    text-decoration: none;
+
+                    .thumbnail {
+                        height: 100%;
+                        width: 100%;
+                        cursor: pointer;
+                        transition: ease-out 0.1s;
+                        position: relative;
+                        border-radius: 10px;
+                        user-select: none;
+
+                        img {
+                            width: 100%;
+                            height: 100%;
+                            object-fit: cover;
+                            object-position: center center;
+                            border-radius: 10px;
+                        }
+
+                        video {
+                            width: 100%;
+                            height: 100%;
+                            object-fit: cover;
+                            object-position: center center;
+                            border-radius: 10px;
+                        }
+
+                        .textContent {
+                            display: block;
+                            height: 100%;
+                            width: 100%;
+                            padding-top: 10px;
+                            margin-top: 5px;
+                            background-color: #1f1f1f;
+                            border-top: 0.5px solid grey;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            color: #ffffff;
+                            // font-family: sans-serif;
+                            font-size: 15px;
+                            font-weight: 300;
+                        }
+
+                        .thumbnailHover {
+                            display: flex;
+                            align-items: center;
+                            position: absolute;
+                            bottom: 6px;
+                            left: 6px;
+                            z-index: 0;
+                            background-color: rgba(18, 18, 18, 0.8);
+                            backdrop-filter: blur(15px);
+                            padding: 5px;
+                            color: #ffffff;
+                            font-size: 14px;
+                            opacity: 0;
+                            transition: ease-out 0.2s;
+                            border-radius: 10px;
+
+                            .likes {
+                                margin: 0px 5px;
+                                margin-right: 15px;
+                                padding-bottom: 1px;
+                            }
+                            .comments {
+                                margin: 0px 5px;
+                                padding-bottom: 1px;
+                            }
+                        }
+                    }
+                    .thumbnail:hover {
+                        // filter: opacity(0.8);
+                    }
+                    .thumbnail:hover .thumbnailHover {
+                        opacity: 1;
+                        // transition: ease-out 0.3s;
+                    }
+                    .thumbnail:active {
+                        opacity: 0.7;
+                    }
+                    .userInfo {
+                        display: flex;
+                        align-items: center;
+                        gap: 4px;
+                        position: absolute;
+                        top: 6px;
+                        left: 6px;
+                        z-index: 0;
+                        background-color: rgba(18, 18, 18, 0.8);
+                        backdrop-filter: blur(15px);
+                        padding: 5px;
+                        color: #ffffff;
+                        font-size: 14px;
+                        opacity: 0;
+                        transition: ease-out 0.2s;
+                        border-radius: 10px;
+                        .avatar {
+                            width: 20px;
+                            height: 20px;
+                            border-radius: 50%;
+                            outline: rgba(135, 135, 135, 0.15) solid 1px;
+                            outline-offset: -1px;
+                            object-fit: cover;
+                            object-position: center;
+                        }
+                        .userName {
+                            font-family: system-ui;
+                            font-size: 12px;
+                            font-weight: 500;
+                        }
+                    }
+                    .thumbnail:hover .userInfo {
+                        opacity: 1;
+                    }
+                    .createdAtHover {
+                        display: flex;
+                        align-items: center;
+                        position: absolute;
+                        bottom: 6px;
+                        right: 6px;
+                        z-index: 0;
+                        background-color: transparent;
+                        padding: 5px;
+                        color: #ffffff;
+                        opacity: 0;
+                        transition: ease-out 0.2s;
+                        border-radius: 10px;
+                        span {
+                            font-family: system-ui;
+                            font-size: 12px;
+                            font-weight: 500;
+                            color: #dfdfdf;
+                        }
+                    }
+                    .thumbnail:hover .createdAtHover {
+                        opacity: 1;
+                    }
+                }
+                .searchItemSong {
+                    height: 302.39px;
+                    padding: 0px 10px 10px 0px;
+                    text-decoration: none;
+                    .songImageContainer {
+                        width: 100%;
+                        height: 100%;
+                        position: relative;
+                        cursor: pointer;
+                        user-select: none;
+                        .songImage {
+                            width: 100%;
+                            height: 100%;
+                            border-radius: 10px;
+                            object-fit: cover;
+                            object-position: center;
+                        }
+                        svg {
+                            color: white;
+                            position: absolute;
+                            right: 6px;
+                            top: 6px;
+                            font-size: 18px;
+                        }
+                    }
+                    .userInfo {
+                        display: flex;
+                        align-items: center;
+                        gap: 4px;
+                        position: absolute;
+                        top: 6px;
+                        left: 6px;
+                        z-index: 0;
+                        background-color: rgba(18, 18, 18, 0.8);
+                        backdrop-filter: blur(15px);
+                        padding: 5px;
+                        color: #ffffff;
+                        font-size: 14px;
+                        opacity: 0;
+                        transition: ease-out 0.2s;
+                        border-radius: 10px;
+                        .avatar {
+                            width: 20px;
+                            height: 20px;
+                            border-radius: 50%;
+                            outline: rgba(135, 135, 135, 0.15) solid 1px;
+                            outline-offset: -1px;
+                            object-fit: cover;
+                            object-position: center;
+                        }
+                        .userName {
+                            font-family: system-ui;
+                            font-size: 12px;
+                            font-weight: 500;
+                        }
+                    }
+                    .songImageContainer:hover .userInfo {
+                        opacity: 1;
+                    }
+                    .thumbnailHoverContainer {
+                        position: absolute;
+                        bottom: 6px;
+                        left: 6px;
+                        opacity: 0;
+                        .songName {
+                            font-family: system-ui;
+                            font-size: 13px;
+                            font-weight: 500;
+                            color: #ffffff;
+                            display: -webkit-box;
+                            -webkit-box-orient: vertical;
+                            -webkit-line-clamp: 1;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            text-align: left;
+                            padding: 5px;
+                            padding-left: 2px;
+                        }
+                        .thumbnailHover {
+                            display: flex;
+                            align-items: center;
+                            z-index: 0;
+                            background-color: rgba(18, 18, 18, 0.8);
+                            backdrop-filter: blur(15px);
+                            padding: 5px;
+                            color: #ffffff;
+                            font-size: 14px;
+                            transition: ease-out 0.2s;
+                            border-radius: 10px;
+                            width: fit-content;
+                            svg {
+                                position: unset;
+                                font-size: 14px;
+                                color: #ffffff;
+                            }
+                            .likes {
+                                margin: 0px 5px;
+                                margin-right: 3px;
+                                padding-bottom: 1px;
+                            }
+                        }
+                    }
+                    .songImageContainer:hover .thumbnailHoverContainer {
+                        opacity: 1;
+                    }
+                    .btnPlay {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        position: absolute;
+                        bottom: 6px;
+                        right: 6px;
+                        opacity: 0;
+                        border: none;
+                        border-radius: 50%;
+                        outline: rgba(135, 135, 135, 0.15) solid 1px;
+                        outline-offset: -1px;
+                        background-color: rgba(18, 18, 18, 0.8);
+                        backdrop-filter: blur(15px);
+                        padding: 0px;
+                        width: 35px;
+                        height: 35px;
+                        color: #ffffff;
+                        font-family: system-ui;
+                        font-size: 14px;
+                        cursor: pointer;
+                        transition: ease-out 0.2s;
+                        svg {
+                            position: unset;
+                            font-size: 14px;
+                            color: #ffffff;
+                        }
+                    }
+                    .btnPlay:hover {
+                        background-color: #dfdfdf;
+                        svg {
+                            color: #000;
+                        }
+                    }
+                    .btnPlay:active {
+                        transform: scale(0.97);
+                    }
+                    .songImageContainer:hover .btnPlay {
+                        opacity: 1;
+                    }
+                    .songImageContainer:active {
+                        opacity: 0.7;
+                    }
+                }
+                // User
+                .searchItemUser {
+                    height: 302.39px;
+                    padding: 0px 10px 10px 0px;
+                    text-decoration: none;
+                    .userCardContainer {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        width: 100%;
+                        height: 100%;
+                        background-color: #1f1f1f;
+                        border-radius: 10px;
+                        position: relative;
+                        cursor: pointer;
+                        transition: ease-out 0.2s;
+                        user-select: none;
+                        .userCard {
+                            display: grid;
+                            gap: 10px;
+                        }
+                        .userAvatarContainer {
+                            width: 100%;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            .userAvatar {
+                                width: 85px;
+                                height: 85px;
+                                object-fit: cover;
+                                object-position: center;
+                                border: none;
+                                border-radius: 50%;
+                                outline: rgba(135, 135, 135, 0.15) solid 1px;
+                                outline-offset: -1px;
+                            }
+                        }
+                        .userInfo {
+                            width: 100%;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            .userName {
+                                font-family: system-ui;
+                                font-size: 14px;
+                                font-weight: 500;
+                                color: #ffffff;
+                                max-width: 130px;
+                                display: -webkit-box;
+                                -webkit-box-orient: vertical;
+                                -webkit-line-clamp: 1;
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                            }
+                        }
+                    }
+                    .userCardContainer:hover {
+                        background-color: #2e2e2e;
+                    }
+                    .userCardContainer:active {
+                        opacity: 0.7;
+                    }
+                }
+            }
         }
     }
 }

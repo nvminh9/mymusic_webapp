@@ -14,7 +14,7 @@ function MyMusicList({ mySongsData, typeMyMusicList }) {
                 {mySongsData && mySongsData?.length > 0 ? (
                     <>
                         {mySongsData?.map((song) => (
-                            <MusicCard songData={song} typeMusicCard={'LeftContainerMyMusic'} />
+                            <MusicCard key={song.songId} songData={song} typeMusicCard={'LeftContainerMyMusic'} />
                         ))}
                     </>
                 ) : (
