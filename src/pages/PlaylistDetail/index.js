@@ -134,6 +134,8 @@ function PlaylistDetail() {
                     ...prev,
                     songs: [...newPlaylistSongs],
                 }));
+                // Refetch data của query key "listPlaylist"
+                queryClient.invalidateQueries(['listPlaylist']);
 
                 return () => {
                     // clearTimeout(navigateToProfileTimeout);
@@ -183,6 +185,8 @@ function PlaylistDetail() {
                     ...prev,
                     songs: [...newPlaylistSongs],
                 }));
+                // Refetch data của query key "listPlaylist"
+                queryClient.invalidateQueries(['listPlaylist']);
 
                 return () => {
                     // clearTimeout(navigateToProfileTimeout);

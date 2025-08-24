@@ -1,13 +1,19 @@
+import { useQueryClient } from '@tanstack/react-query';
 import { useLocation, useNavigate } from 'react-router-dom';
 import noContentImage from '~/assets/images/no_content.jpg';
 import { useMusicPlayerContext } from '~/context/musicPlayer.context';
-import { getSongDataApi } from '~/utils/api';
+import { useMusicPlayer } from '~/hooks/useMusicPlayer';
+import { addMusicToPlaylistApi, getSongDataApi, removeMusicFromPlaylistApi } from '~/utils/api';
 
 function PlaylistCard({ playlistData, typePlaylistCard }) {
     // State
 
     // Context
     // const { playlist, setPlaylist, setCurrentIndex, setIsPlaying } = useMusicPlayerContext();
+    const { currentSong } = useMusicPlayer();
+
+    // React Query
+    const queryClient = useQueryClient();
 
     // Ref
 
@@ -33,6 +39,103 @@ function PlaylistCard({ playlistData, typePlaylistCard }) {
     //         console.log(error);
     //     }
     // };
+    // Handle Check nếu bài hát đã được thêm rồi
+    const handleCheckIsSongAdded = (songData) => {
+        // Các bài trong danh sách phát
+        const playlistSongs = playlistData?.songs;
+        // Kiểm tra
+        const result = playlistSongs?.find((item) => item?.songId === songData?.songId);
+        // Result
+        if (!result) {
+            return false;
+        } else {
+            return true;
+        }
+    };
+    // Handle Add Music
+    const handleAddMusic = async (songData) => {
+        // Call API
+        const data = { playlistId: playlistData?.playlistId, songId: songData?.songId };
+        // // Set Progress
+        // setAddOrRemoveMusicProgress({
+        //     status: 'pending',
+        //     isLoading: true,
+        // });
+        try {
+            const res = await addMusicToPlaylistApi(data);
+            if (res?.status === 200 && res?.message === 'Thêm thành công') {
+                // // Nếu tạo thành công
+                // setAddOrRemoveMusicProgress({
+                //     status: 'success',
+                //     isLoading: true, // true để tránh trường hợp người dùng bấm thêm lần nữa trước khi navigate
+                // });
+
+                // Refetch data của query key "listPlaylist"
+                queryClient.invalidateQueries(['listPlaylist']);
+
+                return () => {
+                    // clearTimeout(navigateToProfileTimeout);
+                };
+            } else {
+                // // Nếu tạo không thành công (có thể bị lỗi ở service hoặc file quá lớn)
+                // setAddOrRemoveMusicProgress({
+                //     status: 'fail',
+                //     isLoading: false,
+                // });
+                // return
+                return;
+            }
+        } catch (error) {
+            // // Nếu có lỗi xảy ra
+            // setAddOrRemoveMusicProgress({
+            //     status: 'error',
+            //     isLoading: false,
+            // });
+            console.log(error);
+        }
+    };
+    // Handle Remove Add Music
+    const handleRemoveAddMusic = async (songData) => {
+        // Call API
+        const data = { playlistId: playlistData?.playlistId, songId: songData?.songId };
+        // // Set Progress
+        // setAddOrRemoveMusicProgress({
+        //     status: 'pending',
+        //     isLoading: true,
+        // });
+        try {
+            const res = await removeMusicFromPlaylistApi(data.playlistId, data.songId);
+            if (res?.status === 200 && res?.message === 'Xóa thành công') {
+                // // Nếu xóa thành công
+                // setAddOrRemoveMusicProgress({
+                //     status: 'success',
+                //     isLoading: true, // true để tránh trường hợp người dùng bấm thêm lần nữa trước khi navigate
+                // });
+
+                // Refetch data của query key "listPlaylist"
+                queryClient.invalidateQueries(['listPlaylist']);
+
+                return () => {
+                    // clearTimeout(navigateToProfileTimeout);
+                };
+            } else {
+                // // Nếu xóa không thành công (có thể bị lỗi ở service hoặc file quá lớn)
+                // setAddOrRemoveMusicProgress({
+                //     status: 'fail',
+                //     isLoading: false,
+                // });
+                // return
+                return;
+            }
+        } catch (error) {
+            // // Nếu có lỗi xảy ra
+            // setAddOrRemoveMusicProgress({
+            //     status: 'error',
+            //     isLoading: false,
+            // });
+            console.log(error);
+        }
+    };
 
     if (typePlaylistCard === 'LeftContainer') {
         return (
@@ -90,6 +193,62 @@ function PlaylistCard({ playlistData, typePlaylistCard }) {
                     </button>
                 </div>
             </div>
+        );
+    }
+
+    if (typePlaylistCard === 'atAddToPlaylistBox') {
+        return (
+            <>
+                <>
+                    {/* Each Item */}
+                    <button
+                        type="button"
+                        className="btnPlaylist"
+                        onClick={() => {
+                            navigate(`/playlist/${playlistData?.playlistId}`);
+                        }}
+                    >
+                        <div className="coverImage">
+                            <img
+                                src={
+                                    playlistData?.coverImage
+                                        ? process.env.REACT_APP_BACKEND_URL + playlistData?.coverImage
+                                        : noContentImage
+                                }
+                                draggable="false"
+                            />
+                        </div>
+                        <div className="info">
+                            <span className="name">{playlistData?.name}</span>
+                            <span className="quantity">{playlistData?.User?.userName}</span>
+                        </div>
+                    </button>
+                    {/* Button Add / Remove Music */}
+                    {handleCheckIsSongAdded(currentSong) ? (
+                        <button
+                            type="button"
+                            className="btnAddMusic btnRemoveAddMusic"
+                            onClick={() => {
+                                handleRemoveAddMusic(currentSong);
+                            }}
+                        >
+                            Xóa thêm
+                        </button>
+                    ) : (
+                        <>
+                            <button
+                                type="button"
+                                className="btnAddMusic"
+                                onClick={() => {
+                                    handleAddMusic(currentSong);
+                                }}
+                            >
+                                Thêm
+                            </button>
+                        </>
+                    )}
+                </>
+            </>
         );
     }
 

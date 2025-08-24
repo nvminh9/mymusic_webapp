@@ -1,5 +1,5 @@
 import Hls from 'hls.js';
-import { Fragment, useEffect, useRef, useState } from 'react';
+import { Fragment, useContext, useEffect, useRef, useState } from 'react';
 import {
     IoPlaySharp,
     IoPauseSharp,
@@ -15,6 +15,9 @@ import {
     IoHeartOutline,
     IoChevronUpSharp,
     IoChevronDownSharp,
+    IoClose,
+    IoSyncSharp,
+    IoAdd,
 } from 'react-icons/io5';
 import CircumIcon from '@klarr-agency/circum-icons-react';
 import Slider from 'react-slick';
@@ -29,10 +32,15 @@ import { MdFullscreen, MdFullscreenExit, MdPictureInPictureAlt } from 'react-ico
 import logo from '~/assets/images/logoWhiteTransparent_noR.png';
 import LikeSongButton from '../LikeSongButton';
 import Playlist from '../Playlist';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { getListPlaylistOfUserDataApi } from '~/utils/api';
+import { AuthContext } from '~/context/auth.context';
+import PlaylistCard from '../PlaylistCard';
 
 function MusicPlayer() {
     // State
     const [isMusicPlayerMaximized, setIsMusicPlayerMaximized] = useState(false);
+    const [isOpenAddToPlaylistBox, setIsOpenAddToPlaylistBox] = useState(false);
 
     // Context
     const {
@@ -73,6 +81,25 @@ function MusicPlayer() {
         handleBtnVolume,
         handleLikeSong,
     } = useMusicPlayer();
+
+    // Auth
+    const { auth } = useContext(AuthContext);
+
+    // React Query
+    const queryClient = useQueryClient();
+    // Call API Get List Playlist
+    const {
+        status,
+        data: listPlaylistData,
+        error,
+    } = useQuery({
+        queryKey: ['listPlaylist'],
+        queryFn: async () => {
+            const res = await getListPlaylistOfUserDataApi(auth?.user?.userId);
+            // setPlaylistData(res?.data);
+            return res?.data;
+        },
+    });
 
     // Config Slider Carousel Thumbnail (React Slick)
     let sliderRef = useRef(null);
@@ -121,6 +148,9 @@ function MusicPlayer() {
         ],
     };
 
+    // Ref
+    const addToPlaylistBoxRef = useRef(null);
+
     // Navigation
     const navigate = useNavigate();
     const location = useLocation();
@@ -152,6 +182,17 @@ function MusicPlayer() {
         songName.classList.remove('songNameMarqueeActived');
         songName.style.transform = 'transformX("0px")';
     };
+    // Handle click outside Add To Playlist Box
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (addToPlaylistBoxRef.current && !addToPlaylistBoxRef.current.contains(event.target)) {
+                setIsOpenAddToPlaylistBox(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
 
     return (
         <Fragment>
@@ -300,13 +341,14 @@ function MusicPlayer() {
                             {/* Button Add To Playlist */}
                             <div className="btnLikeSongContainer">
                                 <button
+                                    type="button"
                                     className={`btnLikeSong ${
                                         !playlist?.length || playlist?.length < 1 ? 'btnDisabled' : ''
                                     }`}
                                     disabled={!playlist?.length || playlist?.length < 1 ? true : false}
-                                    // onClick={() => {
-                                    //     handleLikeSong();
-                                    // }}
+                                    onClick={() => {
+                                        setIsOpenAddToPlaylistBox(true);
+                                    }}
                                     style={{
                                         borderRadius: '25px',
                                         gap: '3px',
@@ -328,6 +370,7 @@ function MusicPlayer() {
                             {/* Button Share Song */}
                             <div className="btnLikeSongContainer">
                                 <button
+                                    type="button"
                                     className={`btnLikeSong ${
                                         !playlist?.length || playlist?.length < 1 ? 'btnDisabled' : ''
                                     }`}
@@ -358,6 +401,74 @@ function MusicPlayer() {
                     {/* Playlist */}
                     {typeMusicPlayer?.type === 'playlist' && (
                         <Playlist data={typeMusicPlayer} currentIndex={currentIndex} type={'musicPlayer'} />
+                    )}
+                    {/* Add To Playlist Box */}
+                    {isOpenAddToPlaylistBox && (
+                        <div className="addToPlaylistBox">
+                            <div ref={addToPlaylistBoxRef} className="addToPlaylist">
+                                {/* Title */}
+                                <div className="title">
+                                    <span>Lưu nhạc vào...</span>
+                                    <button
+                                        type="button"
+                                        className="btnClose"
+                                        onClick={() => {
+                                            setIsOpenAddToPlaylistBox(false);
+                                        }}
+                                    >
+                                        <IoClose />
+                                    </button>
+                                </div>
+                                {/* List Playlist */}
+                                <div className="listPlaylist">
+                                    {/* Render list playlist */}
+                                    {listPlaylistData?.length > 0 ? (
+                                        <>
+                                            {listPlaylistData?.map((playlist) => (
+                                                <div className="playlistCard">
+                                                    <PlaylistCard
+                                                        key={playlist?.playlistId}
+                                                        playlistData={playlist}
+                                                        typePlaylistCard={'atAddToPlaylistBox'}
+                                                    />
+                                                </div>
+                                            ))}
+                                        </>
+                                    ) : (
+                                        <>
+                                            <div
+                                                style={{
+                                                    width: '100%',
+                                                    height: 'max-content',
+                                                    display: 'flex',
+                                                    justifyContent: 'center',
+                                                    alignItems: 'center',
+                                                    padding: '8px',
+                                                    paddingTop: '150px',
+                                                }}
+                                            >
+                                                <IoSyncSharp
+                                                    className="loadingAnimation"
+                                                    style={{ color: 'white', width: '16px', height: '16px' }}
+                                                />
+                                            </div>
+                                        </>
+                                    )}
+                                </div>
+                                {/* Button Create Playlist */}
+                                <div className="btnCreatePlaylistContainer">
+                                    <button
+                                        type="button"
+                                        className="btnCreatePlaylist"
+                                        onClick={() => {
+                                            navigate(`/playlist/create`);
+                                        }}
+                                    >
+                                        <IoAdd /> Danh sách phát mới
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     )}
                 </div>
                 {/* bottom */}

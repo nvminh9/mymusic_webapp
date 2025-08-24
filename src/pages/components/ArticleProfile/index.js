@@ -100,13 +100,14 @@ function ArticleProfile({ article, user, type }) {
                                                         process.env.REACT_APP_BACKEND_URL +
                                                         article?.mediaContent?.[0]?.videoLink
                                                     }
+                                                    playsInline
                                                     muted
                                                     loop
                                                     onMouseOver={(e) => {
                                                         e?.target?.play();
                                                     }}
                                                     onMouseOut={(e) => {
-                                                        e?.target?.pause();
+                                                        e?.target?.play() && e?.target?.pause();
                                                     }}
                                                     alt="thumbnail"
                                                 />
