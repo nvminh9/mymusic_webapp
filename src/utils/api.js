@@ -352,6 +352,12 @@ const getSearchHistoryDataApi = (page, limit) => {
     return axios.get(URL_API);
 };
 
+// API Xóa một lịch sử tìm kiếm (DELETE)
+const deleteSearchHistoryApi = (searchHistoryId) => {
+    const URL_API = `/v1/api/search/history/${searchHistoryId}`;
+    return axios.delete(URL_API);
+};
+
 export {
     signUpApi,
     signInApi,
@@ -409,4 +415,5 @@ export {
     getSearchResultDataApi,
     getSearchAutocompleteApi,
     getSearchHistoryDataApi,
+    deleteSearchHistoryApi,
 };

@@ -205,7 +205,9 @@ function PlaylistCard({ playlistData, typePlaylistCard }) {
                         type="button"
                         className="btnPlaylist"
                         onClick={() => {
-                            navigate(`/playlist/${playlistData?.playlistId}`);
+                            if (location.pathname.split('/')[2] !== playlistData?.playlistId) {
+                                navigate(`/playlist/${playlistData?.playlistId}`);
+                            }
                         }}
                     >
                         <div className="coverImage">

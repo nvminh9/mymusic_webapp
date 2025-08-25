@@ -3505,7 +3505,7 @@ body {
     height: 91%;
     background-color: rgba(18, 18, 18, 0.8);
     backdrop-filter: blur(3px);
-    z-index: 5;
+    z-index: 20;
     display: flex;
     justify-content: center;
 
@@ -8498,21 +8498,33 @@ body {
                 border-radius: 11px;
                 user-select: none;
             }
-            .btnDeleteSearchHistory {
-                background-color: transparent;
-                border-radius: 7px;
-                cursor: pointer;
-                transition: ease-out 0.2s;
-            }
-            .btnDeleteSearchHistory:hover {
-                background-color: #d63031;
-            }
-            .btnDeleteSearchHistory:active {
-                background-color: #d63031aa;
-            }
         }
         .searchHistoryItem:hover {
             background-color: #171717;
+        }
+        .btnDeleteSearchHistory {
+            display: flex;
+            align-items: center;
+            justify-content: left;
+            width: fit-content;
+            font-family: system-ui;
+            font-size: 14px;
+            font-weight: 500;
+            color: #777;
+            padding: 5px;
+            background-color: transparent;
+            backdrop-filter: blur(3px);
+            border-radius: 7px;
+            cursor: pointer;
+            transition: ease-out 0.2s;
+            user-select: none;
+        }
+        .btnDeleteSearchHistory:hover {
+            background-color: #d63031;
+            color: #ffffff;
+        }
+        .btnDeleteSearchHistory:active {
+            background-color: #d63031aa;
         }
     }
 }

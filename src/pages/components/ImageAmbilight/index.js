@@ -70,6 +70,7 @@ const ImageAmbilight = ({ imageSrc, style }) => {
                         style={{
                             ...style,
                         }}
+                        draggable="false"
                     />
                     <img
                         id="imageAmbilight"
@@ -77,6 +78,7 @@ const ImageAmbilight = ({ imageSrc, style }) => {
                         style={{
                             ...style,
                         }}
+                        draggable="false"
                     />
                 </div>
                 <canvas id="ambilight" ref={canvasRef} />

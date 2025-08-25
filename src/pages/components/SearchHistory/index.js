@@ -1,8 +1,8 @@
-import { useInfiniteQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import { IoCloseOutline, IoSyncSharp, IoTimeOutline } from 'react-icons/io5';
 import { useInView } from 'react-intersection-observer';
 import { useSearchParams } from 'react-router-dom';
-import { getSearchHistoryDataApi } from '~/utils/api';
+import { deleteSearchHistoryApi, getSearchHistoryDataApi } from '~/utils/api';
 
 const LIMIT = 10;
 
@@ -15,6 +15,9 @@ function SearchHistory() {
 
     // Navigation
     const [searchParams, setSearchParams] = useSearchParams();
+
+    // React Query
+    const queryClient = useQueryClient();
 
     // --- HANDLE FUNCTION ---
     // Handle Get Search History Data (useInfinityQuery)
@@ -78,6 +81,23 @@ function SearchHistory() {
 
         return `${day} Tháng ${month}, ${year} lúc ${hours}:${minutes}`;
     };
+    // Handle button delete search history
+    const handleBtnDeleteSearchHistory = async (searchHistoryId) => {
+        try {
+            // Call API Delete Search History
+            const res = await deleteSearchHistoryApi(searchHistoryId);
+            // Kiểm tra
+            if (res?.status === 200 && res?.message === 'Xóa lịch sử tìm kiếm thành công') {
+                // Cập nhật data query key 'searchHistory'
+                queryClient.invalidateQueries(['searchHistory', searchHistoryId]);
+            } else {
+                console.log('Xóa lịch sử tìm kiếm không thành công');
+            }
+        } catch (error) {
+            console.log('Error Delete One Search History: ', error);
+            return;
+        }
+    };
 
     return (
         <>
@@ -94,30 +114,55 @@ function SearchHistory() {
                                 {data?.pages.map((page) =>
                                     page.data.map((item) => (
                                         <div
-                                            key={item.searchHistoryId}
-                                            className="searchHistoryItem"
-                                            onClick={() => {
-                                                // Set Search Params
-                                                setSearchParams((prev) => ({ ...prev, q: item.keyword }));
+                                            className=""
+                                            style={{
+                                                position: 'relative',
                                             }}
                                         >
-                                            <span>
-                                                <IoTimeOutline /> {item.keyword}
-                                            </span>
                                             <div
+                                                key={item.searchHistoryId}
+                                                className="searchHistoryItem"
+                                                onClick={() => {
+                                                    // Set Search Params
+                                                    setSearchParams((prev) => ({ ...prev, q: item.keyword }));
+                                                }}
+                                            >
+                                                <span>
+                                                    <IoTimeOutline /> {item.keyword}
+                                                </span>
+                                                <div
+                                                    style={{
+                                                        position: 'absolute',
+                                                        right: '5px',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        gap: '5px',
+                                                    }}
+                                                >
+                                                    <span className="searchedAt">{timeAgo(item.searchedAt)}</span>
+                                                    <span
+                                                        className="searchedAt btnDeleteSearchHistory"
+                                                        style={{ opacity: 0 }}
+                                                    >
+                                                        <IoCloseOutline />
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            {/* Button Delete Search History */}
+                                            <span
+                                                className="searchedAt btnDeleteSearchHistory"
                                                 style={{
                                                     position: 'absolute',
                                                     right: '5px',
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    gap: '5px',
+                                                    top: '7.3px',
+                                                    zIndex: '5',
+                                                }}
+                                                onClick={() => {
+                                                    handleBtnDeleteSearchHistory(item?.searchHistoryId);
                                                 }}
                                             >
-                                                <span className="searchedAt">{timeAgo(item.searchedAt)}</span>
-                                                <span className="searchedAt btnDeleteSearchHistory">
-                                                    <IoCloseOutline />
-                                                </span>
-                                            </div>
+                                                <IoCloseOutline />
+                                            </span>
                                         </div>
                                     )),
                                 )}
