@@ -393,6 +393,39 @@ function MusicCard({
         );
     }
 
+    // Trong Next Song Recommend
+    if (typeMusicCard === 'atNextSongRecommend') {
+        return (
+            <>
+                <button
+                    className="btnPlaylist"
+                    type="button"
+                    onClick={() => {
+                        handlePlay();
+                    }}
+                >
+                    <span className="music">
+                        <div className="songImageContainer">
+                            <img
+                                src={
+                                    songData?.songImage
+                                        ? process.env.REACT_APP_BACKEND_URL + songData?.songImage
+                                        : noContentImage
+                                }
+                                draggable="false"
+                            />
+                        </div>
+                        <div className="info">
+                            <span className="name">{songData?.name}</span>
+                            <span className="quantity">{songData?.User?.userName}</span>
+                        </div>
+                    </span>
+                    <span className="time">{songData?.duration ? songData?.duration : 'null'}</span>
+                </button>
+            </>
+        );
+    }
+
     return <></>;
 }
 

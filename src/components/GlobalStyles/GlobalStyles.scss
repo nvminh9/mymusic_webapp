@@ -1111,7 +1111,7 @@ body {
         overflow-x: hidden;
         overflow-y: auto;
         padding-bottom: 67px;
-        position: relative;
+        // position: relative;
         scrollbar-width: none;
         scroll-behavior: smooth;
 
@@ -1416,7 +1416,8 @@ body {
                     font-size: 12px;
                     font-weight: 500;
                     color: #ffffff;
-                    background-color: #1f1f1fd5;
+                    // background-color: #1f1f1fd5;
+                    background-color: #171717;
                     border: none;
                     border-radius: 25px;
                     padding: 7px 12px;
@@ -1444,7 +1445,8 @@ body {
                     }
                 }
                 .title:hover {
-                    background-color: #171717;
+                    // background-color: #171717;
+                    background-color: #1f1f1fd5;
                 }
                 // Main
                 .main {
@@ -1763,6 +1765,135 @@ body {
                     .btnCreatePlaylist:active {
                         transform: scale(1);
                     }
+                }
+            }
+        }
+        // Next Song Recommend
+        .nextSongRecommendContainer {
+            background-color: transparent;
+            width: 100%;
+            height: fit-content;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 5px;
+            .nextSongRecommend {
+                // background-color: #1f1f1fd5;
+                background-color: #171717;
+                width: 300px;
+                padding: 5px;
+                border: 0.5px solid #1f1f1f;
+                border-radius: 25px;
+                .title {
+                    display: block;
+                    font-family: system-ui;
+                    font-size: 13px;
+                    font-weight: 500;
+                    color: #ffffff;
+                    padding: 2px 10px;
+                }
+                // Music Card
+                .btnPlaylist {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    gap: 5px;
+                    border: none;
+                    border-radius: 20px;
+                    background-color: transparent;
+                    width: 100%;
+                    padding: 8px 10px;
+                    margin: 0;
+                    transition: ease-out 0.2s;
+                    cursor: pointer;
+                    span {
+                        display: flex;
+                        align-items: center;
+                        font-family: system-ui;
+                        font-size: 13px;
+                        font-weight: 500;
+                        color: #ffffffa3;
+                    }
+                    .number {
+                        width: 9%;
+                        justify-content: left;
+                        position: relative;
+                        .numberIcon {
+                            font-size: 14px;
+                            font-weight: 500;
+                        }
+                        .playIcon {
+                            color: #ffffff;
+                            position: absolute;
+                            left: 0;
+                            top: 0;
+                            bottom: 0;
+                            opacity: 0;
+                        }
+                    }
+                    .music {
+                        width: 82%;
+                        display: flex;
+                        align-items: center;
+                        overflow-y: hidden;
+                        overflow-x: auto;
+                        scrollbar-width: none;
+                        scroll-behavior: smooth;
+                        gap: 8px;
+                        .songImageContainer {
+                            height: 45px;
+                            width: 45px;
+                        }
+                        img {
+                            height: 45px;
+                            width: 45px;
+                            outline: rgba(135, 135, 135, 0.15) solid 1px;
+                            outline-offset: -1px;
+                            border-radius: 5px;
+                            object-fit: cover;
+                            object-position: center;
+                            cursor: pointer;
+                            // box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+                        }
+                        .info {
+                            .name {
+                                color: #ffffff;
+                                display: -webkit-box;
+                                -webkit-box-orient: vertical;
+                                -webkit-line-clamp: 1;
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                                text-align: left;
+                            }
+                            .quantity {
+                                color: #777777aa;
+                                font-size: 12px;
+                                font-weight: 500;
+                                display: -webkit-box;
+                                -webkit-box-orient: vertical;
+                                -webkit-line-clamp: 1;
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                                text-align: left;
+                            }
+                        }
+                    }
+                    .time {
+                        width: 9%;
+                        justify-content: right;
+                        color: #777777aa;
+                        font-size: 12px;
+                        font-weight: 500;
+                    }
+                }
+                .btnPlaylist:hover {
+                    background-color: #1f1f1fd5;
+                }
+                .btnPlaylist:hover .number .numberIcon {
+                    opacity: 0;
+                }
+                .btnPlaylist:hover .number .playIcon {
+                    opacity: 1;
                 }
             }
         }

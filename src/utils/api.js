@@ -261,6 +261,12 @@ const unLikeSongApi = (songId) => {
     return axios.patch(URL_API);
 };
 
+// API Lấy đề xuất bài nhạc tiếp theo (GET)
+const getNextSongRecommendApi = (songId, userId) => {
+    const URL_API = `/v1/api/music/recommend/next?songId=${songId}&userId=${userId}`;
+    return axios.get(URL_API);
+};
+
 // API Lấy dữ liệu của các bài nhạc của user đăng (GET)
 const getUserSongsDataApi = (userId) => {
     const URL_API = `/v1/api/music/${userId}`;
@@ -400,6 +406,7 @@ export {
     getSongDataApi,
     createLikeSongApi,
     unLikeSongApi,
+    getNextSongRecommendApi,
     getUserSongsDataApi,
     createPlaylistApi,
     updatePlaylistApi,

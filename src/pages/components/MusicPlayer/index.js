@@ -36,6 +36,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { getListPlaylistOfUserDataApi } from '~/utils/api';
 import { AuthContext } from '~/context/auth.context';
 import PlaylistCard from '../PlaylistCard';
+import NextSongRecommend from '../NextSongRecommend';
 
 function MusicPlayer() {
     // State
@@ -402,6 +403,8 @@ function MusicPlayer() {
                     {typeMusicPlayer?.type === 'playlist' && (
                         <Playlist data={typeMusicPlayer} currentIndex={currentIndex} type={'musicPlayer'} />
                     )}
+                    {/* Next Song Recommend */}
+                    {typeMusicPlayer?.type === 'song' && <NextSongRecommend />}
                     {/* Add To Playlist Box */}
                     {isOpenAddToPlaylistBox && (
                         <div className="addToPlaylistBox">
@@ -461,7 +464,14 @@ function MusicPlayer() {
                                         type="button"
                                         className="btnCreatePlaylist"
                                         onClick={() => {
-                                            navigate(`/playlist/create`);
+                                            if (
+                                                location.pathname.split('/')[1] +
+                                                    '/' +
+                                                    location.pathname.split('/')[2] !==
+                                                'playlist/create'
+                                            ) {
+                                                navigate(`/playlist/create`);
+                                            }
                                         }}
                                     >
                                         <IoAdd /> Danh sách phát mới

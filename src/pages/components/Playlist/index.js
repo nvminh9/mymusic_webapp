@@ -43,6 +43,9 @@ function Playlist({ data, currentIndex, type }) {
                         onClick={() => {
                             handleOpenPlaylist();
                         }}
+                        style={{
+                            backgroundColor: isOpenPlaylist ? '#1f1f1fd5' : '',
+                        }}
                     >
                         <div style={{ marginTop: '4px' }}>
                             <CgPlayList />
