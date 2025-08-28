@@ -1,4 +1,4 @@
-import { Fragment, useContext, useEffect, useState } from 'react';
+import { Fragment, useContext, useEffect, useRef, useState } from 'react';
 import { IoChevronDownSharp, IoCloseSharp, IoPersonOutline, IoSyncSharp } from 'react-icons/io5';
 import { useLocation, useNavigate } from 'react-router-dom';
 import defaultAvatar from '~/assets/images/avatarDefault.jpg';
@@ -15,6 +15,7 @@ function ListFollower() {
     const { auth } = useContext(AuthContext);
 
     // Ref
+    const listFollowerRef = useRef(null);
 
     // Chuyển Tab
     const location = useLocation();
@@ -124,6 +125,18 @@ function ListFollower() {
         };
         getFollowers();
     }, []);
+    // Handle click outside
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (listFollowerRef.current && !listFollowerRef.current.contains(event.target)) {
+                // setIsOpenShareArticleBox(false);
+                navigate(-1);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
 
     return (
         <Fragment>
@@ -135,6 +148,7 @@ function ListFollower() {
                 }}
             >
                 <div
+                    ref={listFollowerRef}
                     className="settingMenu"
                     style={{
                         width: '350px',
@@ -165,7 +179,15 @@ function ListFollower() {
                             <IoCloseSharp />
                         </button>
                     </span>
-                    <input className="searchInput" type="search" placeholder="Tìm kiếm ..." name="search" id="search" />
+                    <input
+                        className="searchInput"
+                        type="search"
+                        placeholder="Tìm kiếm..."
+                        name="search"
+                        id="search"
+                        autoComplete="off"
+                        spellCheck="false"
+                    />
                     {/* Danh sách người theo dõi */}
                     <div
                         className="listFollowerContainer"

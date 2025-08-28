@@ -199,6 +199,17 @@ function ShareArticleButton({ articleData }) {
                 }
             });
     };
+    // Handle click outside
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (shareArticleBoxRef.current && !shareArticleBoxRef.current.contains(event.target)) {
+                setIsOpenShareArticleBox(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
 
     return (
         <>
@@ -321,7 +332,7 @@ function ShareArticleButton({ articleData }) {
                                                             style={{
                                                                 background: 'transparent',
                                                                 // background: 'rgb(18 18 18 / 40%)',
-                                                                borderRadius: '5px',
+                                                                borderRadius: '2px',
                                                                 border: '.5px solid transparent',
                                                                 fontFamily: "'Funnel Sans', sans-serif",
                                                                 maxWidth: 'max-content',
@@ -332,6 +343,9 @@ function ShareArticleButton({ articleData }) {
                                                                 padding: '0px 0px 8px 0px',
                                                                 marginBottom: '8px',
                                                                 marginTop: '5px',
+                                                            }}
+                                                            onFocus={(e) => {
+                                                                e.target.style.outline = 'none';
                                                             }}
                                                         />
                                                         {/* Validate Error Text Content */}

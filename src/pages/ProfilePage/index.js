@@ -32,6 +32,8 @@ function ProfilePage() {
 
     // Ref
     const followersTotal = useRef();
+    const createMenuRef = useRef(null);
+    const followingSettingRef = useRef(null);
 
     // Chuyển Tab
     const location = useLocation();
@@ -196,7 +198,7 @@ function ProfilePage() {
                     setProfileInfo(res?.data);
                     // console.log('Check: ', typeof profileInfo.followStatus);
                     // Set document title
-                    document.title = `${res?.data?.user?.name} (${res?.data?.user?.userName}) | mymusic: Music from everyone`;
+                    document.title = `${res?.data?.user?.name} (${res?.data?.user?.userName})`;
                 } else if (res?.status === 404) {
                     // console.log('Lấy thông tin profile thất bại !');
                     setProfileInfo({
@@ -210,8 +212,24 @@ function ProfilePage() {
         };
         getUserProfileInfo(userName);
     }, [location.pathname.split('/')[2]]);
+    // Handle Click Outside
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            // Click outside create menu
+            if (createMenuRef.current && !createMenuRef.current.contains(event.target)) {
+                setIsOpenCreateMenu(false);
+            }
+            // Click outside follow setting
+            if (followingSettingRef.current && !followingSettingRef.current.contains(event.target)) {
+                setIsOpenFollowSetting(false);
+            }
+        };
 
-    console.log(auth);
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
+    // console.log(auth);
 
     return (
         <Fragment>
@@ -246,7 +264,7 @@ function ProfilePage() {
             {/* Menu Follow Setting */}
             {isOpenFollowSetting === true && location.pathname.split('/')[2] === profileInfo?.user?.userName ? (
                 <div className="settingMenuContainer">
-                    <div className="settingMenu">
+                    <div ref={followingSettingRef} className="settingMenu">
                         <span
                             className="title"
                             style={{
@@ -299,7 +317,7 @@ function ProfilePage() {
             {/* Menu Tạo bài viết / nhạc */}
             {isOpenCreateMenu === true && auth?.user?.userName === location.pathname.split('/')[2] ? (
                 <div className="settingMenuContainer">
-                    <div className="settingMenu">
+                    <div ref={createMenuRef} className="settingMenu">
                         <span className="title" style={{ position: 'relative' }}>
                             <span>Tạo</span>
                             {/* Nút thoát */}
@@ -440,10 +458,7 @@ function ProfilePage() {
                                                                 setIsOpenCreateMenu(true);
                                                             }}
                                                         >
-                                                            Tạo{' '}
-                                                            <IoAddSharp
-                                                                style={{ marginLeft: '5px', marginBottom: '1px' }}
-                                                            />
+                                                            Tạo <IoAddSharp style={{ marginLeft: '5px' }} />
                                                         </button>
                                                     </>
                                                 ) : (

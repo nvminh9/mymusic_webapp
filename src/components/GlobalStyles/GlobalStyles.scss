@@ -1791,6 +1791,7 @@ body {
                     font-weight: 500;
                     color: #ffffff;
                     padding: 2px 10px;
+                    padding-top: 3px;
                 }
                 // Music Card
                 .btnPlaylist {
@@ -3646,16 +3647,19 @@ body {
         background-color: #2e2e2e;
         height: fit-content;
         width: 300px;
-        border-radius: 5px;
+        // border-radius: 5px;
+        border-radius: 20px;
 
         .title {
             display: block;
             text-align: center;
             padding: 10px 0px;
             color: white;
+            font-family: system-ui;
             font-size: 15px;
-            font-weight: 400;
-            border-bottom: 0.5px solid #777;
+            font-weight: 500;
+            // border-bottom: 0.5px solid #777;
+            border-bottom: 0.5px solid rgba(255, 255, 255, 0.1490196078);
         }
 
         button {
@@ -3664,12 +3668,13 @@ body {
             font-family: sans-serif;
             color: white;
             border: 0.2px solid transparent;
+            // border-radius: 5px;
+            border-radius: 20px;
             font-size: 15px;
             font-weight: 400;
             cursor: pointer;
             padding: 10px 0px;
             // transition: ease-out 0.2s;
-            border-radius: 5px;
             margin: 5px;
         }
         button:hover {
@@ -3689,10 +3694,16 @@ body {
         .searchInput {
             margin: 10px;
             padding: 7px 10px;
-            border-radius: 5px;
+            border-radius: 15px;
             border: 0.5px solid transparent;
             background-color: #1f1f1f;
+            font-family: system-ui;
+            font-size: 14px;
+            font-weight: 500;
             color: white;
+        }
+        .searchInput:focus {
+            outline: none;
         }
 
         // listFollowerContainer
@@ -3722,8 +3733,9 @@ body {
                     }
 
                     .userName {
+                        font-family: system-ui;
                         font-size: 15px;
-                        font-weight: 400;
+                        font-weight: 500;
                         color: white;
                         margin: 0px 10px;
                         cursor: pointer;
@@ -3742,8 +3754,9 @@ body {
                         align-items: center;
                         justify-content: center;
                         border: none;
-                        border-radius: 8px;
+                        border-radius: 15px;
                         padding: 8px 15px;
+                        font-family: system-ui;
                         font-size: 14px;
                         font-weight: 500;
                         background-color: #ffffff;
@@ -3765,8 +3778,9 @@ body {
                         align-items: center;
                         justify-content: center;
                         border: none;
-                        border-radius: 8px;
+                        border-radius: 15px;
                         padding: 8px 15px;
+                        font-family: system-ui;
                         font-size: 14px;
                         font-weight: 500;
                         background-color: #1f1f1f;
@@ -3809,6 +3823,7 @@ body {
 
         span {
             color: #ffffff;
+            font-family: system-ui;
             font-size: 16px;
             font-weight: 500;
         }
@@ -3922,8 +3937,9 @@ body {
 
                     .userName {
                         color: #ffffff;
+                        font-family: system-ui;
                         font-size: 20px;
-                        font-weight: 300;
+                        font-weight: 400;
                         margin-right: 20px;
                     }
                     // Box chứa các button kế bên tên user
@@ -3933,9 +3949,14 @@ body {
                     }
                     // Nút theo dõi
                     .btnFollow {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
                         border: none;
-                        border-radius: 8px;
+                        // border-radius: 8px;
+                        border-radius: 15px;
                         padding: 8px 15px;
+                        font-family: system-ui;
                         font-size: 14px;
                         font-weight: 500;
                         background-color: #ffffff;
@@ -3958,8 +3979,10 @@ body {
                         align-items: center;
                         justify-content: center;
                         border: none;
-                        border-radius: 8px;
+                        // border-radius: 8px;
+                        border-radius: 15px;
                         padding: 8px 15px;
+                        font-family: system-ui;
                         font-size: 14px;
                         font-weight: 500;
                         background-color: #1f1f1f;
@@ -3978,9 +4001,14 @@ body {
                     }
                     // Nút nhắn tin
                     .btnMessage {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
                         border: none;
-                        border-radius: 8px;
+                        // border-radius: 8px;
+                        border-radius: 15px;
                         padding: 8px 15px;
+                        font-family: system-ui;
                         font-size: 14px;
                         font-weight: 500;
                         background-color: #1f1f1f;
@@ -3999,9 +4027,14 @@ body {
                     }
                     // Nút Tạo
                     .btnCreate {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
                         border: none;
-                        border-radius: 8px;
+                        // border-radius: 8px;
+                        border-radius: 15px;
                         padding: 8px 15px;
+                        font-family: system-ui;
                         font-size: 14px;
                         font-weight: 500;
                         background-color: #1f1f1f;
@@ -4009,9 +4042,6 @@ body {
                         cursor: pointer;
                         transition: ease-out 0.2s;
                         margin-right: 10px;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
                     }
                     .btnCreate:hover {
                         background-color: #2e2e2e;
@@ -4027,9 +4057,11 @@ body {
                         border: none;
                         color: #ffffff;
                         padding: 5px;
-                        border-radius: 8px;
+                        // border-radius: 8px;
+                        border-radius: 15px;
                         cursor: pointer;
                         transition: ease-out 0.2s;
+                        font-family: system-ui;
                         font-size: 16px;
                         font-weight: 500;
                         display: flex;
@@ -4053,22 +4085,26 @@ body {
                     justify-content: space-between;
                     width: 100%;
                     padding: 10px 0px;
+                    user-select: none;
 
                     .articles {
                         color: #ffffff;
+                        font-family: system-ui;
                         font-size: 15.5px;
-                        font-weight: 300;
+                        font-weight: 500;
                     }
                     .followers {
                         color: #ffffff;
+                        font-family: system-ui;
                         font-size: 15.5px;
-                        font-weight: 300;
+                        font-weight: 500;
                         cursor: pointer;
                     }
                     .following {
                         color: #ffffff;
+                        font-family: system-ui;
                         font-size: 15.5px;
-                        font-weight: 300;
+                        font-weight: 500;
                         cursor: pointer;
                     }
                 }
@@ -4076,8 +4112,9 @@ body {
                 .userDescription {
                     p {
                         color: #ffffff;
+                        font-family: system-ui;
                         font-size: 14px;
-                        font-weight: 300;
+                        font-weight: 400;
                         margin: 0;
                         padding: 20px 0px;
                     }
@@ -4117,6 +4154,7 @@ body {
                 justify-content: center;
                 text-decoration: none;
                 color: #ffffff;
+                font-family: system-ui;
                 padding: 15px 20px;
                 transition: ease-out 0.2s;
                 width: 50%;
@@ -4135,6 +4173,7 @@ body {
                 justify-content: center;
                 text-decoration: none;
                 color: #ffffff;
+                font-family: system-ui;
                 padding: 15px 20px;
                 transition: ease-out 0.2s;
                 width: 50%;
@@ -4341,7 +4380,7 @@ body {
                                     background: #1f1f1f;
                                     color: #fff;
                                     cursor: pointer;
-                                    border-radius: 3px;
+                                    border-radius: 15px;
                                     border: 0.5px solid transparent;
                                     font-family: 'Funnel Sans', sans-serif;
                                     padding: 1px;
@@ -6193,6 +6232,7 @@ body {
     .row {
         margin: 0px;
         margin-right: -4px;
+        padding: 4px;
 
         .col {
             height: 302.39px;
@@ -6211,6 +6251,7 @@ body {
                     height: 100%;
                     object-fit: cover;
                     object-position: center center;
+                    border-radius: 10px;
                 }
 
                 video {
@@ -6218,6 +6259,7 @@ body {
                     height: 100%;
                     object-fit: cover;
                     object-position: center center;
+                    border-radius: 10px;
                 }
 
                 .textContent {
@@ -6232,21 +6274,24 @@ body {
                     text-overflow: ellipsis;
                     color: #ffffff;
                     // font-family: sans-serif;
+                    font-family: system-ui;
                     font-size: 15px;
-                    font-weight: 300;
+                    font-weight: 400;
                 }
 
                 .thumbnailHover {
                     display: flex;
                     align-items: center;
                     position: absolute;
-                    bottom: 0px;
+                    bottom: 6px;
+                    left: 6px;
                     z-index: 0;
-                    left: 0;
                     background-color: rgba(18, 18, 18, 0.8);
                     backdrop-filter: blur(15px);
+                    border-radius: 10px;
                     padding: 5px;
                     color: #ffffff;
+                    font-family: system-ui;
                     font-size: 14px;
                     opacity: 0;
                     transition: ease-out 0.2s;
@@ -6254,9 +6299,11 @@ body {
                     .likes {
                         margin: 0px 5px;
                         margin-right: 15px;
+                        margin-bottom: 1px;
                     }
                     .comments {
                         margin: 0px 5px;
+                        margin-bottom: 1px;
                     }
                 }
             }
@@ -6336,6 +6383,7 @@ body {
 
                         .userName {
                             color: #ffffff;
+                            font-family: system-ui;
                             font-size: 15px;
                             font-weight: 500;
                             height: 100%;
@@ -6377,7 +6425,8 @@ body {
                             justify-content: center;
                             background-color: transparent;
                             border: 0.5px solid transparent;
-                            border-radius: 5px;
+                            // border-radius: 5px;
+                            border-radius: 10px;
                             color: rgba(119, 119, 119, 0.6666666667);
                             cursor: pointer;
                             transition: ease-out 0.2s;
@@ -6397,7 +6446,8 @@ body {
                             position: absolute;
                             background-color: #121212;
                             border: 0.5px solid #1f1f1f;
-                            border-radius: 5px;
+                            // border-radius: 5px;
+                            border-radius: 15px;
                             padding: 8px;
                             right: 3%;
                             top: 25px;
@@ -6413,7 +6463,8 @@ body {
                                 gap: 20px;
                                 background-color: transparent;
                                 border: none;
-                                border-radius: 5px;
+                                // border-radius: 5px;
+                                border-radius: 10px;
                                 padding: 8px 10px;
                                 cursor: pointer;
                                 font-size: 13px;
@@ -6485,7 +6536,8 @@ body {
                                         object-position: center center;
                                         outline: 1px solid rgba(243, 245, 247, 0.15);
                                         outline-offset: -1px;
-                                        border-radius: 5px;
+                                        // border-radius: 5px;
+                                        border-radius: 20px;
                                     }
                                     // Video
                                     video {
@@ -6495,7 +6547,8 @@ body {
                                         object-position: center center;
                                         outline: 1px solid rgba(243, 245, 247, 0.15);
                                         outline-offset: -1px;
-                                        border-radius: 5px;
+                                        // border-radius: 5px;
+                                        border-radius: 20px;
                                     }
                                 }
                                 // Nút điều khiển Carousel Media
@@ -6590,7 +6643,7 @@ body {
                             justify-content: center;
                             background-color: transparent;
                             border: none;
-                            border-radius: 5px;
+                            border-radius: 25px;
                             padding: 10px;
                             padding-top: 9px;
                             cursor: pointer;
@@ -6668,7 +6721,7 @@ body {
                             // Input bình luận
                             .inputComment {
                                 background: transparent;
-                                border-radius: 5px;
+                                border-radius: 15px;
                                 border: 0.5px solid transparent;
                                 // font-family: 'Funnel Sans', sans-serif;
                                 font-family: 'system-ui';
@@ -6678,8 +6731,12 @@ body {
                                 min-width: max-content;
                                 height: max-content;
                                 min-height: max-content;
+                                max-height: max-content;
                                 color: white;
                                 padding: 8px 5px;
+                            }
+                            .inputComment:focus {
+                                outline: none;
                             }
                             // Nút gửi
                             .btnPostComment {
@@ -6688,7 +6745,7 @@ body {
                                 align-items: center;
                                 justify-content: center;
                                 border: none;
-                                border-radius: 5px;
+                                border-radius: 15px;
                                 background-color: transparent;
                                 color: white;
                                 transition: ease-out 0.2s;
@@ -6757,9 +6814,9 @@ body {
                 .title {
                     display: block;
                     color: #ffffff;
+                    font-family: system-ui;
                     font-size: 14px;
-                    font-weight: 400;
-                    // font-family: sans-serif;
+                    font-weight: 500;
                     margin-bottom: 10px;
                 }
                 .btnBox {
@@ -6785,13 +6842,13 @@ body {
                         background-color: #000;
                     }
                     .btnDelete {
-                        border-radius: 5px 0px 0px 5px;
+                        border-radius: 10px 0px 0px 10px;
                     }
                     .btnDelete:active {
                         background-color: red;
                     }
                     .btnCancel {
-                        border-radius: 0px 5px 5px 0px;
+                        border-radius: 0px 10px 10px 0px;
                     }
                 }
             }
@@ -6927,6 +6984,7 @@ body {
                         // Tên người dùng
                         .userName {
                             color: #ffffff;
+                            font-family: system-ui;
                             font-size: 15px;
                             font-weight: 500;
                             height: 100%;
@@ -7041,7 +7099,8 @@ body {
                             justify-content: center;
                             background-color: transparent;
                             border: 0.5px solid transparent;
-                            border-radius: 5px;
+                            // border-radius: 5px;
+                            border-radius: 10px;
                             color: rgba(119, 119, 119, 0.6666666667);
                             cursor: pointer;
                             transition: ease-out 0.2s;
@@ -7061,7 +7120,8 @@ body {
                             position: absolute;
                             background-color: #121212;
                             border: 0.5px solid #1f1f1f;
-                            border-radius: 5px;
+                            // border-radius: 5px;
+                            border-radius: 15px;
                             padding: 8px;
                             right: 40%;
                             top: 25px;
@@ -7076,7 +7136,8 @@ body {
                                 gap: 20px;
                                 background-color: transparent;
                                 border: none;
-                                border-radius: 5px;
+                                // border-radius: 5px;
+                                border-radius: 10px;
                                 padding: 8px 10px;
                                 cursor: pointer;
                                 font-size: 13px;
@@ -7244,7 +7305,8 @@ body {
                             justify-content: center;
                             background-color: transparent;
                             border: none;
-                            border-radius: 5px;
+                            // border-radius: 5px;
+                            border-radius: 25px;
                             padding: 10px;
                             padding-top: 9px;
                             cursor: pointer;
@@ -7299,7 +7361,8 @@ body {
                 // Input bình luận
                 .inputComment {
                     background: transparent;
-                    border-radius: 5px;
+                    // border-radius: 5px;
+                    border-radius: 15px;
                     border: 0.5px solid transparent;
                     // font-family: 'Funnel Sans', sans-serif;
                     font-family: 'system-ui';
@@ -7309,8 +7372,12 @@ body {
                     min-width: max-content;
                     height: max-content;
                     min-height: max-content;
+                    max-height: max-content;
                     color: white;
                     padding: 8px 5px;
+                }
+                .inputComment:focus {
+                    outline: none;
                 }
                 // Nút gửi
                 .btnPostComment {
@@ -7319,7 +7386,8 @@ body {
                     align-items: center;
                     justify-content: center;
                     border: none;
-                    border-radius: 5px;
+                    // border-radius: 5px;
+                    border-radius: 15px;
                     background-color: transparent;
                     color: white;
                     transition: ease-out 0.2s;
@@ -7354,9 +7422,9 @@ body {
                 .title {
                     display: block;
                     color: #ffffff;
+                    font-family: system-ui;
                     font-size: 14px;
-                    font-weight: 400;
-                    // font-family: sans-serif;
+                    font-weight: 500;
                     margin-bottom: 10px;
                 }
                 .btnBox {
@@ -7371,7 +7439,7 @@ body {
                         padding: 5px 10px;
                         border: 0.5px solid #1f1f1f;
                         color: #ffffff;
-                        font-family: 'system-ui';
+                        font-family: system-ui;
                         cursor: pointer;
                         transition: ease-out 0.2s;
                     }
@@ -7382,13 +7450,13 @@ body {
                         background-color: #000;
                     }
                     .btnDelete {
-                        border-radius: 5px 0px 0px 5px;
+                        border-radius: 10px 0px 0px 10px;
                     }
                     .btnDelete:active {
                         background-color: red;
                     }
                     .btnCancel {
-                        border-radius: 0px 5px 5px 0px;
+                        border-radius: 0px 10px 10px 0px;
                     }
                 }
             }
@@ -7691,7 +7759,8 @@ body {
                             // Bài viết được chia sẻ
                             .articleDetail {
                                 background-color: #1f1f1f;
-                                border-radius: 5px;
+                                // border-radius: 5px;
+                                border-radius: 25px;
                                 border: 0.5px solid rgba(243, 245, 247, 0.08);
                                 // outline: 1px solid rgba(243, 245, 247, 0.15);
                                 // outline-offset: -1px;
@@ -7765,7 +7834,7 @@ body {
         position: absolute;
         background-color: #121212;
         border: 0.5px solid #1f1f1f;
-        border-radius: 10px;
+        border-radius: 20px;
         padding: 16px;
         text-decoration: none;
         z-index: 99;
@@ -8063,7 +8132,8 @@ body {
         object-fit: cover;
         object-position: center center;
         z-index: 3;
-        border-radius: 5px;
+        // border-radius: 5px;
+        border-radius: 25px;
         // outline: rgba(135, 135, 135, 0.15) solid 1px;
         // outline-offset: -1px;
     }

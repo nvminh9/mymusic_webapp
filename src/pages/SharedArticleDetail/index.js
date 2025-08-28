@@ -659,7 +659,7 @@ function SharedArticleDetail() {
                                                 style={{
                                                     backgroundColor: '#1f1f1f',
                                                     border: '0.5px solid rgba(243, 245, 247, 0.08)',
-                                                    borderRadius: '5px',
+                                                    borderRadius: '25px',
                                                     // paddingBottom: '0px',
                                                     position: 'relative',
                                                 }}

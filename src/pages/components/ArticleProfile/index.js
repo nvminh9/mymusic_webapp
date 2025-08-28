@@ -298,6 +298,7 @@ function ArticleProfile({ article, user, type }) {
                                             overflow: 'hidden',
                                             textOverflow: 'ellipsis',
                                             padding: '6px',
+                                            borderRadius: '10px',
                                         }}
                                     >
                                         <div className="" style={{ display: 'flex', alignItems: 'center' }}>
@@ -446,6 +447,7 @@ function ArticleProfile({ article, user, type }) {
                                             overflow: 'hidden',
                                             textOverflow: 'ellipsis',
                                             padding: '6px',
+                                            borderRadius: '10px',
                                         }}
                                     >
                                         <div className="" style={{ display: 'flex', alignItems: 'center' }}>

@@ -366,14 +366,15 @@ function CommentInput({ comment, articleData, sharedArticleData, onReplyComment,
                 <div
                     className="errorMessage"
                     style={{
-                        background: '#e91429',
+                        // background: '#e91429',
+                        background: 'rgba(233, 20, 41, 0.5)',
                         width: 'fit-content',
                         padding: '5px',
                         color: 'white',
                         fontSize: '14px',
-                        fontFamily: 'sans-serif',
+                        fontFamily: 'system-ui',
                         margin: '8px 0px',
-                        borderRadius: '5px',
+                        borderRadius: '15px',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
@@ -381,7 +382,7 @@ function CommentInput({ comment, articleData, sharedArticleData, onReplyComment,
                         marginLeft: '42px',
                     }}
                 >
-                    <IoAlertCircleOutline /> {errors.content?.message}
+                    <IoAlertCircleOutline /> <span style={{ marginBottom: '1px' }}>{errors.content?.message}</span>
                 </div>
             ) : (
                 <></>
