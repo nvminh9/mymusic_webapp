@@ -9,8 +9,8 @@ import {
 } from 'react-icons/io5';
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { useContext, useState } from 'react';
-import { googleLoginApi, signUpApi } from '~/utils/api';
+import { useContext, useEffect, useState } from 'react';
+import { signInWithGoogleApi, signUpApi, signUpWithGoogleApi } from '~/utils/api';
 import { useNavigate } from 'react-router-dom';
 import { message } from 'antd';
 import { GoogleLogin, useGoogleLogin } from '@react-oauth/google';
@@ -41,6 +41,10 @@ function SignUpPage() {
     const [messageApi, contextHolder] = message.useMessage();
 
     // --- HANDLE FUNCTION ---
+    useEffect(() => {
+        // Set title
+        document.title = `Sign Up | mymusic`;
+    }, []);
     // Handle Button Show Password
     const handleBtnShowPassword = () => {
         var inputPassword = document.getElementById('password');
@@ -57,7 +61,7 @@ function SignUpPage() {
         // console.log('Form submitted', data);
         // Google Login
         if (formStep === 0 && isGoogleLoginOnSuccess) {
-            console.log('Call API Google Login');
+            console.log('Call API Sign Up With Google');
             const { userName } = data;
             // Loading ... (Ant Design Message)
             messageApi
@@ -70,12 +74,12 @@ function SignUpPage() {
                     },
                 })
                 .then(async () => {
-                    // Call API Google Login
+                    // Call API Sign Up With Google
                     const dataGoogleLogin = {
                         idToken: googleLoginCredential,
                         userName: userName,
                     };
-                    const res = await googleLoginApi(dataGoogleLogin);
+                    const res = await signUpWithGoogleApi(dataGoogleLogin);
                     if (res.status === 200 && res.message === 'Đăng nhập thành công') {
                         message.success({
                             content: 'Đăng ký thành công',
@@ -189,8 +193,42 @@ function SignUpPage() {
     };
     // Handle Google Login Success
     const handleGoogleLoginSuccess = async (credentialResponse) => {
-        setIsGoogleLoginOnSuccess(true);
-        setGoogleLoginCredential(credentialResponse.credential);
+        try {
+            // Loading ... (Ant Design)
+            messageApi
+                .open({
+                    type: 'loading',
+                    content: 'Đang xử lý ...',
+                    duration: 1.5,
+                    style: {
+                        color: 'white',
+                    },
+                })
+                .then(async () => {
+                    // Call API Sign Up With Google
+                    const dataGoogleLogin = {
+                        idToken: credentialResponse.credential,
+                        userName: null,
+                    };
+                    const res = await signUpWithGoogleApi(dataGoogleLogin);
+                    // Kiểm tra response
+                    if (res && res.status === 200 && res.message === 'Email đã được đăng ký') {
+                        // Set onSubmitMessage
+                        setOnSubmitMessage('Email đã được đăng ký');
+                        return;
+                    } else {
+                        // Set onSubmitMessage
+                        setOnSubmitMessage('');
+                        // Nếu Email chưa được đăng ký
+                        setIsGoogleLoginOnSuccess(true);
+                        setGoogleLoginCredential(credentialResponse.credential);
+                        return;
+                    }
+                });
+        } catch (error) {
+            console.log(error);
+            return;
+        }
     };
 
     return (
@@ -219,6 +257,13 @@ function SignUpPage() {
                         </div>
                     ) : (
                         <></>
+                    )}
+                    {onSubmitMessage === 'Email đã được đăng ký' && (
+                        <div className="onSubmitErrorMessage">
+                            <span>
+                                <IoAlertCircleOutline style={{ marginRight: '5px' }} /> {onSubmitMessage}
+                            </span>
+                        </div>
                     )}
                     {/* Step 0 */}
                     {formStep === 0 && (

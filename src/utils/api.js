@@ -24,9 +24,15 @@ const signInApi = (email, password) => {
     return axios.post(URL_API, data);
 };
 
-// API Đăng nhập / Đăng ký với Google (POST)
-const googleLoginApi = (data) => {
-    const URL_API = '/v1/api/auth/google';
+// API Đăng ký với Google (POST)
+const signUpWithGoogleApi = (data) => {
+    const URL_API = '/v1/api/auth/google/signup';
+    return axios.post(URL_API, data);
+};
+
+// API Đăng nhập với Google (POST)
+const signInWithGoogleApi = (data) => {
+    const URL_API = '/v1/api/auth/google/signin';
     return axios.post(URL_API, data);
 };
 
@@ -367,7 +373,8 @@ const deleteSearchHistoryApi = (searchHistoryId) => {
 export {
     signUpApi,
     signInApi,
-    googleLoginApi,
+    signUpWithGoogleApi,
+    signInWithGoogleApi,
     signOutApi,
     getAuthUserInfoApi,
     getUserInfoApi,

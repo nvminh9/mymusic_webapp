@@ -3,7 +3,7 @@ import { IoLogoGoogle, IoChevronBackSharp, IoEyeOffOutline, IoEyeOutline, IoAler
 import { Link, useLocation } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useContext, useEffect, useState } from 'react';
-import { googleLoginApi, signInApi, signUpApi } from '~/utils/api';
+import { signInApi, signInWithGoogleApi, signUpApi } from '~/utils/api';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '~/context/auth.context';
 import { message } from 'antd';
@@ -31,6 +31,10 @@ function SignInPage() {
     const from = location.state?.from?.pathname || '/';
 
     // --- HANDLE FUNCTION ---
+    useEffect(() => {
+        // Set title
+        document.title = `Sign In | mymusic`;
+    }, []);
     // Handle Button Show Password
     const handleBtnShowPassword = () => {
         var inputPassword = document.getElementById('password');
@@ -98,7 +102,6 @@ function SignInPage() {
                 }
             });
     };
-
     // Handle Is User Signed In
     useEffect(() => {
         // Kiểm tra xem đã đăng nhập chưa
@@ -130,7 +133,7 @@ function SignInPage() {
                     idToken: credentialResponse.credential,
                     userName: null,
                 };
-                const res = await googleLoginApi(dataGoogleLogin);
+                const res = await signInWithGoogleApi(dataGoogleLogin);
                 // Kiểm tra response
                 if (res && res.status === 200 && res.message === 'Đăng nhập thành công') {
                     setOnSubmitErrorMessage('');
@@ -154,7 +157,7 @@ function SignInPage() {
                     navigate('/');
                 } else {
                     // setOnSubmitErrorMessage(res?.message ?? 'Lỗi đăng nhập thất bại');
-                    setOnSubmitErrorMessage('Tài khoản chưa được đăng ký trên mymusic');
+                    setOnSubmitErrorMessage('Tài khoản chưa được đăng ký');
                     // Set valid trong local storage
                     localStorage.setItem('valid', false);
                     // Message (Ant design)

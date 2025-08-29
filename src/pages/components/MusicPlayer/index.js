@@ -328,83 +328,85 @@ function MusicPlayer() {
                         </div>
                     )}
                     {/* Song Interact Button Box */}
-                    <div className="interactButtonBoxContainer">
-                        <div className="interactButtonBox">
-                            {/* Button Like Song */}
-                            {currentSong && (
-                                <LikeSongButton
-                                    key={currentSong?.songId}
-                                    songData={currentSong}
-                                    playlist={playlist}
-                                    setPlaylist={setPlaylist}
-                                />
-                            )}
-                            {/* Button Add To Playlist */}
-                            <div className="btnLikeSongContainer">
-                                <button
-                                    type="button"
-                                    className={`btnLikeSong ${
-                                        !playlist?.length || playlist?.length < 1 ? 'btnDisabled' : ''
-                                    }`}
-                                    disabled={!playlist?.length || playlist?.length < 1 ? true : false}
-                                    onClick={() => {
-                                        setIsOpenAddToPlaylistBox(true);
-                                    }}
-                                    style={{
-                                        borderRadius: '25px',
-                                        gap: '3px',
-                                        padding: '7px 12px',
-                                    }}
-                                >
-                                    <CgPlayListAdd />{' '}
-                                    <span
+                    {currentSong && (
+                        <div className="interactButtonBoxContainer">
+                            <div className="interactButtonBox">
+                                {/* Button Like Song */}
+                                {currentSong && (
+                                    <LikeSongButton
+                                        key={currentSong?.songId}
+                                        songData={currentSong}
+                                        playlist={playlist}
+                                        setPlaylist={setPlaylist}
+                                    />
+                                )}
+                                {/* Button Add To Playlist */}
+                                <div className="btnLikeSongContainer">
+                                    <button
+                                        type="button"
+                                        className={`btnLikeSong ${
+                                            !playlist?.length || playlist?.length < 1 ? 'btnDisabled' : ''
+                                        }`}
+                                        disabled={!playlist?.length || playlist?.length < 1 ? true : false}
+                                        onClick={() => {
+                                            setIsOpenAddToPlaylistBox(true);
+                                        }}
                                         style={{
-                                            fontFamily: 'system-ui',
-                                            fontSize: '12px',
-                                            fontWeight: '500',
+                                            borderRadius: '25px',
+                                            gap: '3px',
+                                            padding: '7px 12px',
                                         }}
                                     >
-                                        Thêm vào danh sách phát
-                                    </span>
-                                </button>
-                            </div>
-                            {/* Button Share Song */}
-                            <div className="btnLikeSongContainer">
-                                <button
-                                    type="button"
-                                    className={`btnLikeSong ${
-                                        !playlist?.length || playlist?.length < 1 ? 'btnDisabled' : ''
-                                    }`}
-                                    disabled={!playlist?.length || playlist?.length < 1 ? true : false}
-                                    // onClick={() => {
-                                    //     handleLikeSong();
-                                    // }}
-                                    style={{
-                                        borderRadius: '25px',
-                                        gap: '3px',
-                                        padding: '7px 12px',
-                                    }}
-                                >
-                                    <IoMdShareAlt />{' '}
-                                    <span
+                                        <CgPlayListAdd />{' '}
+                                        <span
+                                            style={{
+                                                fontFamily: 'system-ui',
+                                                fontSize: '12px',
+                                                fontWeight: '500',
+                                            }}
+                                        >
+                                            Thêm vào danh sách phát
+                                        </span>
+                                    </button>
+                                </div>
+                                {/* Button Share Song */}
+                                <div className="btnLikeSongContainer">
+                                    <button
+                                        type="button"
+                                        className={`btnLikeSong ${
+                                            !playlist?.length || playlist?.length < 1 ? 'btnDisabled' : ''
+                                        }`}
+                                        disabled={!playlist?.length || playlist?.length < 1 ? true : false}
+                                        // onClick={() => {
+                                        //     handleLikeSong();
+                                        // }}
                                         style={{
-                                            fontFamily: 'system-ui',
-                                            fontSize: '12px',
-                                            fontWeight: '500',
+                                            borderRadius: '25px',
+                                            gap: '3px',
+                                            padding: '7px 12px',
                                         }}
                                     >
-                                        Chia sẻ
-                                    </span>
-                                </button>
+                                        <IoMdShareAlt />{' '}
+                                        <span
+                                            style={{
+                                                fontFamily: 'system-ui',
+                                                fontSize: '12px',
+                                                fontWeight: '500',
+                                            }}
+                                        >
+                                            Chia sẻ
+                                        </span>
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    )}
                     {/* Playlist */}
                     {typeMusicPlayer?.type === 'playlist' && (
                         <Playlist data={typeMusicPlayer} currentIndex={currentIndex} type={'musicPlayer'} />
                     )}
                     {/* Next Song Recommend */}
-                    {typeMusicPlayer?.type === 'song' && <NextSongRecommend />}
+                    {currentSong && typeMusicPlayer?.type === 'song' && <NextSongRecommend />}
                     {/* Add To Playlist Box */}
                     {isOpenAddToPlaylistBox && (
                         <div className="addToPlaylistBox">

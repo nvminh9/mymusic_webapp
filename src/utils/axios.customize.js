@@ -1,5 +1,6 @@
 import { message } from 'antd';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 // Set config defaults when creating the instance
 const instance = axios.create({
@@ -35,6 +36,9 @@ instance.interceptors.response.use(
         return response;
     },
     function (error) {
+        // Navigation
+        const navigate = useNavigate();
+
         // Any status codes that falls outside the range of 2xx cause this function to trigger
         // Do something with response error
 
@@ -49,6 +53,8 @@ instance.interceptors.response.use(
                         color: 'white',
                     },
                 });
+                // Navigate To Sign In Page
+                navigate(`/signin`);
             }
             // Set valid trong local storage thành false
             localStorage.setItem('valid', false);
