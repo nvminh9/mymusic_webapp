@@ -1,4 +1,3 @@
-// Import Component
 import HomePage from '~/pages/HomePage';
 import ProfilePage from '~/pages/ProfilePage';
 import PublicPage from '~/pages/PublicPage';
@@ -19,6 +18,7 @@ import UploadMusicPage from '~/pages/UploadMusicPage';
 import SharedArticleDetail from '~/pages/SharedArticleDetail';
 import CreatePlaylistPage from '~/pages/CreatePlaylistPage';
 import SearchPage from '~/pages/SearchPage';
+import GenreDetailPage from '~/pages/GenreDetailPage';
 
 // Public Routes (Chưa đăng nhập vẫn truy cập được)
 const publicRoutes = [
@@ -86,6 +86,10 @@ const privateRoutes = [
             {
                 path: 'search', // Trang tìm kiếm
                 component: SearchPage,
+            },
+            {
+                path: 'genre/:genreId', // Trang chi tiết của thể loại nhạc
+                component: GenreDetailPage,
             },
         ],
     },

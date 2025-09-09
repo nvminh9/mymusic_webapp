@@ -370,6 +370,30 @@ const deleteSearchHistoryApi = (searchHistoryId) => {
     return axios.delete(URL_API);
 };
 
+// API Lấy các bài nhạc thịnh hành (GET)
+const getTrendingSongsDataApi = (period, limit, personalized) => {
+    const URL_API = `/v1/api/trending/songs?period=${period}&limit=${limit}&personalized=${personalized}`;
+    return axios.get(URL_API);
+};
+
+// API Lấy tổng hợp các bài nhạc thịnh hành (daily, weekly, monthly, yearly)
+const getTrendingSummaryDataApi = (limit) => {
+    const URL_API = `/v1/api/trending/summary?limit=${limit}`;
+    return axios.get(URL_API);
+};
+
+// API Lấy danh sách các thể loại âm nhạc
+const getListOfGenreDataApi = () => {
+    const URL_API = `/v1/api/genre/list`;
+    return axios.get(URL_API);
+};
+
+// API Lấy các bài nhạc thịnh hành theo thể loại (GET)
+const getGenreTrendingSongsDataApi = (genreId, period, limit, offset) => {
+    const URL_API = `/v1/api/genreTrending/genre/${genreId}?period=${period}&limit=${limit}&offset=${offset}`;
+    return axios.get(URL_API);
+};
+
 export {
     signUpApi,
     signInApi,
@@ -430,4 +454,8 @@ export {
     getSearchAutocompleteApi,
     getSearchHistoryDataApi,
     deleteSearchHistoryApi,
+    getTrendingSongsDataApi,
+    getTrendingSummaryDataApi,
+    getListOfGenreDataApi,
+    getGenreTrendingSongsDataApi,
 };

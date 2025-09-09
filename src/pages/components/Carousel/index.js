@@ -4,13 +4,21 @@
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import aptBanner from '~/assets/images/643564536.jpg';
 import { VscChevronLeft, VscChevronRight } from 'react-icons/vsc';
 import { useRef } from 'react';
 import { Fragment } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import noContentImage from '~/assets/images/no_content.jpg';
+import defaultAvatar from '~/assets/images/avatarDefault.jpg';
+import popCoverImage from '~/assets/images/pop.png';
+import rockCoverImage from '~/assets/images/rock.png';
+import jazzCoverImage from '~/assets/images/jazz.png';
+import bluesCoverImage from '~/assets/images/blues.png';
+import randbsoulCoverImage from '~/assets/images/r&bsoul.png';
+import hiphopCoverImage from '~/assets/images/hiphop.png';
+import edmCoverImage from '~/assets/images/edm.png';
 
-function Carousel({ slides }) {
+function Carousel({ slides, type }) {
     // State
 
     // Context
@@ -72,25 +80,44 @@ function Carousel({ slides }) {
     // nếu data không có thì gán bằng mảng rỗng, hoặc bằng mảng data mẫu
     slides || (slides = []);
 
-    return (
-        <>
-            <div className="carousel">
-                <Slider
-                    ref={(slider) => {
-                        sliderRef = slider;
-                    }}
-                    {...settings}
-                >
-                    {slides.map((slide, index) => (
-                        <Fragment key={index}>
-                            {/* <Link
-                                // to={slide.type === 'playlist' ? `playlist/playlistID` : `song/songID`}
-                                style={{ textDecoration: 'none' }}
-                            >
-                                <div className="carouselItem">
+    // type === 'listOfGenre'
+    if (type === 'listOfGenre') {
+        return (
+            <>
+                <div className="carousel">
+                    <Slider
+                        ref={(slider) => {
+                            sliderRef = slider;
+                        }}
+                        {...settings}
+                    >
+                        {slides.map((slide, index) => (
+                            <Fragment key={index}>
+                                <div
+                                    className="carouselItem"
+                                    onClick={() => {
+                                        navigate(`/genre/${slide?.genreId}`);
+                                    }}
+                                >
                                     <div>
                                         <img
-                                            src={slide.img}
+                                            src={
+                                                slide?.name === 'Pop'
+                                                    ? popCoverImage
+                                                    : slide?.name === 'Rock'
+                                                    ? rockCoverImage
+                                                    : slide?.name === 'Jazz'
+                                                    ? jazzCoverImage
+                                                    : slide?.name === 'Blues'
+                                                    ? bluesCoverImage
+                                                    : slide?.name === 'R&B/Soul'
+                                                    ? randbsoulCoverImage
+                                                    : slide?.name === 'Hip Hop'
+                                                    ? hiphopCoverImage
+                                                    : slide?.name === 'EDM'
+                                                    ? edmCoverImage
+                                                    : noContentImage
+                                            }
                                             className="slide-image"
                                             style={{
                                                 height: '154px',
@@ -114,6 +141,7 @@ function Carousel({ slides }) {
                                             paddingTop: '12px',
                                         }}
                                     >
+                                        {/* Song Name */}
                                         <span
                                             className="info1"
                                             style={{
@@ -129,8 +157,9 @@ function Carousel({ slides }) {
                                                 textOverflow: 'ellipsis',
                                             }}
                                         >
-                                            {slide.info1}
+                                            {slide?.name}
                                         </span>
+                                        {/* User */}
                                         <span
                                             className="info2"
                                             style={{
@@ -146,20 +175,59 @@ function Carousel({ slides }) {
                                                 textOverflow: 'ellipsis',
                                             }}
                                         >
-                                            {slide.info2}
+                                            Thể loại
                                         </span>
                                     </div>
                                 </div>
-                            </Link> */}
+                            </Fragment>
+                        ))}
+                    </Slider>
+                    {slides.length > 2 && (
+                        <>
+                            <button className="btnPrevCarousel" onClick={previous}>
+                                <VscChevronLeft />
+                            </button>
+                            <button className="btnNextCarousel" onClick={next}>
+                                <VscChevronRight />
+                            </button>
+                        </>
+                    )}
+                </div>
+            </>
+        );
+    }
+
+    // type default (List Song For You, List Song Trending)
+    return (
+        <>
+            <div className="carousel">
+                <Slider
+                    ref={(slider) => {
+                        sliderRef = slider;
+                    }}
+                    {...settings}
+                >
+                    {slides.map((slide, index) => (
+                        <Fragment key={index}>
                             <div
                                 className="carouselItem"
                                 onClick={() => {
-                                    navigate(slide.type === 'playlist' ? `playlist/playlistID` : `song/songID`);
+                                    navigate(
+                                        slide?.song?.songId || slide?.Song?.songId
+                                            ? `/song/${slide?.song?.songId || slide?.Song?.songId}`
+                                            : `/playlist/playlistId`,
+                                    );
                                 }}
                             >
                                 <div>
                                     <img
-                                        src={slide.img}
+                                        src={
+                                            slide?.song?.songImage
+                                                ? process.env.REACT_APP_BACKEND_URL + slide?.song?.songImage
+                                                : slide?.Song?.songImage
+                                                ? process.env.REACT_APP_BACKEND_URL + slide?.Song?.songImage
+                                                : noContentImage
+                                        }
                                         className="slide-image"
                                         style={{
                                             height: '154px',
@@ -183,6 +251,7 @@ function Carousel({ slides }) {
                                         paddingTop: '12px',
                                     }}
                                 >
+                                    {/* Song Name */}
                                     <span
                                         className="info1"
                                         style={{
@@ -198,8 +267,9 @@ function Carousel({ slides }) {
                                             textOverflow: 'ellipsis',
                                         }}
                                     >
-                                        {slide.info1}
+                                        {slide?.song?.name || slide?.Song?.name}
                                     </span>
+                                    {/* User */}
                                     <span
                                         className="info2"
                                         style={{
@@ -215,7 +285,7 @@ function Carousel({ slides }) {
                                             textOverflow: 'ellipsis',
                                         }}
                                     >
-                                        {slide.info2}
+                                        {slide?.song?.user?.userName || slide?.Song?.User?.userName}
                                     </span>
                                 </div>
                             </div>

@@ -1,6 +1,9 @@
 import { useQueryClient } from '@tanstack/react-query';
+import { IoHeartSharp, IoMusicalNotes, IoPlay } from 'react-icons/io5';
+import { RiPlayListFill } from 'react-icons/ri';
 import { useLocation, useNavigate } from 'react-router-dom';
 import noContentImage from '~/assets/images/no_content.jpg';
+import defaultAvatar from '~/assets/images/avatarDefault.jpg';
 import { useMusicPlayerContext } from '~/context/musicPlayer.context';
 import { useMusicPlayer } from '~/hooks/useMusicPlayer';
 import { addMusicToPlaylistApi, getSongDataApi, removeMusicFromPlaylistApi } from '~/utils/api';
@@ -39,6 +42,28 @@ function PlaylistCard({ playlistData, typePlaylistCard }) {
     //         console.log(error);
     //     }
     // };
+    // Handle format timestamp to time ago
+    const timeAgo = (timestamp) => {
+        const now = new Date();
+        const past = new Date(timestamp);
+        const seconds = Math.floor((now - past) / 1000);
+        const intervals = [
+            { label: 'năm', seconds: 31536000 },
+            { label: 'tháng', seconds: 2592000 },
+            { label: 'tuần', seconds: 604800 },
+            { label: 'ngày', seconds: 86400 },
+            { label: 'giờ', seconds: 3600 },
+            { label: 'phút', seconds: 60 },
+            { label: 'giây', seconds: 1 },
+        ];
+        for (let i = 0; i < intervals.length; i++) {
+            const interval = Math.floor(seconds / intervals[i].seconds);
+            if (interval >= 1) {
+                return `${interval} ${intervals[i].label} trước`;
+            }
+        }
+        return 'vừa xong';
+    };
     // Handle Check nếu bài hát đã được thêm rồi
     const handleCheckIsSongAdded = (songData) => {
         // Các bài trong danh sách phát
@@ -137,6 +162,7 @@ function PlaylistCard({ playlistData, typePlaylistCard }) {
         }
     };
 
+    // type === 'LeftContainer'
     if (typePlaylistCard === 'LeftContainer') {
         return (
             <div className="listenHistoryItem">
@@ -196,6 +222,7 @@ function PlaylistCard({ playlistData, typePlaylistCard }) {
         );
     }
 
+    // type === 'atAddToPlaylistBox'
     if (typePlaylistCard === 'atAddToPlaylistBox') {
         return (
             <>
@@ -250,6 +277,65 @@ function PlaylistCard({ playlistData, typePlaylistCard }) {
                         </>
                     )}
                 </>
+            </>
+        );
+    }
+
+    // type === 'SearchResult'
+    if (typePlaylistCard === 'SearchResult') {
+        return (
+            <>
+                <div className="col l-4 m-4 c-6 searchItemSong">
+                    {/* Image */}
+                    <div
+                        className="songImageContainer"
+                        onClick={() => {
+                            navigate(`/playlist/${playlistData?.playlistId}`);
+                        }}
+                    >
+                        {/* User Info */}
+                        <div className="userInfo">
+                            <img
+                                className="avatar"
+                                src={
+                                    playlistData?.User?.userAvatar
+                                        ? process.env.REACT_APP_BACKEND_URL + playlistData?.User?.userAvatar
+                                        : defaultAvatar
+                                }
+                            />
+                            <span className="userName">{playlistData?.User?.userName}</span>
+                        </div>
+                        <img
+                            className="songImage"
+                            src={
+                                playlistData?.coverImage
+                                    ? process.env.REACT_APP_BACKEND_URL + playlistData?.coverImage
+                                    : noContentImage
+                            }
+                            draggable="false"
+                        />
+                        {/* Icon Music */}
+                        <RiPlayListFill />
+                        {/* Phần hiển thị khi hover vào thumbnail */}
+                        <div className="thumbnailHoverContainer">
+                            {/* Song Name */}
+                            <span className="songName">{playlistData?.name}</span>
+                            <div className="thumbnailHover">
+                                {/* Lượt thích */}
+                                <span
+                                    className="likes"
+                                    style={{ fontFamily: 'system-ui', fontWeight: '400', fontSize: '13px' }}
+                                >
+                                    {`${playlistData?.songs?.length || 0} bài nhạc`}
+                                </span>
+                            </div>
+                        </div>
+                        {/* Created At */}
+                        <div className="createdAtHover">
+                            <span>{timeAgo(playlistData?.createdAt)}</span>
+                        </div>
+                    </div>
+                </div>
             </>
         );
     }

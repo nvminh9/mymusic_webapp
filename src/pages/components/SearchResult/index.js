@@ -7,6 +7,7 @@ import { AuthContext } from '~/context/auth.context';
 import MusicCard from '../MusicCard';
 import UserCard from '../UserCard';
 import { IoSyncSharp } from 'react-icons/io5';
+import PlaylistCard from '../PlaylistCard';
 
 function SearchResult({}) {
     // State
@@ -32,7 +33,7 @@ function SearchResult({}) {
             try {
                 const query = searchParams.get('q');
                 // Call API Get Search Result
-                const res = await getSearchResultDataApi(query, `article,song,user`, 12, auth?.user?.userId);
+                const res = await getSearchResultDataApi(query, `article,song,playlist,user`, 12, auth?.user?.userId);
                 //
                 if (res?.status === 200 && res?.message === 'Kết quả tìm kiếm') {
                     // Set Search Result Data
@@ -101,6 +102,18 @@ function SearchResult({}) {
                     >
                         Nhạc
                     </button>
+                    <button
+                        className="btnTabSong"
+                        style={{
+                            backgroundColor: resultTab === 4 ? '#dfdfdf' : '',
+                            color: resultTab === 4 ? '#000' : '',
+                        }}
+                        onClick={() => {
+                            setResultTab(4);
+                        }}
+                    >
+                        Danh sách phát
+                    </button>
                 </div>
                 {/* Result */}
                 <div className="resultContent">
@@ -158,6 +171,20 @@ function SearchResult({}) {
                                             {/* Song */}
                                             {item?.songId && (
                                                 <MusicCard songData={item} typeMusicCard={'SearchResult'} />
+                                            )}
+                                        </>
+                                    ))}
+                                {/* Tab Playlist */}
+                                {resultTab === 4 &&
+                                    searchResultData?.results?.map((item) => (
+                                        <>
+                                            {/* Playlist */}
+                                            {item?.playlistId && (
+                                                <PlaylistCard
+                                                    key={`searchResult${item?.playlistId}`}
+                                                    playlistData={item}
+                                                    typePlaylistCard={'SearchResult'}
+                                                />
                                             )}
                                         </>
                                     ))}

@@ -213,7 +213,9 @@ function MusicCard({
                     />
                     <div className="info">
                         <span className="name">{songData?.name}</span>
-                        <span className="quantity">{songData?.User?.userName}</span>
+                        <span className="quantity">
+                            {songData?.User?.userName ? songData?.User?.userName : songData?.user?.userName}
+                        </span>
                     </div>
                 </span>
                 <span className="time">{songData?.duration ? songData?.duration : 'null'}</span>

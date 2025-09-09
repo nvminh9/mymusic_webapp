@@ -35,7 +35,7 @@ function SearchPage() {
             try {
                 //
                 if (!searchParams.get('q')) {
-                    const res = await getSearchResultDataApi('', `article,song,user`, 12, auth?.user?.userId);
+                    const res = await getSearchResultDataApi('', `article,song,playlist,user`, 12, auth?.user?.userId);
                     // Kiểm tra
                     if (res?.status === 200 && res?.message === 'Kết quả tìm kiếm') {
                         // Set You May Like Data
@@ -79,7 +79,7 @@ function SearchPage() {
                     {!searchParams.get('q') && (
                         <div className="searchHistoryContainer">
                             <div className="title">
-                                <span>Bạn có thể thích</span>
+                                <span>Bài nhạc bạn có thể thích</span>
                             </div>
                             <div className="searchHistory">
                                 <>

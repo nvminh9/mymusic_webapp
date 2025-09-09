@@ -379,13 +379,15 @@ function PlaylistDetail() {
                                                 <IoPlaySharp /> Phát tất cả
                                             </button>
                                             {/* Add music */}
-                                            <button
-                                                className="btnPlayPlaylist btnOpenAddMusic"
-                                                type="button"
-                                                onClick={handleBtnAddMusic}
-                                            >
-                                                <IoAddSharp /> Tùy chỉnh
-                                            </button>
+                                            {auth?.user?.userName === playlistDetailData?.User?.userName && (
+                                                <button
+                                                    className="btnPlayPlaylist btnOpenAddMusic"
+                                                    type="button"
+                                                    onClick={handleBtnAddMusic}
+                                                >
+                                                    <IoAddSharp /> Tùy chỉnh
+                                                </button>
+                                            )}
                                         </div>
                                     </div>
                                 </div>

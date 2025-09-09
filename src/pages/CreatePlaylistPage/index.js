@@ -564,42 +564,68 @@ function CreatePlaylistPage() {
                                                             right: '0',
                                                         }}
                                                     >
-                                                        {suggestionsUserTags?.length > 0 ? (
+                                                        {suggestionsUserTags ? (
                                                             <>
-                                                                {suggestionsUserTags?.map((user) => (
-                                                                    <li
-                                                                        className="tag"
-                                                                        // key={user?.followingUser?.userId}
-                                                                        onClick={() => handleSelect(user)}
-                                                                    >
-                                                                        {/* Avatar */}
-                                                                        <img
-                                                                            className="tagAvatar"
-                                                                            src={`${
-                                                                                user?.followingUser?.userAvatar
-                                                                                    ? process.env
-                                                                                          .REACT_APP_BACKEND_URL +
-                                                                                      user?.followingUser?.userAvatar
-                                                                                    : defaultAvatar
-                                                                            }`}
-                                                                        />
-                                                                        {/* Thông tin */}
-                                                                        <div className="tagInfo">
-                                                                            <span className="userName">
-                                                                                {user?.followingUser?.userName}
-                                                                            </span>
-                                                                            <span
-                                                                                className="name"
-                                                                                style={{
-                                                                                    fontWeight: '400',
-                                                                                    lineHeight: 'normal',
-                                                                                }}
+                                                                {suggestionsUserTags?.length > 0 ? (
+                                                                    <>
+                                                                        {suggestionsUserTags?.map((user) => (
+                                                                            <li
+                                                                                className="tag"
+                                                                                // key={user?.followingUser?.userId}
+                                                                                onClick={() => handleSelect(user)}
                                                                             >
-                                                                                {user?.followingUser?.name}
-                                                                            </span>
-                                                                        </div>
-                                                                    </li>
-                                                                ))}
+                                                                                {/* Avatar */}
+                                                                                <img
+                                                                                    className="tagAvatar"
+                                                                                    src={`${
+                                                                                        user?.followingUser?.userAvatar
+                                                                                            ? process.env
+                                                                                                  .REACT_APP_BACKEND_URL +
+                                                                                              user?.followingUser
+                                                                                                  ?.userAvatar
+                                                                                            : defaultAvatar
+                                                                                    }`}
+                                                                                />
+                                                                                {/* Thông tin */}
+                                                                                <div className="tagInfo">
+                                                                                    <span className="userName">
+                                                                                        {user?.followingUser?.userName}
+                                                                                    </span>
+                                                                                    <span
+                                                                                        className="name"
+                                                                                        style={{
+                                                                                            fontWeight: '400',
+                                                                                            lineHeight: 'normal',
+                                                                                        }}
+                                                                                    >
+                                                                                        {user?.followingUser?.name}
+                                                                                    </span>
+                                                                                </div>
+                                                                            </li>
+                                                                        ))}
+                                                                    </>
+                                                                ) : (
+                                                                    <div
+                                                                        style={{
+                                                                            width: '230px',
+                                                                            textAlign: 'center',
+                                                                            padding: '20px 0px',
+                                                                        }}
+                                                                    >
+                                                                        <span
+                                                                            style={{
+                                                                                color: 'white',
+                                                                                // width: '15px',
+                                                                                // height: '15px',
+                                                                                fontFamily: 'system-ui',
+                                                                                fontSize: '14px',
+                                                                                fontWeight: '500',
+                                                                            }}
+                                                                        >
+                                                                            Không có dữ liệu
+                                                                        </span>
+                                                                    </div>
+                                                                )}
                                                             </>
                                                         ) : (
                                                             <div

@@ -37,7 +37,7 @@ instance.interceptors.response.use(
     },
     function (error) {
         // Navigation
-        const navigate = useNavigate();
+        // const navigate = useNavigate();
 
         // Any status codes that falls outside the range of 2xx cause this function to trigger
         // Do something with response error
@@ -54,7 +54,7 @@ instance.interceptors.response.use(
                     },
                 });
                 // Navigate To Sign In Page
-                navigate(`/signin`);
+                // navigate(`/signin`);
             }
             // Set valid trong local storage thành false
             localStorage.setItem('valid', false);
