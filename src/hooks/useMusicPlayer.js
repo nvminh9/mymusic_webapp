@@ -41,6 +41,8 @@ export function useMusicPlayer() {
         setIsAutoNextSong,
         isLikedSong,
         setIsLikedSong,
+        isSaveListeningHistory,
+        setIsSaveListeningHistory,
     } = useMusicPlayerContext();
 
     // Ref
@@ -79,7 +81,7 @@ export function useMusicPlayer() {
             hlsRef.current.destroy();
         }
         //
-        let saveListenHistoryTimer; // Timer save listening history
+        let intervalSaveListeningHistory;
         if (Hls.isSupported()) {
             const hls = new Hls();
             hls.loadSource(process.env.REACT_APP_BACKEND_URL + currentSong.songLink);
@@ -91,10 +93,9 @@ export function useMusicPlayer() {
                     audioRef.current.play();
                     setIsPlaying(true);
                     if (currentSong) {
-                        // Lưu vào lịch sử nghe
-                        saveListenHistoryTimer = setTimeout(() => {
-                            saveListeningHistory(currentSong.songId); // Chỉ gọi nếu nghe > 5s
-                        }, 5000); // Chỉ lưu sau 5 giây nghe
+                        // Set isSaveListeningHistory là false để chuẩn bị lưu nếu nghe được 80% bài nhạc
+                        // Lưu xong thì đổi isSaveListeningHistory thành true
+                        setIsSaveListeningHistory(false);
                         // Local Storage (Bài cuối lúc trước nghe)
                         localStorage.setItem('pl', JSON.stringify([{ ...currentSong }]));
                     }
@@ -110,10 +111,9 @@ export function useMusicPlayer() {
                     audioRef.current.play();
                     setIsPlaying(true);
                     if (currentSong) {
-                        // Lưu vào lịch sử nghe
-                        saveListenHistoryTimer = setTimeout(() => {
-                            saveListeningHistory(currentSong.songId); // Chỉ gọi nếu nghe > 5s
-                        }, 5000); // Chỉ lưu sau 5 giây nghe
+                        // Set isSaveListeningHistory là false để chuẩn bị lưu nếu nghe được 80% bài nhạc
+                        // Lưu xong thì đổi isSaveListeningHistory thành true
+                        setIsSaveListeningHistory(false);
                         // Local Storage (Bài cuối lúc trước nghe)
                         localStorage.setItem('pl', JSON.stringify([{ ...currentSong }]));
                     }
@@ -122,7 +122,6 @@ export function useMusicPlayer() {
         }
         //
         return () => {
-            clearTimeout(saveListenHistoryTimer); // Hủy nếu đổi bài quá nhanh
             if (hlsRef.current) hlsRef.current.destroy();
         };
     }, [currentSong]);
@@ -154,6 +153,22 @@ export function useMusicPlayer() {
         //     const percentage = (currentTime / duration) * 100 || 0;
         //     input.style.background = `linear-gradient(to right, #ff4d4d 0%, #ff4d4d ${percentage}%, #e0e0e0 ${percentage}%, #e0e0e0 100%)`;
         // }
+        // const saveListeningHistory = async () => {
+        //     if (isSaveListeningHistory === false) {
+        //         if (currentSong) {
+        //             const currentSongProgress = (currentTime / duration) * 100 || 0;
+        //             console.log(currentSongProgress);
+        //             if (Math.floor(currentSongProgress) === 80) {
+        //                 // Set isSaveListeningHistory thành true để dừng lưu lịch sử từ 80%-100%
+        //                 setIsSaveListeningHistory(true);
+        //                 // saveListeningHistory(currentSong?.songId);
+        //                 const res = await createListenHistoryApi({ songId: currentSong.songId });
+        //                 return;
+        //             }
+        //         }
+        //     }
+        // };
+        // saveListeningHistory();
     }, [currentTime, duration]);
     // Gửi message cho channel "music-player" khi phát/dừng nhạc
     useEffect(() => {

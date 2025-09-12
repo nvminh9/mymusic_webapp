@@ -8,7 +8,9 @@ import FeedItem from '../components/FeedItem';
 import { IoSyncSharp } from 'react-icons/io5';
 
 // Hàm lấy dữ liệu cho trang Feed
-const fetchFeed = async ({ pageParam = new Date().toISOString() }) => {
+// nếu cursor dạng index timestamp (pageParam = new Date().toISOString())
+// nếu cursor dạng thứ tự int (pageParam = 0)
+const fetchFeed = async ({ pageParam = 0 }) => {
     try {
         // Call API Get Feed Data
         // limit 5
@@ -187,7 +189,10 @@ function FeedPage() {
             <div className="feedPage">
                 {/* Render Feed Item */}
                 {allItems.map((item, index) => (
-                    <FeedItem key={`${item.type}-${item.data.articleId || item.data.sharedArticleId}`} item={item} />
+                    <FeedItem
+                        key={`${item.type}-${item.data.articleId || item.data.sharedArticleId || item.data.playlistId}`}
+                        item={item}
+                    />
                 ))}
                 {/* Load More */}
                 <div ref={loadMoreRef} style={{ color: 'white' }}>

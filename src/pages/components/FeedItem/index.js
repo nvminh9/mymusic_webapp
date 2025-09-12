@@ -1,6 +1,7 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import Article from '../Article';
 import SharedArticle from '../SharedArticle';
+import Playlist from '../Playlist';
 
 function FeedItem({ item }) {
     // State
@@ -18,6 +19,7 @@ function FeedItem({ item }) {
     // console.log(item);
 
     // Return
+
     // Nếu type là Article
     if (type === 'article') {
         return (
@@ -31,6 +33,7 @@ function FeedItem({ item }) {
             </div>
         );
     }
+
     // Nếu type là Shared Article
     if (type === 'sharedArticle') {
         return (
@@ -44,6 +47,12 @@ function FeedItem({ item }) {
             </div>
         );
     }
+
+    // Nếu type là Playlist
+    if (type === 'playlist') {
+        return <div className="feedItemPlaylist">{data && <Playlist data={data} type={'atFeedPage'} />}</div>;
+    }
+
     return null;
 }
 

@@ -1,9 +1,19 @@
 import { useContext, useState } from 'react';
 import { CgPlayList } from 'react-icons/cg';
-import { IoChevronDownSharp, IoChevronUpSharp } from 'react-icons/io5';
+import {
+    IoChevronDownSharp,
+    IoChevronUpSharp,
+    IoEyeOutline,
+    IoGlobeOutline,
+    IoLockClosedOutline,
+} from 'react-icons/io5';
+import { PiPlaylist } from 'react-icons/pi';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '~/context/auth.context';
 import MusicCard from '../MusicCard';
+import noContentImage from '~/assets/images/no_content.jpg';
+import defaultAvatar from '~/assets/images/avatarDefault.jpg';
+import UserTag from '../UserTag';
 
 function Playlist({ data, currentIndex, type }) {
     // State
@@ -18,6 +28,41 @@ function Playlist({ data, currentIndex, type }) {
     const navigate = useNavigate();
 
     // --- HANDLE FUNCTION ---
+    // Format thời gian tạo bài chia sẻ
+    const timeAgo = (timestamp) => {
+        const now = new Date();
+        const past = new Date(timestamp);
+        const seconds = Math.floor((now - past) / 1000);
+        const intervals = [
+            { label: 'năm', seconds: 31536000 },
+            { label: 'tháng', seconds: 2592000 },
+            { label: 'tuần', seconds: 604800 },
+            { label: 'ngày', seconds: 86400 },
+            { label: 'giờ', seconds: 3600 },
+            { label: 'phút', seconds: 60 },
+            { label: 'giây', seconds: 1 },
+        ];
+        for (let i = 0; i < intervals.length; i++) {
+            const interval = Math.floor(seconds / intervals[i].seconds);
+            if (interval >= 1) {
+                return `${interval} ${intervals[i].label} trước`;
+            }
+        }
+        return 'vừa xong';
+    };
+    // Format thời gian tạo bài chia sẻ (timestamp) sang định dạng "dd/mm/yyyy HH:MM"
+    const formatTimestamp = (timestamp) => {
+        const date = new Date(timestamp);
+
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Tháng bắt đầu từ 0
+        const year = date.getFullYear();
+
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+
+        return `${day} Tháng ${month}, ${year} lúc ${hours}:${minutes}`;
+    };
     const handleOpenPlaylist = () => {
         setIsOpenPlaylist(!isOpenPlaylist);
         //
@@ -71,6 +116,124 @@ function Playlist({ data, currentIndex, type }) {
                     </div>
                 </div>
             </div>
+        );
+    }
+
+    // type === 'atFeedPage'
+    if (type === 'atFeedPage') {
+        return (
+            <>
+                <div className="feedItemPlaylist">
+                    <div className="playlistContainer">
+                        <div className="playlist">
+                            <div className="left">
+                                <div className="icon">
+                                    <PiPlaylist />
+                                </div>
+                            </div>
+                            <div className="right">
+                                <div className="top">
+                                    <div className="playlistInfo">
+                                        {/* Type */}
+                                        <span className="name">
+                                            {data?.type === 'default' ? 'Danh sách phát' : 'Album'}
+                                        </span>
+                                        {/* Privacy */}
+                                        <span className="privacy">
+                                            {data?.privacy === '0' ? (
+                                                <IoGlobeOutline style={{ color: 'dimgray' }} />
+                                            ) : (
+                                                <IoLockClosedOutline style={{ color: 'dimgray' }} />
+                                            )}
+                                        </span>
+                                        {/* Created At */}
+                                        <span className="createdAt tooltip">
+                                            {timeAgo(data?.createdAt)}
+                                            <span className="tooltiptext">{formatTimestamp(data?.createdAt)}</span>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div className="middle">
+                                    <div className="playlistContent">
+                                        {/* Cover Image */}
+                                        <div className="coverImageContainer">
+                                            <img
+                                                className="coverImage"
+                                                src={
+                                                    data?.coverImage
+                                                        ? process.env.REACT_APP_BACKEND_URL + data?.coverImage
+                                                        : noContentImage
+                                                }
+                                            />
+                                        </div>
+                                        <div className="nameAndOwner">
+                                            {/* Name */}
+                                            <span
+                                                className="name"
+                                                onClick={() => {
+                                                    navigate(`/playlist/${data?.playlistId}`);
+                                                }}
+                                            >
+                                                {data?.name || ''}
+                                            </span>
+                                            {/* Owner and Feat (userTags) */}
+                                            <span className="ownerAndUserTags">
+                                                {/* Owner */}
+                                                {data?.User && (
+                                                    <button
+                                                        className="btnOwner"
+                                                        type="button"
+                                                        onClick={() => {
+                                                            navigate(`/profile/${data?.User?.userName}`);
+                                                        }}
+                                                    >
+                                                        <img
+                                                            src={
+                                                                data?.User?.userAvatar
+                                                                    ? process.env.REACT_APP_BACKEND_URL +
+                                                                      data?.User?.userAvatar
+                                                                    : defaultAvatar
+                                                            }
+                                                            draggable="false"
+                                                        />{' '}
+                                                        {data?.User?.userName}
+                                                    </button>
+                                                )}
+                                                {/* Feat, colab... */}
+                                                {data?.userTagsData?.length > 0 &&
+                                                    data?.userTagsData?.map((userTag, index) => {
+                                                        if (!userTag) {
+                                                            return <></>;
+                                                        } else {
+                                                            return (
+                                                                <UserTag
+                                                                    key={index}
+                                                                    userName={userTag?.userName}
+                                                                    typeUserTag={'atPlaylistDetail'}
+                                                                    userTagData={userTag}
+                                                                ></UserTag>
+                                                            );
+                                                        }
+                                                    })}
+                                            </span>
+                                        </div>
+                                        {/* Button To Playlist Detail */}
+                                        <button
+                                            className="btnToPlaylistDetail"
+                                            onClick={() => {
+                                                navigate(`/playlist/${data?.playlistId}`);
+                                            }}
+                                        >
+                                            <IoEyeOutline />
+                                        </button>
+                                    </div>
+                                </div>
+                                <div className="bottom"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </>
         );
     }
 

@@ -30,6 +30,7 @@ export const MusicPlayerProvider = ({ children }) => {
     const [isLikedSong, setIsLikedSong] = useState(false); // Liked Song
     const [isInteracted, setIsInteracted] = useState(false); // isInteracted: true khi người dùng đã tương tác với trang (click vào đâu đó) để tránh autoplay gây lỗi
     const [typeMusicPlayer, setTypeMusicPlayer] = useState({ type: 'song' }); // Xác định loại mà Music Player đang phát là song hay playlist (hiện tại sẽ để init là 'song', do lưu local là Song của lần nghe cuối trước khi thoát)
+    const [isSaveListeningHistory, setIsSaveListeningHistory] = useState(); // Xác định đã thực hiện lưu lịch sử cho bài nhạc đang phát khi nghe được 80% chưa
 
     // --- HANDLE FUNCTION ---
     useEffect(() => {}, []);
@@ -67,6 +68,8 @@ export const MusicPlayerProvider = ({ children }) => {
                 setIsLikedSong,
                 typeMusicPlayer,
                 setTypeMusicPlayer,
+                isSaveListeningHistory,
+                setIsSaveListeningHistory,
             }}
         >
             {children}
