@@ -207,7 +207,7 @@ function SongDetail() {
                                                 height: '285px',
                                                 outline: 'rgba(135, 135, 135, 0.15) solid 1px',
                                                 outlineOffset: '-1px',
-                                                borderRadius: '10px',
+                                                borderRadius: '25px',
                                             }}
                                         />
                                     </div>
@@ -267,6 +267,7 @@ function SongDetail() {
                                                 })}
                                         </span>
                                         <span className="detail">
+                                            {songDetailData?.playCount} lượt phát <span className="spaceSymbol">·</span>{' '}
                                             <span className="createdAt">{timeAgo(songDetailData?.createdAt)}</span>
                                         </span>
                                         <div className="playlistControls">

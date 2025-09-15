@@ -634,6 +634,7 @@ body {
                         padding-left: 8px;
                         z-index: 5;
                         background-color: transparent;
+                        width: 65%;
                     }
                     .btnName {
                         // display: flex;
@@ -662,6 +663,16 @@ body {
                     .btnName:hover {
                         text-decoration: underline;
                     }
+                    .btnOwnerAndUserTagsBox {
+                        display: flex;
+                        width: 100%;
+                        text-overflow: ellipsis;
+                        text-align: left;
+                        overflow-y: hidden;
+                        overflow-x: auto;
+                        scroll-behavior: smooth;
+                        scrollbar-width: none;
+                    }
                     .btnQuantity {
                         // display: flex;
                         // align-items: center;
@@ -676,6 +687,13 @@ body {
                         font-size: 14px;
                         font-weight: 500;
                         cursor: pointer;
+                        display: -webkit-box;
+                        -webkit-box-orient: vertical;
+                        -webkit-line-clamp: 1;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        text-align: left;
+                        width: 100%;
                     }
                     .btnQuantity:hover {
                         text-decoration: underline;
@@ -5784,7 +5802,7 @@ body {
                             color: #000;
                             box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
                             border: 2px solid transparent;
-                            border-radius: 10px;
+                            border-radius: 25px;
                             padding: 4px 10px;
                             cursor: pointer;
                             transition: ease-out 0.2s;
@@ -6460,7 +6478,7 @@ body {
     }
 }
 
-// CSS Component List Article
+// CSS Component List Article (List Article In User Profile)
 .listArticle {
     .row {
         margin: 0px;
@@ -6549,6 +6567,116 @@ body {
             }
             .thumbnail:active {
                 opacity: 0.7;
+            }
+        }
+    }
+}
+
+// CSS List Music In Profile
+.listMusicInProfile {
+    .row {
+        margin: 0px;
+        margin-right: -4px;
+        padding: 8px;
+    }
+    // Bài nhạc
+    .musicsContainer {
+        // background-color: green;
+        width: 100%;
+        padding: 6px;
+        .title {
+            font-family: 'system-ui';
+            font-size: 18px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+        .musics {
+            padding: 5px;
+            margin-top: 5px;
+            .btnPlaylist {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 5px;
+                border: none;
+                border-radius: 10px;
+                background-color: transparent;
+                width: 100%;
+                padding: 8px 10px;
+                margin: 0;
+                transition: ease-out 0.2s;
+                cursor: pointer;
+                span {
+                    display: flex;
+                    align-items: center;
+                    font-family: system-ui;
+                    font-size: 15px;
+                    font-weight: 500;
+                    color: #ffffffa3;
+                }
+                .number {
+                    width: 9%;
+                    justify-content: left;
+                    position: relative;
+                    .numberIcon {
+                        font-size: 14px;
+                        font-weight: 500;
+                    }
+                    .playIcon {
+                        color: #ffffff;
+                        position: absolute;
+                        left: 0;
+                        top: 0;
+                        bottom: 0;
+                        opacity: 0;
+                    }
+                }
+                .music {
+                    width: 82%;
+                    display: flex;
+                    align-items: center;
+                    overflow-y: hidden;
+                    overflow-x: auto;
+                    scrollbar-width: none;
+                    scroll-behavior: smooth;
+                    gap: 8px;
+                    img {
+                        height: 45px;
+                        width: 45px;
+                        outline: rgba(135, 135, 135, 0.15) solid 1px;
+                        outline-offset: -1px;
+                        border-radius: 5px;
+                        object-fit: cover;
+                        cursor: pointer;
+                        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+                    }
+                    .info {
+                        .name {
+                            color: #ffffff;
+                        }
+                        .quantity {
+                            color: #777777aa;
+                            font-size: 14px;
+                            font-weight: 500;
+                        }
+                    }
+                }
+                .time {
+                    width: 9%;
+                    justify-content: right;
+                    color: #777777aa;
+                    font-size: 14px;
+                    font-weight: 500;
+                }
+            }
+            .btnPlaylist:hover {
+                background-color: #1f1f1f;
+            }
+            .btnPlaylist:hover .number .numberIcon {
+                opacity: 0;
+            }
+            .btnPlaylist:hover .number .playIcon {
+                opacity: 1;
             }
         }
     }

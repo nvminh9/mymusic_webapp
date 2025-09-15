@@ -1,5 +1,5 @@
 import { useQueryClient } from '@tanstack/react-query';
-import { IoHeartSharp, IoMusicalNotes, IoPlay } from 'react-icons/io5';
+import { IoHeartSharp, IoMusicalNotes, IoPlay, IoPlaySharp } from 'react-icons/io5';
 import { RiPlayListFill } from 'react-icons/ri';
 import { useLocation, useNavigate } from 'react-router-dom';
 import noContentImage from '~/assets/images/no_content.jpg';
@@ -8,7 +8,7 @@ import { useMusicPlayerContext } from '~/context/musicPlayer.context';
 import { useMusicPlayer } from '~/hooks/useMusicPlayer';
 import { addMusicToPlaylistApi, getSongDataApi, removeMusicFromPlaylistApi } from '~/utils/api';
 
-function PlaylistCard({ playlistData, typePlaylistCard }) {
+function PlaylistCard({ playlistData, order, typePlaylistCard }) {
     // State
 
     // Context
@@ -207,16 +207,38 @@ function PlaylistCard({ playlistData, typePlaylistCard }) {
                     >
                         {playlistData?.name}
                     </button>
-                    <button
-                        className="btnQuantity"
-                        onClick={() => {
-                            if (location.pathname.split('/')[2] !== playlistData?.User?.userName) {
-                                navigate(`/profile/${playlistData?.User?.userName}`);
-                            }
-                        }}
-                    >
-                        {playlistData?.User?.userName}
-                    </button>
+                    <div className="btnOwnerAndUserTagsBox">
+                        {/* Owner */}
+                        <div>
+                            <button
+                                className="btnQuantity"
+                                onClick={() => {
+                                    if (location.pathname.split('/')[2] !== playlistData?.User?.userName) {
+                                        navigate(`/profile/${playlistData?.User?.userName}`);
+                                    }
+                                }}
+                            >
+                                {playlistData?.User?.userName}
+                            </button>
+                        </div>
+                        {/* User Tags */}
+                        {playlistData?.userTagsData?.map((user) => (
+                            <>
+                                <div>
+                                    <button
+                                        className="btnQuantity"
+                                        onClick={() => {
+                                            if (location.pathname.split('/')[2] !== user?.userName) {
+                                                navigate(`/profile/${user?.userName}`);
+                                            }
+                                        }}
+                                    >
+                                        ,{user?.userName}
+                                    </button>
+                                </div>
+                            </>
+                        ))}
+                    </div>
                 </div>
             </div>
         );
@@ -337,6 +359,45 @@ function PlaylistCard({ playlistData, typePlaylistCard }) {
                     </div>
                 </div>
             </>
+        );
+    }
+
+    // type === 'atProfileMusics'
+    if (typePlaylistCard === 'atProfileMusics') {
+        return (
+            <button
+                className="btnPlaylist"
+                type="button"
+                onClick={() => {
+                    navigate(`/playlist/${playlistData?.playlistId}`);
+                }}
+            >
+                <span className="number">
+                    <span className="numberIcon">{order}</span>
+                    <span className="playIcon">
+                        <IoPlaySharp />
+                    </span>
+                </span>
+                <span className="music">
+                    <img
+                        src={
+                            playlistData?.coverImage
+                                ? process.env.REACT_APP_BACKEND_URL + playlistData?.coverImage
+                                : noContentImage
+                        }
+                        draggable="false"
+                    />
+                    <div className="info">
+                        <span className="name">{playlistData?.name}</span>
+                        <span className="quantity">
+                            {playlistData?.User?.userName ? playlistData?.User?.userName : playlistData?.user?.userName}
+                        </span>
+                    </div>
+                </span>
+                <span className="time">
+                    {playlistData?.songs ? `${playlistData?.songs?.length} bài nhạc` : '0 bài nhạc'}
+                </span>
+            </button>
         );
     }
 

@@ -54,7 +54,7 @@ function SearchPage() {
     // Handle Search
     const handleSearch = async (query, suggestion = null) => {
         // console.log('Search performed:', { query, suggestion });
-        setSearchParams((prev) => ({ ...prev, q: query }));
+        setSearchParams((prev) => ({ ...prev, q: query, types: 'article,song,playlist,user' }));
     };
 
     return (
@@ -95,6 +95,7 @@ function SearchPage() {
                                                         setSearchParams((prev) => ({
                                                             ...prev,
                                                             q: item?.songId && item.name,
+                                                            types: 'song',
                                                         }));
                                                     }}
                                                 >

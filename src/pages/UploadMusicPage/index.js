@@ -1315,12 +1315,13 @@ function UploadMusicPage() {
                                                     </span>
                                                 </div>
                                                 <div className="artist">
-                                                    <Link
+                                                    {/* <Link
                                                         to={`/profile/${auth?.user?.userName}`}
                                                         style={{ textDecoration: 'none' }}
                                                     >
                                                         <span>{auth?.user?.userName || ''}</span>
-                                                    </Link>
+                                                    </Link> */}
+                                                    <span>{auth?.user?.userName || ''}</span>
                                                 </div>
                                             </div>
                                             {/* Audio */}

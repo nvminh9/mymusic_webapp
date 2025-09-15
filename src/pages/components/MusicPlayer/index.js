@@ -20,6 +20,7 @@ import {
     IoAdd,
 } from 'react-icons/io5';
 import CircumIcon from '@klarr-agency/circum-icons-react';
+import { BsBroadcast } from 'react-icons/bs';
 import Slider from 'react-slick';
 import ImageAmbilight from '../ImageAmbilight';
 import VideoAmbilight from '../VideoAmbilight';
@@ -64,6 +65,8 @@ function MusicPlayer() {
         isLikedSong,
         setIsLikedSong,
         typeMusicPlayer,
+        isSaveListeningHistory,
+        setIsSaveListeningHistory,
     } = useMusicPlayerContext();
 
     // useMusicPlayer (Custom Hook)
@@ -81,6 +84,7 @@ function MusicPlayer() {
         handleEnded,
         handleBtnVolume,
         handleLikeSong,
+        saveListeningHistory,
     } = useMusicPlayer();
 
     // Auth
@@ -297,6 +301,19 @@ function MusicPlayer() {
                             // onEnded handled
                             handleEnded();
                         }}
+                        onTimeUpdate={(e) => {
+                            // Kiểm tra nếu nghe được 70% thì lưu lịch sử phát
+                            // console.log(e.target.currentTime);
+                            // console.log(isSaveListeningHistory);
+                            if (Math.floor(e.target.currentTime) === Math.floor(e.target.duration * 0.7)) {
+                                // console.log('Lưu lịch sử');
+                                // console.log(isSaveListeningHistory);
+                                if (isSaveListeningHistory !== true) {
+                                    saveListeningHistory(currentSong.songId);
+                                    setIsSaveListeningHistory(true);
+                                }
+                            }
+                        }}
                         controls={false}
                         preload="auto"
                     />
@@ -340,6 +357,37 @@ function MusicPlayer() {
                                         setPlaylist={setPlaylist}
                                     />
                                 )}
+                                {/* Songs Play Count */}
+                                <div className="btnLikeSongContainer">
+                                    <button
+                                        type="button"
+                                        className={`btnLikeSong ${
+                                            !playlist?.length || playlist?.length < 1 ? 'btnDisabled' : ''
+                                        }`}
+                                        disabled={!playlist?.length || playlist?.length < 1 ? true : false}
+                                        onClick={() => {
+                                            // setIsOpenAddToPlaylistBox(true);
+                                        }}
+                                        style={{
+                                            background: 'transparent',
+                                            borderRadius: '25px',
+                                            gap: '3px',
+                                            padding: '7px 12px',
+                                            cursor: 'unset',
+                                        }}
+                                    >
+                                        <BsBroadcast />{' '}
+                                        <span
+                                            style={{
+                                                fontFamily: 'system-ui',
+                                                fontSize: '12px',
+                                                fontWeight: '500',
+                                            }}
+                                        >
+                                            {currentSong.playCount} lượt phát
+                                        </span>
+                                    </button>
+                                </div>
                                 {/* Button Add To Playlist */}
                                 <div className="btnLikeSongContainer">
                                     <button
@@ -376,7 +424,8 @@ function MusicPlayer() {
                                         className={`btnLikeSong ${
                                             !playlist?.length || playlist?.length < 1 ? 'btnDisabled' : ''
                                         }`}
-                                        disabled={!playlist?.length || playlist?.length < 1 ? true : false}
+                                        disabled
+                                        // disabled={!playlist?.length || playlist?.length < 1 ? true : false}
                                         // onClick={() => {
                                         //     handleLikeSong();
                                         // }}
@@ -384,6 +433,8 @@ function MusicPlayer() {
                                             borderRadius: '25px',
                                             gap: '3px',
                                             padding: '7px 12px',
+                                            opacity: '0.3',
+                                            background: 'transparent',
                                         }}
                                     >
                                         <IoMdShareAlt />{' '}

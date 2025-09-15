@@ -3,7 +3,7 @@ import avatarDefault from '~/assets/images/avatarDefault.jpg';
 import CircumIcon from '@klarr-agency/circum-icons-react';
 import { VscChevronDown, VscAdd, VscChevronUp, VscClose, VscLibrary, VscMusic, VscHistory } from 'react-icons/vsc';
 import { useContext, useEffect, useRef, useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { getAuthUserInfoApi, getListPlaylistOfUserDataApi, getSongDataApi, getUserSongsDataApi } from '~/utils/api';
 import { AuthContext } from '~/context/auth.context';
 import { useMusicPlayerContext } from '~/context/musicPlayer.context';
@@ -37,6 +37,7 @@ function LeftContainer() {
     // Navigation
     const navigate = useNavigate();
     const location = useLocation();
+    const [searchParams, setSearchParams] = useSearchParams();
 
     // React Query (Tanstack)
     const queryClient = useQueryClient();
@@ -248,7 +249,7 @@ function LeftContainer() {
                     <button
                         className="btnOpenSearch tooltip"
                         onClick={() => {
-                            if (location.pathname.split('/')[1] !== 'search') {
+                            if (location.pathname.split('/')[1] !== 'search' || searchParams.get('q') !== '') {
                                 navigate(`/search`);
                             }
                         }}

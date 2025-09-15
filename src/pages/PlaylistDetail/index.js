@@ -298,7 +298,7 @@ function PlaylistDetail() {
                                                 height: '285px',
                                                 outline: 'rgba(135, 135, 135, 0.15) solid 1px',
                                                 outlineOffset: '-1px',
-                                                borderRadius: '10px',
+                                                borderRadius: '25px',
                                             }}
                                         />
                                     </div>

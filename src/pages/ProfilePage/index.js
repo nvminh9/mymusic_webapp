@@ -664,7 +664,7 @@ function ProfilePage() {
                                                         <>
                                                             <span
                                                                 style={{
-                                                                    color: 'white',
+                                                                    color: 'rgba(255, 255, 255, 0.64)',
                                                                     fontSize: '17px',
                                                                     fontWeight: '500',
                                                                     fontFamily: 'sans-serif',

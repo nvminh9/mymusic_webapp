@@ -11,7 +11,7 @@ import PlaylistCard from '../PlaylistCard';
 
 function SearchResult({}) {
     // State
-    const [resultTab, setResultTab] = useState(0);
+    // const [resultTab, setResultTab] = useState(0);
     const [searchResultData, setSearchResultData] = useState();
 
     // Context
@@ -26,14 +26,13 @@ function SearchResult({}) {
 
     // --- HANDLE FUNCTION ---
     useEffect(() => {
-        //
-        setResultTab(0);
         // Get Search Result Data
         const getSearchResultData = async () => {
             try {
                 const query = searchParams.get('q');
+                const queryTypes = searchParams.get('types');
                 // Call API Get Search Result
-                const res = await getSearchResultDataApi(query, `article,song,playlist,user`, 12, auth?.user?.userId);
+                const res = await getSearchResultDataApi(query, queryTypes, 12, auth?.user?.userId);
                 //
                 if (res?.status === 200 && res?.message === 'Kết quả tìm kiếm') {
                     // Set Search Result Data
@@ -47,7 +46,7 @@ function SearchResult({}) {
             }
         };
         getSearchResultData();
-    }, [searchParams.get('q')]);
+    }, [searchParams.get('q'), searchParams.get('types')]);
 
     return (
         <>
@@ -57,11 +56,19 @@ function SearchResult({}) {
                     <button
                         className="btnTabAll"
                         style={{
-                            backgroundColor: resultTab === 0 ? '#dfdfdf' : '',
-                            color: resultTab === 0 ? '#000' : '',
+                            backgroundColor:
+                                searchParams.get('types') === 'article,song,playlist,user' ? '#dfdfdf' : '',
+                            color: searchParams.get('types') === 'article,song,playlist,user' ? '#000' : '',
                         }}
                         onClick={() => {
-                            setResultTab(0);
+                            // Set Search Params
+                            if (searchParams.get('types') !== 'article,song,playlist,user') {
+                                setSearchParams((prev) => ({
+                                    ...prev,
+                                    q: prev.get('q'),
+                                    types: 'article,song,playlist,user',
+                                }));
+                            }
                         }}
                     >
                         Tất cả
@@ -69,11 +76,18 @@ function SearchResult({}) {
                     <button
                         className="btnTabUser"
                         style={{
-                            backgroundColor: resultTab === 1 ? '#dfdfdf' : '',
-                            color: resultTab === 1 ? '#000' : '',
+                            backgroundColor: searchParams.get('types') === 'user' ? '#dfdfdf' : '',
+                            color: searchParams.get('types') === 'user' ? '#000' : '',
                         }}
                         onClick={() => {
-                            setResultTab(1);
+                            // Set Search Params
+                            if (searchParams.get('types') !== 'user') {
+                                setSearchParams((prev) => ({
+                                    ...prev,
+                                    q: prev.get('q'),
+                                    types: 'user',
+                                }));
+                            }
                         }}
                     >
                         Người dùng
@@ -81,11 +95,18 @@ function SearchResult({}) {
                     <button
                         className="btnTabArticle"
                         style={{
-                            backgroundColor: resultTab === 2 ? '#dfdfdf' : '',
-                            color: resultTab === 2 ? '#000' : '',
+                            backgroundColor: searchParams.get('types') === 'article' ? '#dfdfdf' : '',
+                            color: searchParams.get('types') === 'article' ? '#000' : '',
                         }}
                         onClick={() => {
-                            setResultTab(2);
+                            // Set Search Params
+                            if (searchParams.get('types') !== 'article') {
+                                setSearchParams((prev) => ({
+                                    ...prev,
+                                    q: prev.get('q'),
+                                    types: 'article',
+                                }));
+                            }
                         }}
                     >
                         Bài viết
@@ -93,11 +114,18 @@ function SearchResult({}) {
                     <button
                         className="btnTabSong"
                         style={{
-                            backgroundColor: resultTab === 3 ? '#dfdfdf' : '',
-                            color: resultTab === 3 ? '#000' : '',
+                            backgroundColor: searchParams.get('types') === 'song' ? '#dfdfdf' : '',
+                            color: searchParams.get('types') === 'song' ? '#000' : '',
                         }}
                         onClick={() => {
-                            setResultTab(3);
+                            // Set Search Params
+                            if (searchParams.get('types') !== 'song') {
+                                setSearchParams((prev) => ({
+                                    ...prev,
+                                    q: prev.get('q'),
+                                    types: 'song',
+                                }));
+                            }
                         }}
                     >
                         Nhạc
@@ -105,11 +133,18 @@ function SearchResult({}) {
                     <button
                         className="btnTabSong"
                         style={{
-                            backgroundColor: resultTab === 4 ? '#dfdfdf' : '',
-                            color: resultTab === 4 ? '#000' : '',
+                            backgroundColor: searchParams.get('types') === 'playlist' ? '#dfdfdf' : '',
+                            color: searchParams.get('types') === 'playlist' ? '#000' : '',
                         }}
                         onClick={() => {
-                            setResultTab(4);
+                            // Set Search Params
+                            if (searchParams.get('types') !== 'playlist') {
+                                setSearchParams((prev) => ({
+                                    ...prev,
+                                    q: prev.get('q'),
+                                    types: 'playlist',
+                                }));
+                            }
                         }}
                     >
                         Danh sách phát
@@ -122,10 +157,9 @@ function SearchResult({}) {
                         {searchResultData && (
                             <>
                                 {/* Tab All */}
-                                {resultTab === 0 &&
+                                {/* {resultTab === 0 &&
                                     searchResultData?.results?.map((item) => (
-                                        <>
-                                            {/* Article */}
+                                        <>                                            
                                             {item?.articleId && (
                                                 <ArticleProfile
                                                     key={item?.articleId}
@@ -133,52 +167,10 @@ function SearchResult({}) {
                                                     type={'mediumArticleProfileCard'}
                                                 />
                                             )}
-                                            {/* Song */}
                                             {item?.songId && (
                                                 <MusicCard songData={item} typeMusicCard={'SearchResult'} />
                                             )}
-                                            {/* User */}
                                             {item?.userName && <UserCard userData={item} type={'atSearchResult'} />}
-                                            {/* ... */}
-                                        </>
-                                    ))}
-                                {/* Tab User */}
-                                {resultTab === 1 &&
-                                    searchResultData?.results?.map((item) => (
-                                        <>
-                                            {/* User */}
-                                            {item?.userName && <UserCard userData={item} type={'atSearchResult'} />}
-                                        </>
-                                    ))}
-                                {/* Tab Article */}
-                                {resultTab === 2 &&
-                                    searchResultData?.results?.map((item) => (
-                                        <>
-                                            {/* Article */}
-                                            {item?.articleId && (
-                                                <ArticleProfile
-                                                    key={item?.articleId}
-                                                    article={item}
-                                                    type={'mediumArticleProfileCard'}
-                                                />
-                                            )}
-                                        </>
-                                    ))}
-                                {/* Tab Song */}
-                                {resultTab === 3 &&
-                                    searchResultData?.results?.map((item) => (
-                                        <>
-                                            {/* Song */}
-                                            {item?.songId && (
-                                                <MusicCard songData={item} typeMusicCard={'SearchResult'} />
-                                            )}
-                                        </>
-                                    ))}
-                                {/* Tab Playlist */}
-                                {resultTab === 4 &&
-                                    searchResultData?.results?.map((item) => (
-                                        <>
-                                            {/* Playlist */}
                                             {item?.playlistId && (
                                                 <PlaylistCard
                                                     key={`searchResult${item?.playlistId}`}
@@ -187,8 +179,77 @@ function SearchResult({}) {
                                                 />
                                             )}
                                         </>
-                                    ))}
+                                    ))} */}
+                                {/* Tab User */}
+                                {/* {resultTab === 1 &&
+                                    searchResultData?.results?.map((item) => (
+                                        <>
+                                            {item?.userName && <UserCard userData={item} type={'atSearchResult'} />}
+                                        </>
+                                    ))} */}
+                                {/* Tab Article */}
+                                {/* {resultTab === 2 &&
+                                    searchResultData?.results?.map((item) => (
+                                        <>
+                                            
+                                            {item?.articleId && (
+                                                <ArticleProfile
+                                                    key={item?.articleId}
+                                                    article={item}
+                                                    type={'mediumArticleProfileCard'}
+                                                />
+                                            )}
+                                        </>
+                                    ))} */}
+                                {/* Tab Song */}
+                                {/* {resultTab === 3 &&
+                                    searchResultData?.results?.map((item) => (
+                                        <>
+                                            {item?.songId && (
+                                                <MusicCard songData={item} typeMusicCard={'SearchResult'} />
+                                            )}
+                                        </>
+                                    ))} */}
+                                {/* Tab Playlist */}
+                                {/* {resultTab === 4 &&
+                                    searchResultData?.results?.map((item) => (
+                                        <>
+                                            {item?.playlistId && (
+                                                <PlaylistCard
+                                                    key={`searchResult${item?.playlistId}`}
+                                                    playlistData={item}
+                                                    typePlaylistCard={'SearchResult'}
+                                                />
+                                            )}
+                                        </>
+                                    ))} */}
                             </>
+                        )}
+                        {searchResultData ? (
+                            <>
+                                {searchResultData?.results?.map((item) => (
+                                    <>
+                                        {item?.articleId && (
+                                            <ArticleProfile
+                                                key={item?.articleId}
+                                                article={item}
+                                                type={'mediumArticleProfileCard'}
+                                            />
+                                        )}
+                                        {item?.songId && <MusicCard songData={item} typeMusicCard={'SearchResult'} />}
+                                        {item?.userName && <UserCard userData={item} type={'atSearchResult'} />}
+                                        {item?.playlistId && (
+                                            <PlaylistCard
+                                                key={`searchResult${item?.playlistId}`}
+                                                playlistData={item}
+                                                typePlaylistCard={'SearchResult'}
+                                            />
+                                        )}
+                                    </>
+                                ))}
+                            </>
+                        ) : (
+                            <></>
                         )}
                     </div>
                 </div>

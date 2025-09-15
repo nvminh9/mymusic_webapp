@@ -124,7 +124,11 @@ function SearchHistory() {
                                                 className="searchHistoryItem"
                                                 onClick={() => {
                                                     // Set Search Params
-                                                    setSearchParams((prev) => ({ ...prev, q: item.keyword }));
+                                                    setSearchParams((prev) => ({
+                                                        ...prev,
+                                                        q: item.keyword,
+                                                        types: 'article,song,playlist,user',
+                                                    }));
                                                 }}
                                             >
                                                 <span>
