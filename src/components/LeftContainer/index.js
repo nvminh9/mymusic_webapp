@@ -1,6 +1,8 @@
 import logo from '~/assets/images/logoWhiteTransparent_noR.png';
 import avatarDefault from '~/assets/images/avatarDefault.jpg';
-import CircumIcon from '@klarr-agency/circum-icons-react';
+// import CircumIcon from '@klarr-agency/circum-icons-react';
+// import { TbMessageCircle } from 'react-icons/tb';
+import { CiSearch, CiChat1 } from 'react-icons/ci';
 import { VscChevronDown, VscAdd, VscChevronUp, VscClose, VscLibrary, VscMusic, VscHistory } from 'react-icons/vsc';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
@@ -245,19 +247,50 @@ function LeftContainer() {
                         />
                     </Link>
                 </div>
-                <div className="search">
-                    <button
-                        className="btnOpenSearch tooltip"
-                        onClick={() => {
-                            if (location.pathname.split('/')[1] !== 'search' || searchParams.get('q') !== '') {
-                                navigate(`/search`);
-                            }
-                        }}
-                    >
-                        <CircumIcon name="search" />
-                        {/* Tooltip Text */}
-                        {/* <span class="tooltiptext">Tìm kiếm</span> */}
-                    </button>
+                <div className="right">
+                    {/* Button Messages */}
+                    <div className="search">
+                        <button
+                            className="btnOpenSearch tooltip"
+                            onClick={() => {
+                                if (location.pathname.split('/')[1] !== 'messages') {
+                                    navigate(`/messages`);
+                                }
+                                if (location.pathname.split('/')[1] === 'messages' && location.pathname.split('/')[2]) {
+                                    navigate(`/messages`);
+                                }
+                            }}
+                        >
+                            <CiChat1
+                                style={{
+                                    width: '28px',
+                                    height: '28px',
+                                }}
+                            />
+                            {/* Tooltip Text */}
+                            <span class="tooltiptext">Tin nhắn</span>
+                        </button>
+                    </div>
+                    {/* Button Search */}
+                    <div className="search">
+                        <button
+                            className="btnOpenSearch tooltip"
+                            onClick={() => {
+                                if (location.pathname.split('/')[1] !== 'search' || searchParams.get('q') !== '') {
+                                    navigate(`/search`);
+                                }
+                            }}
+                        >
+                            <CiSearch
+                                style={{
+                                    width: '28px',
+                                    height: '28px',
+                                }}
+                            />
+                            {/* Tooltip Text */}
+                            {/* <span class="tooltiptext">Tìm kiếm</span> */}
+                        </button>
+                    </div>
                 </div>
             </div>
             <div className="middle">

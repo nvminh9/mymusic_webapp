@@ -19,6 +19,8 @@ import SharedArticleDetail from '~/pages/SharedArticleDetail';
 import CreatePlaylistPage from '~/pages/CreatePlaylistPage';
 import SearchPage from '~/pages/SearchPage';
 import GenreDetailPage from '~/pages/GenreDetailPage';
+import MessagePage from '~/pages/MessagePage';
+import ChatWindowPage from '~/pages/ChatWindowPage';
 
 // Public Routes (Chưa đăng nhập vẫn truy cập được)
 const publicRoutes = [
@@ -90,6 +92,13 @@ const privateRoutes = [
             {
                 path: 'genre/:genreId', // Trang chi tiết của thể loại nhạc
                 component: GenreDetailPage,
+            },
+            {
+                path: 'messages', // Trang danh sách các hội thoại
+                component: MessagePage,
+                children: [
+                    { path: ':conversationId', component: ChatWindowPage }, // Cửa sổ chat
+                ],
             },
         ],
     },

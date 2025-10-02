@@ -91,6 +91,11 @@ body {
                 cursor: pointer;
             }
         }
+        .right {
+            display: flex;
+            align-items: center;
+            justify-content: right;
+        }
         // nút tìm kiếm
         .search {
             .btnOpenSearch {
@@ -126,7 +131,7 @@ body {
             border-bottom: 0.5px solid #1f1f1f;
             background-color: #121212;
             position: relative;
-            z-index: 1;
+            // z-index: 1;
 
             .avatar {
                 display: flex;
@@ -9145,6 +9150,66 @@ body {
 .tooltip:hover .tooltiptext {
     visibility: visible;
     transition: ease-out 0.1s;
+}
+
+// CSS Chat Window (Test)
+.chat-window {
+    display: flex;
+    flex-direction: column;
+    // height: 80vh;
+    border: 1px solid #ddd;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 92.5%;
+}
+.message-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px;
+    background: #fafafa;
+}
+.message-row {
+    margin-bottom: 10px;
+    display: flex;
+}
+.message-row.me {
+    justify-content: flex-end;
+}
+.message-bubble {
+    max-width: 70%;
+    background: #fff;
+    padding: 8px 12px;
+    border-radius: 8px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+.message-row.me .message-bubble {
+    background: #dcf8c6;
+}
+.message-meta {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: 6px;
+    color: #666;
+    font-size: 12px;
+}
+.message-input {
+    display: flex;
+    gap: 8px;
+    padding: 8px;
+    border-top: 1px solid #eee;
+}
+.message-input textarea {
+    flex: 1;
+    height: 48px;
+    resize: none;
+    padding: 8px;
+}
+.message-input button {
+    padding: 8px 12px;
 }
 
 /*                           MEDIA QUERY                          */

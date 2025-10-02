@@ -391,11 +391,12 @@ function PlaylistCard({ playlistData, order, typePlaylistCard }) {
                         <span className="name">{playlistData?.name}</span>
                         <span className="quantity">
                             {playlistData?.User?.userName ? playlistData?.User?.userName : playlistData?.user?.userName}
+                            {playlistData?.userTagsData?.map((user) => `,${user?.userName}`)}
                         </span>
                     </div>
                 </span>
-                <span className="time">
-                    {playlistData?.songs ? `${playlistData?.songs?.length} bài nhạc` : '0 bài nhạc'}
+                <span className="time" style={{ width: '10%' }}>
+                    {playlistData?.songs?.length} bài nhạc
                 </span>
             </button>
         );
