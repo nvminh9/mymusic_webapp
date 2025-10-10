@@ -1,22 +1,131 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { AuthContext } from '~/context/auth.context';
 
-export default function MessageBubble({ message, isOwn }) {
-    const time = new Date(message.createdAt).toLocaleTimeString();
-    const style = {
-        maxWidth: '70%',
-        padding: 8,
-        margin: '6px 0',
-        borderRadius: 8,
-        background: isOwn ? '#0078ff' : '#eee',
-        color: isOwn ? '#fff' : '#000',
-        alignSelf: isOwn ? 'flex-end' : 'flex-start',
+export default function MessageBubble({ message, messages, isOwn, isPreviousSameSender, isForwardOwnSameSender }) {
+    // State
+
+    // Context
+    const { auth } = useContext(AuthContext);
+
+    // Message Bubble Shape (Border Radius)
+    const messageBubbleShape = {
+        alignLeft:
+            isPreviousSameSender === false && isForwardOwnSameSender === true
+                ? `20px 20px 20px 7px`
+                : isPreviousSameSender === true && isForwardOwnSameSender === false
+                ? `7px 20px 20px 20px`
+                : isPreviousSameSender === true && isForwardOwnSameSender === true
+                ? `7px 20px 20px 7px`
+                : `20px 20px 20px 20px`,
+        alignRight:
+            isPreviousSameSender === false && isForwardOwnSameSender === true
+                ? `20px 20px 7px 20px`
+                : isPreviousSameSender === true && isForwardOwnSameSender === false
+                ? `20px 7px 20px 20px`
+                : isPreviousSameSender === true && isForwardOwnSameSender === true
+                ? `20px 7px 7px 20px`
+                : `20px 7px 20px 20px`,
+    };
+
+    // --- HANDLE FUNCTION ---
+    // Format thời gian tạo
+    const timeAgo = (timestamp) => {
+        const now = new Date();
+        const past = new Date(timestamp);
+        const seconds = Math.floor((now - past) / 1000);
+        const intervals = [
+            { label: 'năm', seconds: 31536000 },
+            { label: 'tháng', seconds: 2592000 },
+            { label: 'tuần', seconds: 604800 },
+            { label: 'ngày', seconds: 86400 },
+            { label: 'giờ', seconds: 3600 },
+            { label: 'phút', seconds: 60 },
+            { label: 'giây', seconds: 1 },
+        ];
+        // Nếu đã quá 30 phút thì return chi tiết
+        if (seconds >= intervals[5].seconds * 30) {
+            return formatTimestamp(timestamp);
+        }
+        for (let i = 0; i < intervals.length; i++) {
+            const interval = Math.floor(seconds / intervals[i].seconds);
+            if (interval >= 1) {
+                return `${interval} ${intervals[i].label} trước`;
+            }
+        }
+        return 'vừa xong';
+    };
+    // Format thời gian sang định dạng "dd/mm/yyyy HH:MM"
+    const formatTimestamp = (timestamp) => {
+        const date = new Date(timestamp);
+
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Tháng bắt đầu từ 0
+        const year = date.getFullYear();
+
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+
+        return `${day} Tháng ${month}, ${year} lúc ${hours}:${minutes}`;
     };
 
     return (
-        <div style={style}>
-            <div>{message.content}</div>
-            <div style={{ fontSize: 10, opacity: 0.8, marginTop: 6, textAlign: 'right' }}>
-                {time} {message.optimistic ? '· sending...' : message.status === 'read' ? '· read' : ''}
+        <div
+            className="messageBubble"
+            style={{
+                alignSelf: isOwn ? 'flex-end' : 'flex-start',
+            }}
+        >
+            {/* Sender Info */}
+            {!(message.senderId === auth?.user?.userId) && (
+                <div className="sender">
+                    {/* Avatar */}
+                    {isPreviousSameSender === true && isForwardOwnSameSender === false ? (
+                        <div className="avatar">
+                            <img
+                                src={
+                                    message.Sender
+                                        ? process.env.REACT_APP_BACKEND_URL + message.Sender.userAvatar
+                                        : process.env.REACT_APP_BACKEND_URL + message.sender.userAvatar
+                                }
+                            />
+                        </div>
+                    ) : isPreviousSameSender === false && isForwardOwnSameSender === false ? (
+                        <div className="avatar">
+                            <img
+                                src={
+                                    message.Sender
+                                        ? process.env.REACT_APP_BACKEND_URL + message.Sender.userAvatar
+                                        : process.env.REACT_APP_BACKEND_URL + message.sender.userAvatar
+                                }
+                            />
+                        </div>
+                    ) : (
+                        <div className="avatar"></div>
+                    )}
+                </div>
+            )}
+            {/* Content */}
+            <div
+                className="messageContent"
+                style={{
+                    color: isOwn ? '#000' : '#ffffff',
+                    background: isOwn ? '#ffffff' : '#2e2e2e80',
+                    borderRadius: isOwn ? messageBubbleShape.alignRight : messageBubbleShape.alignLeft,
+                }}
+            >
+                {message.content}
+            </div>
+            {/* Created At */}
+            <div className="createdAt" style={{ left: isOwn ? '' : '100%' }}>
+                {timeAgo(message.createdAt)}{' '}
+                {/* {message.optimistic ? '· sending...' : message.status === 'read' ? '· read' : ''} */}
+            </div>
+            {/* Ack */}
+            <div className="ack">
+                {/* Optimistic Ack Sending */}
+                {message.optimistic && 'Đang gửi...'}
+                {/* Ack Status */}
+                {/* {message.status === 'read' ? 'read' : ''} */}
             </div>
         </div>
     );

@@ -7,13 +7,13 @@ function MessagePage() {
     // Context
 
     return (
-        <>
-            <h1 style={{ color: 'white' }}>MessagePage</h1>
+        <div className="messagePage">
+            <h1 style={{ color: 'white', margin: '0' }}>MessagePage</h1>
             {/* Conversations List */}
             <ConversationsList />
             {/* Outlet */}
             <Outlet />
-        </>
+        </div>
     );
 }
 

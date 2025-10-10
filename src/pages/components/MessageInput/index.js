@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { CiPaperplane } from 'react-icons/ci';
 import { v4 as uuidv4 } from 'uuid';
 
 export default function MessageInput({ onSend, onTyping, conversationId }) {
@@ -30,14 +31,20 @@ export default function MessageInput({ onSend, onTyping, conversationId }) {
     };
 
     return (
-        <div style={{ padding: 12, borderTop: '1px solid #eee', display: 'flex', gap: 8 }}>
+        <div
+            className="messageInputContainer"
+            // style={{ padding: 12, borderTop: '1px solid #eee', display: 'flex', gap: 8 }}
+        >
             <input
+                className="messageInput"
                 value={text}
                 onChange={handleChange}
-                placeholder="Write a message..."
-                style={{ flex: 1, padding: 8 }}
+                placeholder="Tin nhắn..."
+                // style={{ flex: 1, padding: 8 }}
             />
-            <button onClick={handleSend}>Send</button>
+            <button className="btnSendMessage" onClick={handleSend}>
+                <CiPaperplane />
+            </button>
         </div>
     );
 }

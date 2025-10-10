@@ -36,10 +36,12 @@ export function useChat(conversationId) {
     const { socket, isConnected, on, sendMessage, acknowledgeMessage, sendTyping } = useSocket();
 
     // Flatten pages -> messages array (oldest -> newest)
-    const messages = (messagesInfiniteQuery.data?.pages || []).flatMap((p) => p.messages || []);
+    const messages = (messagesInfiniteQuery.data?.pages || []).flatMap((p) => p.messages || []).reverse();
+    // console.log(messages);
 
     // --- HANDLE FUNCTION ---
     // Handler: on message_created (from server broadcast)
+    // Hanlde listen socket events
     useEffect(() => {
         if (!conversationId || !socket || !isConnected) return;
 
@@ -48,9 +50,10 @@ export function useChat(conversationId) {
         // - if there is an optimistic message with same clientMessageId -> replace it
         // - otherwise append if not duplicate
         const handleMessageCreated = ({ message }) => {
-            console.log('Handle message created: ', message);
+            // console.log('Handle message created: ', message);
             queryClient.setQueryData(['messages', conversationId], (old) => {
                 // If no cached pages yet, create initial page
+                // Nếu chưa có tin nhắn nào
                 if (!old) {
                     return { pages: [{ messages: [message], nextCursor: null }], pageParams: [] };
                 }
@@ -77,13 +80,17 @@ export function useChat(conversationId) {
                     }
                     if (replaced) break;
                 }
-                console.log('Thay thế');
+                // console.log('Thay thế');
 
                 if (!replaced) {
-                    console.log('Thêm mới');
+                    // console.log('Thêm mới');
                     // Append to last page (assuming pages in chronological order oldest->newest)
-                    if (pages.length === 0) pages.push({ messages: [message], nextCursor: null });
-                    else pages[pages.length - 1].messages.push(message);
+                    if (pages.length === 0) {
+                        pages.push({ messages: [message], nextCursor: null });
+                    } else {
+                        // Unshift message vào page đầu tiên
+                        pages[0].messages.unshift(message);
+                    }
                 }
 
                 return { ...old, pages };
@@ -160,7 +167,8 @@ export function useChat(conversationId) {
             if (pages.length === 0) {
                 pages.push({ messages: [tempMessage], nextCursor: null });
             } else {
-                pages[pages.length - 1].messages.push(tempMessage);
+                // Unshift message vào page đầu tiên
+                pages[0].messages.unshift(tempMessage);
             }
             return { ...old, pages };
         });
@@ -179,7 +187,7 @@ export function useChat(conversationId) {
                         // ack is server response sent by socket handler
                         // expected: { status: "ok", message } or { status: "error", message: "..." }
 
-                        console.log('Ack: ', ack);
+                        // console.log('Ack: ', ack);
 
                         // Nếu không có ack
                         if (!ack) {

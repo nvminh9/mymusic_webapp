@@ -30,7 +30,7 @@ export function SocketProvider({ children, serverUrl }) {
 
         // Ngắt kết nối socket cũ nếu có
         if (socket) {
-            console.log('Disconnecting old socket...');
+            // console.log('Disconnecting old socket...');
             socket.disconnect();
             setSocket(null);
             setIsConnected(false);
@@ -38,11 +38,11 @@ export function SocketProvider({ children, serverUrl }) {
 
         // Chỉ kết nối khi có token và user đã authenticated
         if (!token || !auth.isAuthenticated) {
-            console.log('No token or not authenticated, socket will not connect');
+            // console.log('No token or not authenticated, socket will not connect');
             return;
         }
 
-        console.log('Creating new socket connection with token:', token);
+        // console.log('Creating new socket connection with token:', token);
 
         const s = io(serverUrl || '/', {
             auth: { token: `Bearer ${token}` },
@@ -58,7 +58,7 @@ export function SocketProvider({ children, serverUrl }) {
 
         // Lắng nghe socket event 'connect'
         s.on('connect', () => {
-            console.log('Socket connected:', s.id);
+            // console.log('Socket connected:', s.id);
             setIsConnected(true);
         });
 
