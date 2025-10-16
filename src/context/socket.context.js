@@ -129,7 +129,8 @@ export function SocketProvider({ children, serverUrl }) {
     // Handle Join Conversation
     const joinConversation = async (conversationId) => {
         if (!socket || !isConnected) {
-            throw new Error('Socket not ready');
+            // throw new Error('Socket not ready');
+            console.log('Join Conversation Error: Socket not ready');
         }
         return new Promise((resolve, reject) => {
             socket.timeout(5000).emit('join_conversation', { conversationId }, (response) => {

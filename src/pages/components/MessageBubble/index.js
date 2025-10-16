@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { AuthContext } from '~/context/auth.context';
 
-export default function MessageBubble({ message, messages, isOwn, isPreviousSameSender, isForwardOwnSameSender }) {
+export default function MessageBubble({ message, messages, isOwn, isPreviousSameSender, isForwardSameSender }) {
     // State
 
     // Context
@@ -10,19 +10,19 @@ export default function MessageBubble({ message, messages, isOwn, isPreviousSame
     // Message Bubble Shape (Border Radius)
     const messageBubbleShape = {
         alignLeft:
-            isPreviousSameSender === false && isForwardOwnSameSender === true
+            isPreviousSameSender === false && isForwardSameSender === true
                 ? `20px 20px 20px 7px`
-                : isPreviousSameSender === true && isForwardOwnSameSender === false
+                : isPreviousSameSender === true && isForwardSameSender === false
                 ? `7px 20px 20px 20px`
-                : isPreviousSameSender === true && isForwardOwnSameSender === true
+                : isPreviousSameSender === true && isForwardSameSender === true
                 ? `7px 20px 20px 7px`
                 : `20px 20px 20px 20px`,
         alignRight:
-            isPreviousSameSender === false && isForwardOwnSameSender === true
+            isPreviousSameSender === false && isForwardSameSender === true
                 ? `20px 20px 7px 20px`
-                : isPreviousSameSender === true && isForwardOwnSameSender === false
+                : isPreviousSameSender === true && isForwardSameSender === false
                 ? `20px 7px 20px 20px`
-                : isPreviousSameSender === true && isForwardOwnSameSender === true
+                : isPreviousSameSender === true && isForwardSameSender === true
                 ? `20px 7px 7px 20px`
                 : `20px 7px 20px 20px`,
     };
@@ -73,13 +73,15 @@ export default function MessageBubble({ message, messages, isOwn, isPreviousSame
             className="messageBubble"
             style={{
                 alignSelf: isOwn ? 'flex-end' : 'flex-start',
+                marginTop: !isPreviousSameSender ? '3px' : '',
+                marginBottom: !isForwardSameSender ? '3px' : '',
             }}
         >
             {/* Sender Info */}
             {!(message.senderId === auth?.user?.userId) && (
                 <div className="sender">
                     {/* Avatar */}
-                    {isPreviousSameSender === true && isForwardOwnSameSender === false ? (
+                    {isPreviousSameSender === true && isForwardSameSender === false ? (
                         <div className="avatar">
                             <img
                                 src={
@@ -89,7 +91,7 @@ export default function MessageBubble({ message, messages, isOwn, isPreviousSame
                                 }
                             />
                         </div>
-                    ) : isPreviousSameSender === false && isForwardOwnSameSender === false ? (
+                    ) : isPreviousSameSender === false && isForwardSameSender === false ? (
                         <div className="avatar">
                             <img
                                 src={

@@ -28,8 +28,16 @@ export default function ChatWindow() {
 
     // Custom Hooks
     // useChat
-    const { messages, fetchNextPage, hasNextPage, isFetchingNextPage, send, sendTypingMessage, sendAckMessage } =
-        useChat(conversationId);
+    const {
+        messages,
+        fetchNextPage,
+        hasNextPage,
+        isFetchingNextPage,
+        send,
+        sendTypingMessage,
+        sendAckMessage,
+        isTyping,
+    } = useChat(conversationId);
 
     // Ref
     const messagesListRef = useRef(null);
@@ -42,23 +50,8 @@ export default function ChatWindow() {
         // Đổi title trang
         document.title = 'Chat | mymusic: Music from everyone';
         // Scroll xuống cuối trang
-        endRef.current?.scrollIntoView({ behavior: 'smooth' });
+        // endRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, []);
-    // Handle Auto Load More Message
-    useEffect(() => {
-        //
-        if (!hasNextPage || isFetchingNextPage) return;
-        // Observer Load More Ref
-        const observer = new IntersectionObserver(([entry]) => {
-            if (entry.isIntersecting) {
-                fetchNextPage();
-            }
-        });
-        if (loadMoreMessagesRef.current) observer.observe(loadMoreMessagesRef.current);
-        return () => {
-            if (loadMoreMessagesRef.current) observer.disconnect();
-        };
-    }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
     // Handle joinConversation khi mới vào Chat Window
     useEffect(() => {
         if (!socket && !isConnected) {
@@ -75,6 +68,45 @@ export default function ChatWindow() {
             leaveConversation(conversationId);
         };
     }, [conversationId, socket, joinConversation, leaveConversation]);
+    // Handle Auto Load More Message (Intersection Observer loadMoreMessagesRef)
+    useEffect(() => {
+        //
+        if (!hasNextPage || isFetchingNextPage) return;
+
+        // Messages List
+        const messagesListElement = messagesListRef.current;
+        let messagesListElementScrollTimeout;
+
+        // Observer Load More Ref
+        const observer = new IntersectionObserver(([entry]) => {
+            if (entry.isIntersecting) {
+                fetchNextPage();
+                messagesListElement.scrollTop += 30;
+                messagesListElementScrollTimeout = setTimeout(() => {
+                    messagesListElement.scrollTop += 70;
+                }, 50);
+            }
+        });
+        if (loadMoreMessagesRef.current) observer.observe(loadMoreMessagesRef.current);
+        return () => {
+            if (loadMoreMessagesRef.current) observer.disconnect();
+            // clearTimeout(messagesListElementScrollTimeout);
+        };
+    }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
+    // Handle when reach bottom of messages list (newest message, Intersection Observer endRef)
+    useEffect(() => {
+        // Observer endRef
+        const endRefObserver = new IntersectionObserver(([entry]) => {
+            if (entry.isIntersecting) {
+                // endRef is intersected
+                setIsActiveBtnScrollToBottom(false);
+            }
+        });
+        if (endRef.current) endRefObserver.observe(endRef.current);
+        return () => {
+            if (endRef.current) endRefObserver.disconnect();
+        };
+    }, []);
     // Handle khi có message mới (Khi messages đã được cập nhật và đã hiển thị ra UI, sau đó cần xử lý để scroll xuống cho hợp lý)
     useEffect(() => {
         // Auto-scroll to bottom on new messages
@@ -103,8 +135,8 @@ export default function ChatWindow() {
             endRef.current?.scrollIntoView({ behavior: 'smooth' });
         }
 
-        // Scroll xuống tin nhắn mới nhất khi lần đầu load messages (mount)
-        if (messagesListElement.scrollTop === 0) {
+        // Scroll xuống tin nhắn mới nhất khi lần đầu load messages (when initial load)
+        if (messagesListElement.scrollTop === 0 && messages.length <= 20) {
             // Small delay to ensure DOM updated
             requestAnimationFrame(() => {
                 messagesListElement.scrollTop = messagesListElement.scrollHeight;
@@ -168,7 +200,7 @@ export default function ChatWindow() {
                                     messages={array}
                                     isOwn={m.senderId === auth?.user?.userId}
                                     isPreviousSameSender={index > 0 ? array[index - 1].senderId === m.senderId : false}
-                                    isForwardOwnSameSender={
+                                    isForwardSameSender={
                                         index < array?.length - 1 ? array[index + 1].senderId === m.senderId : false
                                     }
                                 />
@@ -179,17 +211,43 @@ export default function ChatWindow() {
                     <div ref={endRef} />
                 </div>
                 {/* Button Scroll To Bottom */}
-                {isActiveBtnScrollToBottom && (
+                {(isActiveBtnScrollToBottom || isTyping?.isTyping) && (
                     <div className="btnScrollToBottom">
-                        <button
-                            onClick={() => {
-                                endRef.current?.scrollIntoView({ behavior: 'smooth' });
-                                setIsActiveBtnScrollToBottom(false);
-                            }}
-                        >
-                            {/* Tin nhắn mới <CgChevronDown /> */}
-                            <CgChevronDown />
-                        </button>
+                        {/* Button Scroll to Bottom */}
+                        {isActiveBtnScrollToBottom && (
+                            <div className="btnContainer">
+                                <button
+                                    onClick={() => {
+                                        endRef.current?.scrollIntoView({ behavior: 'smooth' });
+                                        setIsActiveBtnScrollToBottom(false);
+                                    }}
+                                >
+                                    {/* Tin nhắn mới <CgChevronDown /> */}
+                                    <CgChevronDown />
+                                </button>
+                            </div>
+                        )}
+                        {/* Is Typing */}
+                        {isTyping?.isTyping &&
+                            isTyping?.conversationId === conversationId &&
+                            isTyping?.userId !== auth?.user?.userId && (
+                                <div className="btnContainer">
+                                    <button
+                                        onClick={() => {}}
+                                        style={{
+                                            width: '48px',
+                                            padding: '10px 8px',
+                                            backgroundColor: 'transparent',
+                                            cursor: 'unset',
+                                            transform: 'unset',
+                                        }}
+                                    >
+                                        {/* Tin nhắn mới <CgChevronDown /> */}
+                                        {/* <CgChevronDown /> */}
+                                        <div class="dot-elastic"></div>
+                                    </button>
+                                </div>
+                            )}
                     </div>
                 )}
                 {/* Message Input */}

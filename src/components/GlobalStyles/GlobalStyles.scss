@@ -9187,7 +9187,7 @@ body {
                 width: max-content;
                 max-width: 70%;
                 .sender {
-                    padding-right: 4px;
+                    padding-right: 6px;
                     .avatar {
                         height: 30px;
                         width: 30px;
@@ -9215,6 +9215,7 @@ body {
                     color: #ffffff;
                     padding: 9px 12px;
                     border-radius: 20px 20px 20px 3px;
+                    transition: ease-out 0.2s;
                 }
                 .createdAt {
                     user-select: none;
@@ -9310,11 +9311,18 @@ body {
             left: 0;
             right: 0;
             background-color: transparent;
-            display: flex;
+            // display: flex;
+            display: grid;
             align-items: center;
             justify-content: center;
             padding: 5px;
+            gap: 4px;
             // padding-bottom: 8px;
+            .btnContainer {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
             button {
                 border: 0.5px solid #1f1f1f;
                 width: max-content;
@@ -9343,6 +9351,103 @@ body {
                 transform: scale(0.98);
             }
         }
+    }
+}
+
+/**
+ * ==============================================
+ * Dot Elastic
+ * ==============================================
+ */
+.dot-elastic {
+    position: relative;
+    width: 6px;
+    height: 5px;
+    border-radius: 7px;
+    //   background-color: #9880ff;
+    //   color: #9880ff;
+    background-color: #ffffff;
+    color: #ffffff;
+    animation: dot-elastic 1s infinite linear;
+}
+.dot-elastic::before,
+.dot-elastic::after {
+    content: '';
+    display: inline-block;
+    position: absolute;
+    top: 0;
+}
+.dot-elastic::before {
+    left: -11px;
+    width: 6px;
+    height: 5px;
+    border-radius: 7px;
+    //   background-color: #9880ff;
+    //   color: #9880ff;
+    background-color: #ffffff;
+    color: #ffffff;
+    animation: dot-elastic-before 1s infinite linear;
+}
+.dot-elastic::after {
+    left: 11px;
+    width: 6px;
+    height: 5px;
+    border-radius: 7px;
+    // background-color: #9880ff;
+    // color: #9880ff;
+    background-color: #ffffff;
+    color: #ffffff;
+    animation: dot-elastic-after 1s infinite linear;
+}
+@keyframes dot-elastic-before {
+    0% {
+        transform: scale(1, 1);
+    }
+    25% {
+        transform: scale(1, 1.5);
+    }
+    50% {
+        transform: scale(1, 0.67);
+    }
+    75% {
+        transform: scale(1, 1);
+    }
+    100% {
+        transform: scale(1, 1);
+    }
+}
+@keyframes dot-elastic {
+    0% {
+        transform: scale(1, 1);
+    }
+    25% {
+        transform: scale(1, 1);
+    }
+    50% {
+        transform: scale(1, 1.5);
+    }
+    75% {
+        transform: scale(1, 1);
+    }
+    100% {
+        transform: scale(1, 1);
+    }
+}
+@keyframes dot-elastic-after {
+    0% {
+        transform: scale(1, 1);
+    }
+    25% {
+        transform: scale(1, 1);
+    }
+    50% {
+        transform: scale(1, 0.67);
+    }
+    75% {
+        transform: scale(1, 1.5);
+    }
+    100% {
+        transform: scale(1, 1);
     }
 }
 

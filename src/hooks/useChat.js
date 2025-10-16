@@ -1,7 +1,7 @@
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import { getMessagesApi } from '~/utils/api'; // still used for initial/history fetch
 import { v4 as uuidv4 } from 'uuid';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 
 import { AuthContext } from '~/context/auth.context';
 import { useSocket } from '~/context/socket.context';
@@ -12,9 +12,13 @@ import { useSocket } from '~/context/socket.context';
  */
 export function useChat(conversationId) {
     // State
+    const [isTyping, setIsTyping] = useState();
 
     // Context
     const { auth } = useContext(AuthContext);
+
+    // Ref
+    // const isTypingRef = useRef();
 
     // React Query (Tanstack)
     const queryClient = useQueryClient();
@@ -41,7 +45,7 @@ export function useChat(conversationId) {
 
     // --- HANDLE FUNCTION ---
     // Handler: on message_created (from server broadcast)
-    // Hanlde listen socket events
+    // HANDLE LISTEN SOCKET EVENTS
     useEffect(() => {
         if (!conversationId || !socket || !isConnected) return;
 
@@ -119,9 +123,15 @@ export function useChat(conversationId) {
             });
         };
 
+        // Handle typing detect
+        const handleTypingDetect = (payload) => {
+            setIsTyping(payload);
+        };
+
         // Register using on() which returns unsubscribe functions
         const unsubMsg = on('message_created', handleMessageCreated);
         const unsubStatus = on('message_status_update', handleStatusUpdate);
+        const unsubTyping = on('typing', handleTypingDetect);
 
         return () => {
             unsubMsg?.();
@@ -298,5 +308,6 @@ export function useChat(conversationId) {
         sendTypingMessage,
         sendAckMessage, // read/delivered acks
         socketAvailable: !!socket,
+        isTyping,
     };
 }

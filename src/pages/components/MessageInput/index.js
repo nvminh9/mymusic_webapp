@@ -18,7 +18,7 @@ export default function MessageInput({ onSend, onTyping, conversationId }) {
         if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
         typingTimeoutRef.current = setTimeout(() => {
             onTyping?.({ conversationId, isTyping: false });
-        }, 1500);
+        }, 800);
     };
     // Handle gửi tin nhắn
     const handleSend = async () => {
