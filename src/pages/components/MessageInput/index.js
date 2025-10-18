@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { CiPaperplane } from 'react-icons/ci';
+import { IoSend } from 'react-icons/io5';
 import { v4 as uuidv4 } from 'uuid';
 
 export default function MessageInput({ onSend, onTyping, conversationId }) {
@@ -36,6 +37,8 @@ export default function MessageInput({ onSend, onTyping, conversationId }) {
             // style={{ padding: 12, borderTop: '1px solid #eee', display: 'flex', gap: 8 }}
         >
             <input
+                id="message"
+                name="message"
                 className="messageInput"
                 value={text}
                 onChange={handleChange}
@@ -43,7 +46,8 @@ export default function MessageInput({ onSend, onTyping, conversationId }) {
                 // style={{ flex: 1, padding: 8 }}
             />
             <button className="btnSendMessage" onClick={handleSend}>
-                <CiPaperplane />
+                {/* <CiPaperplane /> */}
+                <IoSend />
             </button>
         </div>
     );

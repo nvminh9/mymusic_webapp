@@ -106,11 +106,25 @@ export function SocketProvider({ children, serverUrl }) {
             if (cb) cb(payload);
         };
 
+        // Handle socket event "joined_conversation" với callback đã đăng ký
+        const handleJoinedConversation = (payload) => {
+            const cb = listenersRef.current.get('joined_conversation');
+            if (cb) cb(payload);
+        };
+
+        // Handle socket event "conversation_read_by" với callback đã đăng ký
+        const handleConversationReadBy = (payload) => {
+            const cb = listenersRef.current.get('conversation_read_by');
+            if (cb) cb(payload);
+        };
+
         s.on('message_created', handleMessageCreated);
         s.on('message_status_update', handleMessageStatus);
         s.on('conversation_new_message', handleConversationNew);
         s.on('presence', handlePresence);
         s.on('typing', handleTyping);
+        s.on('joined_conversation', handleJoinedConversation);
+        s.on('conversation_read_by', handleConversationReadBy);
 
         return () => {
             console.log('Cleaning up socket...');
@@ -119,6 +133,8 @@ export function SocketProvider({ children, serverUrl }) {
             s.off('conversation_new_message', handleConversationNew);
             s.off('presence', handlePresence);
             s.off('typing', handleTyping);
+            s.off('joined_conversation', handleJoinedConversation);
+            s.off('conversation_read_by', handleConversationReadBy);
             s.disconnect();
             setSocket(null);
             setIsConnected(false);
@@ -183,6 +199,12 @@ export function SocketProvider({ children, serverUrl }) {
         socket.emit('typing', { conversationId, isTyping });
     };
 
+    // Handle emit socket event "conversation_read"
+    const sendConversationRead = (conversationId) => {
+        if (!socket || !isConnected) return;
+        socket.emit('conversation_read', { conversationId });
+    };
+
     // Handle đăng ký callback cho socket event
     const on = (eventName, cb) => {
         listenersRef.current.set(eventName, cb);
@@ -197,6 +219,7 @@ export function SocketProvider({ children, serverUrl }) {
         sendMessage,
         acknowledgeMessage,
         sendTyping,
+        sendConversationRead,
         on,
     };
 

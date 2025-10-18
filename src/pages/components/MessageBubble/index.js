@@ -1,7 +1,16 @@
 import React, { useContext } from 'react';
 import { AuthContext } from '~/context/auth.context';
+import defaultAvatar from '~/assets/images/avatarDefault.jpg';
 
-export default function MessageBubble({ message, messages, isOwn, isPreviousSameSender, isForwardSameSender }) {
+export default function MessageBubble({
+    message,
+    index,
+    messages,
+    isOwn,
+    isPreviousSameSender,
+    isForwardSameSender,
+    lastMessageAuthUserSend,
+}) {
     // State
 
     // Context
@@ -127,7 +136,43 @@ export default function MessageBubble({ message, messages, isOwn, isPreviousSame
                 {/* Optimistic Ack Sending */}
                 {message.optimistic && 'Đang gửi...'}
                 {/* Ack Status */}
-                {/* {message.status === 'read' ? 'read' : ''} */}
+                {/* Ack for DM (1:1) Conversation */}
+                {message?.senderId === auth?.user?.userId &&
+                    message?.Statuses?.length > 0 &&
+                    message?.Statuses?.length === 2 &&
+                    message.Statuses.map((status, index, array) => (
+                        <>
+                            {/* Đã gửi */}
+                            {status?.userId === auth?.user?.userId &&
+                                !(array[0]?.readAt !== null && array[1]?.readAt !== null) &&
+                                status?.deliveredAt !== null && (
+                                    <>
+                                        <div className="readAt">Đã gửi</div>
+                                    </>
+                                )}
+                            {/* Đã xem */}
+                            {status?.userId !== auth?.user?.userId &&
+                                status?.readAt !== null &&
+                                lastMessageAuthUserSend?.messageId === status?.messageId && (
+                                    <>
+                                        <div className="readAt">
+                                            <div className="avatarReadAt">
+                                                <img
+                                                    src={
+                                                        status?.User?.userAvatar
+                                                            ? process.env.REACT_APP_BACKEND_URL +
+                                                              status?.User?.userAvatar
+                                                            : defaultAvatar
+                                                    }
+                                                />
+                                            </div>
+                                        </div>
+                                    </>
+                                )}
+                        </>
+                    ))}
+                {/* Ack for Group Conversation */}
+                {/* ... */}
             </div>
         </div>
     );

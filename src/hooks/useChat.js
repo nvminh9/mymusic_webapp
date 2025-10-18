@@ -37,7 +37,7 @@ export function useChat(conversationId) {
     });
 
     // useSocket
-    const { socket, isConnected, on, sendMessage, acknowledgeMessage, sendTyping } = useSocket();
+    const { socket, isConnected, on, sendMessage, acknowledgeMessage, sendTyping, sendConversationRead } = useSocket();
 
     // Flatten pages -> messages array (oldest -> newest)
     const messages = (messagesInfiniteQuery.data?.pages || []).flatMap((p) => p.messages || []).reverse();
@@ -128,14 +128,68 @@ export function useChat(conversationId) {
             setIsTyping(payload);
         };
 
+        // Handle joined conversation
+        const handleJoinedConversation = (payload) => {
+            //
+            // console.log('Joined Conversation: ', payload?.conversationId);
+            handleSendConversationRead(payload?.conversationId);
+        };
+
+        // Handle conversation read by
+        const handleConversationReadBy = (payload) => {
+            // console.log(`Người dùng ${payload?.userId} đã xem tin nhắn lúc ${payload?.readAt}, cuộc trò chuyện ${payload?.conversationId}`);
+
+            // Dữ liệu nhận được
+            const { userId, conversationId, readAt } = payload;
+
+            // Cập nhật lại trạng thái của tin nhắn trong query data cache
+            queryClient.setQueryData(['messages', conversationId], (old) => {
+                // Nếu chưa có tin nhắn nào
+                if (!old) return old;
+
+                const pages = old.pages.map((p) => {
+                    p.messages = p.messages.map((m) => {
+                        // if (
+                        //     m.messageId === messageId ||
+                        //     (m.optimistic && m.metadata?.clientMessageId === payload.clientMessageId)
+                        // ) {
+                        //     m.statuses = m.statuses || {};
+                        //     m.statuses[userId] = { status, at };
+                        // }
+                        // return m;
+
+                        if (!m?.Statuses) return m; // Bỏ qua nếu không có Statuses
+
+                        // Cập nhật readAt cho tất cả tin nhắn có readAt null
+                        m.Statuses = m.Statuses.map((status) => {
+                            if (status?.userId === userId && status?.readAt === null) {
+                                return { ...status, readAt: readAt };
+                            } else {
+                                return status;
+                            }
+                        });
+                        return m;
+                    });
+                    return p;
+                });
+                console.log({ ...old, pages });
+                return { ...old, pages };
+            });
+        };
+
         // Register using on() which returns unsubscribe functions
-        const unsubMsg = on('message_created', handleMessageCreated);
-        const unsubStatus = on('message_status_update', handleStatusUpdate);
-        const unsubTyping = on('typing', handleTypingDetect);
+        const unsubMsg = on('message_created', handleMessageCreated); // Nhận tin nhắn mới
+        const unsubStatus = on('message_status_update', handleStatusUpdate); // Nhận cập nhật trạng thái tin nhắn
+        const unsubTyping = on('typing', handleTypingDetect); // Nhận trạng thái gõ/nhập tin nhắn
+        const unsubJoined = on('joined_conversation', handleJoinedConversation); // Nhận trạng thái đã tham gia cuộc trò chuyện
+        const unsubReadBy = on('conversation_read_by', handleConversationReadBy); // Nhận trạng thái đã xem cuộc trò chuyện
 
         return () => {
             unsubMsg?.();
             unsubStatus?.();
+            unsubTyping?.();
+            unsubJoined?.();
+            unsubReadBy?.();
         };
     }, [conversationId, socket, on, queryClient]);
 
@@ -286,6 +340,14 @@ export function useChat(conversationId) {
     };
 
     /**
+     * sendAckMessage
+     */
+    const sendAckMessage = ({ messageId, status }) => {
+        //
+        acknowledgeMessage(messageId, status);
+    };
+
+    /**
      * sendTypingMessage: is typing message
      */
     const sendTypingMessage = ({ conversationId, isTyping }) => {
@@ -294,11 +356,11 @@ export function useChat(conversationId) {
     };
 
     /**
-     * sendAckMessage
+     * sendConversationRead: mark conversation as read
      */
-    const sendAckMessage = ({ messageId, status }) => {
+    const handleSendConversationRead = (conversationId) => {
         //
-        acknowledgeMessage(messageId, status);
+        sendConversationRead(conversationId);
     };
 
     return {
@@ -307,6 +369,7 @@ export function useChat(conversationId) {
         send,
         sendTypingMessage,
         sendAckMessage, // read/delivered acks
+        handleSendConversationRead,
         socketAvailable: !!socket,
         isTyping,
     };

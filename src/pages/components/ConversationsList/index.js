@@ -1,9 +1,16 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getConversationsApi } from '~/utils/api';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function ConversationsList() {
+    // State
+
+    // Context
+
+    // Navigation
+    const navigate = useNavigate();
+
     // const { data, isLoading } = useQuery(['conversations'], getConversationsApi);
 
     // const convs = data?.conversations || [
@@ -44,6 +51,8 @@ export default function ConversationsList() {
                                 backgroundColor: 'whitesmoke',
                                 margin: '10px',
                                 borderRadius: '15px',
+                                textDecoration: 'none',
+                                color: '#000',
                             }}
                         >
                             <div>

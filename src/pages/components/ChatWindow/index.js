@@ -8,10 +8,12 @@ import { useChat } from '~/hooks/useChat';
 import { message } from 'antd';
 import { CgChevronDown } from 'react-icons/cg';
 import { VscChevronLeft } from 'react-icons/vsc';
+import { IoChatbubbles } from 'react-icons/io5';
 
 export default function ChatWindow() {
     // State
     const [isActiveBtnScrollToBottom, setIsActiveBtnScrollToBottom] = useState(false);
+    const [lastMessageAuthUserSend, setLastMessageAuthUserSend] = useState();
 
     // Context
     const { auth } = useContext(AuthContext);
@@ -36,6 +38,7 @@ export default function ChatWindow() {
         send,
         sendTypingMessage,
         sendAckMessage,
+        handleSendConversationRead,
         isTyping,
     } = useChat(conversationId);
 
@@ -81,10 +84,10 @@ export default function ChatWindow() {
         const observer = new IntersectionObserver(([entry]) => {
             if (entry.isIntersecting) {
                 fetchNextPage();
-                messagesListElement.scrollTop += 30;
-                messagesListElementScrollTimeout = setTimeout(() => {
-                    messagesListElement.scrollTop += 70;
-                }, 50);
+                messagesListElement.scrollTop += 40;
+                // messagesListElementScrollTimeout = setTimeout(() => {
+                //     messagesListElement.scrollTop += 70;
+                // }, 50);
             }
         });
         if (loadMoreMessagesRef.current) observer.observe(loadMoreMessagesRef.current);
@@ -109,6 +112,11 @@ export default function ChatWindow() {
     }, []);
     // Handle khi có message mới (Khi messages đã được cập nhật và đã hiển thị ra UI, sau đó cần xử lý để scroll xuống cho hợp lý)
     useEffect(() => {
+        // Tìm tin nhắn cuối cùng do chính user auth gửi
+        const reversedMessages = [...messages].reverse();
+        const lastMessageByAuthUser = reversedMessages.find((m) => m.senderId === auth?.user?.userId);
+        setLastMessageAuthUserSend(lastMessageByAuthUser);
+
         // Auto-scroll to bottom on new messages
         // endRef.current?.scrollIntoView({ behavior: 'smooth' });
 
@@ -135,8 +143,20 @@ export default function ChatWindow() {
             endRef.current?.scrollIntoView({ behavior: 'smooth' });
         }
 
+        // Handle ACK Message: Gửi cập nhật trạng thái đã xem tin nhắn
+        // (Tạm thời xử lý nếu người dùng đang joined conversation thì sẽ tính là đã xem tin nhắn)
+        // (NÂNG CAO: Chỉ tính là đã xem khi người dùng ở dưới cùng của ChatWindow,...
+        // ...còn đang scroll lên để đọc tin nhắn cũ sẽ không tính là đã xem)
+        handleSendConversationRead(conversationId); // Hàm được gọi khi người dùng đang trong conversation và có tin nhắn mới đến
+
         // Scroll xuống tin nhắn mới nhất khi lần đầu load messages (when initial load)
-        if (messagesListElement.scrollTop === 0 && messages.length <= 20) {
+        // if (messagesListElement.scrollTop === 0 && messages.length <= 20) {
+        //     // Small delay to ensure DOM updated
+        //     requestAnimationFrame(() => {
+        //         messagesListElement.scrollTop = messagesListElement.scrollHeight;
+        //     });
+        // }
+        if (messagesListElement.scrollTop === 0) {
             // Small delay to ensure DOM updated
             requestAnimationFrame(() => {
                 messagesListElement.scrollTop = messagesListElement.scrollHeight;
@@ -173,39 +193,90 @@ export default function ChatWindow() {
                 // style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100vh' }}
             >
                 {/* Scroll Box */}
-                <div
-                    className="messagesList"
-                    ref={messagesListRef}
-                    // style={{
-                    //     flex: 1,
-                    //     overflow: 'auto',
-                    //     padding: 12,
-                    //     display: 'flex',
-                    //     flexDirection: 'column',
-                    //     position: 'relative',
-                    // }}
-                >
+                <div className="messagesList" ref={messagesListRef}>
                     {/* Load More Ref */}
                     <div
                         ref={loadMoreMessagesRef}
                         // style={{ background: 'red', width: '100%' }}
                     ></div>
                     {/* Render Messages List */}
-                    {messages && (
+                    {messages ? (
                         <>
-                            {messages?.map((m, index, array) => (
-                                <MessageBubble
-                                    key={m.messageId}
-                                    message={m}
-                                    messages={array}
-                                    isOwn={m.senderId === auth?.user?.userId}
-                                    isPreviousSameSender={index > 0 ? array[index - 1].senderId === m.senderId : false}
-                                    isForwardSameSender={
-                                        index < array?.length - 1 ? array[index + 1].senderId === m.senderId : false
-                                    }
-                                />
-                            ))}
+                            {messages.length > 0 ? (
+                                <>
+                                    {messages?.map((m, index, array) => {
+                                        return (
+                                            <MessageBubble
+                                                key={m.messageId}
+                                                message={m}
+                                                index={index}
+                                                messages={array}
+                                                isOwn={m.senderId === auth?.user?.userId}
+                                                isPreviousSameSender={
+                                                    index > 0 ? array[index - 1].senderId === m.senderId : false
+                                                }
+                                                isForwardSameSender={
+                                                    index < array?.length - 1
+                                                        ? array[index + 1].senderId === m.senderId
+                                                        : false
+                                                }
+                                                lastMessageAuthUserSend={lastMessageAuthUserSend}
+                                            />
+                                        );
+                                    })}
+                                </>
+                            ) : (
+                                <div
+                                    style={{
+                                        width: '100%',
+                                        height: '100%',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                    }}
+                                >
+                                    <div
+                                        className="newConversation"
+                                        style={{
+                                            width: '100%',
+                                            display: 'grid',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            gap: '15px',
+                                        }}
+                                    >
+                                        <div
+                                            className=""
+                                            style={{
+                                                background: '#2e2e2e80',
+                                                width: 'max-content',
+                                                height: 'max-content',
+                                                padding: '15px',
+                                                borderRadius: '50%',
+                                                margin: '0 auto',
+                                            }}
+                                        >
+                                            <IoChatbubbles style={{ fontSize: '75px', color: '#121212' }} />
+                                        </div>
+                                        <div className="">
+                                            <span
+                                                style={{
+                                                    fontFamily: 'system-ui',
+                                                    fontSize: '22px',
+                                                    fontWeight: '700',
+                                                    color: '#ffffff',
+                                                    userSelect: 'none',
+                                                }}
+                                            >
+                                                Hãy bắt đầu cuộc trò chuyện
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
                         </>
+                    ) : (
+                        <span style={{ color: '#ffffff' }}>Loading...</span>
                     )}
                     {/* End Ref */}
                     <div ref={endRef} />
