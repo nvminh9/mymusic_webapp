@@ -9180,6 +9180,23 @@ body {
             flex-direction: column;
             gap: 2.5px;
             padding: 10px;
+            .readAt {
+                .avatarReadAt {
+                    height: 14px;
+                    width: 14px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    img {
+                        height: 100%;
+                        width: 100%;
+                        outline: rgba(135, 135, 135, 0.15) solid 1px;
+                        outline-offset: -1px;
+                        border-radius: 50%;
+                        object-fit: cover;
+                    }
+                }
+            }
             .messageBubble {
                 display: flex;
                 align-items: center;

@@ -13,7 +13,7 @@ import { IoChatbubbles } from 'react-icons/io5';
 export default function ChatWindow() {
     // State
     const [isActiveBtnScrollToBottom, setIsActiveBtnScrollToBottom] = useState(false);
-    const [lastMessageAuthUserSend, setLastMessageAuthUserSend] = useState();
+    // const [lastMessageAuthUserSend, setLastMessageAuthUserSend] = useState();
 
     // Context
     const { auth } = useContext(AuthContext);
@@ -112,10 +112,12 @@ export default function ChatWindow() {
     }, []);
     // Handle khi có message mới (Khi messages đã được cập nhật và đã hiển thị ra UI, sau đó cần xử lý để scroll xuống cho hợp lý)
     useEffect(() => {
-        // Tìm tin nhắn cuối cùng do chính user auth gửi
-        const reversedMessages = [...messages].reverse();
-        const lastMessageByAuthUser = reversedMessages.find((m) => m.senderId === auth?.user?.userId);
-        setLastMessageAuthUserSend(lastMessageByAuthUser);
+        // console.log('Messages Changed:', messages);
+
+        // // Tìm tin nhắn cuối cùng do chính user này gửi
+        // const reversedMessages = [...messages].reverse();
+        // const lastMessageByAuthUser = reversedMessages.find((m) => m.senderId === auth?.user?.userId);
+        // setLastMessageAuthUserSend(lastMessageByAuthUser);
 
         // Auto-scroll to bottom on new messages
         // endRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -156,12 +158,20 @@ export default function ChatWindow() {
         //         messagesListElement.scrollTop = messagesListElement.scrollHeight;
         //     });
         // }
+        let scrollToEndRefTimeout;
         if (messagesListElement.scrollTop === 0) {
             // Small delay to ensure DOM updated
             requestAnimationFrame(() => {
                 messagesListElement.scrollTop = messagesListElement.scrollHeight;
+                scrollToEndRefTimeout = setTimeout(() => {
+                    endRef.current?.scrollIntoView({ behavior: 'smooth' });
+                }, 80);
             });
         }
+        //
+        return () => {
+            clearTimeout(scrollToEndRefTimeout);
+        };
     }, [messages?.length]);
     // Handle gửi tin nhắn
     const handleSend = async ({ content, metadata }) => {
@@ -220,7 +230,6 @@ export default function ChatWindow() {
                                                         ? array[index + 1].senderId === m.senderId
                                                         : false
                                                 }
-                                                lastMessageAuthUserSend={lastMessageAuthUserSend}
                                             />
                                         );
                                     })}

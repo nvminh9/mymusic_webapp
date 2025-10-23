@@ -2,9 +2,15 @@ import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import { getMessagesApi } from '~/utils/api'; // still used for initial/history fetch
 import { v4 as uuidv4 } from 'uuid';
 import { useContext, useEffect, useRef, useState } from 'react';
-
+import {
+    addNewMessage,
+    addOptimisticMessage,
+    markOptimisticMessageFailed,
+    updateMessageStatus,
+} from '~/helper/messagesCacheModify';
 import { AuthContext } from '~/context/auth.context';
 import { useSocket } from '~/context/socket.context';
+import { message } from 'antd';
 
 /**
  * useChat
@@ -55,50 +61,8 @@ export function useChat(conversationId) {
         // - otherwise append if not duplicate
         const handleMessageCreated = ({ message }) => {
             // console.log('Handle message created: ', message);
-            queryClient.setQueryData(['messages', conversationId], (old) => {
-                // If no cached pages yet, create initial page
-                // Nếu chưa có tin nhắn nào
-                if (!old) {
-                    return { pages: [{ messages: [message], nextCursor: null }], pageParams: [] };
-                }
-                // Deep clone pages to avoid mutating cached object
-                const pages = JSON.parse(JSON.stringify(old.pages || []));
-                // Check duplicate: if any messageId or clientMessageId equal -> skip/replace
-                let replaced = false;
-                for (let pi = 0; pi < pages.length; pi++) {
-                    for (let mi = 0; mi < pages[pi].messages.length; mi++) {
-                        const m = pages[pi].messages[mi];
-                        // match by clientMessageId if optimistic, or by messageId
-                        const mClientId = m?.metadata?.clientMessageId;
-                        const sClientId = message?.metadata?.clientMessageId;
-                        if (m.optimistic && sClientId && mClientId === sClientId && m.senderId === auth?.user?.userId) {
-                            // replace optimistic with server message
-                            pages[pi].messages[mi] = message;
-                            replaced = true;
-                            break;
-                        }
-                        if (m.messageId === message.messageId && m.senderId === auth?.user?.userId) {
-                            replaced = true; // already present
-                            break;
-                        }
-                    }
-                    if (replaced) break;
-                }
-                // console.log('Thay thế');
-
-                if (!replaced) {
-                    // console.log('Thêm mới');
-                    // Append to last page (assuming pages in chronological order oldest->newest)
-                    if (pages.length === 0) {
-                        pages.push({ messages: [message], nextCursor: null });
-                    } else {
-                        // Unshift message vào page đầu tiên
-                        pages[0].messages.unshift(message);
-                    }
-                }
-
-                return { ...old, pages };
-            });
+            // Thêm tin nhắn mới vào cache
+            addNewMessage(queryClient, auth, conversationId, message);
         };
 
         // Handle message status update
@@ -137,44 +101,48 @@ export function useChat(conversationId) {
 
         // Handle conversation read by
         const handleConversationReadBy = (payload) => {
-            // console.log(`Người dùng ${payload?.userId} đã xem tin nhắn lúc ${payload?.readAt}, cuộc trò chuyện ${payload?.conversationId}`);
+            console.log(
+                `Người dùng ${payload?.User?.userName} đã xem tin nhắn lúc ${payload?.readAt}, cuộc trò chuyện ${payload?.conversationId}`,
+            );
 
-            // Dữ liệu nhận được
-            const { userId, conversationId, readAt } = payload;
+            updateMessageStatus(queryClient, auth, payload);
 
-            // Cập nhật lại trạng thái của tin nhắn trong query data cache
-            queryClient.setQueryData(['messages', conversationId], (old) => {
-                // Nếu chưa có tin nhắn nào
-                if (!old) return old;
+            // // Dữ liệu nhận được
+            // const { userId, conversationId, readAt } = payload;
 
-                const pages = old.pages.map((p) => {
-                    p.messages = p.messages.map((m) => {
-                        // if (
-                        //     m.messageId === messageId ||
-                        //     (m.optimistic && m.metadata?.clientMessageId === payload.clientMessageId)
-                        // ) {
-                        //     m.statuses = m.statuses || {};
-                        //     m.statuses[userId] = { status, at };
-                        // }
-                        // return m;
+            // // Cập nhật lại trạng thái của tin nhắn trong query data cache
+            // queryClient.setQueryData(['messages', conversationId], (old) => {
+            //     // Nếu chưa có tin nhắn nào
+            //     if (!old) return old;
 
-                        if (!m?.Statuses) return m; // Bỏ qua nếu không có Statuses
+            //     const pages = old.pages.map((p) => {
+            //         p.messages = p.messages.map((m) => {
+            //             // if (
+            //             //     m.messageId === messageId ||
+            //             //     (m.optimistic && m.metadata?.clientMessageId === payload.clientMessageId)
+            //             // ) {
+            //             //     m.statuses = m.statuses || {};
+            //             //     m.statuses[userId] = { status, at };
+            //             // }
+            //             // return m;
 
-                        // Cập nhật readAt cho tất cả tin nhắn có readAt null
-                        m.Statuses = m.Statuses.map((status) => {
-                            if (status?.userId === userId && status?.readAt === null) {
-                                return { ...status, readAt: readAt };
-                            } else {
-                                return status;
-                            }
-                        });
-                        return m;
-                    });
-                    return p;
-                });
-                console.log({ ...old, pages });
-                return { ...old, pages };
-            });
+            //             if (!m?.Statuses) return m; // Bỏ qua nếu không có Statuses
+
+            //             // Cập nhật readAt cho tất cả tin nhắn có readAt null
+            //             m.Statuses = m.Statuses.map((status) => {
+            //                 if (status?.userId === userId && status?.readAt === null) {
+            //                     return { ...status, readAt: readAt };
+            //                 } else {
+            //                     return status;
+            //                 }
+            //             });
+            //             return m;
+            //         });
+            //         return p;
+            //     });
+            //     console.log({ ...old, pages });
+            //     return { ...old, pages };
+            // });
         };
 
         // Register using on() which returns unsubscribe functions
@@ -219,23 +187,12 @@ export function useChat(conversationId) {
             metadata,
             createdAt: new Date().toISOString(),
             optimistic: true,
+            seenBy: [],
             status: 'sending',
         };
 
-        // Optimistically insert into cache at the end
-        queryClient.setQueryData(['messages', conversationId], (old) => {
-            if (!old) {
-                return { pages: [{ messages: [tempMessage], nextCursor: null }], pageParams: [] };
-            }
-            const pages = JSON.parse(JSON.stringify(old.pages || []));
-            if (pages.length === 0) {
-                pages.push({ messages: [tempMessage], nextCursor: null });
-            } else {
-                // Unshift message vào page đầu tiên
-                pages[0].messages.unshift(tempMessage);
-            }
-            return { ...old, pages };
-        });
+        // Thêm tin nhắn optimistic vào cache
+        addOptimisticMessage(queryClient, conversationId, tempMessage);
 
         // Send via socket with ack callback
         return new Promise((resolve, reject) => {
@@ -253,87 +210,82 @@ export function useChat(conversationId) {
 
                         // console.log('Ack: ', ack);
 
-                        // Nếu không có ack
-                        if (!ack) {
+                        // Nếu không có ack hoặc status là error
+                        if (!ack || ack.status === 'error') {
                             // no ack -> mark failed
-                            // set optimistic message status = failed
-                            queryClient.setQueryData(['messages', conversationId], (old) => {
-                                if (!old) return old;
-                                const pages = old.pages.map((p) => {
-                                    p.messages = p.messages.map((m) => {
-                                        if (m.optimistic && m.metadata?.clientMessageId === clientMessageId) {
-                                            m.status = 'failed';
-                                        }
-                                        return m;
-                                    });
-                                    return p;
-                                });
-                                return { ...old, pages };
-                            });
+                            // Set optimistic message status = failed
+                            markOptimisticMessageFailed(queryClient, conversationId, clientMessageId, tempMessage);
                             return reject(new Error('No ack from server'));
                         }
 
                         // Nếu ack status 'ok'
                         if (ack.status === 'ok' && ack.message) {
+                            // console.log('Ack Status OK');
                             const serverMsg = ack.message;
                             // Replace optimistic message with serverMessage in cache
-                            queryClient.setQueryData(['messages', conversationId], (old) => {
-                                if (!old) {
-                                    return { pages: [{ messages: [serverMsg], nextCursor: null }], pageParams: [] };
-                                }
-                                const pages = old.pages.map((p) => {
-                                    p.messages = p.messages.map((m) => {
-                                        if (
-                                            m.optimistic &&
-                                            m.metadata?.clientMessageId &&
-                                            serverMsg.metadata?.clientMessageId &&
-                                            m.metadata.clientMessageId === serverMsg.metadata.clientMessageId
-                                        ) {
-                                            return serverMsg;
-                                        }
-                                        return m;
-                                    });
-                                    return p;
-                                });
-                                return { ...old, pages };
-                            });
+                            // queryClient.setQueryData(['messages', conversationId], (old) => {
+                            //     if (!old) {
+                            //         return { pages: [{ messages: [serverMsg], nextCursor: null }], pageParams: [] };
+                            //     }
+                            //     const pages = old.pages.map((p) => {
+                            //         p.messages = p.messages.map((m) => {
+                            //             if (
+                            //                 m.optimistic &&
+                            //                 m.metadata?.clientMessageId &&
+                            //                 serverMsg.metadata?.clientMessageId &&
+                            //                 m.metadata.clientMessageId === serverMsg.metadata.clientMessageId
+                            //             ) {
+                            //                 return serverMsg;
+                            //             }
+                            //             return m;
+                            //         });
+                            //         return p;
+                            //     });
+                            //     return { ...old, pages };
+                            // });
+                            // Không cần thiết thực hiện thay thế tin nhắn optimistic ở đây,...
+                            // vì sự kiện lắng nghe message_created sẽ làm việc này
                             return resolve({ ok: true, message: serverMsg });
                         } else {
+                            console.log('Server timeout or unexpected ack');
                             // server ack error
-                            queryClient.setQueryData(['messages', conversationId], (old) => {
-                                if (!old) return old;
-                                const pages = old.pages.map((p) => {
-                                    p.messages = p.messages.map((m) => {
-                                        if (m.optimistic && m.metadata?.clientMessageId === clientMessageId) {
-                                            m.status = 'failed';
-                                            m.error = ack?.message || 'send_error';
-                                        }
-                                        return m;
-                                    });
-                                    return p;
-                                });
-                                return { ...old, pages };
-                            });
+                            // queryClient.setQueryData(['messages', conversationId], (old) => {
+                            //     if (!old) return old;
+                            //     const pages = old.pages.map((p) => {
+                            //         p.messages = p.messages.map((m) => {
+                            //             if (m.optimistic && m.metadata?.clientMessageId === clientMessageId) {
+                            //                 m.status = 'failed';
+                            //                 m.error = ack?.message || 'send_error';
+                            //             }
+                            //             return m;
+                            //         });
+                            //         return p;
+                            //     });
+                            //     return { ...old, pages };
+                            // });
+                            markOptimisticMessageFailed(queryClient, conversationId, clientMessageId, tempMessage);
                             return reject(new Error(ack?.message || 'send_error'));
                         }
                     },
                 );
             } catch (err) {
+                console.log('Send message error, network or socket issue');
                 // network or send error -> mark failed
-                queryClient.setQueryData(['messages', conversationId], (old) => {
-                    if (!old) return old;
-                    const pages = old.pages.map((p) => {
-                        p.messages = p.messages.map((m) => {
-                            if (m.optimistic && m.metadata?.clientMessageId === clientMessageId) {
-                                m.status = 'failed';
-                                m.error = err.message;
-                            }
-                            return m;
-                        });
-                        return p;
-                    });
-                    return { ...old, pages };
-                });
+                // queryClient.setQueryData(['messages', conversationId], (old) => {
+                //     if (!old) return old;
+                //     const pages = old.pages.map((p) => {
+                //         p.messages = p.messages.map((m) => {
+                //             if (m.optimistic && m.metadata?.clientMessageId === clientMessageId) {
+                //                 m.status = 'failed';
+                //                 m.error = err.message;
+                //             }
+                //             return m;
+                //         });
+                //         return p;
+                //     });
+                //     return { ...old, pages };
+                // });
+                markOptimisticMessageFailed(queryClient, conversationId, clientMessageId, tempMessage);
                 return reject(err);
             }
         });

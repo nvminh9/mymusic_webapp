@@ -43,6 +43,7 @@ export default function MessageInput({ onSend, onTyping, conversationId }) {
                 value={text}
                 onChange={handleChange}
                 placeholder="Tin nhắn..."
+                autoComplete="off"
                 // style={{ flex: 1, padding: 8 }}
             />
             <button className="btnSendMessage" onClick={handleSend}>
