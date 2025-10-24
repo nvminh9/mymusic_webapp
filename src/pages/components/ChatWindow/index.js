@@ -35,6 +35,9 @@ export default function ChatWindow() {
         fetchNextPage,
         hasNextPage,
         isFetchingNextPage,
+        refetch,
+        isRefetching,
+        isRefetchError,
         send,
         sendTypingMessage,
         sendAckMessage,
@@ -54,7 +57,10 @@ export default function ChatWindow() {
         document.title = 'Chat | mymusic: Music from everyone';
         // Scroll xuống cuối trang
         // endRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }, []);
+
+        // Refetch
+        refetch();
+    }, [conversationId]);
     // Handle joinConversation khi mới vào Chat Window
     useEffect(() => {
         if (!socket && !isConnected) {
@@ -146,10 +152,10 @@ export default function ChatWindow() {
         }
 
         // Handle ACK Message: Gửi cập nhật trạng thái đã xem tin nhắn
-        // (Tạm thời xử lý nếu người dùng đang joined conversation thì sẽ tính là đã xem tin nhắn)
+        // (Tạm thời xử lý nếu người dùng đang joined conversation, thì khi có tin nhắn mới nó sẽ được tính là đã được xem)
         // (NÂNG CAO: Chỉ tính là đã xem khi người dùng ở dưới cùng của ChatWindow,...
         // ...còn đang scroll lên để đọc tin nhắn cũ sẽ không tính là đã xem)
-        handleSendConversationRead(conversationId); // Hàm được gọi khi người dùng đang trong conversation và có tin nhắn mới đến
+        handleSendConversationRead(conversationId); // Hàm được gọi khi người dùng đang trong conversation và có tin nhắn mới đến làm thay đổi messages
 
         // Scroll xuống tin nhắn mới nhất khi lần đầu load messages (when initial load)
         // if (messagesListElement.scrollTop === 0 && messages.length <= 20) {
@@ -186,7 +192,7 @@ export default function ChatWindow() {
 
     return (
         <>
-            {/* Conversation Info */}
+            {/* Chat Window Header */}
             <div className="tabSwitchProfile">
                 <div className="profileUserName">
                     <span>Chat: {conversationId}</span>
@@ -198,17 +204,12 @@ export default function ChatWindow() {
                     </button>
                 </div>
             </div>
-            <div
-                className="chatWindow"
-                // style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100vh' }}
-            >
-                {/* Scroll Box */}
+            {/* Chat Window Main */}
+            <div className="chatWindow">
+                {/* Message List */}
                 <div className="messagesList" ref={messagesListRef}>
                     {/* Load More Ref */}
-                    <div
-                        ref={loadMoreMessagesRef}
-                        // style={{ background: 'red', width: '100%' }}
-                    ></div>
+                    <div ref={loadMoreMessagesRef}></div>
                     {/* Render Messages List */}
                     {messages ? (
                         <>

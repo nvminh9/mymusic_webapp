@@ -93,12 +93,20 @@ const privateRoutes = [
                 path: 'genre/:genreId', // Trang chi tiết của thể loại nhạc
                 component: GenreDetailPage,
             },
+            // {
+            //     path: 'messages', // Trang danh sách các hội thoại
+            //     component: MessagePage,
+            //     children: [
+            //         { path: ':conversationId', component: ChatWindowPage }, // Cửa sổ chat
+            //     ],
+            // },
             {
                 path: 'messages', // Trang danh sách các hội thoại
                 component: MessagePage,
-                children: [
-                    { path: ':conversationId', component: ChatWindowPage }, // Cửa sổ chat
-                ],
+            },
+            {
+                path: 'messages/:conversationId', // Cửa sổ chat
+                component: ChatWindowPage,
             },
         ],
     },

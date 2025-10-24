@@ -87,7 +87,7 @@ export default function MessageBubble({ message, index, messages, isOwn, isPrevi
     }, [messages?.length]);
 
     return (
-        <Fragment>
+        <Fragment key={`msgBubbleFragment${message.messageId}`}>
             <div
                 className="messageBubble"
                 style={{
@@ -160,19 +160,21 @@ export default function MessageBubble({ message, index, messages, isOwn, isPrevi
                     {message?.seenBy?.length > 0 ? (
                         <>
                             {message?.seenBy?.map((user) => (
-                                <>
-                                    <div className="readAt" style={{ alignSelf: isOwn ? 'flex-end' : 'flex-start' }}>
-                                        <div className="avatarReadAt" style={{ marginBottom: '3px' }}>
-                                            <img
-                                                src={
-                                                    user?.User?.userAvatar
-                                                        ? process.env.REACT_APP_BACKEND_URL + user?.User?.userAvatar
-                                                        : defaultAvatar
-                                                }
-                                            />
-                                        </div>
+                                <div
+                                    key={`msgReadAt${message.messageId}`}
+                                    className="readAt"
+                                    style={{ alignSelf: isOwn ? 'flex-end' : 'flex-start' }}
+                                >
+                                    <div className="avatarReadAt" style={{ marginBottom: '3px' }}>
+                                        <img
+                                            src={
+                                                user?.User?.userAvatar
+                                                    ? process.env.REACT_APP_BACKEND_URL + user?.User?.userAvatar
+                                                    : defaultAvatar
+                                            }
+                                        />
                                     </div>
-                                </>
+                                </div>
                             ))}
                         </>
                     ) : (

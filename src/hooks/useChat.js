@@ -11,6 +11,7 @@ import {
 import { AuthContext } from '~/context/auth.context';
 import { useSocket } from '~/context/socket.context';
 import { message } from 'antd';
+import { useParams } from 'react-router-dom';
 
 /**
  * useChat
@@ -25,6 +26,9 @@ export function useChat(conversationId) {
 
     // Ref
     // const isTypingRef = useRef();
+
+    // React Router
+    // const { conversationId } = useParams();
 
     // React Query (Tanstack)
     const queryClient = useQueryClient();
@@ -47,7 +51,6 @@ export function useChat(conversationId) {
 
     // Flatten pages -> messages array (oldest -> newest)
     const messages = (messagesInfiniteQuery.data?.pages || []).flatMap((p) => p.messages || []).reverse();
-    // console.log(messages);
 
     // --- HANDLE FUNCTION ---
     // Handler: on message_created (from server broadcast)
@@ -101,52 +104,14 @@ export function useChat(conversationId) {
 
         // Handle conversation read by
         const handleConversationReadBy = (payload) => {
-            console.log(
-                `Người dùng ${payload?.User?.userName} đã xem tin nhắn lúc ${payload?.readAt}, cuộc trò chuyện ${payload?.conversationId}`,
-            );
-
+            // console.log(
+            //     `Người dùng ${payload?.User?.userName} đã xem tin nhắn lúc ${payload?.readAt}, cuộc trò chuyện ${payload?.conversationId}`,
+            // );
             updateMessageStatus(queryClient, auth, payload);
-
-            // // Dữ liệu nhận được
-            // const { userId, conversationId, readAt } = payload;
-
-            // // Cập nhật lại trạng thái của tin nhắn trong query data cache
-            // queryClient.setQueryData(['messages', conversationId], (old) => {
-            //     // Nếu chưa có tin nhắn nào
-            //     if (!old) return old;
-
-            //     const pages = old.pages.map((p) => {
-            //         p.messages = p.messages.map((m) => {
-            //             // if (
-            //             //     m.messageId === messageId ||
-            //             //     (m.optimistic && m.metadata?.clientMessageId === payload.clientMessageId)
-            //             // ) {
-            //             //     m.statuses = m.statuses || {};
-            //             //     m.statuses[userId] = { status, at };
-            //             // }
-            //             // return m;
-
-            //             if (!m?.Statuses) return m; // Bỏ qua nếu không có Statuses
-
-            //             // Cập nhật readAt cho tất cả tin nhắn có readAt null
-            //             m.Statuses = m.Statuses.map((status) => {
-            //                 if (status?.userId === userId && status?.readAt === null) {
-            //                     return { ...status, readAt: readAt };
-            //                 } else {
-            //                     return status;
-            //                 }
-            //             });
-            //             return m;
-            //         });
-            //         return p;
-            //     });
-            //     console.log({ ...old, pages });
-            //     return { ...old, pages };
-            // });
         };
 
         // Register using on() which returns unsubscribe functions
-        const unsubMsg = on('message_created', handleMessageCreated); // Nhận tin nhắn mới
+        const unsubMsg = on('message_created', handleMessageCreated); // Nhận tin nhắn mới khi ở trong cuộc trò chuyện
         const unsubStatus = on('message_status_update', handleStatusUpdate); // Nhận cập nhật trạng thái tin nhắn
         const unsubTyping = on('typing', handleTypingDetect); // Nhận trạng thái gõ/nhập tin nhắn
         const unsubJoined = on('joined_conversation', handleJoinedConversation); // Nhận trạng thái đã tham gia cuộc trò chuyện
@@ -243,8 +208,10 @@ export function useChat(conversationId) {
                             //     });
                             //     return { ...old, pages };
                             // });
-                            // Không cần thiết thực hiện thay thế tin nhắn optimistic ở đây,...
-                            // vì sự kiện lắng nghe message_created sẽ làm việc này
+
+                            // # Không cần thiết thực hiện thay thế tin nhắn optimistic ở đây,...
+                            // # vì sự kiện lắng nghe message_created sẽ làm việc này
+
                             return resolve({ ok: true, message: serverMsg });
                         } else {
                             console.log('Server timeout or unexpected ack');
