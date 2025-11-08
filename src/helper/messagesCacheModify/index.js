@@ -3,13 +3,38 @@
  * - Nếu có tin nhắn optimistic với cùng clientMessageId thì thay thế nó.
  * - Ngược lại thì thêm vào nếu không trùng lặp.
  */
-export const addNewMessage = (queryClient, auth, conversationId, message) => {
+export const addNewMessage = (
+    queryClient,
+    auth,
+    conversationId,
+    message,
+    conversationInfo,
+    lastReadMessagesEachParticipant,
+) => {
+    console.log('THẰNG addNewMessage ĐƯỢC GỌI');
     // Thực hiện cập nhật cache
     queryClient.setQueryData(['messages', conversationId], (old) => {
         // If no cached pages yet, create initial page
         // Nếu chưa có tin nhắn nào
         if (!old) {
-            return { pages: [{ messages: [message], nextCursor: null }], pageParams: [] };
+            // const result = { pages: old?.pages, pageParams: [] };
+            // result.pages?.forEach((page) => {
+            //     if (page?.conversation?.conversationId === conversationId) {
+            //         page.messages = [message];
+            //     }
+            // });
+            // return result;
+            return {
+                pages: [
+                    {
+                        messages: [message],
+                        conversation: conversationInfo,
+                        lastReadMessagesEachParticipant: lastReadMessagesEachParticipant,
+                        nextCursor: null,
+                    },
+                ],
+                pageParams: [],
+            };
         }
         // Deep clone pages to avoid mutating cached object
         const pages = JSON.parse(JSON.stringify(old.pages || []));
@@ -21,12 +46,14 @@ export const addNewMessage = (queryClient, auth, conversationId, message) => {
                 // match by clientMessageId if optimistic, or by messageId
                 const mClientId = m?.metadata?.clientMessageId;
                 const sClientId = message?.metadata?.clientMessageId;
+                // Replace Optimistic Message
                 if (m.optimistic && sClientId && mClientId === sClientId && m.senderId === auth?.user?.userId) {
                     // replace optimistic with server message
                     pages[pi].messages[mi] = message;
                     replaced = true;
                     break;
                 }
+                // Check if message already replaced (prevent duplicate)
                 if (m.messageId === message.messageId && m.senderId === auth?.user?.userId) {
                     replaced = true; // already present
                     break;
@@ -40,7 +67,12 @@ export const addNewMessage = (queryClient, auth, conversationId, message) => {
             // console.log('Thêm mới');
             // Append to last page (assuming pages in chronological order oldest->newest)
             if (pages.length === 0) {
-                pages.push({ messages: [message], nextCursor: null });
+                pages.push({
+                    messages: [message],
+                    conversation: conversationInfo,
+                    lastReadMessagesEachParticipant: lastReadMessagesEachParticipant,
+                    nextCursor: null,
+                });
             } else {
                 // Unshift message vào page đầu tiên
                 pages[0].messages.unshift(message);
@@ -54,16 +86,38 @@ export const addNewMessage = (queryClient, auth, conversationId, message) => {
 /**
  * Thêm tin nhắn optimistic vào cache
  */
-export const addOptimisticMessage = (queryClient, conversationId, tempMessage) => {
+export const addOptimisticMessage = (
+    queryClient,
+    conversationId,
+    tempMessage,
+    conversationInfo,
+    lastReadMessagesEachParticipant,
+) => {
+    console.log('THẰNG addOptimisticMessage ĐƯỢC GỌI');
     // Thực hiện cập nhật cache
     queryClient.setQueryData(['messages', conversationId], (old) => {
         if (!old) {
-            return { pages: [{ messages: [tempMessage], nextCursor: null }], pageParams: [] };
+            return {
+                pages: [
+                    {
+                        messages: [tempMessage],
+                        conversation: conversationInfo,
+                        lastReadMessagesEachParticipant: lastReadMessagesEachParticipant,
+                        nextCursor: null,
+                    },
+                ],
+                pageParams: [],
+            };
         }
         // Deep clone pages to avoid mutating cached object
         const pages = JSON.parse(JSON.stringify(old.pages || []));
         if (pages.length === 0) {
-            pages.push({ messages: [tempMessage], nextCursor: null });
+            pages.push({
+                messages: [tempMessage],
+                conversation: conversationInfo,
+                lastReadMessagesEachParticipant: lastReadMessagesEachParticipant,
+                nextCursor: null,
+            });
         } else {
             // Unshift message vào page đầu tiên
             pages[0].messages.unshift(tempMessage);
@@ -74,6 +128,7 @@ export const addOptimisticMessage = (queryClient, conversationId, tempMessage) =
 
 /**
  * Cập nhật tin nhắn optimistic trong cache nếu ack (callback) của "send_message" trả về { status: "error", ... }
+ * (Chưa dùng đến)
  */
 export const markOptimisticMessageFailed = (queryClient, conversationId, clientMessageId, tempMessage) => {
     // Set optimistic message status = failed
@@ -99,11 +154,13 @@ export const markOptimisticMessageFailed = (queryClient, conversationId, clientM
 
 /**
  * Cập nhật tin nhắn optimistic trong cache nếu ack (callback) của "send_message" trả về { status: "error", ... } hoặc timeout
+ * (Chưa dùng đến)
  */
 export const handleOptimisticMessageTimeoutOrError = (queryClient, conversationId, clientMessageId, tempMessage) => {};
 
 /**
  * Xóa tin nhắn khỏi cache
+ * (Chưa dùng đến)
  */
 export const removeMessage = (queryClient, auth, conversationId, messageId) => {};
 
@@ -113,7 +170,7 @@ export const removeMessage = (queryClient, auth, conversationId, messageId) => {
  */
 export const updateMessageStatus = (queryClient, auth, payload) => {
     // Dữ liệu nhận được
-    const { userId, conversationId, readAt, deliveredAt, User } = payload;
+    const { conversationId, lastReadMessageId, readAt, userId } = payload;
     // Update message status
     queryClient.setQueryData(['messages', conversationId], (old) => {
         // Nếu chưa có tin nhắn nào
@@ -122,23 +179,14 @@ export const updateMessageStatus = (queryClient, auth, payload) => {
         //     return { pages: [{ messages: [{ ...tempMessage, status: 'failed' }], nextCursor: null }], pageParams: [] };
         // }
         const pages = old.pages.map((p) => {
-            p.messages = p.messages.map((m) => {
-                // Nếu người xem chưa có trong seenBy của message
-                if (!m?.seenBy?.find((item) => item.userId === userId)) {
-                    m.seenBy = [
-                        ...m.seenBy,
-                        {
-                            messageId: m.messageId,
-                            userId: userId,
-                            conversationId: conversationId,
-                            deliveredAt: deliveredAt,
-                            readAt: readAt,
-                            User: User,
-                        },
-                    ];
-                    return m;
+            p.lastReadMessagesEachParticipant = p.lastReadMessagesEachParticipant.map((lrm) => {
+                if (lrm.userId === userId) {
+                    return {
+                        ...lrm,
+                        lastReadMessageId: lastReadMessageId,
+                    };
                 }
-                return m;
+                return lrm;
             });
             return p;
         });

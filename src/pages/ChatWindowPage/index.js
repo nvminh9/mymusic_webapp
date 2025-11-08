@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef } from 'react';
+import { useRef } from 'react';
 import ChatWindow from '../components/ChatWindow';
 import { useParams } from 'react-router-dom';
 
@@ -8,17 +8,12 @@ function ChatWindowPage() {
     // Context
 
     // React Router
-    const { conversationId } = useParams();
+    // const { conversationId } = useParams();
 
     // Ref
     const chatWindowContainerRef = useRef(null);
 
     // --- HANDLE FUNCTION ---
-    useEffect(() => {
-        return () => {
-            //
-        };
-    }, [conversationId]);
 
     return (
         <div ref={chatWindowContainerRef} className="chatWindowContainer">

@@ -1,68 +1,250 @@
-import React from 'react';
-import { useQuery } from '@tanstack/react-query';
+import React, { Fragment, useContext } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { getConversationsApi } from '~/utils/api';
 import { Link, useNavigate } from 'react-router-dom';
+import { VscChevronLeft } from 'react-icons/vsc';
+import defaultAvatar from '~/assets/images/avatarDefault.jpg';
+import { IoEllipse, IoSyncSharp } from 'react-icons/io5';
+import { AuthContext } from '~/context/auth.context';
+import { formatMessageTime } from '~/utils/dateFormatter';
+import { message } from 'antd';
 
 export default function ConversationsList() {
     // State
 
     // Context
+    const { auth } = useContext(AuthContext);
 
     // Navigation
     const navigate = useNavigate();
 
-    // const { data, isLoading } = useQuery(['conversations'], getConversationsApi);
-
-    // const convs = data?.conversations || [
-    //     {
-    //         conversationId: '65e2a2f5-8a61-45d9-bc09-c1bdd1e36061',
-    //         title: 'DM Test',
-    //         lastMessage: {
-    //             content: 'Test last message',
-    //         },
-    //     },
-    // ];
-    const convs = [
-        {
-            conversationId: '65e2a2f5-8a61-45d9-bc09-c1bdd1e36061',
-            title: 'DM Test',
-            lastMessage: {
-                content: 'Test last message',
-            },
+    // React Query (Tanstack)
+    // const queryClient = useQueryClient();
+    // Fetch Conversation List (Chưa phân trang)
+    const {
+        data: conversationList,
+        isLoading,
+        status,
+    } = useQuery({
+        queryKey: ['conversationList'],
+        queryFn: async () => {
+            const res = await getConversationsApi(); // { status, message, data }
+            return res.data;
         },
-    ];
+        enabled: true,
+        refetchOnWindowFocus: true,
+        // staleTime: 1000 * 60, // Cần refetch sau 1 phút (có thể sẽ điều chỉnh lại thành lâu hơn)
+    });
+
+    // --- HANDLE FUNCTION ---
+    // Format thời gian tạo
+    const timeAgo = (timestamp) => {
+        const now = new Date();
+        const past = new Date(timestamp);
+        const seconds = Math.floor((now - past) / 1000);
+        const intervals = [
+            { label: 'năm', seconds: 31536000 },
+            { label: 'tháng', seconds: 2592000 },
+            { label: 'tuần', seconds: 604800 },
+            { label: 'ngày', seconds: 86400 },
+            { label: 'giờ', seconds: 3600 },
+            { label: 'phút', seconds: 60 },
+            { label: 'giây', seconds: 1 },
+        ];
+        // Nếu đã quá 30 phút thì return chi tiết
+        if (seconds >= intervals[5].seconds * 30) {
+            return formatTimestamp(timestamp);
+        }
+        for (let i = 0; i < intervals.length; i++) {
+            const interval = Math.floor(seconds / intervals[i].seconds);
+            if (interval >= 1) {
+                return `${interval} ${intervals[i].label} trước`;
+            }
+        }
+        return 'vừa xong';
+    };
+    // Format thời gian sang định dạng "dd/mm/yyyy HH:MM"
+    const formatTimestamp = (timestamp) => {
+        const date = new Date(timestamp);
+
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Tháng bắt đầu từ 0
+        const year = date.getFullYear();
+
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+
+        return `${day} Tháng ${month}, ${year} lúc ${hours}:${minutes}`;
+    };
 
     // Nếu đang load
-    // if (isLoading) {
-    //     return <div>Loading...</div>;
-    // }
+    if (isLoading) {
+        return (
+            <Fragment>
+                {/* Thanh chuyển tab */}
+                <div className="tabSwitchProfile">
+                    <div className="profileUserName">
+                        <span>Message</span>
+                    </div>
+                    <div className="btnComeBackBox">
+                        <button className="btnComeBack tooltip" onClick={() => navigate(-1)}>
+                            <VscChevronLeft />
+                            <span class="tooltiptext">Quay lại</span>
+                        </button>
+                    </div>
+                </div>
+                <div
+                    style={{
+                        height: '100%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        // padding: '30px 0px',
+                    }}
+                >
+                    <IoSyncSharp
+                        className="loadingAnimation"
+                        style={{ color: 'white', width: '20px', height: '20px' }}
+                    />
+                </div>
+            </Fragment>
+        );
+    }
 
     return (
-        <div style={{ width: '100%', height: 'max-content', overflow: 'auto' }}>
-            <h3>Conversations</h3>
-            <ul style={{ listStyle: 'none', padding: 0 }}>
-                {convs.map((c) => (
-                    <li key={c.conversationId}>
-                        <Link
-                            to={`${c.conversationId}`}
-                            style={{
-                                display: 'block',
-                                padding: 12,
-                                backgroundColor: 'whitesmoke',
-                                margin: '10px',
-                                borderRadius: '15px',
-                                textDecoration: 'none',
-                                color: '#000',
-                            }}
-                        >
-                            <div>
-                                <strong>{c.title || 'DM'}</strong>
-                            </div>
-                            <div style={{ fontSize: 12 }}>{c.lastMessage?.content?.slice(0, 80)}</div>
-                        </Link>
-                    </li>
-                ))}
-            </ul>
-        </div>
+        <Fragment>
+            <div className="conversationListContainer">
+                <ul className="conversationList">
+                    {/* Render Conversation List */}
+                    {conversationList &&
+                        conversationList?.map((conversation) => (
+                            <li className="conversationItem" key={conversation.conversationId}>
+                                <Link className="conversationLink" to={`${conversation.conversationId}`}>
+                                    {/* Left */}
+                                    <div className="left">
+                                        {/* Avatar */}
+                                        <div className="conversationAvatar">
+                                            <img
+                                                src={
+                                                    conversation.avatar
+                                                        ? process.env.REACT_APP_BACKEND_URL + conversation.avatar
+                                                        : defaultAvatar
+                                                }
+                                                loading="lazy"
+                                            />
+                                        </div>
+                                    </div>
+                                    {/* Right */}
+                                    <div className="right">
+                                        {/* User Name */}
+                                        <span className="conversationTitle">
+                                            {conversation.title ? conversation.title : 'Chưa có tên'}
+                                        </span>
+                                        {/* Tin nhắn mới nhất */}
+                                        <span className="newestMessage">
+                                            <span
+                                                className="content"
+                                                style={{
+                                                    color:
+                                                        !!conversation?.unseenMessages?.find(
+                                                            (message) =>
+                                                                message.messageId ===
+                                                                conversation?.newestMessage?.[0]?.messageId,
+                                                        ) &&
+                                                        conversation?.newestMessage?.[0]?.senderId !==
+                                                            auth?.user?.userId
+                                                            ? '#ffffff'
+                                                            : '',
+                                                    fontWeight:
+                                                        !!conversation?.unseenMessages?.find(
+                                                            (message) =>
+                                                                message.messageId ===
+                                                                conversation?.newestMessage?.[0]?.messageId,
+                                                        ) &&
+                                                        conversation?.newestMessage?.[0]?.senderId !==
+                                                            auth?.user?.userId
+                                                            ? '700'
+                                                            : '',
+                                                    width:
+                                                        conversation?.newestMessage?.[0]?.content?.length < 31
+                                                            ? 'max-content'
+                                                            : '',
+                                                }}
+                                            >
+                                                {conversation?.newestMessage?.[0]
+                                                    ? `${
+                                                          conversation?.newestMessage?.[0]?.senderId ===
+                                                          auth?.user?.userId
+                                                              ? 'Bạn: '
+                                                              : ''
+                                                      }${conversation?.newestMessage?.[0]?.content}`
+                                                    : ''}
+                                            </span>
+                                            {conversation?.newestMessage?.[0] && <span>·</span>}
+                                            <span className="createdAt">
+                                                {conversation?.newestMessage?.[0]?.createdAt
+                                                    ? `${formatMessageTime(
+                                                          conversation?.newestMessage?.[0]?.createdAt,
+                                                      )}`
+                                                    : ''}
+                                            </span>
+                                        </span>
+                                    </div>
+                                    {/* Mark if have new message unseen or seen, sent */}
+                                    {/* Unseen */}
+                                    {!!conversation?.unseenMessages?.find(
+                                        (message) => message.messageId === conversation?.newestMessage?.[0]?.messageId,
+                                    ) && (
+                                        <>
+                                            {conversation?.newestMessage?.[0]?.senderId !== auth?.user?.userId ? (
+                                                <div className="mark">
+                                                    <IoEllipse />
+                                                </div>
+                                            ) : (
+                                                <div className="mark">
+                                                    <span style={{ color: '#818181', fontWeight: '500' }}>Đã gửi</span>
+                                                </div>
+                                            )}
+                                        </>
+                                    )}
+                                    {/* Seen */}
+                                    {!!!conversation?.unseenMessages?.find(
+                                        (message) => message.messageId === conversation?.newestMessage?.[0]?.messageId,
+                                    ) && (
+                                        <>
+                                            {conversation?.newestMessage?.[0]?.senderId === auth?.user?.userId ? (
+                                                <>
+                                                    <div className="mark">
+                                                        <img
+                                                            className="markAvatar"
+                                                            src={
+                                                                conversation?.participants?.filter(
+                                                                    (participant) =>
+                                                                        participant?.User?.userId !==
+                                                                        auth?.user?.userId,
+                                                                )?.[0]?.User?.userAvatar
+                                                                    ? process.env.REACT_APP_BACKEND_URL +
+                                                                      conversation?.participants?.filter(
+                                                                          (participant) =>
+                                                                              participant?.User?.userId !==
+                                                                              auth?.user?.userId,
+                                                                      )?.[0]?.User?.userAvatar
+                                                                    : defaultAvatar
+                                                            }
+                                                            loading="lazy"
+                                                        />
+                                                    </div>
+                                                </>
+                                            ) : (
+                                                <></>
+                                            )}
+                                        </>
+                                    )}
+                                </Link>
+                            </li>
+                        ))}
+                </ul>
+            </div>
+        </Fragment>
     );
 }

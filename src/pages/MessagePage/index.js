@@ -1,51 +1,70 @@
-import { Outlet } from 'react-router-dom';
+import { Fragment, useEffect } from 'react';
 import ConversationsList from '../components/ConversationsList';
-import { useContext, useEffect } from 'react';
-import { AuthContext } from '~/context/auth.context';
-import { useQueryClient } from '@tanstack/react-query';
+import { VscChevronLeft } from 'react-icons/vsc';
+import { useNavigate } from 'react-router-dom';
 import { useSocket } from '~/context/socket.context';
-import { addNewMessage } from '~/helper/messagesCacheModify';
 
 function MessagePage() {
     // State
 
     // Context
-    const { auth } = useContext(AuthContext);
 
-    // React Query
-    const queryClient = useQueryClient();
+    // Navigation
+    const navigate = useNavigate();
 
     // useSocket
     const { socket, isConnected, on } = useSocket();
 
     // --- HANDLE FUNCTION ---
+    // Đăng ký hàm xử lý cho các sự kiện Socket nhận về từ Server
     useEffect(() => {
         if (!socket || !isConnected) return;
 
-        // Handle conversation new message
+        // Handle Conversation New Message
         const handleConversationNewMessage = (payload) => {
-            const { conversationId, message } = payload;
-            // console.log(conversationId, message);
-            // Thêm tin nhắn mới vào cache messages của conversation đó
-            // addNewMessage(queryClient, auth, conversationId, message);
+            console.log('Conversation New Message', payload);
         };
 
-        // Đăng ký callback xử lý cho socket event
-        const unsubConvNewMsg = on('conversation_new_message', handleConversationNewMessage); // Nhận tin nhắn mới của conversation
+        // Handle conversation read by
+        const handleConversationReadBy = (payload) => {
+            // console.log(
+            //     `Người dùng ${payload?.User?.userName} đã xem tin nhắn lúc ${payload?.readAt}, cuộc trò chuyện ${payload?.conversationId}`,
+            // );
+            console.log(payload);
+            // updateMessageStatus(queryClient, auth, payload);
+        };
+
+        // Đăng ký với socket
+        // const unsubConversationNewMessage = on('conversation_new_message', handleConversationNewMessage);
+        // const unsubReadBy = on('conversation_read_by', handleConversationReadBy); // Nhận trạng thái đã xem cuộc trò chuyện
 
         return () => {
-            unsubConvNewMsg?.();
+            // unsubConversationNewMessage?.();
+            // unsubReadBy?.();
         };
-    }, [socket, on, queryClient]);
+    }, [socket, on]);
 
     return (
-        <div className="messagePage">
-            <h1 style={{ color: 'white', margin: '0' }}>MessagePage</h1>
-            {/* Conversations List */}
-            <ConversationsList />
-            {/* Outlet */}
-            <Outlet />
-        </div>
+        <Fragment>
+            {/* Thanh chuyển tab */}
+            <div className="tabSwitchProfile">
+                <div className="profileUserName">
+                    <span>Nhắn tin</span>
+                </div>
+                <div className="btnComeBackBox">
+                    <button className="btnComeBack tooltip" onClick={() => navigate(-1)}>
+                        <VscChevronLeft />
+                        <span class="tooltiptext">Quay lại</span>
+                    </button>
+                </div>
+            </div>
+            <div className="messagePage">
+                {/* Conversations List */}
+                <ConversationsList />
+                {/* Outlet */}
+                {/* <Outlet /> */}
+            </div>
+        </Fragment>
     );
 }
 

@@ -276,7 +276,10 @@ function LeftContainer() {
                         <button
                             className="btnOpenSearch tooltip"
                             onClick={() => {
-                                if (location.pathname.split('/')[1] !== 'search' || searchParams.get('q') !== '') {
+                                if (
+                                    location.pathname.split('/')[1] !== 'search' ||
+                                    (location.pathname.split('/')[1] !== 'search' && searchParams.get('q') !== '')
+                                ) {
                                     navigate(`/search`);
                                 }
                             }}

@@ -9156,6 +9156,114 @@ body {
 .messagePage {
     position: relative;
     height: 100%;
+    .conversationListContainer {
+        background-color: #121212;
+        height: 100%;
+        width: 100%;
+        .conversationList {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            overflow-x: hidden;
+            overflow-y: auto;
+            .conversationItem {
+                width: 100%;
+                cursor: pointer;
+                transition: ease-out 0.2s;
+                .conversationLink {
+                    display: flex;
+                    align-items: center;
+                    justify-content: left;
+                    gap: 16px;
+                    height: 80px;
+                    width: 100%;
+                    border-bottom: 1px solid #1f1f1f;
+                    padding: 8px 16px;
+                    text-decoration: none;
+                    font-family: system-ui;
+                    font-size: 14px;
+                    font-weight: 400;
+                    color: #ffffff;
+                    position: relative;
+                    .left {
+                        .conversationAvatar {
+                            img {
+                                height: 53.2px;
+                                width: 53.2px;
+                                outline: rgba(135, 135, 135, 0.15) solid 1px;
+                                outline-offset: -1px;
+                                border-radius: 50%;
+                                object-fit: cover;
+                                cursor: pointer;
+                                // box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+                            }
+                        }
+                    }
+                    .right {
+                        display: grid;
+                        gap: 2px;
+                        .conversationTitle {
+                            font-family: system-ui;
+                            font-size: 16px;
+                            font-weight: 500;
+                            color: #ffffff;
+                            display: -webkit-box;
+                            -webkit-box-orient: vertical;
+                            -webkit-line-clamp: 1;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            text-align: left;
+                            width: 100%;
+                        }
+                        .newestMessage {
+                            font-family: system-ui;
+                            font-size: 14px;
+                            font-weight: 400;
+                            color: #818181;
+                            display: flex;
+                            align-items: center;
+                            gap: 3px;
+                            overflow: hidden;
+                            .content {
+                                display: -webkit-box;
+                                -webkit-box-orient: vertical;
+                                -webkit-line-clamp: 1;
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                                text-align: left;
+                                width: 60%;
+                            }
+                            .createdAt {
+                                //
+                            }
+                        }
+                    }
+                    .mark {
+                        color: #ffffff;
+                        font-size: 11px;
+                        position: absolute;
+                        right: 16px;
+                        .markAvatar {
+                            height: 12px;
+                            width: 12px;
+                            outline: rgba(135, 135, 135, 0.15) solid 1px;
+                            outline-offset: -1px;
+                            border-radius: 50%;
+                            object-fit: cover;
+                        }
+                    }
+                }
+            }
+            .conversationItem:hover {
+                background-color: #1f1f1f;
+            }
+            .conversationItem:active {
+                background-color: #000;
+            }
+        }
+    }
 }
 
 // CSS Chat Window
@@ -9170,6 +9278,7 @@ body {
     .chatWindow {
         height: 100%;
         width: 100%;
+        padding-top: 58px;
         .messagesList {
             height: 90%;
             overflow-x: hidden;
@@ -9178,8 +9287,10 @@ body {
             display: flex;
             flex: 1;
             flex-direction: column;
-            gap: 2.5px;
+            // gap: 2.5px;
+            gap: 1.2px;
             padding: 10px;
+            // scroll-behavior: smooth;
             .readAt {
                 .avatarReadAt {
                     height: 14px;
@@ -9288,6 +9399,25 @@ body {
             }
             .messageBubble:hover .createdAt {
                 opacity: 1;
+            }
+            .messageStatus {
+                display: flex;
+                align-items: center;
+                justify-content: right;
+                gap: 3px;
+                position: relative;
+                align-self: flex-end;
+                width: max-content;
+                max-width: 65%;
+                span {
+                    user-select: none;
+                    font-family: system-ui;
+                    font-size: 12px;
+                    font-weight: 500;
+                    color: #777777aa;
+                    background-color: transparent;
+                    border-radius: 20px;
+                }
             }
         }
         .messageInputContainer {

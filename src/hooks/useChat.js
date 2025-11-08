@@ -37,20 +37,34 @@ export function useChat(conversationId) {
     const messagesInfiniteQuery = useInfiniteQuery({
         queryKey: ['messages', conversationId],
         queryFn: async ({ pageParam = null }) => {
+            // conversationId, pageParam = nextCursor, limit = 20
             const res = await getMessagesApi(conversationId, pageParam, 20);
-            return res; // { messages, nextCursor }
+            return res; // { messages, conversation, lastReadMessageEachParticipant, nextCursor }
         },
         getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
         enabled: !!conversationId,
         refetchOnWindowFocus: false,
         staleTime: 1000 * 60, // 1 minute
+        // enabled: true,
+        // refetchOnWindowFocus: true,
     });
 
     // useSocket
     const { socket, isConnected, on, sendMessage, acknowledgeMessage, sendTyping, sendConversationRead } = useSocket();
 
     // Flatten pages -> messages array (oldest -> newest)
-    const messages = (messagesInfiniteQuery.data?.pages || []).flatMap((p) => p.messages || []).reverse();
+    // const messages = (messagesInfiniteQuery.data?.pages || []).flatMap((p) => p.messages || []).reverse();
+    const messages = (messagesInfiniteQuery.data?.pages || []).flatMap((p) => p.messages)?.reverse();
+    // lastReadMessagesEachParticipant
+    const lastReadMessagesEachParticipant =
+        (messagesInfiniteQuery.data?.pages || [])?.[
+            messagesInfiniteQuery?.data?.pages ? messagesInfiniteQuery?.data?.pages?.length - 1 : 0
+        ]?.lastReadMessagesEachParticipant || [];
+    // Conversation Info
+    const conversationInfo =
+        (messagesInfiniteQuery.data?.pages || [])?.[
+            messagesInfiniteQuery?.data?.pages ? messagesInfiniteQuery?.data?.pages?.length - 1 : 0
+        ]?.conversation || {};
 
     // --- HANDLE FUNCTION ---
     // Handler: on message_created (from server broadcast)
@@ -65,7 +79,14 @@ export function useChat(conversationId) {
         const handleMessageCreated = ({ message }) => {
             // console.log('Handle message created: ', message);
             // Thêm tin nhắn mới vào cache
-            addNewMessage(queryClient, auth, conversationId, message);
+            addNewMessage(
+                queryClient,
+                auth,
+                conversationId,
+                message,
+                conversationInfo,
+                lastReadMessagesEachParticipant,
+            );
         };
 
         // Handle message status update
@@ -99,7 +120,7 @@ export function useChat(conversationId) {
         const handleJoinedConversation = (payload) => {
             //
             // console.log('Joined Conversation: ', payload?.conversationId);
-            handleSendConversationRead(payload?.conversationId);
+            // handleSendConversationRead(payload?.conversationId);
         };
 
         // Handle conversation read by
@@ -107,6 +128,7 @@ export function useChat(conversationId) {
             // console.log(
             //     `Người dùng ${payload?.User?.userName} đã xem tin nhắn lúc ${payload?.readAt}, cuộc trò chuyện ${payload?.conversationId}`,
             // );
+            // console.log(payload);
             updateMessageStatus(queryClient, auth, payload);
         };
 
@@ -152,12 +174,17 @@ export function useChat(conversationId) {
             metadata,
             createdAt: new Date().toISOString(),
             optimistic: true,
-            seenBy: [],
             status: 'sending',
         };
 
         // Thêm tin nhắn optimistic vào cache
-        addOptimisticMessage(queryClient, conversationId, tempMessage);
+        addOptimisticMessage(
+            queryClient,
+            conversationId,
+            tempMessage,
+            conversationInfo,
+            lastReadMessagesEachParticipant,
+        );
 
         // Send via socket with ack callback
         return new Promise((resolve, reject) => {
@@ -285,6 +312,8 @@ export function useChat(conversationId) {
     return {
         ...messagesInfiniteQuery,
         messages,
+        lastReadMessagesEachParticipant,
+        conversationInfo,
         send,
         sendTypingMessage,
         sendAckMessage, // read/delivered acks

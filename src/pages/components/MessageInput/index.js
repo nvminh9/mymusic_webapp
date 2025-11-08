@@ -22,7 +22,8 @@ export default function MessageInput({ onSend, onTyping, conversationId }) {
         }, 800);
     };
     // Handle gửi tin nhắn
-    const handleSend = async () => {
+    const handleSend = async (e) => {
+        e.preventDefault();
         if (!text.trim()) return;
         const clientMessageId = uuidv4();
         const metadata = { clientMessageId };
@@ -36,16 +37,18 @@ export default function MessageInput({ onSend, onTyping, conversationId }) {
             className="messageInputContainer"
             // style={{ padding: 12, borderTop: '1px solid #eee', display: 'flex', gap: 8 }}
         >
-            <input
-                id="message"
-                name="message"
-                className="messageInput"
-                value={text}
-                onChange={handleChange}
-                placeholder="Tin nhắn..."
-                autoComplete="off"
-                // style={{ flex: 1, padding: 8 }}
-            />
+            <form onSubmit={handleSend} style={{ width: '100%' }}>
+                <input
+                    id="message"
+                    name="message"
+                    className="messageInput"
+                    value={text}
+                    onChange={handleChange}
+                    placeholder="Tin nhắn..."
+                    autoComplete="off"
+                    // style={{ flex: 1, padding: 8 }}
+                />
+            </form>
             <button className="btnSendMessage" onClick={handleSend}>
                 {/* <CiPaperplane /> */}
                 <IoSend />

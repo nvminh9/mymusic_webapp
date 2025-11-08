@@ -8,7 +8,10 @@ import { useChat } from '~/hooks/useChat';
 import { message } from 'antd';
 import { CgChevronDown } from 'react-icons/cg';
 import { VscChevronLeft } from 'react-icons/vsc';
-import { IoChatbubbles } from 'react-icons/io5';
+import { IoChatbubbles, IoSyncSharp } from 'react-icons/io5';
+import { useQueryClient } from '@tanstack/react-query';
+import defaultAvatar from '~/assets/images/avatarDefault.jpg';
+import MessageList from '../MessageList';
 
 export default function ChatWindow() {
     // State
@@ -28,10 +31,17 @@ export default function ChatWindow() {
     // useSocket
     const { socket, isConnected, joinConversation, leaveConversation } = useSocket();
 
+    // React Query
+    // const queryClient = useQueryClient();
+
     // Custom Hooks
     // useChat
     const {
         messages,
+        lastReadMessagesEachParticipant,
+        conversationInfo,
+        isLoading,
+        // isFetched,
         fetchNextPage,
         hasNextPage,
         isFetchingNextPage,
@@ -46,31 +56,25 @@ export default function ChatWindow() {
     } = useChat(conversationId);
 
     // Ref
-    const messagesListRef = useRef(null);
-    const endRef = useRef(null);
-    const loadMoreMessagesRef = useRef(null);
+    // const messagesListRef = useRef(null);
+    // const loadMoreMessagesRef = useRef(null);
+    // const endRef = useRef(null);
 
     // --- HANDLE FUNCTION ---
-    //
+    // Handle khi mới vào ChatWindow (hoặc conversationId thay đổi)
     useEffect(() => {
         // Đổi title trang
         document.title = 'Chat | mymusic: Music from everyone';
-        // Scroll xuống cuối trang
-        // endRef.current?.scrollIntoView({ behavior: 'smooth' });
-
         // Refetch
-        refetch();
-    }, [conversationId]);
+        // refetch();
+    }, []);
     // Handle joinConversation khi mới vào Chat Window
     useEffect(() => {
         if (!socket && !isConnected) {
             console.log('Socket chưa connect');
             return;
         }
-
-        // console.log('Join conversation: ', conversationId);
         joinConversation(conversationId);
-
         // cleanup
         return () => {
             // console.log('Leave conversation: ', conversationId);
@@ -78,107 +82,123 @@ export default function ChatWindow() {
         };
     }, [conversationId, socket, joinConversation, leaveConversation]);
     // Handle Auto Load More Message (Intersection Observer loadMoreMessagesRef)
-    useEffect(() => {
-        //
-        if (!hasNextPage || isFetchingNextPage) return;
+    // useEffect(() => {
+    //     //
+    //     if (!hasNextPage || isFetchingNextPage) return;
 
-        // Messages List
-        const messagesListElement = messagesListRef.current;
-        let messagesListElementScrollTimeout;
+    //     // Messages List
+    //     const messagesListElement = messagesListRef.current;
+    //     let messagesListElementScrollTimeout;
 
-        // Observer Load More Ref
-        const observer = new IntersectionObserver(([entry]) => {
-            if (entry.isIntersecting) {
-                fetchNextPage();
-                messagesListElement.scrollTop += 40;
-                // messagesListElementScrollTimeout = setTimeout(() => {
-                //     messagesListElement.scrollTop += 70;
-                // }, 50);
-            }
-        });
-        if (loadMoreMessagesRef.current) observer.observe(loadMoreMessagesRef.current);
-        return () => {
-            if (loadMoreMessagesRef.current) observer.disconnect();
-            // clearTimeout(messagesListElementScrollTimeout);
-        };
-    }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
+    //     // Observer Load More Ref
+    //     const observer = new IntersectionObserver(([entry]) => {
+    //         if (entry.isIntersecting) {
+    //             fetchNextPage();
+    //             messagesListElement.scrollTop += 40;
+    //             // messagesListElementScrollTimeout = setTimeout(() => {
+    //             //     messagesListElement.scrollTop += 70;
+    //             // }, 50);
+    //         }
+    //     });
+    //     if (loadMoreMessagesRef.current) observer.observe(loadMoreMessagesRef.current);
+    //     return () => {
+    //         if (loadMoreMessagesRef.current) observer.disconnect();
+    //         // clearTimeout(messagesListElementScrollTimeout);
+    //     };
+    // }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
     // Handle when reach bottom of messages list (newest message, Intersection Observer endRef)
-    useEffect(() => {
-        // Observer endRef
-        const endRefObserver = new IntersectionObserver(([entry]) => {
-            if (entry.isIntersecting) {
-                // endRef is intersected
-                setIsActiveBtnScrollToBottom(false);
-            }
-        });
-        if (endRef.current) endRefObserver.observe(endRef.current);
-        return () => {
-            if (endRef.current) endRefObserver.disconnect();
-        };
-    }, []);
+    // useEffect(() => {
+    //     // Observer endRef
+    //     const endRefObserver = new IntersectionObserver(([entry]) => {
+    //         if (entry.isIntersecting) {
+    //             // endRef is intersected
+    //             setIsActiveBtnScrollToBottom(false);
+    //         }
+    //     });
+    //     if (endRef.current) endRefObserver.observe(endRef.current);
+    //     return () => {
+    //         if (endRef.current) endRefObserver.disconnect();
+    //     };
+    // }, []);
+    // Handle khi lần đầu load data
+    // useEffect(() => {
+    //     // // Check messagesListRef
+    //     const messagesListElement = messagesListRef.current;
+    //     if (!messagesListElement) {
+    //         return;
+    //     }
+    //     // Scroll xuống tin nhắn mới nhất khi lần đầu load messages (when initial load done)
+    //     // let scrollToEndRefTimeout;
+    //     // if (messagesListElement.scrollTop === 0 || messages.length <= 20) {
+    //     //     // Small delay to ensure DOM updated
+    //     //     requestAnimationFrame(() => {
+    //     //         messagesListElement.scrollTop = messagesListElement.scrollHeight;
+    //     //         scrollToEndRefTimeout = setTimeout(() => {
+    //     //             endRef.current?.scrollIntoView({ behavior: 'smooth' });
+    //     //         }, 80);
+    //     //     });
+    //     // }
+    //     // //
+    //     // return () => {
+    //     //     clearTimeout(scrollToEndRefTimeout);
+    //     // };
+    // }, [isLoading]);
     // Handle khi có message mới (Khi messages đã được cập nhật và đã hiển thị ra UI, sau đó cần xử lý để scroll xuống cho hợp lý)
-    useEffect(() => {
-        // console.log('Messages Changed:', messages);
+    // useEffect(() => {
+    //     // Auto-scroll to bottom on new messages
+    //     // endRef.current?.scrollIntoView({ behavior: 'smooth' });
 
-        // // Tìm tin nhắn cuối cùng do chính user này gửi
-        // const reversedMessages = [...messages].reverse();
-        // const lastMessageByAuthUser = reversedMessages.find((m) => m.senderId === auth?.user?.userId);
-        // setLastMessageAuthUserSend(lastMessageByAuthUser);
+    //     // Check messagesListRef
+    //     const messagesListElement = messagesListRef.current;
+    //     if (!messagesListElement) {
+    //         return;
+    //     }
 
-        // Auto-scroll to bottom on new messages
-        // endRef.current?.scrollIntoView({ behavior: 'smooth' });
+    //     // Ở các lần sau khi có message mới thì có 2 trường hợp
+    //     // Nếu người dùng đang đọc các tin nhắn cũ thì không tự scroll xuống...
+    //     // ...mà có thể thông báo new message và có nút bấm để scroll xuống
+    //     if (
+    //         Math.floor(messagesListElement.scrollHeight - messagesListElement.offsetHeight) -
+    //             Math.floor(messagesListElement.scrollTop) >
+    //         100
+    //     ) {
+    //         // console.log('New message!');
+    //         if (!(messagesListElement.scrollTop === 0) && messages.length > 20) {
+    //             setIsActiveBtnScrollToBottom(true);
+    //         }
+    //     } else {
+    //         // Nếu người dùng đang ở dưới cùng của Chat Window (đang chat) thì scroll xuống để hiện new message
+    //         endRef.current?.scrollIntoView({ behavior: 'smooth' });
+    //     }
 
-        // Check messagesListRef
-        const messagesListElement = messagesListRef.current;
-        if (!messagesListElement) {
-            return;
-        }
+    //     // Handle ACK Message: Gửi cập nhật trạng thái đã xem tin nhắn
+    //     // (Tạm thời xử lý nếu người dùng đang joined conversation, thì khi có tin nhắn mới nó sẽ được tính là đã được xem)
+    //     // (NÂNG CAO: Chỉ tính là đã xem khi người dùng ở dưới cùng của ChatWindow,...
+    //     // ...còn đang scroll lên để đọc tin nhắn cũ sẽ không tính là đã xem)
+    //     handleSendConversationRead(conversationId); // Hàm được gọi khi người dùng đang trong conversation và có tin nhắn mới đến làm thay đổi messages
 
-        // Ở các lần sau khi có message mới thì có 2 trường hợp
-        // Nếu người dùng đang đọc các tin nhắn cũ thì không tự scroll xuống...
-        // ...mà có thể thông báo new message và có nút bấm để scroll xuống
-        if (
-            Math.floor(messagesListElement.scrollHeight - messagesListElement.offsetHeight) -
-                Math.floor(messagesListElement.scrollTop) >
-            100
-        ) {
-            // console.log('New message!');
-            if (!(messagesListElement.scrollTop === 0) && messages.length > 20) {
-                setIsActiveBtnScrollToBottom(true);
-            }
-        } else {
-            // Nếu người dùng đang ở dưới cùng của Chat Window (đang chat) thì scroll xuống để hiện new message
-            endRef.current?.scrollIntoView({ behavior: 'smooth' });
-        }
-
-        // Handle ACK Message: Gửi cập nhật trạng thái đã xem tin nhắn
-        // (Tạm thời xử lý nếu người dùng đang joined conversation, thì khi có tin nhắn mới nó sẽ được tính là đã được xem)
-        // (NÂNG CAO: Chỉ tính là đã xem khi người dùng ở dưới cùng của ChatWindow,...
-        // ...còn đang scroll lên để đọc tin nhắn cũ sẽ không tính là đã xem)
-        handleSendConversationRead(conversationId); // Hàm được gọi khi người dùng đang trong conversation và có tin nhắn mới đến làm thay đổi messages
-
-        // Scroll xuống tin nhắn mới nhất khi lần đầu load messages (when initial load)
-        // if (messagesListElement.scrollTop === 0 && messages.length <= 20) {
-        //     // Small delay to ensure DOM updated
-        //     requestAnimationFrame(() => {
-        //         messagesListElement.scrollTop = messagesListElement.scrollHeight;
-        //     });
-        // }
-        let scrollToEndRefTimeout;
-        if (messagesListElement.scrollTop === 0) {
-            // Small delay to ensure DOM updated
-            requestAnimationFrame(() => {
-                messagesListElement.scrollTop = messagesListElement.scrollHeight;
-                scrollToEndRefTimeout = setTimeout(() => {
-                    endRef.current?.scrollIntoView({ behavior: 'smooth' });
-                }, 80);
-            });
-        }
-        //
-        return () => {
-            clearTimeout(scrollToEndRefTimeout);
-        };
-    }, [messages?.length]);
+    //     // Scroll xuống tin nhắn mới nhất khi lần đầu load messages (when initial load)
+    //     // if (messagesListElement.scrollTop === 0 && messages.length <= 20) {
+    //     //     // Small delay to ensure DOM updated
+    //     //     requestAnimationFrame(() => {
+    //     //         messagesListElement.scrollTop = messagesListElement.scrollHeight;
+    //     //     });
+    //     // }
+    //     let scrollToEndRefTimeout;
+    //     if (messagesListElement.scrollTop === 0) {
+    //         // Small delay to ensure DOM updated
+    //         requestAnimationFrame(() => {
+    //             messagesListElement.scrollTop = messagesListElement.scrollHeight;
+    //             scrollToEndRefTimeout = setTimeout(() => {
+    //                 endRef.current?.scrollIntoView({ behavior: 'smooth' });
+    //             }, 80);
+    //         });
+    //     }
+    //     //
+    //     return () => {
+    //         clearTimeout(scrollToEndRefTimeout);
+    //     };
+    // }, [messages?.length]);
     // Handle gửi tin nhắn
     const handleSend = async ({ content, metadata }) => {
         //
@@ -190,12 +210,136 @@ export default function ChatWindow() {
         sendTypingMessage({ conversationId, isTyping });
     };
 
+    // Initial Loading...
+    if (isLoading) {
+        return (
+            <>
+                {/* Chat Window Header */}
+                <div className="tabSwitchProfile">
+                    <div
+                        className="profileUserName"
+                        style={{
+                            gap: '10px',
+                            background: 'transparent',
+                            width: 'max-content',
+                            height: '100%',
+                            padding: '10px',
+                        }}
+                    >
+                        {/* User Avatar */}
+                        <img
+                            style={{
+                                height: '36px',
+                                width: '36px',
+                                outline: 'rgba(135, 135, 135, 0.15) solid 1px',
+                                outlineOffset: '-1px',
+                                borderRadius: '50%',
+                                objectFit: 'cover',
+                                cursor: 'pointer',
+                            }}
+                            src={
+                                conversationInfo?.avatar
+                                    ? process.env.REACT_APP_BACKEND_URL + conversationInfo?.avatar
+                                    : defaultAvatar
+                            }
+                            onClick={() => {
+                                if (!conversationInfo?.title) return;
+                                navigate(`/profile/${conversationInfo?.title}`);
+                            }}
+                        />
+                        {/* User Name */}
+                        <span
+                            style={{ cursor: 'pointer' }}
+                            onMouseEnter={(e) => {
+                                e.target.style.textDecoration = 'underline';
+                            }}
+                            onMouseLeave={(e) => {
+                                e.target.style.textDecoration = 'unset';
+                            }}
+                            onClick={() => {
+                                if (!conversationInfo?.title) return;
+                                navigate(`/profile/${conversationInfo?.title}`);
+                            }}
+                        >
+                            {conversationInfo?.title}
+                        </span>
+                    </div>
+                    <div className="btnComeBackBox">
+                        <button className="btnComeBack tooltip" onClick={() => navigate(-1)}>
+                            <VscChevronLeft />
+                            <span class="tooltiptext">Quay lại</span>
+                        </button>
+                    </div>
+                </div>
+                <div
+                    style={{
+                        height: '100%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        // padding: '30px 0px',
+                    }}
+                >
+                    <IoSyncSharp
+                        className="loadingAnimation"
+                        style={{ color: 'white', width: '20px', height: '20px' }}
+                    />
+                </div>
+            </>
+        );
+    }
+
     return (
         <>
             {/* Chat Window Header */}
             <div className="tabSwitchProfile">
-                <div className="profileUserName">
-                    <span>Chat: {conversationId}</span>
+                <div
+                    className="profileUserName"
+                    style={{
+                        gap: '10px',
+                        background: 'transparent',
+                        width: 'max-content',
+                        height: '100%',
+                        padding: '10px',
+                    }}
+                >
+                    {/* User Avatar */}
+                    <img
+                        style={{
+                            height: '36px',
+                            width: '36px',
+                            outline: 'rgba(135, 135, 135, 0.15) solid 1px',
+                            outlineOffset: '-1px',
+                            borderRadius: '50%',
+                            objectFit: 'cover',
+                            cursor: 'pointer',
+                        }}
+                        src={
+                            conversationInfo?.avatar
+                                ? process.env.REACT_APP_BACKEND_URL + conversationInfo?.avatar
+                                : defaultAvatar
+                        }
+                        onClick={() => {
+                            if (!conversationInfo?.title) return;
+                            navigate(`/profile/${conversationInfo?.title}`);
+                        }}
+                    />
+                    {/* User Name */}
+                    <span
+                        style={{ cursor: 'pointer' }}
+                        onMouseEnter={(e) => {
+                            e.target.style.textDecoration = 'underline';
+                        }}
+                        onMouseLeave={(e) => {
+                            e.target.style.textDecoration = 'unset';
+                        }}
+                        onClick={() => {
+                            if (!conversationInfo?.title) return;
+                            navigate(`/profile/${conversationInfo?.title}`);
+                        }}
+                    >
+                        {conversationInfo?.title}
+                    </span>
                 </div>
                 <div className="btnComeBackBox">
                     <button className="btnComeBack tooltip" onClick={() => navigate(-1)}>
@@ -207,129 +351,16 @@ export default function ChatWindow() {
             {/* Chat Window Main */}
             <div className="chatWindow">
                 {/* Message List */}
-                <div className="messagesList" ref={messagesListRef}>
-                    {/* Load More Ref */}
-                    <div ref={loadMoreMessagesRef}></div>
-                    {/* Render Messages List */}
-                    {messages ? (
-                        <>
-                            {messages.length > 0 ? (
-                                <>
-                                    {messages?.map((m, index, array) => {
-                                        return (
-                                            <MessageBubble
-                                                key={m.messageId}
-                                                message={m}
-                                                index={index}
-                                                messages={array}
-                                                isOwn={m.senderId === auth?.user?.userId}
-                                                isPreviousSameSender={
-                                                    index > 0 ? array[index - 1].senderId === m.senderId : false
-                                                }
-                                                isForwardSameSender={
-                                                    index < array?.length - 1
-                                                        ? array[index + 1].senderId === m.senderId
-                                                        : false
-                                                }
-                                            />
-                                        );
-                                    })}
-                                </>
-                            ) : (
-                                <div
-                                    style={{
-                                        width: '100%',
-                                        height: '100%',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                    }}
-                                >
-                                    <div
-                                        className="newConversation"
-                                        style={{
-                                            width: '100%',
-                                            display: 'grid',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            gap: '15px',
-                                        }}
-                                    >
-                                        <div
-                                            className=""
-                                            style={{
-                                                background: '#2e2e2e80',
-                                                width: 'max-content',
-                                                height: 'max-content',
-                                                padding: '15px',
-                                                borderRadius: '50%',
-                                                margin: '0 auto',
-                                            }}
-                                        >
-                                            <IoChatbubbles style={{ fontSize: '75px', color: '#121212' }} />
-                                        </div>
-                                        <div className="">
-                                            <span
-                                                style={{
-                                                    fontFamily: 'system-ui',
-                                                    fontSize: '22px',
-                                                    fontWeight: '700',
-                                                    color: '#ffffff',
-                                                    userSelect: 'none',
-                                                }}
-                                            >
-                                                Hãy bắt đầu cuộc trò chuyện
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
-                        </>
-                    ) : (
-                        <span style={{ color: '#ffffff' }}>Loading...</span>
-                    )}
-                    {/* End Ref */}
-                    <div ref={endRef} />
-                </div>
-                {/* Button Scroll To Bottom */}
-                {(isActiveBtnScrollToBottom || isTyping?.isTyping) && (
-                    <div className="btnScrollToBottom">
-                        {/* Button Scroll to Bottom */}
-                        {isActiveBtnScrollToBottom && (
-                            <div className="btnContainer">
-                                <button
-                                    onClick={() => {
-                                        endRef.current?.scrollIntoView({ behavior: 'smooth' });
-                                        setIsActiveBtnScrollToBottom(false);
-                                    }}
-                                >
-                                    {/* Tin nhắn mới <CgChevronDown /> */}
-                                    <CgChevronDown />
-                                </button>
-                            </div>
-                        )}
-                        {/* Is Typing */}
-                        {isTyping?.isTyping &&
-                            isTyping?.conversationId === conversationId &&
-                            isTyping?.userId !== auth?.user?.userId && (
-                                <div className="btnContainer">
-                                    <button
-                                        onClick={() => {}}
-                                        style={{
-                                            width: '48px',
-                                            padding: '10px 8px',
-                                            backgroundColor: 'transparent',
-                                            cursor: 'unset',
-                                            transform: 'unset',
-                                        }}
-                                    >
-                                        {/* Tin nhắn mới <CgChevronDown /> */}
-                                        {/* <CgChevronDown /> */}
-                                        <div class="dot-elastic"></div>
-                                    </button>
-                                </div>
-                            )}
-                    </div>
+                {messages && (
+                    <MessageList
+                        messages={messages}
+                        lastReadMessagesEachParticipant={lastReadMessagesEachParticipant}
+                        fetchNextPage={fetchNextPage}
+                        hasNextPage={hasNextPage}
+                        isFetchingNextPage={isFetchingNextPage}
+                        isTyping={isTyping}
+                        conversationId={conversationId}
+                    />
                 )}
                 {/* Message Input */}
                 <MessageInput onSend={handleSend} onTyping={handleTyping} conversationId={conversationId} />
