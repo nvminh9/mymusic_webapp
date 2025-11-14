@@ -42,11 +42,11 @@ export function useChat(conversationId) {
             return res; // { messages, conversation, lastReadMessageEachParticipant, nextCursor }
         },
         getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
-        enabled: !!conversationId,
-        refetchOnWindowFocus: false,
-        staleTime: 1000 * 60, // 1 minute
-        // enabled: true,
-        // refetchOnWindowFocus: true,
+        // enabled: !!conversationId,
+        // refetchOnWindowFocus: false,
+        // staleTime: 1000 * 60, // 1 minute
+        enabled: true,
+        refetchOnWindowFocus: true,
     });
 
     // useSocket
@@ -56,10 +56,9 @@ export function useChat(conversationId) {
     // const messages = (messagesInfiniteQuery.data?.pages || []).flatMap((p) => p.messages || []).reverse();
     const messages = (messagesInfiniteQuery.data?.pages || []).flatMap((p) => p.messages)?.reverse();
     // lastReadMessagesEachParticipant
-    const lastReadMessagesEachParticipant =
-        (messagesInfiniteQuery.data?.pages || [])?.[
-            messagesInfiniteQuery?.data?.pages ? messagesInfiniteQuery?.data?.pages?.length - 1 : 0
-        ]?.lastReadMessagesEachParticipant || [];
+    const lastReadMessagesEachParticipant = (messagesInfiniteQuery.data?.pages || [])?.[
+        messagesInfiniteQuery?.data?.pages ? messagesInfiniteQuery?.data?.pages?.length - 1 : 0
+    ]?.lastReadMessagesEachParticipant;
     // Conversation Info
     const conversationInfo =
         (messagesInfiniteQuery.data?.pages || [])?.[
@@ -128,7 +127,8 @@ export function useChat(conversationId) {
             // console.log(
             //     `Người dùng ${payload?.User?.userName} đã xem tin nhắn lúc ${payload?.readAt}, cuộc trò chuyện ${payload?.conversationId}`,
             // );
-            // console.log(payload);
+            console.log(payload);
+            console.log('handleConversationReadBy bên ChatWindow');
             updateMessageStatus(queryClient, auth, payload);
         };
 
@@ -304,9 +304,9 @@ export function useChat(conversationId) {
     /**
      * sendConversationRead: mark conversation as read
      */
-    const handleSendConversationRead = (conversationId) => {
-        //
-        sendConversationRead(conversationId);
+    const handleSendConversationRead = ({ conversationId, lastReadMessageId }) => {
+        // Gọi hàm gửi cập nhật trạng thái đã xem tin nhắn qua socket
+        sendConversationRead(conversationId, lastReadMessageId);
     };
 
     return {

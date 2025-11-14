@@ -14,9 +14,9 @@ function MessageStatus({ message, lastReadMessagesEachParticipant, isNewestMessa
                 {/* Render Đã gửi */}
                 {isNewestMessageByAuthUser &&
                     !message.optimistic &&
-                    !!!lastReadMessagesEachParticipant?.find((i) => i.lastReadMessageId === message.messageId) && (
-                        <span>Đã gửi</span>
-                    )}
+                    !!!lastReadMessagesEachParticipant?.find(
+                        (i) => i.userId !== auth?.user?.userId && i.lastReadMessageId === message.messageId,
+                    ) && <span>Đã gửi</span>}
                 {/* Render Đã xem */}
                 {lastReadMessagesEachParticipant?.map((i) => {
                     if (i.userId !== auth?.user?.userId && i.lastReadMessageId === message.messageId) {

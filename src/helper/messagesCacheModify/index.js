@@ -11,7 +11,7 @@ export const addNewMessage = (
     conversationInfo,
     lastReadMessagesEachParticipant,
 ) => {
-    console.log('THẰNG addNewMessage ĐƯỢC GỌI');
+    // console.log('THẰNG addNewMessage ĐƯỢC GỌI');
     // Thực hiện cập nhật cache
     queryClient.setQueryData(['messages', conversationId], (old) => {
         // If no cached pages yet, create initial page
@@ -93,7 +93,7 @@ export const addOptimisticMessage = (
     conversationInfo,
     lastReadMessagesEachParticipant,
 ) => {
-    console.log('THẰNG addOptimisticMessage ĐƯỢC GỌI');
+    // console.log('THẰNG addOptimisticMessage ĐƯỢC GỌI');
     // Thực hiện cập nhật cache
     queryClient.setQueryData(['messages', conversationId], (old) => {
         if (!old) {
@@ -165,13 +165,13 @@ export const handleOptimisticMessageTimeoutOrError = (queryClient, conversationI
 export const removeMessage = (queryClient, auth, conversationId, messageId) => {};
 
 /**
- * Cập nhật trạng thái tin nhắn trong cache khi bấm xem conversation, xem message
- * payload: { userId, conversationId, readAt, deliveredAt, User }
+ * Cập nhật trạng thái tin nhắn trong cache khi bấm xem conversation, xem message.
+ * Payload: { userId, conversationId, readAt, deliveredAt, User }
  */
 export const updateMessageStatus = (queryClient, auth, payload) => {
     // Dữ liệu nhận được
     const { conversationId, lastReadMessageId, readAt, userId } = payload;
-    // Update message status
+    // Update messages cache
     queryClient.setQueryData(['messages', conversationId], (old) => {
         // Nếu chưa có tin nhắn nào
         if (!old) return old;
@@ -192,5 +192,21 @@ export const updateMessageStatus = (queryClient, auth, payload) => {
         });
 
         return { ...old, pages };
+    });
+    // Update conversationList cache
+    queryClient.setQueryData(['conversationList'], (oldConvList) => {
+        // Nếu chưa có danh sách cuộc trò chuyện
+        if (!oldConvList) return oldConvList;
+
+        const newConvList = oldConvList.map((conv) => {
+            if (conv.conversationId === conversationId) {
+                return {
+                    ...conv,
+                    unseenMessages: [],
+                };
+            }
+            return conv;
+        });
+        return newConvList;
     });
 };

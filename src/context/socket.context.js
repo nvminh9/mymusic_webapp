@@ -200,9 +200,9 @@ export function SocketProvider({ children, serverUrl }) {
     };
 
     // Handle emit socket event "conversation_read"
-    const sendConversationRead = (conversationId) => {
+    const sendConversationRead = (conversationId, lastReadMessageId) => {
         if (!socket || !isConnected) return;
-        socket.emit('conversation_read', { conversationId });
+        socket.emit('conversation_read', { conversationId, lastReadMessageId });
     };
 
     // Handle đăng ký callback cho socket event

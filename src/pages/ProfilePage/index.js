@@ -13,7 +13,14 @@ import {
     IoCloseSharp,
 } from 'react-icons/io5';
 import { AuthContext } from '~/context/auth.context';
-import { createFollowUserApi, getFollowersApi, getUserProfileInfoApi, signOutApi, unfollowUserApi } from '~/utils/api';
+import {
+    createConversationApi,
+    createFollowUserApi,
+    getFollowersApi,
+    getUserProfileInfoApi,
+    signOutApi,
+    unfollowUserApi,
+} from '~/utils/api';
 import defaultAvatar from '~/assets/images/avatarDefault.jpg';
 import { message } from 'antd';
 import ArticleProfile from '../components/ArticleProfile';
@@ -173,6 +180,27 @@ function ProfilePage() {
                 content: 'Hủy theo dõi người dùng không thành công',
                 duration: 1.5,
             });
+            return;
+        }
+    };
+    // Handle Button Message
+    const handleBtnMessage = async (e) => {
+        //
+        try {
+            // Call API tạo conversation
+            // Payload: { type: 'dm' || 'group', participantIds: ['781ac2b1a24',...], title: '', avatar: '' }
+            const res = await createConversationApi({
+                type: 'dm',
+                participantIds: JSON.stringify([`${auth?.user?.userId}`, `${profileInfo?.user?.userId}`]),
+            });
+            // Check if conversation created or existing, then navigate to conversation with conversationId
+            if (res?.conversation && res?.conversation?.conversationId) {
+                navigate(`/messages/${res?.conversation?.conversationId}`);
+            } else {
+                console.log('Tạo cuộc trò chuyện không thành công');
+            }
+        } catch (error) {
+            console.log('Error Handle Button Message: ', error);
             return;
         }
     };
@@ -528,7 +556,9 @@ function ProfilePage() {
                                                             </button>
                                                         )}
                                                         {/* Nút nhắn tin */}
-                                                        <button className="btnMessage">Nhắn tin</button>
+                                                        <button className="btnMessage" onClick={handleBtnMessage}>
+                                                            Nhắn tin
+                                                        </button>
                                                     </>
                                                 )}
                                                 {/* Menu của profile cá nhân của mình */}

@@ -351,7 +351,7 @@ export default function ChatWindow() {
             {/* Chat Window Main */}
             <div className="chatWindow">
                 {/* Message List */}
-                {messages && (
+                {messages && lastReadMessagesEachParticipant ? (
                     <MessageList
                         messages={messages}
                         lastReadMessagesEachParticipant={lastReadMessagesEachParticipant}
@@ -360,10 +360,37 @@ export default function ChatWindow() {
                         isFetchingNextPage={isFetchingNextPage}
                         isTyping={isTyping}
                         conversationId={conversationId}
+                        handleSendConversationRead={handleSendConversationRead}
                     />
+                ) : (
+                    <>
+                        <div
+                            className=""
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                height: '100%',
+                                width: '100%',
+                            }}
+                        >
+                            <span
+                                style={{
+                                    fontFamily: 'system-ui',
+                                    fontSize: '16px',
+                                    fontWeight: '500',
+                                    color: '#ffffff',
+                                }}
+                            >
+                                Không tìm thấy cuộc trò chuyện
+                            </span>
+                        </div>
+                    </>
                 )}
                 {/* Message Input */}
-                <MessageInput onSend={handleSend} onTyping={handleTyping} conversationId={conversationId} />
+                {messages && lastReadMessagesEachParticipant && (
+                    <MessageInput onSend={handleSend} onTyping={handleTyping} conversationId={conversationId} />
+                )}
             </div>
         </>
     );

@@ -4,6 +4,7 @@ import { IoChatbubbles, IoSyncSharp } from 'react-icons/io5';
 import { CgChevronDown } from 'react-icons/cg';
 import { AuthContext } from '~/context/auth.context';
 import MessageStatus from '../MessageStatus';
+import { useQueryClient } from '@tanstack/react-query';
 
 function MessageList({
     messages,
@@ -13,6 +14,7 @@ function MessageList({
     isFetchingNextPage,
     isTyping,
     conversationId,
+    handleSendConversationRead,
 }) {
     // State
     const [isActiveBtnScrollToBottom, setIsActiveBtnScrollToBottom] = useState(false);
@@ -71,7 +73,8 @@ function MessageList({
 
         // Auto scroll to bottom if isAtBottom
         if (isAtBottom) {
-            endRef.current?.scrollIntoView({ behavior: 'smooth' });
+            // endRef.current?.scrollIntoView({ behavior: 'smooth' });
+            endRef.current?.scrollIntoView();
         }
 
         // Handle ACK Message: Gửi cập nhật trạng thái đã xem tin nhắn
@@ -79,6 +82,14 @@ function MessageList({
         // (NÂNG CAO: Chỉ tính là đã xem khi người dùng ở dưới cùng của ChatWindow,...
         // ...còn đang scroll lên để đọc tin nhắn cũ sẽ không tính là đã xem)
         // handleSendConversationRead(conversationId); // Hàm được gọi khi người dùng đang trong conversation và có tin nhắn mới đến làm thay đổi messages
+        // Gửi cập nhật trạng thái đã xem tin nhắn qua socket
+        console.log(
+            `lastReadMessage: ${messages[messages.length - 1]?.messageId} - ${messages[messages.length - 1]?.content}`,
+        );
+        handleSendConversationRead({
+            conversationId,
+            lastReadMessageId: messages?.[messages?.length - 1] ? messages[messages.length - 1]?.messageId : null,
+        });
 
         // Cleanup
         return () => {};
@@ -90,6 +101,7 @@ function MessageList({
             if (entry.isIntersecting) {
                 setIsAtBottom(true);
                 setIsActiveBtnScrollToBottom(false);
+                // Gửi cập nhật trạng thái đã xem tin nhắn qua socket
             } else {
                 setIsAtBottom(false);
                 setIsActiveBtnScrollToBottom(true);
@@ -99,7 +111,7 @@ function MessageList({
         return () => {
             if (endRef.current) endRefObserver.disconnect();
         };
-    }, []);
+    }, []); // Tạm thời bỏ dependency messages?.length
 
     //
     return (

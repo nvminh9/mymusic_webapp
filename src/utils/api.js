@@ -395,6 +395,7 @@ const getGenreTrendingSongsDataApi = (genreId, period, limit, offset) => {
 };
 
 // API Tạo conversation
+// Payload: { type: 'dm' || 'group', participantIds: ['781ac2b1a24',...], title: '', avatar: '' }
 const createConversationApi = (data) => {
     const URL_API = `/v1/api/conversation`;
     return axios.post(URL_API, data);
@@ -403,6 +404,12 @@ const createConversationApi = (data) => {
 // API Lấy các conversation
 const getConversationsApi = () => {
     const URL_API = `/v1/api/conversation/list`;
+    return axios.get(URL_API);
+};
+
+// API Tìm kiếm conversation
+const searchConversationApi = (query) => {
+    const URL_API = `/v1/api/conversation/search?q=${query}`;
     return axios.get(URL_API);
 };
 
@@ -484,6 +491,7 @@ export {
     getGenreTrendingSongsDataApi,
     createConversationApi,
     getConversationsApi,
+    searchConversationApi,
     createMessageApi,
     getMessagesApi,
 };
