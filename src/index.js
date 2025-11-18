@@ -12,7 +12,11 @@ if (!window.name) {
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <React.StrictMode>
-        <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
+        <GoogleOAuthProvider
+            // clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
+            // Test for firebase web app domain mymusic-social.web.app
+            clientId="399223275562-ora13ihmeq65igmc1hp4u5v042f1adus.apps.googleusercontent.com"
+        >
             <App />
         </GoogleOAuthProvider>
     </React.StrictMode>,

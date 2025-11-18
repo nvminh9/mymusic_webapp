@@ -9220,6 +9220,15 @@ body {
         justify-content: space-between;
         padding: 8px 16px;
         border-bottom: 1px solid #1f1f1f;
+        position: fixed;
+        z-index: 5;
+        // right: 0;
+        // left: 0;
+        top: 0;
+        width: 50%;
+        background-color: rgba(18, 18, 18, 0.8);
+        backdrop-filter: blur(25px);
+        transition: ease-out 0.2s;
         .searchInput {
             width: 100%;
             background-color: transparent;
@@ -9274,6 +9283,7 @@ body {
             width: 100%;
             overflow-x: hidden;
             overflow-y: auto;
+            transition: ease-out 0.2s;
             .conversationItem {
                 width: 100%;
                 cursor: pointer;
@@ -9368,6 +9378,120 @@ body {
             }
             .conversationItem:active {
                 background-color: #000;
+            }
+        }
+    }
+    // Create New Conversation Box
+    .createNewConversationContainer {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: rgba(18, 18, 18, 0.8);
+        backdrop-filter: blur(5px);
+        border-radius: 25px;
+        transition: ease-out 0.2s;
+        transform: scale(0);
+        .createNewConversationBox {
+            display: grid;
+            background-color: #121212;
+            border: 1px solid #1f1f1f;
+            border-radius: 25px;
+            padding: 15px 20px;
+            height: max-content;
+            width: max-content;
+            gap: 10px;
+            // box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+            .top {
+                display: grid;
+                gap: 20px;
+                position: relative;
+                .btnClose {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    background-color: #121212;
+                    border: 1px solid #1f1f1f;
+                    border-radius: 50%;
+                    padding: 7px;
+                    color: #ffffff;
+                    cursor: pointer;
+                    transition: ease-out 0.2s;
+                }
+                .btnClose:hover {
+                    background-color: #1f1f1f;
+                }
+                .btnClose:active {
+                    transform: scale(0.97);
+                }
+                .title {
+                    display: block;
+                    font-family: system-ui;
+                    font-size: 15px;
+                    font-weight: 500;
+                    color: #ffffff;
+                    width: 100%;
+                    text-align: center;
+                }
+                .inputFindParticipantWrapper {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    background-color: #000;
+                    padding: 6px 15px;
+                    border-radius: 20px;
+                    .inputFindParticipant {
+                        font-family: system-ui;
+                        font-size: 14px;
+                        font-weight: 400;
+                        width: 250px;
+                        color: #ffffff;
+                        background: transparent;
+                        border: none;
+                    }
+                    .inputFindParticipant:focus {
+                        outline: none;
+                    }
+                }
+            }
+            .bottom {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                .btnCreateNewConversation {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 5px;
+                    font-family: system-ui;
+                    font-size: 14px;
+                    font-weight: 500;
+                    background-color: #ffffff;
+                    color: #000;
+                    border: none;
+                    border-radius: 25px;
+                    padding: 5px 15px;
+                    cursor: pointer;
+                    transition: ease-out 0.2s;
+                }
+                .btnCreateNewConversation:hover {
+                    background-color: #ffffffaa;
+                }
+                .btnCreateNewConversation:active {
+                    transform: scale(0.97);
+                }
+                .conversationType {
+                    font-family: system-ui;
+                    font-size: 12px;
+                    font-weight: 500;
+                    color: #777777aa;
+                }
             }
         }
     }
@@ -10034,6 +10158,72 @@ body {
                             width: 100% !important;
                         }
                     }
+                }
+            }
+        }
+    }
+
+    // Message Page
+    .messagePage {
+        //
+        .searchConversation {
+            width: 100%;
+            .searchInput {
+                //
+                input {
+                    //
+                }
+                input:focus {
+                    //
+                }
+                svg {
+                    //
+                }
+            }
+            .btnCloseSearchConversation {
+                //
+            }
+            .btnCloseSearchConversation:hover {
+                //
+            }
+        }
+        .conversationListContainer {
+            //
+            .conversationList {
+                //
+                .conversationItem {
+                    //
+                    .conversationLink {
+                        //
+                        .left {
+                            .conversationAvatar {
+                                img {
+                                    //
+                                }
+                            }
+                        }
+                        .right {
+                            //
+                            .conversationTitle {
+                                //
+                            }
+                            .newestMessage {
+                                //
+                                .content {
+                                    //
+                                }
+                                .createdAt {
+                                    //
+                                }
+                            }
+                        }
+                    }
+                }
+                .conversationItem:hover {
+                    //
+                }
+                .conversationItem:active {
+                    //
                 }
             }
         }

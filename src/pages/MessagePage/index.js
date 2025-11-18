@@ -6,7 +6,7 @@ import { useSocket } from '~/context/socket.context';
 import { updateMessageStatus } from '~/helper/messagesCacheModify';
 import { AuthContext } from '~/context/auth.context';
 import { useQueryClient } from '@tanstack/react-query';
-import { IoAdd, IoClose, IoEllipse, IoPeople, IoPerson, IoSearch } from 'react-icons/io5';
+import { IoAdd, IoClose, IoEllipse, IoPeople, IoPerson, IoSearch, IoSyncSharp } from 'react-icons/io5';
 import { searchConversationApi } from '~/utils/api';
 import { debounce } from 'lodash';
 import defaultAvatar from '~/assets/images/avatarDefault.jpg';
@@ -18,8 +18,9 @@ function MessagePage() {
     const [isOpenCreateConversation, setIsOpenCreateConversation] = useState(false);
     const [searchConversationQuery, setSearchConversationQuery] = useState('');
     const [searchConversationResult, setSearchConversationResult] = useState();
-    // const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const [isShowSearchConversationResult, setIsShowSearchConversationResult] = useState(false);
+    const [isOpenCreateNewConversationBox, setIsOpenCreateNewConversationBox] = useState(false);
 
     // Context
     const { auth } = useContext(AuthContext);
@@ -27,6 +28,7 @@ function MessagePage() {
     // Ref
     const createConversationChoicesRef = useRef(null);
     const searchConversationInputRef = useRef(null);
+    const createNewConversationBoxRef = useRef(null);
 
     // Navigation
     const navigate = useNavigate();
@@ -123,6 +125,10 @@ function MessagePage() {
             if (createConversationChoicesRef.current && !createConversationChoicesRef.current.contains(event.target)) {
                 setIsOpenCreateConversation(false);
             }
+            // Click outside createNewConversationBoxRef
+            if (createNewConversationBoxRef.current && !createNewConversationBoxRef.current.contains(event.target)) {
+                setIsOpenCreateNewConversationBox(false);
+            }
         };
 
         document.addEventListener('mousedown', handleClickOutside);
@@ -139,7 +145,7 @@ function MessagePage() {
             }
 
             //
-            // setIsLoading(true);
+            setIsLoading(true);
             try {
                 // Call API Search Conversation
                 // const res = await getSearchAutocompleteApi(encodeURIComponent(searchQuery), 8);
@@ -152,7 +158,7 @@ function MessagePage() {
             } catch (error) {
                 console.error('Search autocomplete error:', error);
             } finally {
-                // setIsLoading(false);
+                setIsLoading(false);
             }
         }, 300),
         [],
@@ -188,6 +194,7 @@ function MessagePage() {
                                     setIsShowSearchConversationResult(false);
                                 } else {
                                     setIsOpenSearchConversation(true);
+                                    searchConversationInputRef.current?.focus();
                                 }
                             }}
                             style={{
@@ -210,7 +217,13 @@ function MessagePage() {
                         {/* Create Conversation Choices */}
                         {isOpenCreateConversation && (
                             <div ref={createConversationChoicesRef} className="createConversationChoices">
-                                <button type="button">
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setIsOpenCreateConversation(false);
+                                        setIsOpenCreateNewConversationBox(true);
+                                    }}
+                                >
                                     <IoPerson /> Tạo cuộc trò chuyện mới
                                 </button>
                                 <button
@@ -238,186 +251,264 @@ function MessagePage() {
             </div>
             <div className="messagePage">
                 {/* Search Conversation Input */}
-                {isOpenSearchConversation && (
-                    <div className="searchConversation">
-                        <div className="searchInput">
-                            <IoSearch />
-                            <input
-                                ref={searchConversationInputRef}
-                                type="text"
-                                placeholder="Tìm kiếm cuộc trò chuyện"
-                                autoComplete="off"
-                                spellCheck="false"
-                                value={searchConversationQuery}
-                                onChange={handleSearchConversationQueryChange}
-                                onFocus={() => {}}
-                            />
-                        </div>
-                        <button
-                            className="btnCloseSearchConversation"
-                            onClick={() => {
-                                setIsOpenSearchConversation(false);
-                                setSearchConversationQuery('');
-                                setIsShowSearchConversationResult(false);
-                            }}
-                        >
-                            <IoClose />
-                        </button>
+                <div
+                    className="searchConversation"
+                    style={{
+                        top: isOpenSearchConversation ? '58.4px' : '',
+                    }}
+                >
+                    <div className="searchInput">
+                        <IoSearch />
+                        <input
+                            ref={searchConversationInputRef}
+                            type="text"
+                            placeholder="Tìm kiếm cuộc trò chuyện"
+                            autoComplete="off"
+                            spellCheck="false"
+                            value={searchConversationQuery}
+                            onChange={handleSearchConversationQueryChange}
+                            autoFocus
+                        />
                     </div>
-                )}
+                    <button
+                        className="btnCloseSearchConversation"
+                        onClick={() => {
+                            setIsOpenSearchConversation(false);
+                            setSearchConversationQuery('');
+                            setIsShowSearchConversationResult(false);
+                        }}
+                    >
+                        <IoClose />
+                    </button>
+                </div>
+                {/* Create New Conversation Box (DM) */}
+                <div
+                    className="createNewConversationContainer"
+                    style={{
+                        transform: isOpenCreateNewConversationBox ? 'scale(1)' : '',
+                        borderRadius: isOpenCreateNewConversationBox ? '0px' : '',
+                    }}
+                >
+                    <div ref={createNewConversationBoxRef} className="createNewConversationBox">
+                        <div className="top">
+                            <span className="title">Cuộc trò chuyện mới</span>
+                            {/* Button Close */}
+                            <button
+                                className="btnClose"
+                                onClick={() => {
+                                    setIsOpenCreateNewConversationBox(false);
+                                }}
+                            >
+                                <IoClose />
+                            </button>
+                            <div className="inputFindParticipantWrapper">
+                                <span
+                                    style={{
+                                        color: '#ffffff',
+                                        fontFamily: 'system-ui',
+                                        fontSize: '15px',
+                                        fontWeight: '400',
+                                    }}
+                                >
+                                    Đến:
+                                </span>
+                                <input
+                                    type="text"
+                                    id="inputFindParticipantID"
+                                    name="queryFindParticipant"
+                                    className="inputFindParticipant"
+                                    placeholder="Tìm kiếm người dùng..."
+                                    autoComplete="off"
+                                    autoFocus
+                                    spellCheck="false"
+                                />
+                            </div>
+                        </div>
+                        <div className="bottom">
+                            <span className="conversationType">Loại: DM</span>
+                            {/* Btn Create */}
+                            <button type="button" className="btnCreateNewConversation" onClick={() => {}}>
+                                <IoAdd /> Tạo
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {/* Create New Conversation Box (Group) */}
+                {/* ... */}
                 {/* Conversations List */}
                 {isShowSearchConversationResult ? (
                     <Fragment>
+                        {/* Search Result */}
                         <div className="conversationListContainer">
-                            <ul className="conversationList">
+                            <ul
+                                className="conversationList"
+                                style={{
+                                    paddingTop: isShowSearchConversationResult ? '48.8px' : '',
+                                }}
+                            >
                                 {/* Render Conversation List */}
                                 {searchConversationResult ? (
                                     searchConversationResult?.length > 0 ? (
-                                        searchConversationResult?.map((conversation) => (
-                                            <li className="conversationItem" key={conversation.conversationId}>
-                                                <Link
-                                                    className="conversationLink"
-                                                    to={`${conversation.conversationId}`}
-                                                >
-                                                    {/* Left */}
-                                                    <div className="left">
-                                                        {/* Avatar */}
-                                                        <div className="conversationAvatar">
-                                                            <img
-                                                                src={
-                                                                    conversation.avatar
-                                                                        ? process.env.REACT_APP_BACKEND_URL +
-                                                                          conversation.avatar
-                                                                        : defaultAvatar
-                                                                }
-                                                                loading="lazy"
-                                                            />
+                                        searchConversationResult?.map((conversation) => {
+                                            if (
+                                                conversation?.newestMessage?.length === 0 &&
+                                                conversation?.createdBy !== auth?.user?.userId
+                                            ) {
+                                                return;
+                                            }
+                                            return (
+                                                <li className="conversationItem" key={conversation.conversationId}>
+                                                    <Link
+                                                        className="conversationLink"
+                                                        to={`${conversation.conversationId}`}
+                                                    >
+                                                        {/* Left */}
+                                                        <div className="left">
+                                                            {/* Avatar */}
+                                                            <div className="conversationAvatar">
+                                                                <img
+                                                                    src={
+                                                                        conversation.avatar
+                                                                            ? process.env.REACT_APP_BACKEND_URL +
+                                                                              conversation.avatar
+                                                                            : defaultAvatar
+                                                                    }
+                                                                    loading="lazy"
+                                                                />
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    {/* Right */}
-                                                    <div className="right">
-                                                        {/* User Name */}
-                                                        <span className="conversationTitle">
-                                                            {conversation.title ? conversation.title : 'Chưa có tên'}
-                                                        </span>
-                                                        {/* Tin nhắn mới nhất */}
-                                                        <span className="newestMessage">
-                                                            <span
-                                                                className="content"
-                                                                style={{
-                                                                    color:
-                                                                        !!conversation?.unseenMessages?.find(
-                                                                            (message) =>
-                                                                                message.messageId ===
-                                                                                conversation?.newestMessage?.[0]
-                                                                                    ?.messageId,
-                                                                        ) &&
-                                                                        conversation?.newestMessage?.[0]?.senderId !==
-                                                                            auth?.user?.userId
-                                                                            ? '#ffffff'
-                                                                            : '',
-                                                                    fontWeight:
-                                                                        !!conversation?.unseenMessages?.find(
-                                                                            (message) =>
-                                                                                message.messageId ===
-                                                                                conversation?.newestMessage?.[0]
-                                                                                    ?.messageId,
-                                                                        ) &&
-                                                                        conversation?.newestMessage?.[0]?.senderId !==
-                                                                            auth?.user?.userId
-                                                                            ? '700'
-                                                                            : '',
-                                                                    width:
-                                                                        conversation?.newestMessage?.[0]?.content
-                                                                            ?.length < 31
-                                                                            ? 'max-content'
-                                                                            : '',
-                                                                }}
-                                                            >
-                                                                {conversation?.newestMessage?.[0]
-                                                                    ? `${
-                                                                          conversation?.newestMessage?.[0]?.senderId ===
-                                                                          auth?.user?.userId
-                                                                              ? 'Bạn: '
-                                                                              : ''
-                                                                      }${conversation?.newestMessage?.[0]?.content}`
-                                                                    : ''}
+                                                        {/* Right */}
+                                                        <div className="right">
+                                                            {/* User Name */}
+                                                            <span className="conversationTitle">
+                                                                {conversation.title
+                                                                    ? conversation.title
+                                                                    : 'Chưa có tên'}
                                                             </span>
-                                                            {conversation?.newestMessage?.[0] && <span>·</span>}
-                                                            <span className="createdAt">
-                                                                {conversation?.newestMessage?.[0]?.createdAt
-                                                                    ? `${formatMessageTime(
-                                                                          conversation?.newestMessage?.[0]?.createdAt,
-                                                                      )}`
-                                                                    : ''}
+                                                            {/* Tin nhắn mới nhất */}
+                                                            <span className="newestMessage">
+                                                                <span
+                                                                    className="content"
+                                                                    style={{
+                                                                        color:
+                                                                            !!conversation?.unseenMessages?.find(
+                                                                                (message) =>
+                                                                                    message.messageId ===
+                                                                                    conversation?.newestMessage?.[0]
+                                                                                        ?.messageId,
+                                                                            ) &&
+                                                                            conversation?.newestMessage?.[0]
+                                                                                ?.senderId !== auth?.user?.userId
+                                                                                ? '#ffffff'
+                                                                                : '',
+                                                                        fontWeight:
+                                                                            !!conversation?.unseenMessages?.find(
+                                                                                (message) =>
+                                                                                    message.messageId ===
+                                                                                    conversation?.newestMessage?.[0]
+                                                                                        ?.messageId,
+                                                                            ) &&
+                                                                            conversation?.newestMessage?.[0]
+                                                                                ?.senderId !== auth?.user?.userId
+                                                                                ? '700'
+                                                                                : '',
+                                                                        width:
+                                                                            conversation?.newestMessage?.[0]?.content
+                                                                                ?.length < 31
+                                                                                ? 'max-content'
+                                                                                : '',
+                                                                    }}
+                                                                >
+                                                                    {conversation?.newestMessage?.[0]
+                                                                        ? `${
+                                                                              conversation?.newestMessage?.[0]
+                                                                                  ?.senderId === auth?.user?.userId
+                                                                                  ? 'Bạn: '
+                                                                                  : ''
+                                                                          }${conversation?.newestMessage?.[0]?.content}`
+                                                                        : ''}
+                                                                </span>
+                                                                {conversation?.newestMessage?.[0] && <span>·</span>}
+                                                                <span className="createdAt">
+                                                                    {conversation?.newestMessage?.[0]?.createdAt
+                                                                        ? `${formatMessageTime(
+                                                                              conversation?.newestMessage?.[0]
+                                                                                  ?.createdAt,
+                                                                          )}`
+                                                                        : ''}
+                                                                </span>
                                                             </span>
-                                                        </span>
-                                                    </div>
-                                                    {/* Mark if have new message unseen or seen, sent */}
-                                                    {/* Unseen */}
-                                                    {!!conversation?.unseenMessages?.find(
-                                                        (message) =>
-                                                            message.messageId ===
-                                                            conversation?.newestMessage?.[0]?.messageId,
-                                                    ) && (
-                                                        <>
-                                                            {conversation?.newestMessage?.[0]?.senderId !==
-                                                            auth?.user?.userId ? (
-                                                                <div className="mark">
-                                                                    <IoEllipse />
-                                                                </div>
-                                                            ) : (
-                                                                <div className="mark">
-                                                                    <span
-                                                                        style={{ color: '#818181', fontWeight: '500' }}
-                                                                    >
-                                                                        Đã gửi
-                                                                    </span>
-                                                                </div>
-                                                            )}
-                                                        </>
-                                                    )}
-                                                    {/* Seen */}
-                                                    {!!!conversation?.unseenMessages?.find(
-                                                        (message) =>
-                                                            message.messageId ===
-                                                            conversation?.newestMessage?.[0]?.messageId,
-                                                    ) && (
-                                                        <>
-                                                            {conversation?.newestMessage?.[0]?.senderId ===
-                                                            auth?.user?.userId ? (
-                                                                <>
+                                                        </div>
+                                                        {/* Mark if have new message unseen or seen, sent */}
+                                                        {/* Unseen */}
+                                                        {!!conversation?.unseenMessages?.find(
+                                                            (message) =>
+                                                                message.messageId ===
+                                                                conversation?.newestMessage?.[0]?.messageId,
+                                                        ) && (
+                                                            <>
+                                                                {conversation?.newestMessage?.[0]?.senderId !==
+                                                                auth?.user?.userId ? (
                                                                     <div className="mark">
-                                                                        <img
-                                                                            className="markAvatar"
-                                                                            src={
-                                                                                conversation?.participants?.filter(
-                                                                                    (participant) =>
-                                                                                        participant?.User?.userId !==
-                                                                                        auth?.user?.userId,
-                                                                                )?.[0]?.User?.userAvatar
-                                                                                    ? process.env
-                                                                                          .REACT_APP_BACKEND_URL +
-                                                                                      conversation?.participants?.filter(
-                                                                                          (participant) =>
-                                                                                              participant?.User
-                                                                                                  ?.userId !==
-                                                                                              auth?.user?.userId,
-                                                                                      )?.[0]?.User?.userAvatar
-                                                                                    : defaultAvatar
-                                                                            }
-                                                                            loading="lazy"
-                                                                        />
+                                                                        <IoEllipse />
                                                                     </div>
-                                                                </>
-                                                            ) : (
-                                                                <></>
-                                                            )}
-                                                        </>
-                                                    )}
-                                                </Link>
-                                            </li>
-                                        ))
+                                                                ) : (
+                                                                    <div className="mark">
+                                                                        <span
+                                                                            style={{
+                                                                                color: '#818181',
+                                                                                fontWeight: '500',
+                                                                            }}
+                                                                        >
+                                                                            Đã gửi
+                                                                        </span>
+                                                                    </div>
+                                                                )}
+                                                            </>
+                                                        )}
+                                                        {/* Seen */}
+                                                        {!!!conversation?.unseenMessages?.find(
+                                                            (message) =>
+                                                                message.messageId ===
+                                                                conversation?.newestMessage?.[0]?.messageId,
+                                                        ) && (
+                                                            <>
+                                                                {conversation?.newestMessage?.[0]?.senderId ===
+                                                                auth?.user?.userId ? (
+                                                                    <>
+                                                                        <div className="mark">
+                                                                            <img
+                                                                                className="markAvatar"
+                                                                                src={
+                                                                                    conversation?.participants?.filter(
+                                                                                        (participant) =>
+                                                                                            participant?.User
+                                                                                                ?.userId !==
+                                                                                            auth?.user?.userId,
+                                                                                    )?.[0]?.User?.userAvatar
+                                                                                        ? process.env
+                                                                                              .REACT_APP_BACKEND_URL +
+                                                                                          conversation?.participants?.filter(
+                                                                                              (participant) =>
+                                                                                                  participant?.User
+                                                                                                      ?.userId !==
+                                                                                                  auth?.user?.userId,
+                                                                                          )?.[0]?.User?.userAvatar
+                                                                                        : defaultAvatar
+                                                                                }
+                                                                                loading="lazy"
+                                                                            />
+                                                                        </div>
+                                                                    </>
+                                                                ) : (
+                                                                    <></>
+                                                                )}
+                                                            </>
+                                                        )}
+                                                    </Link>
+                                                </li>
+                                            );
+                                        })
                                     ) : (
                                         <span
                                             style={{
@@ -436,22 +527,29 @@ function MessagePage() {
                                         </span>
                                     )
                                 ) : (
-                                    <span
-                                        style={{
-                                            fontFamily: 'system-ui',
-                                            fontSize: '15px',
-                                            fontWeight: '500',
-                                            color: '#ffffff',
-                                        }}
-                                    >
-                                        Không tìm thấy cuộc trò chuyện
-                                    </span>
+                                    <>
+                                        {/* Search Loading */}
+                                        <div
+                                            style={{
+                                                height: '100%',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                // padding: '30px 0px',
+                                            }}
+                                        >
+                                            <IoSyncSharp
+                                                className="loadingAnimation"
+                                                style={{ color: 'white', width: '18px', height: '18px' }}
+                                            />
+                                        </div>
+                                    </>
                                 )}
                             </ul>
                         </div>
                     </Fragment>
                 ) : (
-                    <ConversationsList />
+                    <ConversationsList isOpenSearchConversation={isOpenSearchConversation} />
                 )}
                 {/* Outlet */}
                 {/* <Outlet /> */}
