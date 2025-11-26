@@ -1,4 +1,4 @@
-import { Fragment, useLayoutEffect, useState } from 'react';
+import { Fragment, useContext, useLayoutEffect, useState } from 'react';
 import CircumIcon from '@klarr-agency/circum-icons-react';
 import Slider from 'react-slick';
 import { useRef, useEffect } from 'react';
@@ -20,6 +20,7 @@ import { Link } from 'react-router-dom';
 import VideoAmbilight from '../VideoAmbilight';
 import ImageAmbilight from '../ImageAmbilight';
 import { getSongDataApi } from '~/utils/api';
+import { EnvContext } from '~/context/env.context';
 
 function SongPlayer() {
     // State
@@ -30,6 +31,7 @@ function SongPlayer() {
     // const [songData, setSongData] = useState();
 
     // Context
+    const { env } = useContext(EnvContext);
 
     // Ref
     const audioHLSRef = useRef(null);
@@ -139,15 +141,11 @@ function SongPlayer() {
                 if (res?.status === 200 && res?.message === 'Dữ liệu của bài nhạc') {
                     // Nếu trình duyệt hỗ trợ natively (Safari)
                     if (audioRef.current.canPlayType('application/vnd.apple.mpegurl')) {
-                        audioRef.current.src = res?.data?.songLink
-                            ? process.env.REACT_APP_BACKEND_URL + res?.data?.songLink
-                            : '';
+                        audioRef.current.src = res?.data?.songLink ? env?.backend_url + res?.data?.songLink : '';
                     } else if (Hls.isSupported()) {
                         const hls = new Hls();
 
-                        hls.loadSource(
-                            res?.data?.songLink ? process.env.REACT_APP_BACKEND_URL + res?.data?.songLink : '',
-                        );
+                        hls.loadSource(res?.data?.songLink ? env?.backend_url + res?.data?.songLink : '');
                         hls.attachMedia(audioRef.current);
 
                         hls.on(Hls.Events.ERROR, function (event, data) {
@@ -158,9 +156,7 @@ function SongPlayer() {
                             hls.destroy();
                         };
                     } else {
-                        audioRef.current.src = res?.data?.songLink
-                            ? process.env.REACT_APP_BACKEND_URL + res?.data?.songLink
-                            : ''; // fallback
+                        audioRef.current.src = res?.data?.songLink ? env?.backend_url + res?.data?.songLink : ''; // fallback
                         console.error('HLS is not supported in this browser');
                     }
                 } else {

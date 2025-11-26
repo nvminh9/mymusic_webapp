@@ -27,6 +27,7 @@ function ListenHistoryList({ typeMyMusicList }) {
             const totalPages = lastPage.pagination.totalPages;
             return currentPage < totalPages ? currentPage + 1 : undefined;
         },
+        // refetchOnWindowFocus: false,
     });
     // Handle when fetchNextPage
     const { ref } = useInView({

@@ -1,9 +1,32 @@
+import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { IoChevronBackSharp } from 'react-icons/io5';
 import { VscChevronLeft } from 'react-icons/vsc';
 import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
+import { getConversationsApi } from '~/utils/api';
 
 function MiddleContainer({ children }) {
+    // State
+
+    // Context
+
+    // React Query
+    // Prefetch Conversation List (Chưa phân trang)
+    const {
+        data: conversationList,
+        isLoading,
+        status,
+    } = useQuery({
+        queryKey: ['conversationList'],
+        queryFn: async () => {
+            const res = await getConversationsApi(); // { status, message, data }
+            return res.data;
+        },
+        enabled: true,
+        refetchOnWindowFocus: true,
+        // staleTime: 1000 * 60, // Cần refetch sau 1 phút (có thể sẽ điều chỉnh lại thành lâu hơn)
+    });
+
     // Chuyển Tab
     const location = useLocation();
     const navigate = useNavigate();

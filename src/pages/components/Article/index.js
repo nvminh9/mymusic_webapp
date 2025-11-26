@@ -22,6 +22,7 @@ import { AuthContext } from '~/context/auth.context';
 import defaultAvatar from '~/assets/images/avatarDefault.jpg';
 import { message } from 'antd';
 import { deleteArticleApi } from '~/utils/api';
+import { EnvContext } from '~/context/env.context';
 
 function Article({ articleData, type }) {
     // State
@@ -39,6 +40,7 @@ function Article({ articleData, type }) {
 
     // Context
     const { auth } = useContext(AuthContext);
+    const { env } = useContext(EnvContext);
 
     // Ref
     const articleRef = useRef(null); // ref cho bài viết
@@ -254,7 +256,7 @@ function Article({ articleData, type }) {
                                     <img
                                         src={
                                             articleData?.User?.userAvatar
-                                                ? process.env.REACT_APP_BACKEND_URL + articleData?.User?.userAvatar
+                                                ? env?.backend_url + articleData?.User?.userAvatar
                                                 : defaultAvatar
                                         }
                                     />
@@ -404,10 +406,7 @@ function Article({ articleData, type }) {
                                                                     {media.type === 'photo' ? (
                                                                         <>
                                                                             <img
-                                                                                src={
-                                                                                    process.env.REACT_APP_BACKEND_URL +
-                                                                                    media.photoLink
-                                                                                }
+                                                                                src={env?.backend_url + media.photoLink}
                                                                                 className="slide-image"
                                                                                 loading="lazy"
                                                                                 style={{}}
@@ -415,10 +414,7 @@ function Article({ articleData, type }) {
                                                                         </>
                                                                     ) : (
                                                                         <video
-                                                                            src={
-                                                                                process.env.REACT_APP_BACKEND_URL +
-                                                                                media.videoLink
-                                                                            }
+                                                                            src={env?.backend_url + media.videoLink}
                                                                             style={{}}
                                                                             playsInline
                                                                             controls

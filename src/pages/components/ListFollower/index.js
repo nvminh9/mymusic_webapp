@@ -5,6 +5,7 @@ import defaultAvatar from '~/assets/images/avatarDefault.jpg';
 import { AuthContext } from '~/context/auth.context';
 import { createFollowUserApi, getFollowersApi, unfollowUserApi } from '~/utils/api';
 import { message } from 'antd';
+import { EnvContext } from '~/context/env.context';
 
 function ListFollower() {
     // State
@@ -13,6 +14,7 @@ function ListFollower() {
 
     // Context
     const { auth } = useContext(AuthContext);
+    const { env } = useContext(EnvContext);
 
     // Ref
     const listFollowerRef = useRef(null);
@@ -226,8 +228,7 @@ function ListFollower() {
                                                         className="userAvatar"
                                                         src={
                                                             follower?.followerUser?.userAvatar
-                                                                ? process.env.REACT_APP_BACKEND_URL +
-                                                                  follower?.followerUser?.userAvatar
+                                                                ? env?.backend_url + follower?.followerUser?.userAvatar
                                                                 : defaultAvatar
                                                         }
                                                         onClick={() => {
@@ -243,77 +244,88 @@ function ListFollower() {
                                                         {follower?.follower}
                                                     </span>
                                                 </div>
-                                                <div className="right">
-                                                    {/* Render nút theo dõi */}
-                                                    {auth?.user?.userName === follower?.follower ? (
-                                                        <></>
-                                                    ) : (
-                                                        <>
-                                                            {follower?.followStatus === true ? (
-                                                                <button
-                                                                    className="btnFollowed"
-                                                                    onClick={() => {
-                                                                        handleUnfollowUser(follower?.follower);
-                                                                    }}
-                                                                >
-                                                                    {isFollowed === 'pending' ? (
-                                                                        <>
-                                                                            <div
-                                                                                style={{
-                                                                                    width: '15px',
-                                                                                    height: '15px',
-                                                                                    display: 'flex',
-                                                                                    justifyContent: 'center',
-                                                                                    alignItems: 'center',
-                                                                                }}
-                                                                            >
-                                                                                <IoSyncSharp
-                                                                                    className="loadingAnimation"
-                                                                                    style={{ color: 'white' }}
-                                                                                />
-                                                                            </div>
-                                                                        </>
-                                                                    ) : (
-                                                                        <>
-                                                                            Hủy theo dõi
-                                                                            {/* <IoChevronDownSharp
+                                                {/* <div className="right"></div> */}
+                                                {/* Render nút theo dõi */}
+                                                {auth?.user?.userName === follower?.follower ? (
+                                                    <></>
+                                                ) : (
+                                                    <>
+                                                        {follower?.followStatus === true ? (
+                                                            <button
+                                                                className="btnFollowed"
+                                                                onClick={() => {
+                                                                    handleUnfollowUser(follower?.follower);
+                                                                }}
+                                                                style={{
+                                                                    position: 'absolute',
+                                                                    right: '0',
+                                                                    padding: '5px 8px',
+                                                                    fontWeight: '500',
+                                                                }}
+                                                            >
+                                                                {isFollowed === 'pending' ? (
+                                                                    <>
+                                                                        <div
+                                                                            style={{
+                                                                                width: '15px',
+                                                                                height: '15px',
+                                                                                display: 'flex',
+                                                                                justifyContent: 'center',
+                                                                                alignItems: 'center',
+                                                                            }}
+                                                                        >
+                                                                            <IoSyncSharp
+                                                                                className="loadingAnimation"
+                                                                                style={{ color: 'white' }}
+                                                                            />
+                                                                        </div>
+                                                                    </>
+                                                                ) : (
+                                                                    <>
+                                                                        Hủy theo dõi
+                                                                        {/* <IoChevronDownSharp
                                                                             style={{ marginLeft: '5px' }}
                                                                         /> */}
-                                                                        </>
-                                                                    )}
-                                                                </button>
-                                                            ) : (
-                                                                <button
-                                                                    className="btnFollow"
-                                                                    onClick={() => {
-                                                                        handleFollowUser(follower?.follower);
-                                                                    }}
-                                                                >
-                                                                    {isFollowed === 'pending' ? (
-                                                                        <>
-                                                                            <div
-                                                                                style={{
-                                                                                    width: '15px',
-                                                                                    height: '15px',
-                                                                                    display: 'flex',
-                                                                                    justifyContent: 'center',
-                                                                                    alignItems: 'center',
-                                                                                }}
-                                                                            >
-                                                                                <IoSyncSharp
-                                                                                    className="loadingAnimation"
-                                                                                    style={{ color: '#000' }}
-                                                                                />
-                                                                            </div>
-                                                                        </>
-                                                                    ) : (
-                                                                        <>Theo dõi</>
-                                                                    )}
-                                                                </button>
-                                                            )}
-                                                        </>
-                                                    )}
-                                                </div>
+                                                                    </>
+                                                                )}
+                                                            </button>
+                                                        ) : (
+                                                            <button
+                                                                className="btnFollow"
+                                                                onClick={() => {
+                                                                    handleFollowUser(follower?.follower);
+                                                                }}
+                                                                style={{
+                                                                    position: 'absolute',
+                                                                    right: '0',
+                                                                    padding: '5px 8px',
+                                                                    fontWeight: '500',
+                                                                }}
+                                                            >
+                                                                {isFollowed === 'pending' ? (
+                                                                    <>
+                                                                        <div
+                                                                            style={{
+                                                                                width: '15px',
+                                                                                height: '15px',
+                                                                                display: 'flex',
+                                                                                justifyContent: 'center',
+                                                                                alignItems: 'center',
+                                                                            }}
+                                                                        >
+                                                                            <IoSyncSharp
+                                                                                className="loadingAnimation"
+                                                                                style={{ color: '#000' }}
+                                                                            />
+                                                                        </div>
+                                                                    </>
+                                                                ) : (
+                                                                    <>Theo dõi</>
+                                                                )}
+                                                            </button>
+                                                        )}
+                                                    </>
+                                                )}
                                             </div>
                                         ))}
                                     </>

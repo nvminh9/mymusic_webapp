@@ -2,11 +2,14 @@ import { IoHeartSharp, IoChatbubbleSharp, IoDocumentTextSharp, IoReader, IoImage
 import { IoIosShareAlt } from 'react-icons/io';
 import { Link, useNavigate } from 'react-router-dom';
 import defaultAvatar from '~/assets/images/avatarDefault.jpg';
+import { EnvContext } from '~/context/env.context';
+import { useContext } from 'react';
 
 function ArticleProfile({ article, user, type }) {
     // State
 
     // Context
+    const { env } = useContext(EnvContext);
 
     // Navigation
     const navigate = useNavigate();
@@ -56,7 +59,7 @@ function ArticleProfile({ article, user, type }) {
                                                 className="avatar"
                                                 src={
                                                     article?.User?.userAvatar
-                                                        ? process.env.REACT_APP_BACKEND_URL + article?.User?.userAvatar
+                                                        ? env?.backend_url + article?.User?.userAvatar
                                                         : defaultAvatar
                                                 }
                                             />
@@ -75,10 +78,7 @@ function ArticleProfile({ article, user, type }) {
                                                 />
                                                 {/* Hình thumbnail */}
                                                 <img
-                                                    src={
-                                                        process.env.REACT_APP_BACKEND_URL +
-                                                        article?.mediaContent?.[0]?.photoLink
-                                                    }
+                                                    src={env?.backend_url + article?.mediaContent?.[0]?.photoLink}
                                                     alt="thumbnail"
                                                     draggable="false"
                                                 />
@@ -96,10 +96,7 @@ function ArticleProfile({ article, user, type }) {
                                                 />
                                                 {/* Video Thumbnail */}
                                                 <video
-                                                    src={
-                                                        process.env.REACT_APP_BACKEND_URL +
-                                                        article?.mediaContent?.[0]?.videoLink
-                                                    }
+                                                    src={env?.backend_url + article?.mediaContent?.[0]?.videoLink}
                                                     playsInline
                                                     muted
                                                     loop
@@ -142,8 +139,7 @@ function ArticleProfile({ article, user, type }) {
                                                 <img
                                                     src={
                                                         article?.User?.userAvatar
-                                                            ? process.env.REACT_APP_BACKEND_URL +
-                                                              article?.User?.userAvatar
+                                                            ? env?.backend_url + article?.User?.userAvatar
                                                             : defaultAvatar
                                                     }
                                                     style={{
@@ -241,10 +237,7 @@ function ArticleProfile({ article, user, type }) {
                                             />
                                             {/* Hình thumbnail */}
                                             <img
-                                                src={
-                                                    process.env.REACT_APP_BACKEND_URL +
-                                                    article?.Article?.mediaContent?.[0]?.photoLink
-                                                }
+                                                src={env?.backend_url + article?.Article?.mediaContent?.[0]?.photoLink}
                                                 alt="thumbnail"
                                             />
                                         </>
@@ -261,10 +254,7 @@ function ArticleProfile({ article, user, type }) {
                                             />
                                             {/* Video Thumbnail */}
                                             <video
-                                                src={
-                                                    process.env.REACT_APP_BACKEND_URL +
-                                                    article?.Article?.mediaContent?.[0]?.videoLink
-                                                }
+                                                src={env?.backend_url + article?.Article?.mediaContent?.[0]?.videoLink}
                                                 muted
                                                 loop
                                                 onMouseOver={(e) => {
@@ -306,8 +296,7 @@ function ArticleProfile({ article, user, type }) {
                                             <img
                                                 src={
                                                     article?.Article?.User?.userAvatar
-                                                        ? process.env.REACT_APP_BACKEND_URL +
-                                                          article?.Article?.User?.userAvatar
+                                                        ? env?.backend_url + article?.Article?.User?.userAvatar
                                                         : defaultAvatar
                                                 }
                                                 style={{
@@ -390,10 +379,7 @@ function ArticleProfile({ article, user, type }) {
                                             />
                                             {/* Hình thumbnail */}
                                             <img
-                                                src={
-                                                    process.env.REACT_APP_BACKEND_URL +
-                                                    article?.mediaContent?.[0]?.photoLink
-                                                }
+                                                src={env?.backend_url + article?.mediaContent?.[0]?.photoLink}
                                                 alt="thumbnail"
                                             />
                                         </>
@@ -410,10 +396,7 @@ function ArticleProfile({ article, user, type }) {
                                             />
                                             {/* Video Thumbnail */}
                                             <video
-                                                src={
-                                                    process.env.REACT_APP_BACKEND_URL +
-                                                    article?.mediaContent?.[0]?.videoLink
-                                                }
+                                                src={env?.backend_url + article?.mediaContent?.[0]?.videoLink}
                                                 muted
                                                 loop
                                                 onMouseOver={(e) => {
@@ -455,7 +438,7 @@ function ArticleProfile({ article, user, type }) {
                                             <img
                                                 src={
                                                     article?.User?.userAvatar
-                                                        ? process.env.REACT_APP_BACKEND_URL + article?.User?.userAvatar
+                                                        ? env?.backend_url + article?.User?.userAvatar
                                                         : defaultAvatar
                                                 }
                                                 style={{

@@ -8,6 +8,7 @@ import { Fragment, useContext, useEffect, useRef, useState } from 'react';
 import { AuthContext } from '~/context/auth.context';
 import noContentImage from '~/assets/images/no_content.jpg';
 import { message } from 'antd';
+import { EnvContext } from '~/context/env.context';
 
 const LIMIT = 5;
 
@@ -20,6 +21,10 @@ function CustomPlaylistBox({
     handleRemoveAddMusic,
     addOrRemoveMusicProgress,
 }) {
+    // Context
+    const { auth } = useContext(AuthContext);
+    const { env } = useContext(EnvContext);
+
     // State
     const [mySongsData, setMySongsData] = useState();
     const [tab, setTab] = useState(1);
@@ -29,14 +34,11 @@ function CustomPlaylistBox({
     }); // Đang thực hiện xóa playlist
     const [playlistImageFile, setPlaylistImageFile] = useState(); // File hình ảnh
     const [previewPlaylistImage, setPreviewPlaylistImage] = useState(
-        playlistDetailData?.coverImage ? process.env.REACT_APP_BACKEND_URL + playlistDetailData?.coverImage : null,
+        playlistDetailData?.coverImage ? env?.backend_url + playlistDetailData?.coverImage : null,
     ); // Hình ảnh blob xem thử
     const [playlistName, setPlaylistName] = useState(playlistDetailData?.name); // Tên
     const [isPlaylistInfoChanged, setIsPlaylistInfoChanged] = useState(false); // Thông tin playlist đã có thay đổi
     const [updateProgressStatus, setUpdateProgressStatus] = useState();
-
-    // Context
-    const { auth } = useContext(AuthContext);
 
     // Ref
     const myMusicListRef = useRef(null);
@@ -180,9 +182,7 @@ function CustomPlaylistBox({
                         name: res?.data?.name,
                         coverImage: res?.data?.coverImage,
                     }));
-                    setPreviewPlaylistImage(
-                        res?.data?.coverImage ? process.env.REACT_APP_BACKEND_URL + res?.data?.coverImage : null,
-                    );
+                    setPreviewPlaylistImage(res?.data?.coverImage ? env?.backend_url + res?.data?.coverImage : null);
                     setPlaylistName(res?.data?.name);
                     // Set change count
                     // setChangedCount(res?.data?.changedCount);

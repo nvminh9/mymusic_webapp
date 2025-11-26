@@ -22,6 +22,7 @@ import LikeCommentButton from '../LikeCommentButton';
 import { VscEllipsis } from 'react-icons/vsc';
 import { set } from 'lodash';
 import { deleteCommentApi, deleteCommentSharedArticleApi } from '~/utils/api';
+import { EnvContext } from '~/context/env.context';
 
 function Comment({ comment, onReplyComment, onDeleteComment, getRespondedComment, onLikeComment }) {
     // State
@@ -34,6 +35,7 @@ function Comment({ comment, onReplyComment, onDeleteComment, getRespondedComment
 
     // Context
     const { auth } = useContext(AuthContext);
+    const { env } = useContext(EnvContext);
 
     // Ref
     const commentRef = useRef(null); // ref cho comment
@@ -218,7 +220,7 @@ function Comment({ comment, onReplyComment, onDeleteComment, getRespondedComment
                                 <img
                                     src={
                                         comment?.User?.userAvatar
-                                            ? process.env.REACT_APP_BACKEND_URL + comment?.User?.userAvatar
+                                            ? env?.backend_url + comment?.User?.userAvatar
                                             : defaultAvatar
                                     }
                                 />
@@ -254,8 +256,7 @@ function Comment({ comment, onReplyComment, onDeleteComment, getRespondedComment
                                         <img
                                             src={
                                                 comment?.isLikedByAuthor?.userAvatar
-                                                    ? process.env.REACT_APP_BACKEND_URL +
-                                                      comment?.isLikedByAuthor?.userAvatar
+                                                    ? env?.backend_url + comment?.isLikedByAuthor?.userAvatar
                                                     : defaultAvatar
                                             }
                                         />

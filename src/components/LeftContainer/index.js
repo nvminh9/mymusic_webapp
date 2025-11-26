@@ -13,6 +13,8 @@ import MyMusicList from '~/pages/components/MyMusicList';
 import ListenHistoryList from '~/pages/components/ListenHistoryList';
 import PlaylistList from '~/pages/components/PlaylistList';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import UnseenConversationCount from '~/pages/components/UnseenConversationCount';
+import { EnvContext } from '~/context/env.context';
 
 function LeftContainer() {
     // State
@@ -26,6 +28,7 @@ function LeftContainer() {
 
     // Context
     const { auth } = useContext(AuthContext);
+    const { env } = useContext(EnvContext);
     const { playlist, setPlaylist, setCurrentIndex, setIsPlaying } = useMusicPlayerContext();
 
     // Ref
@@ -194,6 +197,7 @@ function LeftContainer() {
             setPlaylistData(res?.data);
             return res?.data;
         },
+        // refetchOnWindowFocus: false,
     });
     useEffect(() => {
         if (isOpenPlayList === true) {
@@ -216,6 +220,7 @@ function LeftContainer() {
             setMySongsData(res?.data);
             return res?.data;
         },
+        // refetchOnWindowFocus: false,
     });
     useEffect(() => {
         if (isOpenMySong === true) {
@@ -267,6 +272,8 @@ function LeftContainer() {
                                     height: '28px',
                                 }}
                             />
+                            {/* Unseen Conversation Count */}
+                            <UnseenConversationCount />
                             {/* Tooltip Text */}
                             <span class="tooltiptext">Tin nhắn</span>
                         </button>
@@ -305,11 +312,7 @@ function LeftContainer() {
                             style={{ textDecoration: 'none', height: '100%' }}
                         >
                             <img
-                                src={
-                                    auth?.user?.userAvatar
-                                        ? process.env.REACT_APP_BACKEND_URL + auth?.user?.userAvatar
-                                        : avatarDefault
-                                }
+                                src={auth?.user?.userAvatar ? env?.backend_url + auth?.user?.userAvatar : avatarDefault}
                                 draggable="false"
                             />
                         </Link>

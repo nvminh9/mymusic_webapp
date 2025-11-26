@@ -26,6 +26,7 @@ import { createPlaylistApi, getFollowsApi } from '~/utils/api';
 import { debounce } from 'lodash';
 import UserTag from '../components/UserTag';
 import { useQueryClient } from '@tanstack/react-query';
+import { EnvContext } from '~/context/env.context';
 
 function CreatePlaylistPage() {
     // State
@@ -40,6 +41,7 @@ function CreatePlaylistPage() {
 
     // Context
     const { auth } = useContext(AuthContext);
+    const { env } = useContext(EnvContext);
 
     // Ref
     const addCoverImageInputRef = useRef(null); // Input Cover Image Ref
@@ -517,7 +519,7 @@ function CreatePlaylistPage() {
                                             <img
                                                 src={
                                                     auth?.user?.userAvatar
-                                                        ? process.env.REACT_APP_BACKEND_URL + auth?.user?.userAvatar
+                                                        ? env?.backend_url + auth?.user?.userAvatar
                                                         : defaultAvatar
                                                 }
                                                 draggable="false"
@@ -579,8 +581,7 @@ function CreatePlaylistPage() {
                                                                                     className="tagAvatar"
                                                                                     src={`${
                                                                                         user?.followingUser?.userAvatar
-                                                                                            ? process.env
-                                                                                                  .REACT_APP_BACKEND_URL +
+                                                                                            ? env?.backend_url +
                                                                                               user?.followingUser
                                                                                                   ?.userAvatar
                                                                                             : defaultAvatar

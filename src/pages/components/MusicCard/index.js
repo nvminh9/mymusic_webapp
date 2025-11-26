@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import {
     IoAddSharp,
     IoAlertSharp,
@@ -16,6 +16,7 @@ import defaultAvatar from '~/assets/images/avatarDefault.jpg';
 import { useMusicPlayerContext } from '~/context/musicPlayer.context';
 import { useMusicPlayer } from '~/hooks/useMusicPlayer';
 import { getSongDataApi } from '~/utils/api';
+import { EnvContext } from '~/context/env.context';
 
 // handleCheckIsSongAdded: Hàm kiểm tra xem bài đã có trong playlist chưa (return true hoặc false)
 // handleAddMusic: Hàm thực hiện thêm bài vào playlist
@@ -36,6 +37,7 @@ function MusicCard({
     // Context
     const { playlist, setPlaylist, setCurrentIndex, isPlaying, setIsPlaying, setTypeMusicPlayer } =
         useMusicPlayerContext();
+    const { env } = useContext(EnvContext);
 
     // useMusicPlayer (Custom Hook)
     const { currentSong } = useMusicPlayer();
@@ -82,11 +84,7 @@ function MusicCard({
                 >
                     <div className="coverImage">
                         <img
-                            src={
-                                songData?.songImage
-                                    ? process.env.REACT_APP_BACKEND_URL + songData?.songImage
-                                    : noContentImage
-                            }
+                            src={songData?.songImage ? env?.backend_url + songData?.songImage : noContentImage}
                             draggable="false"
                         />
                     </div>
@@ -146,11 +144,7 @@ function MusicCard({
                 >
                     <div className="coverImage">
                         <img
-                            src={
-                                songData?.songImage
-                                    ? process.env.REACT_APP_BACKEND_URL + songData?.songImage
-                                    : noContentImage
-                            }
+                            src={songData?.songImage ? env?.backend_url + songData?.songImage : noContentImage}
                             draggable="false"
                         />
                     </div>
@@ -204,11 +198,7 @@ function MusicCard({
                 </span>
                 <span className="music">
                     <img
-                        src={
-                            songData?.songImage
-                                ? process.env.REACT_APP_BACKEND_URL + songData?.songImage
-                                : noContentImage
-                        }
+                        src={songData?.songImage ? env?.backend_url + songData?.songImage : noContentImage}
                         draggable="false"
                     />
                     <div className="info">
@@ -237,11 +227,7 @@ function MusicCard({
                 >
                     <div className="coverImage">
                         <img
-                            src={
-                                songData?.songImage
-                                    ? process.env.REACT_APP_BACKEND_URL + songData?.songImage
-                                    : noContentImage
-                            }
+                            src={songData?.songImage ? env?.backend_url + songData?.songImage : noContentImage}
                             draggable="false"
                         />
                     </div>
@@ -302,11 +288,7 @@ function MusicCard({
                     <span className="music">
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                             <img
-                                src={
-                                    songData?.songImage
-                                        ? process.env.REACT_APP_BACKEND_URL + songData?.songImage
-                                        : noContentImage
-                                }
+                                src={songData?.songImage ? env?.backend_url + songData?.songImage : noContentImage}
                                 draggable="false"
                             />
                         </div>
@@ -353,7 +335,7 @@ function MusicCard({
                                 className="avatar"
                                 src={
                                     songData?.User?.userAvatar
-                                        ? process.env.REACT_APP_BACKEND_URL + songData?.User?.userAvatar
+                                        ? env?.backend_url + songData?.User?.userAvatar
                                         : defaultAvatar
                                 }
                             />
@@ -361,11 +343,7 @@ function MusicCard({
                         </div>
                         <img
                             className="songImage"
-                            src={
-                                songData?.songImage
-                                    ? process.env.REACT_APP_BACKEND_URL + songData?.songImage
-                                    : noContentImage
-                            }
+                            src={songData?.songImage ? env?.backend_url + songData?.songImage : noContentImage}
                             draggable="false"
                         />
                         {/* Icon Music */}
@@ -409,11 +387,7 @@ function MusicCard({
                     <span className="music">
                         <div className="songImageContainer">
                             <img
-                                src={
-                                    songData?.songImage
-                                        ? process.env.REACT_APP_BACKEND_URL + songData?.songImage
-                                        : noContentImage
-                                }
+                                src={songData?.songImage ? env?.backend_url + songData?.songImage : noContentImage}
                                 draggable="false"
                             />
                         </div>

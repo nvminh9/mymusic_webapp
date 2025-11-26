@@ -22,6 +22,7 @@ import CommentInput from '../components/CommentInput';
 import UserName from '../components/UserName';
 import { message } from 'antd';
 import LikeSharedArticleButton from '../components/LikeSharedArticleButton';
+import { EnvContext } from '~/context/env.context';
 
 function SharedArticleDetail() {
     // State
@@ -35,6 +36,7 @@ function SharedArticleDetail() {
 
     // Context
     const { auth } = useContext(AuthContext);
+    const { env } = useContext(EnvContext);
 
     // Navigate
     const navigate = useNavigate();
@@ -532,8 +534,7 @@ function SharedArticleDetail() {
                                             <img
                                                 src={
                                                     sharedArticleData?.User?.userAvatar
-                                                        ? process.env.REACT_APP_BACKEND_URL +
-                                                          sharedArticleData?.User?.userAvatar
+                                                        ? env?.backend_url + sharedArticleData?.User?.userAvatar
                                                         : defaultAvatar
                                                 }
                                             />
@@ -675,7 +676,7 @@ function SharedArticleDetail() {
                                                                 <img
                                                                     src={
                                                                         sharedArticleData?.Article?.User?.userAvatar
-                                                                            ? process.env.REACT_APP_BACKEND_URL +
+                                                                            ? env?.backend_url +
                                                                               sharedArticleData?.Article?.User
                                                                                   ?.userAvatar
                                                                             : defaultAvatar
@@ -787,9 +788,7 @@ function SharedArticleDetail() {
                                                                                                         <>
                                                                                                             <img
                                                                                                                 src={
-                                                                                                                    process
-                                                                                                                        .env
-                                                                                                                        .REACT_APP_BACKEND_URL +
+                                                                                                                    env?.backend_url +
                                                                                                                     media.photoLink
                                                                                                                 }
                                                                                                                 className="slide-image"
@@ -799,9 +798,7 @@ function SharedArticleDetail() {
                                                                                                     ) : (
                                                                                                         <video
                                                                                                             src={
-                                                                                                                process
-                                                                                                                    .env
-                                                                                                                    .REACT_APP_BACKEND_URL +
+                                                                                                                env?.backend_url +
                                                                                                                 media.videoLink
                                                                                                             }
                                                                                                             style={{}}

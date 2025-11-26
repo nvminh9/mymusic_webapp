@@ -20,6 +20,7 @@ import { deleteSharedArticleApi, getSharedArticleApi } from '~/utils/api';
 import { message } from 'antd';
 import UserName from '../UserName';
 import LikeSharedArticleButton from '../LikeSharedArticleButton';
+import { EnvContext } from '~/context/env.context';
 
 function SharedArticle({ sharedArticleData }) {
     // State
@@ -37,6 +38,7 @@ function SharedArticle({ sharedArticleData }) {
 
     // Context
     const { auth } = useContext(AuthContext);
+    const { env } = useContext(EnvContext);
 
     // Navigate
     const navigate = useNavigate();
@@ -251,8 +253,7 @@ function SharedArticle({ sharedArticleData }) {
                                     <img
                                         src={
                                             sharedArticleData?.User?.userAvatar
-                                                ? process.env.REACT_APP_BACKEND_URL +
-                                                  sharedArticleData?.User?.userAvatar
+                                                ? env?.backend_url + sharedArticleData?.User?.userAvatar
                                                 : defaultAvatar
                                         }
                                     />
@@ -388,7 +389,7 @@ function SharedArticle({ sharedArticleData }) {
                                                         <img
                                                             src={
                                                                 sharedArticleData?.Article?.User?.userAvatar
-                                                                    ? process.env.REACT_APP_BACKEND_URL +
+                                                                    ? env?.backend_url +
                                                                       sharedArticleData?.Article?.User?.userAvatar
                                                                     : defaultAvatar
                                                             }
@@ -491,8 +492,7 @@ function SharedArticle({ sharedArticleData }) {
                                                                                                 <>
                                                                                                     <img
                                                                                                         src={
-                                                                                                            process.env
-                                                                                                                .REACT_APP_BACKEND_URL +
+                                                                                                            env?.backend_url +
                                                                                                             media.photoLink
                                                                                                         }
                                                                                                         className="slide-image"
@@ -502,8 +502,7 @@ function SharedArticle({ sharedArticleData }) {
                                                                                             ) : (
                                                                                                 <video
                                                                                                     src={
-                                                                                                        process.env
-                                                                                                            .REACT_APP_BACKEND_URL +
+                                                                                                        env?.backend_url +
                                                                                                         media.videoLink
                                                                                                     }
                                                                                                     style={{}}

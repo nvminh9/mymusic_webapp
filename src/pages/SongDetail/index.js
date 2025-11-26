@@ -20,6 +20,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useMusicPlayerContext } from '~/context/musicPlayer.context';
 import { AuthContext } from '~/context/auth.context';
 import CustomSongBox from '../components/CustomSongBox';
+import { EnvContext } from '~/context/env.context';
 
 function SongDetail() {
     // State
@@ -30,6 +31,7 @@ function SongDetail() {
 
     // Context
     const { auth } = useContext(AuthContext);
+    const { env } = useContext(EnvContext);
     // useMusicPlayerContext
     const { playlist, setPlaylist, setCurrentIndex } = useMusicPlayerContext();
 
@@ -199,7 +201,7 @@ function SongDetail() {
                                         <ImageAmbilight
                                             imageSrc={
                                                 songDetailData?.songImage
-                                                    ? process.env.REACT_APP_BACKEND_URL + songDetailData?.songImage
+                                                    ? env?.backend_url + songDetailData?.songImage
                                                     : noContentImage
                                             }
                                             style={{
@@ -240,8 +242,7 @@ function SongDetail() {
                                                     <img
                                                         src={
                                                             songDetailData?.User?.userAvatar
-                                                                ? process.env.REACT_APP_BACKEND_URL +
-                                                                  songDetailData?.User?.userAvatar
+                                                                ? env?.backend_url + songDetailData?.User?.userAvatar
                                                                 : defaultAvatar
                                                         }
                                                         draggable="false"

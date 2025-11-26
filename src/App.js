@@ -11,11 +11,16 @@ import { AuthWrapper } from './context/auth.context';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { MusicPlayerProvider } from './context/musicPlayer.context';
 import { SocketProvider } from './context/socket.context';
+import { EnvContext } from './context/env.context';
 // import { SocketProvider } from './context/socket.context';
 
 const queryClient = new QueryClient();
 
 function App() {
+    // Context
+    const { env } = useContext(EnvContext);
+
+    // console.log('BACKEND_URL: ', env?.backend_url);
     // console.log('Token: ', `Bearer ${localStorage.getItem('actk')}`);
 
     return (
@@ -23,7 +28,7 @@ function App() {
             <GlobalStyles>
                 <AuthWrapper>
                     <QueryClientProvider client={queryClient}>
-                        <SocketProvider serverUrl={process.env.REACT_APP_BACKEND_URL}>
+                        <SocketProvider serverUrl={env?.backend_url}>
                             <MusicPlayerProvider>
                                 <BrowserRouter>
                                     <Favicon url={favicon} />

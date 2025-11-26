@@ -15,6 +15,7 @@ import {
     IoLockClosedOutline,
 } from 'react-icons/io5';
 import { createArticleApi } from '~/utils/api';
+import { EnvContext } from '~/context/env.context';
 
 function UploadArticlePage() {
     // State
@@ -24,11 +25,13 @@ function UploadArticlePage() {
 
     // Context
     const { auth } = useContext(AuthContext);
+    const { env } = useContext(EnvContext);
 
     // Ref
     const textContentInput = useRef(null);
     const addMediaBoxRef = useRef(null); // Ref hộp thêm ảnh/video
     const mediaList = useRef(null); // Ref mediaList xem trước ảnh/video đã chọn
+    const settingMenuRef = useRef(null); // Hộp xem trước bài viết trước khi xác nhận đăng
 
     // Navigate
     const navigate = useNavigate();
@@ -159,7 +162,7 @@ function UploadArticlePage() {
     // --- HANDLE FUNCTIONS ---
     useEffect(() => {
         // Đổi title trang
-        document.title = 'Post Article | mymusic: Music from everyone';
+        document.title = 'Tạo bài viết mới | mymusic: Music from everyone';
     }, []);
     // Handle Submit Form Upload Article
     const onSubmit = async (data) => {
@@ -262,6 +265,18 @@ function UploadArticlePage() {
             return;
         }
     };
+    // Handle Click Outside To Close
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            // Click outside settingMenuRef
+            if (settingMenuRef.current && !settingMenuRef.current.contains(event.target)) {
+                setIsOpenPreviewArticle(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
 
     return (
         <Fragment>
@@ -291,15 +306,18 @@ function UploadArticlePage() {
                                     {/* Avatar */}
                                     <div className="userAvatar">
                                         <Link
-                                            to={`/profile/${auth?.user?.userName}`}
+                                            // to={`/profile/${auth?.user?.userName}`}
                                             style={{ textDecoration: 'none' }}
                                         >
                                             <img
                                                 src={
                                                     auth?.user?.userAvatar
-                                                        ? process.env.REACT_APP_BACKEND_URL + auth?.user?.userAvatar
+                                                        ? env?.backend_url + auth?.user?.userAvatar
                                                         : defaultAvatar
                                                 }
+                                                style={{
+                                                    cursor: 'default',
+                                                }}
                                             />
                                         </Link>
                                     </div>
@@ -308,10 +326,15 @@ function UploadArticlePage() {
                                     <div className="top">
                                         <div className="articleInfo">
                                             <Link
-                                                to={`/profile/${auth?.user?.userName}`}
+                                                // to={`/profile/${auth?.user?.userName}`}
                                                 style={{ textDecoration: 'none' }}
                                             >
-                                                <span className="userName">{auth?.user?.userName}</span>
+                                                <span
+                                                    className="userName"
+                                                    style={{ textDecoration: 'none', cursor: 'default' }}
+                                                >
+                                                    {auth?.user?.userName}
+                                                </span>
                                             </Link>
                                             {/* Chọn Privacy */}
                                             <select
@@ -330,7 +353,12 @@ function UploadArticlePage() {
                                             {/* <span className="createdAt"></span> */}
                                         </div>
                                         <div className="articleOptions">
-                                            <button type="button" className="btnArticleOptions">
+                                            <button
+                                                type="button"
+                                                className="btnArticleOptions"
+                                                disabled
+                                                style={{ background: 'transparent', cursor: 'unset' }}
+                                            >
                                                 <VscEllipsis></VscEllipsis>
                                             </button>
                                         </div>
@@ -357,14 +385,15 @@ function UploadArticlePage() {
                                                     background: 'transparent',
                                                     borderRadius: '5px',
                                                     border: '.5px solid transparent',
-                                                    fontFamily: "'Funnel Sans', sans-serif",
                                                     maxWidth: '100%',
                                                     minWidth: '100%',
                                                     height: 'max-content',
                                                     minHeight: 'max-content',
+                                                    maxHeight: '300px',
                                                     padding: '0px 0px 8px 0px',
                                                     marginBottom: '8px',
                                                     marginTop: '5px',
+                                                    fontWeight: '400',
                                                 }}
                                             />
                                             {/* Validate Error Text Content */}
@@ -372,14 +401,15 @@ function UploadArticlePage() {
                                                 <div
                                                     className="errorMessage"
                                                     style={{
-                                                        background: '#e91429',
+                                                        background: 'rgba(233, 20, 41, 0.5)',
                                                         width: 'fit-content',
-                                                        padding: '5px',
-                                                        color: 'white',
+                                                        padding: '6px 7px 6px 6px',
+                                                        color: 'rgb(255, 255, 255)',
                                                         fontSize: '14px',
-                                                        fontFamily: 'sans-serif',
+                                                        fontWeight: '400',
+                                                        fontFamily: 'system-ui',
                                                         margin: '8px 0px',
-                                                        borderRadius: '5px',
+                                                        borderRadius: '20px',
                                                         display: 'flex',
                                                         alignItems: 'center',
                                                         justifyContent: 'center',
@@ -419,6 +449,11 @@ function UploadArticlePage() {
                                                                                     style={{}}
                                                                                     playsInline
                                                                                     controls
+                                                                                    controlsList="noplaybackrate nodownload"
+                                                                                    muted
+                                                                                    disablePictureInPicture
+                                                                                    disableRemotePlayback
+                                                                                    preload="false"
                                                                                 />
                                                                             )}
                                                                         </div>
@@ -466,6 +501,9 @@ function UploadArticlePage() {
                                                                         behavior: 'smooth',
                                                                     });
                                                                 }, 150);
+                                                            }}
+                                                            style={{
+                                                                backgroundColor: isOpenAddMediaBox ? '#1f1f1f' : '',
                                                             }}
                                                         >
                                                             <IoImages />
@@ -548,6 +586,7 @@ function UploadArticlePage() {
                                                                                                     src={
                                                                                                         previewMediaFile.preview
                                                                                                     }
+                                                                                                    draggable="false"
                                                                                                 />
                                                                                                 <button
                                                                                                     className="btnRemove"
@@ -579,6 +618,11 @@ function UploadArticlePage() {
                                                                                                     }
                                                                                                     playsInline
                                                                                                     controls
+                                                                                                    controlsList="noplaybackrate nodownload"
+                                                                                                    muted
+                                                                                                    disablePictureInPicture
+                                                                                                    disableRemotePlayback
+                                                                                                    preload="false"
                                                                                                 />
                                                                                                 <button
                                                                                                     className="btnRemove"
@@ -604,10 +648,10 @@ function UploadArticlePage() {
                                                                     ) : (
                                                                         <span
                                                                             style={{
-                                                                                color: 'whitesmoke',
-                                                                                fontFamily: 'sans-serif',
+                                                                                color: '#ffffff80',
+                                                                                fontFamily: 'system-ui',
                                                                                 fontSize: '15px',
-                                                                                fontWeight: '400',
+                                                                                fontWeight: '500',
                                                                                 textAlign: 'center',
                                                                                 display: 'block',
                                                                                 width: '100%',
@@ -643,7 +687,7 @@ function UploadArticlePage() {
                             {/* Menu Xem trước bài viết chuẩn bị tạo */}
                             {isOpenPreviewArticle === true && location.pathname.split('/')[2] === 'upload' ? (
                                 <div className="settingMenuContainer" style={{ top: 0, height: '99%' }}>
-                                    <div className="settingMenu" style={{ width: 'max-content' }}>
+                                    <div ref={settingMenuRef} className="settingMenu" style={{ width: 'max-content' }}>
                                         <span className="title" style={{ position: 'relative' }}>
                                             <span style={{ fontFamily: 'sans-serif' }}>Xem trước</span>
                                             {/* Nút thoát */}
@@ -656,8 +700,8 @@ function UploadArticlePage() {
                                                     alignItems: 'center',
                                                     justifyContent: 'center',
                                                     padding: '5px',
-                                                    top: '0',
-                                                    right: '0',
+                                                    top: '2px',
+                                                    right: '3px',
                                                 }}
                                                 onClick={() => {
                                                     setIsOpenPreviewArticle(false);
@@ -667,7 +711,7 @@ function UploadArticlePage() {
                                             </button>
                                         </span>
                                         {/* Mẫu bài viết xem trước */}
-                                        <div style={{ padding: '12px', borderBottom: '0.5px solid #777' }}>
+                                        <div style={{ padding: '12px' }}>
                                             <div className="article">
                                                 <div className="left">
                                                     {/* Avatar */}
@@ -679,8 +723,7 @@ function UploadArticlePage() {
                                                             <img
                                                                 src={
                                                                     auth?.user?.userAvatar
-                                                                        ? process.env.REACT_APP_BACKEND_URL +
-                                                                          auth?.user?.userAvatar
+                                                                        ? env?.backend_url + auth?.user?.userAvatar
                                                                         : defaultAvatar
                                                                 }
                                                             />
@@ -719,7 +762,9 @@ function UploadArticlePage() {
                                                                     margin: '0',
                                                                     padding: '3px',
                                                                     borderRadius: '0px',
+                                                                    backgroundColor: 'transparent',
                                                                 }}
+                                                                disabled
                                                             >
                                                                 <VscEllipsis></VscEllipsis>
                                                             </button>
@@ -763,6 +808,11 @@ function UploadArticlePage() {
                                                                                                         style={{}}
                                                                                                         playsInline
                                                                                                         controls
+                                                                                                        controlsList="noplaybackrate nodownload"
+                                                                                                        muted
+                                                                                                        disablePictureInPicture
+                                                                                                        disableRemotePlayback
+                                                                                                        preload="false"
                                                                                                     />
                                                                                                 )}
                                                                                             </div>

@@ -4,6 +4,7 @@ import defaultAvatar from '~/assets/images/avatarDefault.jpg';
 import { useChat } from '~/hooks/useChat';
 import { useParams } from 'react-router-dom';
 import { formatMessageTime } from '~/utils/dateFormatter';
+import { EnvContext } from '~/context/env.context';
 
 export default function MessageBubble({ message, isOwn, isPreviousSameSender, isForwardSameSender }) {
     // State
@@ -11,6 +12,7 @@ export default function MessageBubble({ message, isOwn, isPreviousSameSender, is
 
     // Context
     const { auth } = useContext(AuthContext);
+    const { env } = useContext(EnvContext);
 
     // React Router
     // const { conversationId } = useParams();
@@ -67,8 +69,8 @@ export default function MessageBubble({ message, isOwn, isPreviousSameSender, is
                                 <img
                                     src={
                                         message.Sender
-                                            ? process.env.REACT_APP_BACKEND_URL + message.Sender.userAvatar
-                                            : process.env.REACT_APP_BACKEND_URL + message.sender.userAvatar
+                                            ? env?.backend_url + message.Sender.userAvatar
+                                            : env?.backend_url + message.sender.userAvatar
                                     }
                                 />
                             </div>
@@ -77,8 +79,8 @@ export default function MessageBubble({ message, isOwn, isPreviousSameSender, is
                                 <img
                                     src={
                                         message.Sender
-                                            ? process.env.REACT_APP_BACKEND_URL + message.Sender.userAvatar
-                                            : process.env.REACT_APP_BACKEND_URL + message.sender.userAvatar
+                                            ? env?.backend_url + message.Sender.userAvatar
+                                            : env?.backend_url + message.sender.userAvatar
                                     }
                                 />
                             </div>
@@ -140,7 +142,7 @@ export default function MessageBubble({ message, isOwn, isPreviousSameSender, is
                                             <img
                                                 src={
                                                     lastReadMessage?.User?.userAvatar
-                                                        ? process.env.REACT_APP_BACKEND_URL +
+                                                        ? env?.backend_url +
                                                           lastReadMessage?.User?.userAvatar
                                                         : defaultAvatar
                                                 }

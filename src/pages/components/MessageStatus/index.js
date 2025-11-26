@@ -1,12 +1,14 @@
 import { useContext, useState } from 'react';
 import { AuthContext } from '~/context/auth.context';
 import defaultAvatar from '~/assets/images/avatarDefault.jpg';
+import { EnvContext } from '~/context/env.context';
 
 function MessageStatus({ message, lastReadMessagesEachParticipant, isNewestMessageByAuthUser }) {
     // State
 
     // Context
     const { auth } = useContext(AuthContext);
+    const { env } = useContext(EnvContext);
 
     return (
         <>
@@ -25,9 +27,7 @@ function MessageStatus({ message, lastReadMessagesEachParticipant, isNewestMessa
                                 <div className="avatarReadAt">
                                     <img
                                         src={
-                                            i?.User?.userAvatar
-                                                ? process.env.REACT_APP_BACKEND_URL + i?.User?.userAvatar
-                                                : defaultAvatar
+                                            i?.User?.userAvatar ? env?.backend_url + i?.User?.userAvatar : defaultAvatar
                                         }
                                     />
                                 </div>

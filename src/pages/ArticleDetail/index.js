@@ -23,6 +23,7 @@ import LikeArticleButton from '../components/LikeArticleButton';
 import UserName from '../components/UserName';
 import { message } from 'antd';
 import ShareArticleButton from '../components/ShareArticleButton';
+import { EnvContext } from '~/context/env.context';
 
 function ArticleDetail() {
     // State
@@ -36,6 +37,7 @@ function ArticleDetail() {
 
     // Context
     const { auth } = useContext(AuthContext);
+    const { env } = useContext(EnvContext);
 
     // Navigate
     const navigate = useNavigate();
@@ -526,8 +528,7 @@ function ArticleDetail() {
                                             <img
                                                 src={
                                                     articleData?.User?.userAvatar
-                                                        ? process.env.REACT_APP_BACKEND_URL +
-                                                          articleData?.User?.userAvatar
+                                                        ? env?.backend_url + articleData?.User?.userAvatar
                                                         : defaultAvatar
                                                 }
                                             />
@@ -662,8 +663,7 @@ function ArticleDetail() {
                                                                                 <>
                                                                                     <img
                                                                                         src={
-                                                                                            process.env
-                                                                                                .REACT_APP_BACKEND_URL +
+                                                                                            env?.backend_url +
                                                                                             media.photoLink
                                                                                         }
                                                                                         className="slide-image"
@@ -673,8 +673,7 @@ function ArticleDetail() {
                                                                             ) : (
                                                                                 <video
                                                                                     src={
-                                                                                        process.env
-                                                                                            .REACT_APP_BACKEND_URL +
+                                                                                        env?.backend_url +
                                                                                         media.videoLink
                                                                                     }
                                                                                     style={{}}

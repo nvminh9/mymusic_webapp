@@ -1,10 +1,11 @@
 // Custome Hook useMusicPlayer.js
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useContext } from 'react';
 import Hls from 'hls.js';
 import noContentImage from '~/assets/images/no_content.jpg';
 import { useMusicPlayerContext } from '~/context/musicPlayer.context';
 import { createListenHistoryApi } from '~/utils/api';
 import { debounce } from 'lodash';
+import { EnvContext } from '~/context/env.context';
 
 // BroadcastChannel
 const channel = new BroadcastChannel('music-player');
@@ -45,6 +46,7 @@ export function useMusicPlayer() {
         isSaveListeningHistory,
         setIsSaveListeningHistory,
     } = useMusicPlayerContext();
+    const { env } = useContext(EnvContext);
 
     // Ref
     const audioRef = useRef(null);
@@ -57,19 +59,15 @@ export function useMusicPlayer() {
     const thumbnails = currentSong?.songVideo
         ? [
               {
-                  imageUrl: currentSong?.songImage
-                      ? process.env.REACT_APP_BACKEND_URL + currentSong?.songImage
-                      : noContentImage,
+                  imageUrl: currentSong?.songImage ? env?.backend_url + currentSong?.songImage : noContentImage,
               },
               {
-                  videoUrl: currentSong?.songVideo ? process.env.REACT_APP_BACKEND_URL + currentSong?.songVideo : '',
+                  videoUrl: currentSong?.songVideo ? env?.backend_url + currentSong?.songVideo : '',
               },
           ]
         : [
               {
-                  imageUrl: currentSong?.songImage
-                      ? process.env.REACT_APP_BACKEND_URL + currentSong?.songImage
-                      : noContentImage,
+                  imageUrl: currentSong?.songImage ? env?.backend_url + currentSong?.songImage : noContentImage,
               },
           ];
 
@@ -84,7 +82,7 @@ export function useMusicPlayer() {
         //
         if (Hls.isSupported()) {
             const hls = new Hls();
-            hls.loadSource(process.env.REACT_APP_BACKEND_URL + currentSong.songLink);
+            hls.loadSource(env?.backend_url + currentSong.songLink);
             hls.attachMedia(audioRef.current);
             // Auto play
             hls.on(Hls.Events.MANIFEST_PARSED, () => {
@@ -103,7 +101,7 @@ export function useMusicPlayer() {
             });
             hlsRef.current = hls;
         } else if (audioRef.current.canPlayType('application/vnd.apple.mpegurl')) {
-            audioRef.current.src = process.env.REACT_APP_BACKEND_URL + currentSong.songLink;
+            audioRef.current.src = env?.backend_url + currentSong.songLink;
             // Auto play
             audioRef.current.addEventListener('loadedmetadata', () => {
                 if (isInteracted) {

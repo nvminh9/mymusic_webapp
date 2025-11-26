@@ -7,16 +7,18 @@ import { AuthContext } from '~/context/auth.context';
 import { message } from 'antd';
 import defaultAvatar from '~/assets/images/avatarDefault.jpg';
 import { updateUserProfileInfoApi } from '~/utils/api';
+import { EnvContext } from '~/context/env.context';
 
 function ProfileEditPage() {
     console.log('Re load Edit Page....');
 
     // Context (useContext)
     const { auth, setAuth } = useContext(AuthContext);
+    const { env } = useContext(EnvContext);
 
     // State (useState)
     const [previewAvatarLink, setPreviewAvatarLink] = useState(
-        auth?.user?.userAvatar ? process.env.REACT_APP_BACKEND_URL + auth?.user?.userAvatar : defaultAvatar,
+        auth?.user?.userAvatar ? env?.backend_url + auth?.user?.userAvatar : defaultAvatar,
     );
     // const [preDescription, setPreDescription] = useState(auth?.user?.description);
 

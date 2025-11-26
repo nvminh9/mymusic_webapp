@@ -23,10 +23,15 @@ import { AuthContext } from '~/context/auth.context';
 import noContentImage from '~/assets/images/no_content.jpg';
 import { constant } from 'lodash';
 import { message } from 'antd';
+import { EnvContext } from '~/context/env.context';
 
 const LIMIT = 5;
 
 function CustomSongBox({ songDetailData, setIsOpenCustomBox, setChangedCount }) {
+    // Context
+    const { auth } = useContext(AuthContext);
+    const { env } = useContext(EnvContext);
+
     // State
     const [tab, setTab] = useState(1);
     const [isDeleting, setIsDeleting] = useState({
@@ -36,18 +41,15 @@ function CustomSongBox({ songDetailData, setIsOpenCustomBox, setChangedCount }) 
     const [songMediaFileTab, setSongMediaFileTab] = useState(1);
     const [songImageFile, setSongImageFile] = useState(); // File hình ảnh
     const [previewSongImage, setPreviewSongImage] = useState(
-        songDetailData?.songImage ? process.env.REACT_APP_BACKEND_URL + songDetailData?.songImage : null,
+        songDetailData?.songImage ? env?.backend_url + songDetailData?.songImage : null,
     ); // Hình ảnh blob xem thử
     const [songVideoFile, setSongVideoFile] = useState(); // File video
     const [previewSongVideo, setPreviewSongVideo] = useState(
-        songDetailData?.songVideo ? process.env.REACT_APP_BACKEND_URL + songDetailData?.songVideo : null,
+        songDetailData?.songVideo ? env?.backend_url + songDetailData?.songVideo : null,
     ); // Video blob xem thử
     const [songName, setSongName] = useState(songDetailData?.name); // Tên
     const [isSongInfoChanged, setIsSongInfoChanged] = useState(false); // Thông tin nhạc đã có thay đổi
     const [updateProgressStatus, setUpdateProgressStatus] = useState();
-
-    // Context
-    const { auth } = useContext(AuthContext);
 
     // Ref
     const changeSongImageInputRef = useRef(null);

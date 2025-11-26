@@ -7,6 +7,8 @@ import defaultAvatar from '~/assets/images/avatarDefault.jpg';
 import { useMusicPlayerContext } from '~/context/musicPlayer.context';
 import { useMusicPlayer } from '~/hooks/useMusicPlayer';
 import { addMusicToPlaylistApi, getSongDataApi, removeMusicFromPlaylistApi } from '~/utils/api';
+import { EnvContext } from '~/context/env.context';
+import { useContext } from 'react';
 
 function PlaylistCard({ playlistData, order, typePlaylistCard }) {
     // State
@@ -14,6 +16,7 @@ function PlaylistCard({ playlistData, order, typePlaylistCard }) {
     // Context
     // const { playlist, setPlaylist, setCurrentIndex, setIsPlaying } = useMusicPlayerContext();
     const { currentSong } = useMusicPlayer();
+    const { env } = useContext(EnvContext);
 
     // React Query
     const queryClient = useQueryClient();
@@ -178,9 +181,7 @@ function PlaylistCard({ playlistData, order, typePlaylistCard }) {
                     <div className="coverImage">
                         <img
                             src={
-                                playlistData?.coverImage
-                                    ? process.env.REACT_APP_BACKEND_URL + playlistData?.coverImage
-                                    : noContentImage
+                                playlistData?.coverImage ? env?.backend_url + playlistData?.coverImage : noContentImage
                             }
                             draggable="false"
                             style={{
@@ -263,7 +264,7 @@ function PlaylistCard({ playlistData, order, typePlaylistCard }) {
                             <img
                                 src={
                                     playlistData?.coverImage
-                                        ? process.env.REACT_APP_BACKEND_URL + playlistData?.coverImage
+                                        ? env?.backend_url + playlistData?.coverImage
                                         : noContentImage
                                 }
                                 draggable="false"
@@ -321,7 +322,7 @@ function PlaylistCard({ playlistData, order, typePlaylistCard }) {
                                 className="avatar"
                                 src={
                                     playlistData?.User?.userAvatar
-                                        ? process.env.REACT_APP_BACKEND_URL + playlistData?.User?.userAvatar
+                                        ? env?.backend_url + playlistData?.User?.userAvatar
                                         : defaultAvatar
                                 }
                             />
@@ -330,9 +331,7 @@ function PlaylistCard({ playlistData, order, typePlaylistCard }) {
                         <img
                             className="songImage"
                             src={
-                                playlistData?.coverImage
-                                    ? process.env.REACT_APP_BACKEND_URL + playlistData?.coverImage
-                                    : noContentImage
+                                playlistData?.coverImage ? env?.backend_url + playlistData?.coverImage : noContentImage
                             }
                             draggable="false"
                         />
@@ -380,11 +379,7 @@ function PlaylistCard({ playlistData, order, typePlaylistCard }) {
                 </span>
                 <span className="music">
                     <img
-                        src={
-                            playlistData?.coverImage
-                                ? process.env.REACT_APP_BACKEND_URL + playlistData?.coverImage
-                                : noContentImage
-                        }
+                        src={playlistData?.coverImage ? env?.backend_url + playlistData?.coverImage : noContentImage}
                         draggable="false"
                     />
                     <div className="info">

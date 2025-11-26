@@ -15,6 +15,7 @@ import defaultAvatar from '~/assets/images/avatarDefault.jpg';
 import UserName from '../UserName';
 import Slider from 'react-slick';
 import { shareArticleApi } from '~/utils/api';
+import { EnvContext } from '~/context/env.context';
 
 function ShareArticleButton({ articleData }) {
     // State
@@ -23,6 +24,7 @@ function ShareArticleButton({ articleData }) {
 
     // Context
     const { auth } = useContext(AuthContext);
+    const { env } = useContext(EnvContext);
 
     // Navigate
     const navigate = useNavigate();
@@ -262,8 +264,7 @@ function ShareArticleButton({ articleData }) {
                                                         <img
                                                             src={
                                                                 auth?.user?.userAvatar
-                                                                    ? process.env.REACT_APP_BACKEND_URL +
-                                                                      auth?.user?.userAvatar
+                                                                    ? env?.backend_url + auth?.user?.userAvatar
                                                                     : defaultAvatar
                                                             }
                                                         />
@@ -384,8 +385,7 @@ function ShareArticleButton({ articleData }) {
                                                                             <img
                                                                                 src={
                                                                                     articleData?.User?.userAvatar
-                                                                                        ? process.env
-                                                                                              .REACT_APP_BACKEND_URL +
+                                                                                        ? env?.backend_url +
                                                                                           articleData?.User?.userAvatar
                                                                                         : defaultAvatar
                                                                                 }
@@ -472,9 +472,7 @@ function ShareArticleButton({ articleData }) {
                                                                                                                     <>
                                                                                                                         <img
                                                                                                                             src={
-                                                                                                                                process
-                                                                                                                                    .env
-                                                                                                                                    .REACT_APP_BACKEND_URL +
+                                                                                                                                env?.backend_url +
                                                                                                                                 media.photoLink
                                                                                                                             }
                                                                                                                             className="slide-image"
@@ -484,9 +482,7 @@ function ShareArticleButton({ articleData }) {
                                                                                                                 ) : (
                                                                                                                     <video
                                                                                                                         src={
-                                                                                                                            process
-                                                                                                                                .env
-                                                                                                                                .REACT_APP_BACKEND_URL +
+                                                                                                                            env?.backend_url +
                                                                                                                             media.videoLink
                                                                                                                         }
                                                                                                                         style={{}}

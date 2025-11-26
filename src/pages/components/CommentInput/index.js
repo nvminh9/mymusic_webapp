@@ -6,6 +6,7 @@ import defaultAvatar from '~/assets/images/avatarDefault.jpg';
 import { AuthContext } from '~/context/auth.context';
 import { createCommentApi, createCommentSharedArticleApi, getFollowsApi } from '~/utils/api';
 import { debounce } from 'lodash';
+import { EnvContext } from '~/context/env.context';
 
 // Component CommentInput
 // comment: Nếu gọi ở Comment thì truyền data của comment
@@ -23,6 +24,7 @@ function CommentInput({ comment, articleData, sharedArticleData, onReplyComment,
 
     // Context
     const { auth } = useContext(AuthContext);
+    const { env } = useContext(EnvContext);
 
     // Navigate
     const navigate = useNavigate();
@@ -253,11 +255,7 @@ function CommentInput({ comment, articleData, sharedArticleData, onReplyComment,
             <div className="commentBox" style={{}}>
                 <img
                     className="userAvatar"
-                    src={
-                        auth?.user?.userAvatar
-                            ? process.env.REACT_APP_BACKEND_URL + auth?.user?.userAvatar
-                            : defaultAvatar
-                    }
+                    src={auth?.user?.userAvatar ? env?.backend_url + auth?.user?.userAvatar : defaultAvatar}
                 />
                 <form
                     onSubmit={handleSubmit(onSubmitFormReplyComment)}
@@ -287,6 +285,7 @@ function CommentInput({ comment, articleData, sharedArticleData, onReplyComment,
                                     ? '.5px solid rgb(233 20 41 / 54%)'
                                     : '0.5px solid transparent',
                         }}
+                        autoFocus
                     />
                     {/* Check Data */}
                     <pre style={{ color: 'red' }} hidden>
@@ -333,7 +332,7 @@ function CommentInput({ comment, articleData, sharedArticleData, onReplyComment,
                                         className="tagAvatar"
                                         src={`${
                                             user?.followingUser?.userAvatar
-                                                ? process.env.REACT_APP_BACKEND_URL + user?.followingUser?.userAvatar
+                                                ? env?.backend_url + user?.followingUser?.userAvatar
                                                 : defaultAvatar
                                         }`}
                                     />

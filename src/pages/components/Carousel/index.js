@@ -5,7 +5,7 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { VscChevronLeft, VscChevronRight } from 'react-icons/vsc';
-import { useRef } from 'react';
+import { useContext, useRef } from 'react';
 import { Fragment } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import noContentImage from '~/assets/images/no_content.jpg';
@@ -17,11 +17,13 @@ import bluesCoverImage from '~/assets/images/blues.png';
 import randbsoulCoverImage from '~/assets/images/r&bsoul.png';
 import hiphopCoverImage from '~/assets/images/hiphop.png';
 import edmCoverImage from '~/assets/images/edm.png';
+import { EnvContext } from '~/context/env.context';
 
 function Carousel({ slides, type }) {
     // State
 
     // Context
+    const { env } = useContext(EnvContext);
 
     // Ref
 
@@ -223,9 +225,9 @@ function Carousel({ slides, type }) {
                                     <img
                                         src={
                                             slide?.song?.songImage
-                                                ? process.env.REACT_APP_BACKEND_URL + slide?.song?.songImage
+                                                ? env?.backend_url + slide?.song?.songImage
                                                 : slide?.Song?.songImage
-                                                ? process.env.REACT_APP_BACKEND_URL + slide?.Song?.songImage
+                                                ? env?.backend_url + slide?.Song?.songImage
                                                 : noContentImage
                                         }
                                         className="slide-image"

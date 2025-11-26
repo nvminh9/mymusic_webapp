@@ -12,6 +12,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useMusicPlayerContext } from '~/context/musicPlayer.context';
 import { AuthContext } from '~/context/auth.context';
 import CustomPlaylistBox from '../components/CustomPlaylistBox';
+import { EnvContext } from '~/context/env.context';
 
 function PlaylistDetail() {
     // State
@@ -21,10 +22,13 @@ function PlaylistDetail() {
 
     // Context
     const { auth } = useContext(AuthContext);
+    const { env } = useContext(EnvContext);
+
     // React Query
     const queryClient = useQueryClient();
     // Listening History
     const listenHistoryData = queryClient.getQueryData(['listeningHistory']);
+
     // useMusicPlayerContext
     const { setPlaylist, setCurrentIndex, setTypeMusicPlayer } = useMusicPlayerContext();
 
@@ -290,7 +294,7 @@ function PlaylistDetail() {
                                         <ImageAmbilight
                                             imageSrc={
                                                 playlistDetailData?.coverImage
-                                                    ? process.env.REACT_APP_BACKEND_URL + playlistDetailData?.coverImage
+                                                    ? env?.backend_url + playlistDetailData?.coverImage
                                                     : noContentImage
                                             }
                                             style={{
@@ -330,7 +334,7 @@ function PlaylistDetail() {
                                                     <img
                                                         src={
                                                             playlistDetailData?.User?.userAvatar
-                                                                ? process.env.REACT_APP_BACKEND_URL +
+                                                                ? env?.backend_url +
                                                                   playlistDetailData?.User?.userAvatar
                                                                 : defaultAvatar
                                                         }

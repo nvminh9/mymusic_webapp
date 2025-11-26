@@ -12,6 +12,7 @@ import { IoChatbubbles, IoSyncSharp } from 'react-icons/io5';
 import { useQueryClient } from '@tanstack/react-query';
 import defaultAvatar from '~/assets/images/avatarDefault.jpg';
 import MessageList from '../MessageList';
+import { EnvContext } from '~/context/env.context';
 
 export default function ChatWindow() {
     // State
@@ -20,6 +21,7 @@ export default function ChatWindow() {
 
     // Context
     const { auth } = useContext(AuthContext);
+    const { env } = useContext(EnvContext);
 
     // React Router
     const { conversationId } = useParams();
@@ -237,11 +239,7 @@ export default function ChatWindow() {
                                 objectFit: 'cover',
                                 cursor: 'pointer',
                             }}
-                            src={
-                                conversationInfo?.avatar
-                                    ? process.env.REACT_APP_BACKEND_URL + conversationInfo?.avatar
-                                    : defaultAvatar
-                            }
+                            src={conversationInfo?.avatar ? env?.backend_url + conversationInfo?.avatar : defaultAvatar}
                             onClick={() => {
                                 if (!conversationInfo?.title) return;
                                 navigate(`/profile/${conversationInfo?.title}`);
@@ -314,11 +312,7 @@ export default function ChatWindow() {
                             objectFit: 'cover',
                             cursor: 'pointer',
                         }}
-                        src={
-                            conversationInfo?.avatar
-                                ? process.env.REACT_APP_BACKEND_URL + conversationInfo?.avatar
-                                : defaultAvatar
-                        }
+                        src={conversationInfo?.avatar ? env?.backend_url + conversationInfo?.avatar : defaultAvatar}
                         onClick={() => {
                             if (!conversationInfo?.title) return;
                             navigate(`/profile/${conversationInfo?.title}`);

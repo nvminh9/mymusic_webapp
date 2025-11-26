@@ -24,6 +24,7 @@ import {
 import defaultAvatar from '~/assets/images/avatarDefault.jpg';
 import { message } from 'antd';
 import ArticleProfile from '../components/ArticleProfile';
+import { EnvContext } from '~/context/env.context';
 
 function ProfilePage() {
     // State (useState)
@@ -36,11 +37,13 @@ function ProfilePage() {
     // Context (useContext)
     // auth là object, trong đó có thuộc tính user chứa thông tin của user auth
     const { auth, setAuth } = useContext(AuthContext);
+    const { env } = useContext(EnvContext);
 
     // Ref
     const followersTotal = useRef();
     const createMenuRef = useRef(null);
     const followingSettingRef = useRef(null);
+    const settingMenuRef = useRef(null);
 
     // Chuyển Tab
     const location = useLocation();
@@ -256,6 +259,18 @@ function ProfilePage() {
         document.addEventListener('mousedown', handleClickOutside);
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
+    // Handle Click Outside To Close
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            // Click outside settingMenuRef
+            if (settingMenuRef.current && !settingMenuRef.current.contains(event.target)) {
+                setIsOpenSettingMenu(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
 
     // console.log(auth);
 
@@ -264,7 +279,7 @@ function ProfilePage() {
             {/* Menu Setting */}
             {isOpenSettingMenu === true && auth?.user?.userName === location.pathname.split('/')[2] ? (
                 <div className="settingMenuContainer">
-                    <div className="settingMenu">
+                    <div ref={settingMenuRef} className="settingMenu">
                         <span className="title">Cài đặt</span>
                         <button
                             id="btnSignOutID"
@@ -272,6 +287,7 @@ function ProfilePage() {
                             onClick={() => {
                                 handleSignOut();
                             }}
+                            style={{ marginBottom: '8px' }}
                         >
                             Đăng xuất
                         </button>
@@ -305,7 +321,7 @@ function ProfilePage() {
                                 <img
                                     src={
                                         profileInfo?.user?.userAvatar
-                                            ? process.env.REACT_APP_BACKEND_URL + profileInfo?.user?.userAvatar
+                                            ? env?.backend_url + profileInfo?.user?.userAvatar
                                             : defaultAvatar
                                     }
                                     style={{
@@ -378,13 +394,12 @@ function ProfilePage() {
                             style={{
                                 display: 'flex',
                                 alignItems: 'center',
-                                justifyContent: 'space-between',
-                                padding: '10px 105px',
+                                justifyContent: 'center',
+                                // padding: '10px 105px',
                                 gap: '10px',
                             }}
                         >
-                            <IoImagesOutline />{' '}
-                            <span style={{ display: 'block', width: '100%', textAlign: 'left' }}>Bài viết</span>
+                            <IoImagesOutline /> Bài viết
                         </button>
                         {/* Nút tạo nhạc */}
                         <button
@@ -397,14 +412,14 @@ function ProfilePage() {
                             style={{
                                 display: 'flex',
                                 alignItems: 'center',
-                                justifyContent: 'space-between',
-                                padding: '10px 105px',
+                                justifyContent: 'center',
+                                // padding: '10px 105px',
                                 gap: '10px',
                                 marginBottom: '5px',
+                                marginTop: '8px',
                             }}
                         >
-                            <IoMusicalNotesOutline />{' '}
-                            <span style={{ display: 'block', width: '100%', textAlign: 'left' }}>Nhạc</span>
+                            <IoMusicalNotesOutline /> Nhạc
                         </button>
                     </div>
                 </div>
@@ -454,7 +469,7 @@ function ProfilePage() {
                                         <img
                                             src={
                                                 profileInfo?.user?.userAvatar
-                                                    ? process.env.REACT_APP_BACKEND_URL + profileInfo?.user?.userAvatar
+                                                    ? env?.backend_url + profileInfo?.user?.userAvatar
                                                     : defaultAvatar
                                             }
                                         />

@@ -3,6 +3,7 @@ import { IoSyncSharp } from 'react-icons/io5';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import defaultAvatar from '~/assets/images/avatarDefault.jpg';
 import { AuthContext } from '~/context/auth.context';
+import { EnvContext } from '~/context/env.context';
 import { getUserProfileInfoApi } from '~/utils/api';
 
 // Cache user data (Tạm thời chưa dùng, vì muốn cập nhật data mới nhất của user)
@@ -18,6 +19,7 @@ function UserName({ userName }) {
 
     // Context
     const { auth } = useContext(AuthContext);
+    const { env } = useContext(EnvContext);
 
     // Ref
     const timeoutFetchUserRef = useRef(null);
@@ -128,7 +130,7 @@ function UserName({ userName }) {
                                         className="userAvatar"
                                         src={
                                             userData?.user?.userAvatar
-                                                ? process.env.REACT_APP_BACKEND_URL + userData?.user?.userAvatar
+                                                ? env?.backend_url + userData?.user?.userAvatar
                                                 : defaultAvatar
                                         }
                                     />

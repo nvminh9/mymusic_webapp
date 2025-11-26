@@ -4,7 +4,9 @@ import { useNavigate } from 'react-router-dom';
 
 // Set config defaults when creating the instance
 const instance = axios.create({
-    baseURL: process.env.REACT_APP_BACKEND_URL,
+    // baseURL: `https://mymusic-api-1n5t.onrender.com`,
+    baseURL:
+        window.location.hostname !== 'localhost' ? `https://mymusic-api-1n5t.onrender.com` : `http://localhost:3700`,
 });
 
 // Alter defaults after instance has been created

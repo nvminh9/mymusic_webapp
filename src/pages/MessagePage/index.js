@@ -11,6 +11,8 @@ import { searchConversationApi } from '~/utils/api';
 import { debounce } from 'lodash';
 import defaultAvatar from '~/assets/images/avatarDefault.jpg';
 import { formatMessageTime } from '~/utils/dateFormatter';
+import CreateNewConversationBox from '../components/CreateNewConversationBox';
+import { EnvContext } from '~/context/env.context';
 
 function MessagePage() {
     // State
@@ -24,11 +26,11 @@ function MessagePage() {
 
     // Context
     const { auth } = useContext(AuthContext);
+    const { env } = useContext(EnvContext);
 
     // Ref
     const createConversationChoicesRef = useRef(null);
     const searchConversationInputRef = useRef(null);
-    const createNewConversationBoxRef = useRef(null);
 
     // Navigation
     const navigate = useNavigate();
@@ -124,10 +126,6 @@ function MessagePage() {
             // Click outside createConversationChoicesRef
             if (createConversationChoicesRef.current && !createConversationChoicesRef.current.contains(event.target)) {
                 setIsOpenCreateConversation(false);
-            }
-            // Click outside createNewConversationBoxRef
-            if (createNewConversationBoxRef.current && !createNewConversationBoxRef.current.contains(event.target)) {
-                setIsOpenCreateNewConversationBox(false);
             }
         };
 
@@ -282,57 +280,11 @@ function MessagePage() {
                     </button>
                 </div>
                 {/* Create New Conversation Box (DM) */}
-                <div
-                    className="createNewConversationContainer"
-                    style={{
-                        transform: isOpenCreateNewConversationBox ? 'scale(1)' : '',
-                        borderRadius: isOpenCreateNewConversationBox ? '0px' : '',
-                    }}
-                >
-                    <div ref={createNewConversationBoxRef} className="createNewConversationBox">
-                        <div className="top">
-                            <span className="title">Cuộc trò chuyện mới</span>
-                            {/* Button Close */}
-                            <button
-                                className="btnClose"
-                                onClick={() => {
-                                    setIsOpenCreateNewConversationBox(false);
-                                }}
-                            >
-                                <IoClose />
-                            </button>
-                            <div className="inputFindParticipantWrapper">
-                                <span
-                                    style={{
-                                        color: '#ffffff',
-                                        fontFamily: 'system-ui',
-                                        fontSize: '15px',
-                                        fontWeight: '400',
-                                    }}
-                                >
-                                    Đến:
-                                </span>
-                                <input
-                                    type="text"
-                                    id="inputFindParticipantID"
-                                    name="queryFindParticipant"
-                                    className="inputFindParticipant"
-                                    placeholder="Tìm kiếm người dùng..."
-                                    autoComplete="off"
-                                    autoFocus
-                                    spellCheck="false"
-                                />
-                            </div>
-                        </div>
-                        <div className="bottom">
-                            <span className="conversationType">Loại: DM</span>
-                            {/* Btn Create */}
-                            <button type="button" className="btnCreateNewConversation" onClick={() => {}}>
-                                <IoAdd /> Tạo
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                <CreateNewConversationBox
+                    isOpenCreateNewConversationBox={isOpenCreateNewConversationBox}
+                    setIsOpenCreateNewConversationBox={setIsOpenCreateNewConversationBox}
+                    type={'dm'}
+                />
                 {/* Create New Conversation Box (Group) */}
                 {/* ... */}
                 {/* Conversations List */}
@@ -369,8 +321,7 @@ function MessagePage() {
                                                                 <img
                                                                     src={
                                                                         conversation.avatar
-                                                                            ? process.env.REACT_APP_BACKEND_URL +
-                                                                              conversation.avatar
+                                                                            ? env?.backend_url + conversation.avatar
                                                                             : defaultAvatar
                                                                     }
                                                                     loading="lazy"
@@ -486,8 +437,7 @@ function MessagePage() {
                                                                                                 ?.userId !==
                                                                                             auth?.user?.userId,
                                                                                     )?.[0]?.User?.userAvatar
-                                                                                        ? process.env
-                                                                                              .REACT_APP_BACKEND_URL +
+                                                                                        ? env?.backend_url +
                                                                                           conversation?.participants?.filter(
                                                                                               (participant) =>
                                                                                                   participant?.User

@@ -14,6 +14,7 @@ import MusicCard from '../MusicCard';
 import noContentImage from '~/assets/images/no_content.jpg';
 import defaultAvatar from '~/assets/images/avatarDefault.jpg';
 import UserTag from '../UserTag';
+import { EnvContext } from '~/context/env.context';
 
 function Playlist({ data, currentIndex, type }) {
     // State
@@ -21,6 +22,7 @@ function Playlist({ data, currentIndex, type }) {
 
     // Context
     const { auth } = useContext(AuthContext);
+    const { env } = useContext(EnvContext);
 
     // Ref
 
@@ -161,7 +163,7 @@ function Playlist({ data, currentIndex, type }) {
                                                 className="coverImage"
                                                 src={
                                                     data?.coverImage
-                                                        ? process.env.REACT_APP_BACKEND_URL + data?.coverImage
+                                                        ? env?.backend_url + data?.coverImage
                                                         : noContentImage
                                                 }
                                             />
@@ -190,8 +192,7 @@ function Playlist({ data, currentIndex, type }) {
                                                         <img
                                                             src={
                                                                 data?.User?.userAvatar
-                                                                    ? process.env.REACT_APP_BACKEND_URL +
-                                                                      data?.User?.userAvatar
+                                                                    ? env?.backend_url + data?.User?.userAvatar
                                                                     : defaultAvatar
                                                             }
                                                             draggable="false"

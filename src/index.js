@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import { EnvWrapper } from './context/env.context';
 
 // Gán window.name (nếu chưa có)
 if (!window.name) {
@@ -17,7 +18,9 @@ root.render(
             // Test for firebase web app domain mymusic-social.web.app
             clientId="399223275562-ora13ihmeq65igmc1hp4u5v042f1adus.apps.googleusercontent.com"
         >
-            <App />
+            <EnvWrapper>
+                <App />
+            </EnvWrapper>
         </GoogleOAuthProvider>
     </React.StrictMode>,
 );

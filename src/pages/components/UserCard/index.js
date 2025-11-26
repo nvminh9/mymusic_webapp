@@ -1,11 +1,14 @@
+import { useContext } from 'react';
 import { IoPerson } from 'react-icons/io5';
 import { useNavigate } from 'react-router-dom';
 import defaultAvatar from '~/assets/images/avatarDefault.jpg';
+import { EnvContext } from '~/context/env.context';
 
 function UserCard({ userData, type }) {
     // State
 
     // Context
+    const { env } = useContext(EnvContext);
 
     // Ref
 
@@ -40,11 +43,7 @@ function UserCard({ userData, type }) {
                             <div className="userAvatarContainer">
                                 <img
                                     className="userAvatar"
-                                    src={
-                                        userData?.userAvatar
-                                            ? process.env.REACT_APP_BACKEND_URL + userData?.userAvatar
-                                            : defaultAvatar
-                                    }
+                                    src={userData?.userAvatar ? env?.backend_url + userData?.userAvatar : defaultAvatar}
                                     draggable="false"
                                 />
                             </div>

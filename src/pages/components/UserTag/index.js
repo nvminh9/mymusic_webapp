@@ -4,6 +4,7 @@ import { AuthContext } from '~/context/auth.context';
 import { getUserProfileInfoApi } from '~/utils/api';
 import defaultAvatar from '~/assets/images/avatarDefault.jpg';
 import { IoCloseSharp, IoSyncSharp } from 'react-icons/io5';
+import { EnvContext } from '~/context/env.context';
 
 // Cache user data (Tạm thời chưa dùng, để cập nhật data mới nhất của user)
 const userCache = {};
@@ -18,6 +19,7 @@ function UserTag({ children, userName, userTagData, typeUserTag, handleRemoveUse
 
     // Context
     const { auth } = useContext(AuthContext);
+    const { env } = useContext(EnvContext);
 
     // Ref
     const userTagRef = useRef(null);
@@ -126,11 +128,7 @@ function UserTag({ children, userName, userTagData, typeUserTag, handleRemoveUse
                     // disabled
                 >
                     <img
-                        src={
-                            userTagData?.userAvatar
-                                ? process.env.REACT_APP_BACKEND_URL + userTagData?.userAvatar
-                                : defaultAvatar
-                        }
+                        src={userTagData?.userAvatar ? env?.backend_url + userTagData?.userAvatar : defaultAvatar}
                         draggable="false"
                     />{' '}
                     {userTagData?.userName}
@@ -158,13 +156,7 @@ function UserTag({ children, userName, userTagData, typeUserTag, handleRemoveUse
                     navigate(`/profile/${userTagData?.userName}`);
                 }}
             >
-                <img
-                    src={
-                        userTagData?.userAvatar
-                            ? process.env.REACT_APP_BACKEND_URL + userTagData?.userAvatar
-                            : defaultAvatar
-                    }
-                />{' '}
+                <img src={userTagData?.userAvatar ? env?.backend_url + userTagData?.userAvatar : defaultAvatar} />{' '}
                 {userTagData?.userName}
             </button>
         );
@@ -200,7 +192,7 @@ function UserTag({ children, userName, userTagData, typeUserTag, handleRemoveUse
                                         className="userAvatar"
                                         src={
                                             userData?.user?.userAvatar
-                                                ? process.env.REACT_APP_BACKEND_URL + userData?.user?.userAvatar
+                                                ? env?.backend_url + userData?.user?.userAvatar
                                                 : defaultAvatar
                                         }
                                     />

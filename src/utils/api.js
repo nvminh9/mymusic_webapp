@@ -425,6 +425,12 @@ const getMessagesApi = (conversationId, cursor, limit = 20) => {
     return axios.get(URL_API);
 };
 
+// API Tìm kiếm người dùng có sự liên quan (người theo dõi, đang theo dõi)
+const searchReferenceUserApi = (query) => {
+    const URL_API = `/v1/api/user/reference/search?q=${query}`;
+    return axios.get(URL_API);
+};
+
 export {
     signUpApi,
     signInApi,
@@ -494,4 +500,5 @@ export {
     searchConversationApi,
     createMessageApi,
     getMessagesApi,
+    searchReferenceUserApi,
 };

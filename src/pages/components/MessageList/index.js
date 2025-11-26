@@ -74,7 +74,12 @@ function MessageList({
         // Auto scroll to bottom if isAtBottom
         if (isAtBottom) {
             // endRef.current?.scrollIntoView({ behavior: 'smooth' });
-            endRef.current?.scrollIntoView();
+            // endRef.current?.scrollIntoView();
+            endRef.current?.scrollIntoView({ behavior: 'smooth' });
+            // Small delay to ensure DOM updated
+            setTimeout(() => {
+                endRef.current?.scrollIntoView({ behavior: 'smooth' });
+            }, 80);
         }
 
         // Handle ACK Message: Gửi cập nhật trạng thái đã xem tin nhắn
