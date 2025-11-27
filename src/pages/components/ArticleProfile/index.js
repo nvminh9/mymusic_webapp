@@ -136,22 +136,30 @@ function ArticleProfile({ article, user, type }) {
                                         >
                                             <div className="" style={{ display: 'flex', alignItems: 'center' }}>
                                                 {/* Avatar */}
-                                                <img
-                                                    src={
-                                                        article?.User?.userAvatar
-                                                            ? env?.backend_url + article?.User?.userAvatar
-                                                            : defaultAvatar
-                                                    }
+                                                <div
                                                     style={{
-                                                        height: '35px',
-                                                        width: '35px',
-                                                        borderRadius: '50%',
-                                                        objectFit: 'cover',
-                                                        objectPosition: 'center',
-                                                        outline: 'rgba(135, 135, 135, 0.15) solid 1px',
-                                                        outlineOffset: '-1px',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
                                                     }}
-                                                />
+                                                >
+                                                    <img
+                                                        src={
+                                                            article?.User?.userAvatar
+                                                                ? env?.backend_url + article?.User?.userAvatar
+                                                                : defaultAvatar
+                                                        }
+                                                        style={{
+                                                            height: '35px',
+                                                            width: '35px',
+                                                            borderRadius: '50%',
+                                                            objectFit: 'cover',
+                                                            objectPosition: 'center',
+                                                            outline: 'rgba(135, 135, 135, 0.15) solid 1px',
+                                                            outlineOffset: '-1px',
+                                                        }}
+                                                    />
+                                                </div>
                                                 <div className="" style={{ marginLeft: '8px' }}>
                                                     {/* User Name */}
                                                     <span
@@ -220,7 +228,7 @@ function ArticleProfile({ article, user, type }) {
             {article?.Article ? (
                 <>
                     {/* Shared Article */}
-                    <Link to={`/article/shared/${article.sharedArticleId}`} className="col l-4 m-4 c-4">
+                    <Link to={`/article/shared/${article.sharedArticleId}`} className="col l-4 m-4 c-6">
                         <div className="thumbnail">
                             {article?.Article?.mediaContent?.length > 0 ? (
                                 <>
@@ -293,20 +301,28 @@ function ArticleProfile({ article, user, type }) {
                                     >
                                         <div className="" style={{ display: 'flex', alignItems: 'center' }}>
                                             {/* Avatar */}
-                                            <img
-                                                src={
-                                                    article?.Article?.User?.userAvatar
-                                                        ? env?.backend_url + article?.Article?.User?.userAvatar
-                                                        : defaultAvatar
-                                                }
+                                            <div
                                                 style={{
-                                                    height: '17%',
-                                                    width: '17%',
-                                                    // borderRadius: '50%',
-                                                    // objectFit: 'cover',
-                                                    // objectPosition: 'center',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
                                                 }}
-                                            />
+                                            >
+                                                <img
+                                                    src={
+                                                        article?.Article?.User?.userAvatar
+                                                            ? env?.backend_url + article?.Article?.User?.userAvatar
+                                                            : defaultAvatar
+                                                    }
+                                                    style={{
+                                                        height: '35px',
+                                                        width: '35px',
+                                                        borderRadius: '50%',
+                                                        objectFit: 'cover',
+                                                        objectPosition: 'center',
+                                                    }}
+                                                />
+                                            </div>
                                             <div className="" style={{ marginLeft: '8px' }}>
                                                 {/* User Name */}
                                                 <span
@@ -362,7 +378,7 @@ function ArticleProfile({ article, user, type }) {
             ) : (
                 <>
                     {/* Article */}
-                    <Link to={`/article/${article.articleId}`} className="col l-4 m-4 c-4">
+                    <Link to={`/article/${article.articleId}`} className="col l-4 m-4 c-6">
                         <div className="thumbnail">
                             {article?.mediaContent?.length > 0 ? (
                                 <>
@@ -435,20 +451,28 @@ function ArticleProfile({ article, user, type }) {
                                     >
                                         <div className="" style={{ display: 'flex', alignItems: 'center' }}>
                                             {/* Avatar */}
-                                            <img
-                                                src={
-                                                    article?.User?.userAvatar
-                                                        ? env?.backend_url + article?.User?.userAvatar
-                                                        : defaultAvatar
-                                                }
+                                            <div
                                                 style={{
-                                                    height: '17%',
-                                                    width: '17%',
-                                                    // borderRadius: '50%',
-                                                    // objectFit: 'cover',
-                                                    // objectPosition: 'center',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
                                                 }}
-                                            />
+                                            >
+                                                <img
+                                                    src={
+                                                        article?.User?.userAvatar
+                                                            ? env?.backend_url + article?.User?.userAvatar
+                                                            : defaultAvatar
+                                                    }
+                                                    style={{
+                                                        height: '35px',
+                                                        width: '35px',
+                                                        borderRadius: '50%',
+                                                        objectFit: 'cover',
+                                                        objectPosition: 'center',
+                                                    }}
+                                                />
+                                            </div>
                                             <div className="" style={{ marginLeft: '8px' }}>
                                                 {/* User Name */}
                                                 <span

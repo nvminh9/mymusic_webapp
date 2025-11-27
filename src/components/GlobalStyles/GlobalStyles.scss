@@ -3575,13 +3575,7 @@ body {
                                     align-items: center;
                                     position: absolute;
                                     background-color: transparent;
-                                    // background: rgb(0, 0, 0);
-                                    // background: linear-gradient(
-                                    //     90deg,
-                                    //     rgba(0, 0, 0, 0.8) 0%,
-                                    //     rgba(0, 0, 0, 0.3) 35%,
-                                    //     rgba(255, 255, 255, 0) 100%
-                                    // );
+                                    backdrop-filter: unset;
                                     border: none;
                                     color: #ffffff;
                                     padding-left: 10px;
@@ -3604,13 +3598,7 @@ body {
                                     align-items: center;
                                     position: absolute;
                                     background-color: transparent;
-                                    // background: rgb(0, 0, 0);
-                                    // background: linear-gradient(
-                                    //     270deg,
-                                    //     rgba(0, 0, 0, 0.8) 0%,
-                                    //     rgba(0, 0, 0, 0.3) 35%,
-                                    //     rgba(255, 255, 255, 0) 100%
-                                    // );
+                                    backdrop-filter: unset;
                                     border: none;
                                     color: #ffffff;
                                     padding-left: 10px;
@@ -3921,7 +3909,9 @@ body {
 // CSS Profile Page
 .settingMenuContainer {
     position: absolute;
-    width: 100%;
+    // width: 100%;
+    left: 0px;
+    right: 0px;
     height: 91%;
     background-color: rgba(18, 18, 18, 0.8);
     backdrop-filter: blur(5px);
@@ -4519,6 +4509,9 @@ body {
             .btnToArticle:active {
                 background-color: #000;
             }
+            .btnToArticle:focus {
+                outline: none;
+            }
             // Nút chuyển qua tab coi âm nhạc
             .btnToMusic {
                 display: flex;
@@ -4537,6 +4530,9 @@ body {
             }
             .btnToMusic:active {
                 background-color: #000;
+            }
+            .btnToMusic:focus {
+                outline: none;
             }
             // Tab Actived
             .actived {
@@ -4559,10 +4555,12 @@ body {
         padding: 15px;
         position: relative;
         width: 100%;
+        font-family: system-ui;
 
         // Error Message
         .errorMessage {
-            color: #f3727f;
+            // color: #f3727f;
+            color: #e91429;
             min-inline-size: 0px;
             overflow-wrap: break-word;
             width: 350px;
@@ -4597,13 +4595,17 @@ body {
                 }
             }
             .labelUserAvatar {
+                display: flex;
+                align-items: center;
+                justify-content: center;
                 background-color: #121212;
                 border: 2px solid #1f1f1f;
-                border-radius: 2px;
+                border-radius: 20px;
                 transition: ease-out 0.2s;
-                color: white;
-                font-family: 'Funnel Sans', sans-serif;
-                font-size: 13px;
+                color: #ffffff;
+                font-family: system-ui;
+                font-size: 14px;
+                font-weight: 500;
                 padding: 10px 20px;
                 margin: 20px 0px;
                 margin-bottom: 0px;
@@ -4613,6 +4615,7 @@ body {
             }
             .labelUserAvatar:hover {
                 border: 2px solid white;
+                background-color: #1f1f1f;
             }
             .labelUserAvatar:active {
                 transform: scale(0.98);
@@ -4627,12 +4630,14 @@ body {
         // Description
         .labelDescription {
             color: white;
-            font-size: 15px;
-            font-weight: 600;
+            font-size: 17px;
+            font-weight: 700;
             margin: 5px 0px;
         }
         .inputDescription {
-            font-family: 'Funnel Sans', sans-serif;
+            font-family: system-ui;
+            font-size: 15px;
+            font-weight: 400;
             padding: 10px;
             margin: 5px 0px;
             width: 100%;
@@ -4640,21 +4645,25 @@ body {
             resize: none;
             background-color: #121212;
             border: 2px solid #1f1f1f;
-            border-radius: 2px;
+            border-radius: 20px;
             transition: ease-out 0.2s;
-            color: white;
+            color: #ffffff;
             text-align: start;
         }
         .inputDescription:hover {
             border: 2px solid whitesmoke;
         }
+        .inputDescription:focus {
+            outline: none;
+        }
 
         // Gender
         .labelGender {
             color: white;
-            font-size: 15px;
-            font-weight: 600;
+            font-size: 17px;
+            font-weight: 700;
             margin: 5px 0px;
+            margin-top: 20px;
         }
         .inputGender {
             font-family: 'Funnel Sans', sans-serif;
@@ -4675,17 +4684,19 @@ body {
         .labelGenderOther {
             background-color: #121212;
             border: 2px solid #1f1f1f;
-            border-radius: 2px;
+            border-radius: 20px;
             transition: ease-out 0.2s;
             color: white;
-            font-family: 'Funnel Sans', sans-serif;
-            font-size: 13px;
+            font-family: system-ui;
+            font-size: 14px;
+            font-weight: 500;
             padding: 15px 10px;
             width: 34%;
             margin: 5px 0px;
             margin-right: 5px;
             text-align: center;
             cursor: pointer;
+            user-select: none;
         }
         .labelGenderOther {
             margin-right: 0px;
@@ -4698,15 +4709,16 @@ body {
 
         // Button submit
         .btnSubmit {
-            font-family: 'Funnel Sans', sans-serif;
+            font-family: system-ui;
+            font-size: 15px;
+            font-weight: 500;
             margin: 5px 0px;
+            margin-top: 20px;
             background-color: #000;
             border: 2px solid transparent;
-            border-radius: 2px;
+            border-radius: 20px;
             color: white;
             padding: 15px 10px;
-            font-size: 15px;
-            font-weight: 600;
             cursor: pointer;
             transition: ease-out 0.2s;
         }
@@ -4744,6 +4756,9 @@ body {
                                     .privacyOption:hover {
                                         cursor: pointer !important;
                                     }
+                                }
+                                .privacySelect:focus {
+                                    outline: none;
                                 }
                             }
                         }
@@ -4969,6 +4984,7 @@ body {
                                                 .slick-dots {
                                                     button {
                                                         font-size: 0px;
+                                                        border: none;
                                                     }
                                                     button:hover {
                                                         background-color: transparent;
@@ -5391,6 +5407,34 @@ body {
                 color: #ffffff;
             }
             .inputNameMusic:focus {
+                outline: none;
+            }
+
+            .selectMusicGenre {
+                width: 100%;
+                font-family: system-ui;
+                font-size: 16px;
+                font-weight: 400;
+                background-color: transparent;
+                border: 0.5px solid #1f1f1f;
+                border-radius: 20px;
+                padding: 15px 10px;
+                color: #ffffff;
+                -webkit-appearance: none; /* For Safari, Chrome, Opera */
+                -moz-appearance: none; /* For Firefox */
+                appearance: none;
+                option {
+                    background-color: #121212;
+                    color: #ffffff;
+                    font-family: system-ui;
+                    font-size: 15px;
+                    font-weight: 500;
+                }
+            }
+            .selectMusicGenre::-ms-expand {
+                display: none;
+            }
+            .selectMusicGenre:focus {
                 outline: none;
             }
         }
@@ -7201,6 +7245,7 @@ body {
                                 max-height: max-content;
                                 color: white;
                                 padding: 8px 5px;
+                                resize: none;
                             }
                             .inputComment:focus {
                                 outline: none;
@@ -7842,6 +7887,7 @@ body {
                     max-height: max-content;
                     color: white;
                     padding: 8px 5px;
+                    resize: none;
                 }
                 .inputComment:focus {
                     outline: none;
@@ -10136,7 +10182,7 @@ body {
                         .userName {
                             color: #ffffff;
                             font-size: 20px;
-                            font-weight: 300;
+                            font-weight: 400;
                             margin-right: 0px;
                             text-align: center;
                         }
@@ -10149,7 +10195,7 @@ body {
                         // Nút theo dõi
                         .btnFollow {
                             border: none;
-                            border-radius: 8px;
+                            border-radius: 15px;
                             padding: 8px 15px;
                             font-size: 14px;
                             font-weight: 500;
@@ -10170,12 +10216,12 @@ body {
                         // Nút tạo
                         .btnCreate {
                             border: none;
-                            border-radius: 8px;
+                            border-radius: 15px;
                             padding: 8px 15px;
                             font-size: 14px;
                             font-weight: 500;
-                            background-color: #ffffff;
-                            color: #000;
+                            background-color: #1f1f1f;
+                            color: #ffffff;
                             cursor: pointer;
                             transition: ease-out 0.2s;
                             margin-right: 10px;
@@ -10245,24 +10291,24 @@ body {
                         padding: 5px 0px;
 
                         .articles {
-                            color: #ffffff;
+                            color: #ffffffaa;
                             font-size: 14.5px;
-                            font-weight: 300;
+                            font-weight: 400;
                             padding: 0px 5px;
                             border-right: 0.5px solid #1f1f1f;
                         }
                         .followers {
-                            color: #ffffff;
+                            color: #ffffffaa;
                             font-size: 14.5px;
-                            font-weight: 300;
+                            font-weight: 400;
                             padding: 0px 5px;
                             border-right: 0.5px solid #1f1f1f;
                             cursor: pointer;
                         }
                         .following {
-                            color: #ffffff;
+                            color: #ffffffaa;
                             font-size: 14.5px;
-                            font-weight: 300;
+                            font-weight: 400;
                             padding: 0px 5px;
                             cursor: pointer;
                         }
@@ -10402,5 +10448,45 @@ body {
                 }
             }
         }
+    }
+
+    // Preview Article
+    .previewArticleContainer {
+        width: 345px;
+    }
+
+    .createPlaylistPage {
+        width: 100%;
+        .createPlaylistContainer {
+            width: 100%;
+            .top {
+                width: 100%;
+                //
+                .playlistInfo {
+                    display: grid;
+                    justify-content: center;
+                    .info {
+                        height: max-content;
+                        .playlistControls {
+                            position: unset;
+                            padding: 10px 0px;
+                            padding-top: 30px;
+                        }
+                    }
+                }
+            }
+            .middle {
+                //
+            }
+            .bottom {
+                //
+            }
+        }
+    }
+
+    // tagSuggestionsList
+    .tagSuggestionsList {
+        top: unset !important;
+        right: 35px !important;
     }
 }

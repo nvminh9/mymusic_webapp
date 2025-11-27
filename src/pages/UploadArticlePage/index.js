@@ -711,7 +711,7 @@ function UploadArticlePage() {
                                             </button>
                                         </span>
                                         {/* Mẫu bài viết xem trước */}
-                                        <div style={{ padding: '12px' }}>
+                                        <div className="previewArticleContainer" style={{ padding: '12px' }}>
                                             <div className="article">
                                                 <div className="left">
                                                     {/* Avatar */}

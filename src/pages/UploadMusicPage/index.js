@@ -34,7 +34,7 @@ import { VscChevronLeft } from 'react-icons/vsc';
 import CircumIcon from '@klarr-agency/circum-icons-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '~/context/auth.context';
-import { uploadMusicApi } from '~/utils/api';
+import { getListOfGenreDataApi, uploadMusicApi } from '~/utils/api';
 import ImageAmbilight from '../components/ImageAmbilight';
 import VideoAmbilight from '../components/VideoAmbilight';
 import Slider from 'react-slick';
@@ -61,6 +61,7 @@ function UploadMusicPage() {
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
     const [uploadProgressStatus, setUploadProgressStatus] = useState();
+    const [listOfGenre, setListOfGenre] = useState();
 
     // Context
     const { auth } = useContext(AuthContext);
@@ -167,6 +168,7 @@ function UploadMusicPage() {
             setIsAudioFileNotValid(true);
             return;
         }
+
         // Đến bước tiếp theo
         if (formStep < 2) {
             setFormStep(formStep + 1);
@@ -176,7 +178,7 @@ function UploadMusicPage() {
         }
         // Nếu là bước cuối thì thực hiện đăng bài nhạc
         if (formStep === 2) {
-            const { name } = data;
+            const { name, genre } = data;
             const duration = formatTime(testAudioRef.current.duration);
             // Form Data
             const formData = new FormData();
@@ -185,6 +187,8 @@ function UploadMusicPage() {
             if (audioFile) formData.append('audioAndMediaFiles', audioFile);
             if (imageFile) formData.append('audioAndMediaFiles', imageFile);
             if (videoFile) formData.append('audioAndMediaFiles', videoFile);
+            if (JSON.parse(genre)?.genreName) formData.append('genreName', JSON.parse(genre)?.genreName);
+            if (JSON.parse(genre)?.genreId) formData.append('genreId', JSON.parse(genre)?.genreId);
             // Start Upload
             try {
                 // Set Upload Progress Status
@@ -414,6 +418,24 @@ function UploadMusicPage() {
         if (typeof bytes !== 'number' || isNaN(bytes)) return 0;
         return (bytes / (1024 * 1024)).toFixed(2);
     };
+    // Lấy danh sách thể loại nhạc
+    useEffect(() => {
+        // Get List Of Genre
+        const getListOfGenre = async () => {
+            try {
+                // Call API getListOfGenre
+                const res = await getListOfGenreDataApi();
+                // Kiểm tra
+                if (res?.status === 200) {
+                    setListOfGenre(res?.data);
+                }
+            } catch (error) {
+                console.log(error);
+                return;
+            }
+        };
+        getListOfGenre();
+    }, []);
 
     return (
         <Fragment>
@@ -800,7 +822,36 @@ function UploadMusicPage() {
                                     )}
                                 </div>
                                 {/* Genre */}
-                                {/* ... */}
+                                <div className="nameField">
+                                    <span className="title">
+                                        Thể loại{' '}
+                                        <span style={{ fontSize: '15px', color: '#777' }}>
+                                            (tùy chọn, thể loại giúp bài nhạc được đề xuất chính xác hơn)
+                                        </span>
+                                    </span>
+                                    {/* Select Genre */}
+                                    <select
+                                        className="selectMusicGenre"
+                                        {...register('genre', {
+                                            // required: 'Chưa chọn thể loại',
+                                        })}
+                                        onClick={(e) => {}}
+                                    >
+                                        {listOfGenre &&
+                                            listOfGenre?.map((genre) => (
+                                                <>
+                                                    <option
+                                                        value={JSON.stringify({
+                                                            genreName: genre?.name,
+                                                            genreId: genre?.genreId,
+                                                        })}
+                                                    >
+                                                        {genre?.name}
+                                                    </option>
+                                                </>
+                                            ))}
+                                    </select>
+                                </div>
                                 {/* Song Image */}
                                 <div className="songImageField">
                                     <span className="title">

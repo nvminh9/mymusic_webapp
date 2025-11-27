@@ -11,6 +11,7 @@ import {
     IoImagesOutline,
     IoMusicalNotesOutline,
     IoCloseSharp,
+    IoListOutline,
 } from 'react-icons/io5';
 import { AuthContext } from '~/context/auth.context';
 import {
@@ -25,6 +26,7 @@ import defaultAvatar from '~/assets/images/avatarDefault.jpg';
 import { message } from 'antd';
 import ArticleProfile from '../components/ArticleProfile';
 import { EnvContext } from '~/context/env.context';
+import { RiPlayListFill } from 'react-icons/ri';
 
 function ProfilePage() {
     // State (useState)
@@ -341,6 +343,7 @@ function ProfilePage() {
                             onClick={() => {
                                 handleUnfollowUser();
                             }}
+                            style={{ marginBottom: '8px' }}
                         >
                             Bỏ theo dõi
                         </button>
@@ -415,11 +418,32 @@ function ProfilePage() {
                                 justifyContent: 'center',
                                 // padding: '10px 105px',
                                 gap: '10px',
-                                marginBottom: '5px',
+                                margin: '5px',
                                 marginTop: '8px',
+                                marginBottom: '0px',
                             }}
                         >
                             <IoMusicalNotesOutline /> Nhạc
+                        </button>
+                        {/* Nút tạo nhạc */}
+                        <button
+                            id="btnSignOutID"
+                            className="btnSignOut"
+                            onClick={() => {
+                                navigate(`/playlist/create`);
+                                setIsOpenCreateMenu(false);
+                            }}
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                // padding: '10px 105px',
+                                gap: '10px',
+                                margin: '8px 5px',
+                                // marginTop: '8px',
+                            }}
+                        >
+                            <RiPlayListFill /> Danh sách phát
                         </button>
                     </div>
                 </div>
@@ -599,6 +623,7 @@ function ProfilePage() {
                                                 <span
                                                     style={{
                                                         fontWeight: '600',
+                                                        color: '#ffffff',
                                                     }}
                                                 >
                                                     {profileInfo?.articles.length || 0}
@@ -614,6 +639,7 @@ function ProfilePage() {
                                                 <span
                                                     style={{
                                                         fontWeight: '600',
+                                                        color: '#ffffff',
                                                     }}
                                                     id="followersTotalID"
                                                     ref={followersTotal}
@@ -634,6 +660,7 @@ function ProfilePage() {
                                                 <span
                                                     style={{
                                                         fontWeight: '600',
+                                                        color: '#ffffff',
                                                     }}
                                                 >
                                                     {profileInfo?.follow?.count

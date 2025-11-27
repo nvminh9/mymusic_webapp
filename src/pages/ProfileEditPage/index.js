@@ -10,7 +10,7 @@ import { updateUserProfileInfoApi } from '~/utils/api';
 import { EnvContext } from '~/context/env.context';
 
 function ProfileEditPage() {
-    console.log('Re load Edit Page....');
+    // console.log('Re load Edit Page....');
 
     // Context (useContext)
     const { auth, setAuth } = useContext(AuthContext);
@@ -20,7 +20,7 @@ function ProfileEditPage() {
     const [previewAvatarLink, setPreviewAvatarLink] = useState(
         auth?.user?.userAvatar ? env?.backend_url + auth?.user?.userAvatar : defaultAvatar,
     );
-    // const [preDescription, setPreDescription] = useState(auth?.user?.description);
+    const [preDescription, setPreDescription] = useState(auth?.user?.description);
 
     // Navigate
     const navigate = useNavigate();
@@ -87,7 +87,8 @@ function ProfileEditPage() {
         const { description, gender, userAvatar } = data;
         // Form Data
         const formData = new FormData();
-        if (description) formData.append('description', description);
+        // if (description) formData.append('description', description);
+        formData.append('description', description);
         if (gender) formData.append('gender', gender);
         if (userAvatar) formData.append('userAvatar', userAvatar[0]);
         // Loading ... (Ant Design Message)
@@ -160,6 +161,7 @@ function ProfileEditPage() {
                                 className="userAvatar"
                                 id="userAvatarID"
                                 src={previewAvatarLink ? previewAvatarLink : defaultAvatar}
+                                loading="lazy"
                             />
                         </div>
                         <label className="labelUserAvatar" htmlFor="userAvatar">
@@ -185,19 +187,22 @@ function ProfileEditPage() {
                         id="description"
                         name="description"
                         type="text"
-                        placeholder={auth?.user?.description ? auth?.user?.description : `Nhập mô tả ...`}
+                        placeholder={`Nhập mô tả ...`}
                         {...register('description', {
                             maxLength: {
                                 value: 150,
                                 message: 'Mô tả không được vượt quá 150 ký tự',
                             },
                         })}
-                        onChange={() => {
-                            console.log(errors.description?.message);
+                        value={preDescription}
+                        onChange={(e) => {
+                            // console.log(errors.description?.message);
+                            setPreDescription(e.target.value);
                         }}
                         style={{
                             width: '100%',
                         }}
+                        spellCheck="false"
                     />
                     <p className="errorMessage">{errors.description?.message}</p>
                     {/* Giới tính */}

@@ -28,7 +28,12 @@ function ListFollower() {
     const handleFollowUser = async (userName) => {
         try {
             // Loading Follow Handle
-            setIsFollowed('pending');
+            // setIsFollowed('pending');
+            setIsFollowed({
+                status: 'pending',
+                userName: userName,
+                action: 'follow',
+            });
             // Call API
             setTimeout(async () => {
                 const res = await createFollowUserApi(userName);
@@ -70,7 +75,12 @@ function ListFollower() {
     const handleUnfollowUser = async (userName) => {
         try {
             // Loading Follow Handle
-            setIsFollowed('pending');
+            // setIsFollowed('pending');
+            setIsFollowed({
+                status: 'pending',
+                userName: userName,
+                action: 'unfollow',
+            });
             // Call API Hủy theo dõi
             setTimeout(async () => {
                 const res = await unfollowUserApi(userName);
@@ -181,7 +191,7 @@ function ListFollower() {
                             <IoCloseSharp />
                         </button>
                     </span>
-                    <input
+                    {/* <input
                         className="searchInput"
                         type="search"
                         placeholder="Tìm kiếm..."
@@ -189,7 +199,7 @@ function ListFollower() {
                         id="search"
                         autoComplete="off"
                         spellCheck="false"
-                    />
+                    /> */}
                     {/* Danh sách người theo dõi */}
                     <div
                         className="listFollowerContainer"
@@ -250,7 +260,33 @@ function ListFollower() {
                                                     <></>
                                                 ) : (
                                                     <>
-                                                        {follower?.followStatus === true ? (
+                                                        {isFollowed?.status === 'pending' &&
+                                                            isFollowed?.userName === follower?.follower && (
+                                                                <button
+                                                                    className="btnFollow"
+                                                                    style={{
+                                                                        position: 'absolute',
+                                                                        right: '0',
+                                                                        padding: '6px 8px',
+                                                                        fontWeight: '500',
+                                                                        zIndex: '10',
+                                                                        display: 'flex',
+                                                                        alignItems: 'center',
+                                                                        justifyContent: 'center',
+                                                                        gap: '5px',
+                                                                    }}
+                                                                    disabled
+                                                                >
+                                                                    {isFollowed?.action === 'follow'
+                                                                        ? 'Theo dõi'
+                                                                        : 'Hủy theo dõi'}
+                                                                    <IoSyncSharp
+                                                                        className="loadingAnimation"
+                                                                        style={{ color: '#000', fontSize: '14px' }}
+                                                                    />
+                                                                </button>
+                                                            )}
+                                                        {follower?.followStatus === true && (
                                                             <button
                                                                 className="btnFollowed"
                                                                 onClick={() => {
@@ -261,35 +297,25 @@ function ListFollower() {
                                                                     right: '0',
                                                                     padding: '5px 8px',
                                                                     fontWeight: '500',
+                                                                    opacity:
+                                                                        isFollowed?.status === 'pending' ? '0.3' : '',
+                                                                    backgroundColor:
+                                                                        isFollowed?.status === 'pending'
+                                                                            ? 'transparent'
+                                                                            : '',
+                                                                    cursor:
+                                                                        isFollowed?.status === 'pending'
+                                                                            ? 'not-allowed'
+                                                                            : '',
                                                                 }}
+                                                                disabled={
+                                                                    isFollowed?.status === 'pending' ? true : false
+                                                                }
                                                             >
-                                                                {isFollowed === 'pending' ? (
-                                                                    <>
-                                                                        <div
-                                                                            style={{
-                                                                                width: '15px',
-                                                                                height: '15px',
-                                                                                display: 'flex',
-                                                                                justifyContent: 'center',
-                                                                                alignItems: 'center',
-                                                                            }}
-                                                                        >
-                                                                            <IoSyncSharp
-                                                                                className="loadingAnimation"
-                                                                                style={{ color: 'white' }}
-                                                                            />
-                                                                        </div>
-                                                                    </>
-                                                                ) : (
-                                                                    <>
-                                                                        Hủy theo dõi
-                                                                        {/* <IoChevronDownSharp
-                                                                            style={{ marginLeft: '5px' }}
-                                                                        /> */}
-                                                                    </>
-                                                                )}
+                                                                Hủy theo dõi
                                                             </button>
-                                                        ) : (
+                                                        )}
+                                                        {follower?.followStatus === false && (
                                                             <button
                                                                 className="btnFollow"
                                                                 onClick={() => {
@@ -300,28 +326,20 @@ function ListFollower() {
                                                                     right: '0',
                                                                     padding: '5px 8px',
                                                                     fontWeight: '500',
+                                                                    opacity:
+                                                                        isFollowed?.status === 'pending' ? '0.3' : '',
+                                                                    backgroundColor:
+                                                                        isFollowed?.status === 'pending' ? 'white' : '',
+                                                                    cursor:
+                                                                        isFollowed?.status === 'pending'
+                                                                            ? 'not-allowed'
+                                                                            : '',
                                                                 }}
+                                                                disabled={
+                                                                    isFollowed?.status === 'pending' ? true : false
+                                                                }
                                                             >
-                                                                {isFollowed === 'pending' ? (
-                                                                    <>
-                                                                        <div
-                                                                            style={{
-                                                                                width: '15px',
-                                                                                height: '15px',
-                                                                                display: 'flex',
-                                                                                justifyContent: 'center',
-                                                                                alignItems: 'center',
-                                                                            }}
-                                                                        >
-                                                                            <IoSyncSharp
-                                                                                className="loadingAnimation"
-                                                                                style={{ color: '#000' }}
-                                                                            />
-                                                                        </div>
-                                                                    </>
-                                                                ) : (
-                                                                    <>Theo dõi</>
-                                                                )}
+                                                                Theo dõi
                                                             </button>
                                                         )}
                                                     </>

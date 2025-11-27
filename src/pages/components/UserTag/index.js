@@ -206,11 +206,11 @@ function UserTag({ children, userName, userTagData, typeUserTag, handleRemoveUse
                             </div>
                             <div className="bottom">
                                 {/* Render nút theo dõi */}
-                                {userData?.user?.userName !== auth?.user?.userName && (
+                                {/* {userData?.user?.userName !== auth?.user?.userName && (
                                     <button className={`${userData?.followStatus ? 'btnFollowed' : 'btnFollow'}`}>
                                         {userData?.followStatus ? 'Đang theo dõi' : 'Theo dõi'}
                                     </button>
-                                )}
+                                )} */}
                             </div>
                         </>
                     ) : (

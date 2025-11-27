@@ -183,6 +183,23 @@ function CreateNewConversationBox({ isOpenCreateNewConversationBox, setIsOpenCre
                         </div>
                     </div>
                     <div className="middle">
+                        {/* Search Loading */}
+                        {isLoadingSearchUser && (
+                            <div
+                                style={{
+                                    height: '38px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    // padding: '30px 0px',
+                                }}
+                            >
+                                <IoSyncSharp
+                                    className="loadingAnimation"
+                                    style={{ color: 'white', width: '18px', height: '18px' }}
+                                />
+                            </div>
+                        )}
                         {/* Search Reference User Result */}
                         {isShowSearchUserResult && !selectedUser && (
                             <ul
@@ -191,51 +208,52 @@ function CreateNewConversationBox({ isOpenCreateNewConversationBox, setIsOpenCre
                                     width: !selectedUser ? '' : '0px',
                                 }}
                             >
-                                {searchUserResult ? (
+                                {!isLoadingSearchUser && searchUserResult && (
                                     <>
-                                        {searchUserResult?.map((user) => (
+                                        {searchUserResult?.length > 0 ? (
+                                            searchUserResult?.map((user) => (
+                                                <>
+                                                    <li
+                                                        className="searchResultItem"
+                                                        onClick={() => {
+                                                            handleSelectUser(user);
+                                                        }}
+                                                    >
+                                                        <div className="user">
+                                                            <div className="avatarContainer">
+                                                                <img
+                                                                    className="userAvatar"
+                                                                    src={
+                                                                        user?.userAvatar
+                                                                            ? env?.backend_url + user?.userAvatar
+                                                                            : defaultAvatar
+                                                                    }
+                                                                    alt={`Hình đại diện của ${user?.userName}`}
+                                                                />
+                                                            </div>
+                                                            <span className="userName">{user?.userName}</span>
+                                                        </div>
+                                                    </li>
+                                                </>
+                                            ))
+                                        ) : (
                                             <>
-                                                <li
-                                                    className="searchResultItem"
-                                                    onClick={() => {
-                                                        handleSelectUser(user);
+                                                <span
+                                                    style={{
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                        fontFamily: 'system-ui',
+                                                        fontSize: '14px',
+                                                        fontWeight: '400',
+                                                        color: '#ffffff80',
+                                                        padding: '10px',
                                                     }}
                                                 >
-                                                    <div className="user">
-                                                        <div className="avatarContainer">
-                                                            <img
-                                                                className="userAvatar"
-                                                                src={
-                                                                    user?.userAvatar
-                                                                        ? env?.backend_url + user?.userAvatar
-                                                                        : defaultAvatar
-                                                                }
-                                                                alt={`Hình đại diện của ${user?.userName}`}
-                                                            />
-                                                        </div>
-                                                        <span className="userName">{user?.userName}</span>
-                                                    </div>
-                                                </li>
+                                                    Không tìm thấy người dùng
+                                                </span>
                                             </>
-                                        ))}
-                                    </>
-                                ) : (
-                                    <>
-                                        {/* Search Loading */}
-                                        {/* <div
-                                            style={{
-                                                height: '45px',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                // padding: '30px 0px',
-                                            }}
-                                        >
-                                            <IoSyncSharp
-                                                className="loadingAnimation"
-                                                style={{ color: 'white', width: '18px', height: '18px' }}
-                                            />
-                                        </div> */}
+                                        )}
                                     </>
                                 )}
                             </ul>
