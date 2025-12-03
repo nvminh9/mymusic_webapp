@@ -478,17 +478,46 @@ function MusicPlayer() {
                                 {/* List Playlist */}
                                 <div className="listPlaylist">
                                     {/* Render list playlist */}
-                                    {listPlaylistData?.length > 0 ? (
+                                    {listPlaylistData ? (
                                         <>
-                                            {listPlaylistData?.map((playlist) => (
-                                                <div className="playlistCard">
-                                                    <PlaylistCard
-                                                        key={playlist?.playlistId}
-                                                        playlistData={playlist}
-                                                        typePlaylistCard={'atAddToPlaylistBox'}
-                                                    />
-                                                </div>
-                                            ))}
+                                            {listPlaylistData?.length > 0 ? (
+                                                <>
+                                                    {listPlaylistData?.map((playlist) => (
+                                                        <div className="playlistCard">
+                                                            <PlaylistCard
+                                                                key={playlist?.playlistId}
+                                                                playlistData={playlist}
+                                                                typePlaylistCard={'atAddToPlaylistBox'}
+                                                            />
+                                                        </div>
+                                                    ))}
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <div
+                                                        style={{
+                                                            width: '100%',
+                                                            height: 'max-content',
+                                                            display: 'flex',
+                                                            justifyContent: 'center',
+                                                            alignItems: 'center',
+                                                            padding: '8px',
+                                                            paddingTop: '150px',
+                                                        }}
+                                                    >
+                                                        <span
+                                                            style={{
+                                                                fontFamily: 'system-ui',
+                                                                fontSize: '14px',
+                                                                fontWeight: '500',
+                                                                color: '#ffffffaa',
+                                                            }}
+                                                        >
+                                                            Chưa có danh sách phát
+                                                        </span>
+                                                    </div>
+                                                </>
+                                            )}
                                         </>
                                     ) : (
                                         <>

@@ -5,7 +5,7 @@ import RightContainer from '~/components/RightContainer';
 import { AuthContext } from '~/context/auth.context';
 import { getAuthUserInfoApi } from '~/utils/api';
 import logo from '~/assets/images/logoWhiteTransparent.png';
-import { IoBowlingBallOutline } from 'react-icons/io5';
+import { IoBowlingBallOutline, IoSyncSharp } from 'react-icons/io5';
 import { useNavigate } from 'react-router-dom';
 import { useMusicPlayerContext } from '~/context/musicPlayer.context';
 
@@ -68,7 +68,7 @@ function DefaultLayout({ children }) {
                                             marginTop: '20px',
                                         }}
                                     >
-                                        <IoBowlingBallOutline className="loadingAnimation" />
+                                        <IoSyncSharp className="loadingAnimation" />
                                     </div>
                                 </div>
                             </div>

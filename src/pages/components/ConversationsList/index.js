@@ -9,6 +9,7 @@ import { AuthContext } from '~/context/auth.context';
 import { formatMessageTime } from '~/utils/dateFormatter';
 import { message } from 'antd';
 import { EnvContext } from '~/context/env.context';
+import { useSocket } from '~/context/socket.context';
 
 export default function ConversationsList({ isOpenSearchConversation }) {
     // State
@@ -19,6 +20,9 @@ export default function ConversationsList({ isOpenSearchConversation }) {
 
     // Navigation
     const navigate = useNavigate();
+
+    // useSocket
+    const { presence } = useSocket();
 
     // React Query (Tanstack)
     // const queryClient = useQueryClient();
@@ -162,6 +166,20 @@ export default function ConversationsList({ isOpenSearchConversation }) {
                                                     }
                                                     loading="lazy"
                                                 />
+                                                {/* Presence Sign */}
+                                                <div
+                                                    className="presenceSign"
+                                                    style={{
+                                                        backgroundColor: presence?.get(
+                                                            conversation?.participants?.find(
+                                                                (participant) =>
+                                                                    participant?.User?.userId !== auth?.user?.userId,
+                                                            )?.User?.userId,
+                                                        )?.online
+                                                            ? '#2ecc71'
+                                                            : '#7f8c8d',
+                                                    }}
+                                                ></div>
                                             </div>
                                         </div>
                                         {/* Right */}

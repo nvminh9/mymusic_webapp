@@ -50,3 +50,33 @@ export const formatConversationTime = (dateString) => {
 
     return format(date, 'dd/MM/yyyy', { locale: vi });
 };
+
+// Trả về dạng "Hoạt động 'thời gian' trước"
+export const getTimeAgo = (date) => {
+    const now = new Date();
+    const past = new Date(date);
+    const diffInSeconds = Math.floor((now - past) / 1000);
+
+    // Các khoảng thời gian tính bằng giây
+    const intervals = {
+        năm: 31536000,
+        tháng: 2592000,
+        tuần: 604800,
+        ngày: 86400,
+        giờ: 3600,
+        phút: 60,
+        giây: 1,
+    };
+
+    // Tìm khoảng thời gian phù hợp
+    for (const [unit, secondsInUnit] of Object.entries(intervals)) {
+        const interval = Math.floor(diffInSeconds / secondsInUnit);
+
+        if (interval >= 1) {
+            return `Hoạt động ${interval} ${unit} trước`;
+        }
+    }
+
+    return '';
+    // return 'Hoạt động vừa xong';
+};

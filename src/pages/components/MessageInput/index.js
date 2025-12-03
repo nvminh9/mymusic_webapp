@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { CiPaperplane } from 'react-icons/ci';
-import { IoSend } from 'react-icons/io5';
+import { IoSend, IoSendOutline } from 'react-icons/io5';
 import { v4 as uuidv4 } from 'uuid';
 
 export default function MessageInput({ onSend, onTyping, conversationId }) {
@@ -51,7 +51,7 @@ export default function MessageInput({ onSend, onTyping, conversationId }) {
             </form>
             <button className="btnSendMessage" onClick={handleSend}>
                 {/* <CiPaperplane /> */}
-                <IoSend />
+                <IoSendOutline />
             </button>
         </div>
     );

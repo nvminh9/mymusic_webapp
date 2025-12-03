@@ -16,6 +16,7 @@ export function SocketProvider({ children, serverUrl }) {
     // State
     const [socket, setSocket] = useState(null);
     const [isConnected, setIsConnected] = useState(false);
+    const [presence, setPresence] = useState(new Map());
 
     // Context
     const { auth } = useContext(AuthContext);
@@ -98,6 +99,12 @@ export function SocketProvider({ children, serverUrl }) {
         const handlePresence = (payload) => {
             const cb = listenersRef.current.get('presence');
             if (cb) cb(payload);
+            // Set presence state (initial)
+            setPresence((old) => {
+                const presenceMap = new Map(old);
+                presenceMap.set(payload?.userId, payload);
+                return presenceMap;
+            });
         };
 
         // Handle socket event "typing" với callback đã đăng ký
@@ -221,6 +228,8 @@ export function SocketProvider({ children, serverUrl }) {
         sendTyping,
         sendConversationRead,
         on,
+        presence,
+        setPresence,
     };
 
     return <SocketContext.Provider value={value}>{children}</SocketContext.Provider>;

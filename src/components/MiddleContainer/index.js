@@ -1,12 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { IoChevronBackSharp } from 'react-icons/io5';
+import { IoChevronBackSharp, IoClose, IoEllipsisVertical, IoExpandSharp } from 'react-icons/io5';
 import { VscChevronLeft } from 'react-icons/vsc';
 import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 import { getConversationsApi } from '~/utils/api';
 
 function MiddleContainer({ children }) {
     // State
+    const [isExpandMenu, setIsExpandMenu] = useState(false);
 
     // Context
 
@@ -185,6 +186,46 @@ function MiddleContainer({ children }) {
                     </div>
                 </div> */}
                 {children}
+                {/* Button Expand Menu (Phone) */}
+                {/* <button
+                    className="btnExpandMenuOnPhone"
+                    style={{
+                        position: 'sticky',
+                        bottom: '15px',
+                        margin: '15px',
+                        float: 'right',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        backgroundColor: 'rgba(18, 18, 18, 0.8)',
+                        backdropFilter: 'blur(15px)',
+                        border: '1px solid #1f1f1f',
+                        fontFamily: 'system-ui',
+                        fontSize: '13px',
+                        fontWeight: '500',
+                        padding: '15px',
+                        borderRadius: '50%',
+                        color: '#ffffff',
+                        cursor: 'pointer',
+                        visibility: 'hidden',
+                    }}
+                    onClick={() => {
+                        const leftContainer = document.getElementById('leftContainerID');
+                        if (!leftContainer) return;
+                        //
+                        if (isExpandMenu) {
+                            // Đóng
+                            leftContainer.classList = 'col l-3 m-0 c-0 leftContainer';
+                            setIsExpandMenu(false);
+                        } else {
+                            // Mở
+                            leftContainer.classList = 'col l-3 m-0 c-8 leftContainer';
+                            setIsExpandMenu(true);
+                        }
+                    }}
+                >
+                    {isExpandMenu ? <IoClose /> : <IoEllipsisVertical />}
+                </button> */}
             </div>
             <div className="col l-3 m-0 c-0"></div>
         </>

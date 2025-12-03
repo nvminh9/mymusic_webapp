@@ -178,25 +178,25 @@ function GenreDetailPage() {
                                     <div className="coverImage">
                                         <ImageAmbilight
                                             imageSrc={
-                                                genreDetailData?.genreName === 'Pop' || genreDetailData?.genreId === 4
+                                                genreDetailData?.genreName === 'Pop' || genreDetailData?.genreId === 1
                                                     ? popCoverImage
                                                     : genreDetailData?.genreName === 'Rock' ||
-                                                      genreDetailData?.genreId === 5
+                                                      genreDetailData?.genreId === 2
                                                     ? rockCoverImage
                                                     : genreDetailData?.genreName === 'Jazz' ||
-                                                      genreDetailData?.genreId === 6
+                                                      genreDetailData?.genreId === 3
                                                     ? jazzCoverImage
                                                     : genreDetailData?.genreName === 'Blues' ||
-                                                      genreDetailData?.genreId === 7
+                                                      genreDetailData?.genreId === 4
                                                     ? bluesCoverImage
                                                     : genreDetailData?.genreName === 'R&B/Soul' ||
-                                                      genreDetailData?.genreId === 8
+                                                      genreDetailData?.genreId === 5
                                                     ? randbsoulCoverImage
                                                     : genreDetailData?.genreName === 'Hip Hop' ||
-                                                      genreDetailData?.genreId === 9
+                                                      genreDetailData?.genreId === 6
                                                     ? hiphopCoverImage
                                                     : genreDetailData?.genreName === 'EDM' ||
-                                                      genreDetailData?.genreId === 10
+                                                      genreDetailData?.genreId === 7
                                                     ? edmCoverImage
                                                     : noContentImage
                                             }
@@ -215,25 +215,24 @@ function GenreDetailPage() {
                                         <span className="type">Bảng xếp hạng nhạc theo thể loại</span>
                                         {/* Tiêu đề */}
                                         <span className="name">
-                                            {genreDetailData?.genreName === 'Pop' || genreDetailData?.genreId === 4
+                                            {genreDetailData?.genreName === 'Pop' || genreDetailData?.genreId === 1
                                                 ? 'Pop'
                                                 : genreDetailData?.genreName === 'Rock' ||
-                                                  genreDetailData?.genreId === 5
+                                                  genreDetailData?.genreId === 2
                                                 ? 'Rock'
                                                 : genreDetailData?.genreName === 'Jazz' ||
-                                                  genreDetailData?.genreId === 6
+                                                  genreDetailData?.genreId === 3
                                                 ? 'Jazz'
                                                 : genreDetailData?.genreName === 'Blues' ||
-                                                  genreDetailData?.genreId === 7
+                                                  genreDetailData?.genreId === 4
                                                 ? 'Blues'
                                                 : genreDetailData?.genreName === 'R&B/Soul' ||
-                                                  genreDetailData?.genreId === 8
+                                                  genreDetailData?.genreId === 5
                                                 ? 'R&B/Soul'
                                                 : genreDetailData?.genreName === 'Hip Hop' ||
-                                                  genreDetailData?.genreId === 9
+                                                  genreDetailData?.genreId === 6
                                                 ? 'Hip Hop'
-                                                : genreDetailData?.genreName === 'EDM' ||
-                                                  genreDetailData?.genreId === 10
+                                                : genreDetailData?.genreName === 'EDM' || genreDetailData?.genreId === 7
                                                 ? 'EDM'
                                                 : ''}
                                         </span>

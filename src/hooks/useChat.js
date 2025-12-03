@@ -50,7 +50,8 @@ export function useChat(conversationId) {
     });
 
     // useSocket
-    const { socket, isConnected, on, sendMessage, acknowledgeMessage, sendTyping, sendConversationRead } = useSocket();
+    const { socket, isConnected, on, sendMessage, acknowledgeMessage, sendTyping, sendConversationRead, setPresence } =
+        useSocket();
 
     // Flatten pages -> messages array (oldest -> newest)
     // const messages = (messagesInfiniteQuery.data?.pages || []).flatMap((p) => p.messages || []).reverse();
@@ -132,12 +133,23 @@ export function useChat(conversationId) {
             updateMessageStatus(queryClient, auth, payload);
         };
 
+        // Handle presence
+        const handlePresence = (payload) => {
+            // Set presence context
+            setPresence((old) => {
+                const presenceMap = new Map(old);
+                presenceMap.set(payload?.userId, payload);
+                return presenceMap;
+            });
+        };
+
         // Register using on() which returns unsubscribe functions
         const unsubMsg = on('message_created', handleMessageCreated); // Nhận tin nhắn mới khi ở trong cuộc trò chuyện
         const unsubStatus = on('message_status_update', handleStatusUpdate); // Nhận cập nhật trạng thái tin nhắn
         const unsubTyping = on('typing', handleTypingDetect); // Nhận trạng thái gõ/nhập tin nhắn
         const unsubJoined = on('joined_conversation', handleJoinedConversation); // Nhận trạng thái đã tham gia cuộc trò chuyện
         const unsubReadBy = on('conversation_read_by', handleConversationReadBy); // Nhận trạng thái đã xem cuộc trò chuyện
+        const unsubPresence = on('presence', handlePresence); // Nhận trạng thái hoạt động của người dùng
 
         return () => {
             unsubMsg?.();
@@ -145,6 +157,7 @@ export function useChat(conversationId) {
             unsubTyping?.();
             unsubJoined?.();
             unsubReadBy?.();
+            unsubPresence?.();
         };
     }, [conversationId, socket, on, queryClient]);
 

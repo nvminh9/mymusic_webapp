@@ -68,6 +68,7 @@ body {
     left: 0px;
     border-right: 0.5px solid #1f1f1f;
     z-index: 2;
+    transition: ease-out 0.2s;
 
     // phần top của leftContainer
     .top {
@@ -9395,6 +9396,7 @@ body {
                     position: relative;
                     .left {
                         .conversationAvatar {
+                            position: relative;
                             img {
                                 height: 53.2px;
                                 width: 53.2px;
@@ -9404,6 +9406,15 @@ body {
                                 object-fit: cover;
                                 cursor: pointer;
                                 // box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+                            }
+                            .presenceSign {
+                                width: 15px;
+                                height: 15px;
+                                border-radius: 50%;
+                                border: 2px solid #121212;
+                                position: absolute;
+                                bottom: 1px;
+                                right: 2px;
                             }
                         }
                     }
@@ -9465,6 +9476,9 @@ body {
             }
             .conversationItem:hover {
                 background-color: #1f1f1f;
+            }
+            .conversationItem:hover .presenceSign {
+                border: 2px solid #1f1f1f;
             }
             .conversationItem:active {
                 background-color: #000;
@@ -9728,8 +9742,10 @@ body {
         height: 100%;
         width: 100%;
         padding-top: 58px;
+        background-color: #12121200;
         .messagesList {
-            height: 90%;
+            // height: 90%;
+            height: 100%;
             overflow-x: hidden;
             overflow-y: auto;
             position: relative;
@@ -9739,6 +9755,7 @@ body {
             // gap: 2.5px;
             gap: 1.2px;
             padding: 10px;
+            padding-bottom: 58.4px;
             // scroll-behavior: smooth;
             .readAt {
                 .avatarReadAt {
@@ -9870,63 +9887,9 @@ body {
                 }
             }
         }
-        .messageInputContainer {
-            height: 10%;
-            width: 100%;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background-color: #121212;
-            padding: 10px;
-            // border-top: 0.5px solid #1f1f1f;
-            .messageInput {
-                background-color: #121212;
-                border: 3px solid #1f1f1f;
-                border-radius: 25px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-family: system-ui;
-                font-size: 15px;
-                font-weight: 400;
-                color: #ffffff;
-                padding: 10px 12px;
-                width: 100%;
-            }
-            .messageInput:focus {
-                outline: none;
-            }
-            .btnSendMessage {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 5px;
-                padding: 10px;
-                // font-family: system-ui;
-                font-size: 16px;
-                // font-weight: 500;
-                border: none;
-                border: 3px solid #ffffff;
-                background-color: #ffffff;
-                color: #000;
-                border-radius: 50%;
-                cursor: pointer;
-                transition: ease-out 0.2s;
-                svg {
-                    color: #121212;
-                    transform: translateX(1px);
-                    transition: ease-out 0.2s;
-                }
-            }
-            .btnSendMessage:active {
-                svg {
-                    transform: translateX(3px);
-                }
-            }
-        }
         .btnScrollToBottom {
             position: absolute;
-            bottom: 10%;
+            bottom: 7%;
             left: 0;
             right: 0;
             background-color: transparent;
@@ -9968,6 +9931,66 @@ body {
             }
             button:active {
                 transform: scale(0.98);
+            }
+        }
+    }
+    .messageInputContainer {
+        height: 58.4px;
+        width: 50%;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: #121212;
+        background: linear-gradient(0deg, #121212 0%, #12121200 100%);
+        // background: linear-gradient(0deg, rgb(0 0 0 / 25%) 0%, #12121200 100%);
+        padding: 10px;
+        position: fixed;
+        bottom: 0;
+        .messageInput {
+            // background-color: #121212;
+            // border: 3px solid #1f1f1f;
+            border: none;
+            border-radius: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: system-ui;
+            font-size: 15px;
+            font-weight: 400;
+            color: #ffffff;
+            padding: 7px 12px;
+            width: 100%;
+            background-color: rgba(18, 18, 18, 0.8);
+            backdrop-filter: blur(6px);
+            outline: 1px solid #ffffff07;
+        }
+        .messageInput:focus {
+            outline: 1px solid #ffffff07;
+        }
+        .btnSendMessage {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            padding: 11px;
+            font-size: 14px;
+            border: none;
+            background-color: rgba(18, 18, 18, 0.8);
+            backdrop-filter: blur(6px);
+            outline: 1px solid #ffffff07;
+            color: #000;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: ease-out 0.2s;
+            svg {
+                color: #ffffff;
+                transform: translateX(1px);
+                transition: ease-out 0.2s;
+            }
+        }
+        .btnSendMessage:active {
+            svg {
+                transform: translateX(3px);
             }
         }
     }
@@ -10488,5 +10511,22 @@ body {
     .tagSuggestionsList {
         top: unset !important;
         right: 35px !important;
+    }
+
+    // btnExpandMenuOnPhone
+    .btnExpandMenuOnPhone {
+        visibility: visible !important;
+    }
+
+    // .leftContainer
+    .leftContainer {
+        z-index: 100;
+    }
+
+    // Chat Window
+    .chatWindowContainer {
+        .messageInputContainer {
+            width: 100%;
+        }
     }
 }
