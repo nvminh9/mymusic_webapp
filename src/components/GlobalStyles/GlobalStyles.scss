@@ -9755,7 +9755,7 @@ body {
             // gap: 2.5px;
             gap: 1.2px;
             padding: 10px;
-            padding-bottom: 58.4px;
+            padding-bottom: 68.4px;
             // scroll-behavior: smooth;
             .readAt {
                 .avatarReadAt {
@@ -9889,7 +9889,7 @@ body {
         }
         .btnScrollToBottom {
             position: absolute;
-            bottom: 7%;
+            bottom: 8%;
             left: 0;
             right: 0;
             background-color: transparent;
@@ -9943,7 +9943,8 @@ body {
         background: #121212;
         background: linear-gradient(0deg, #121212 0%, #12121200 100%);
         // background: linear-gradient(0deg, rgb(0 0 0 / 25%) 0%, #12121200 100%);
-        padding: 10px;
+        // padding: 10px;
+        padding: 0px 14px 14px 14px;
         position: fixed;
         bottom: 0;
         .messageInput {
@@ -9958,7 +9959,7 @@ body {
             font-size: 15px;
             font-weight: 400;
             color: #ffffff;
-            padding: 7px 12px;
+            padding: 8px 12px;
             width: 100%;
             background-color: rgba(18, 18, 18, 0.8);
             backdrop-filter: blur(6px);
