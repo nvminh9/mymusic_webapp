@@ -10094,6 +10094,11 @@ body {
     }
 }
 
+// Bottom Navigation (Phone)
+.bottomNavigationBar {
+    display: none;
+}
+
 /*                           MEDIA QUERY                          */
 /***** 1. Thiết bị có kích thước màn hình 740px - 1023px (màn hình tablet và laptop nhỏ) *****/
 @media (min-width: 740px) and (max-width: 1023px) {
@@ -10119,6 +10124,7 @@ body {
 
     // CSS Middle Container
     .middleContainer {
+        padding-bottom: 58.4px; // Để tránh bị che bởi thanh điều hướng dưới cùng (bottom nav)
         .tabSwitchBar {
             width: 100%;
         }
@@ -10528,6 +10534,117 @@ body {
     .chatWindowContainer {
         .messageInputContainer {
             width: 100%;
+        }
+    }
+
+    // Bottom Navigation (Phone)
+    .bottomNavigationBar {
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        position: fixed;
+        bottom: 0;
+        z-index: 99;
+        height: 58.4px;
+        width: 100%;
+        background-color: rgba(18, 18, 18, 0.8);
+        backdrop-filter: blur(15px);
+        border-top: 0.5px solid #1f1f1f;
+        transition: ease-out 0.2s;
+        button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: none;
+            border: none;
+            border-radius: 50%;
+            padding: 10px;
+            svg {
+                font-size: 24px;
+                color: #ffffff;
+                transition: ease-out 0.2s;
+            }
+        }
+        .btnHome {
+            //
+        }
+        .btnMessages {
+            //
+        }
+        .btnUpload {
+            background-color: #1f1f1f;
+            border-radius: 15px;
+            position: relative;
+            .uploadOptions {
+                position: absolute;
+                bottom: 135%;
+                background-color: #121212;
+                border: 1px solid #1f1f1f;
+                border-radius: 25px;
+                height: max-content;
+                width: max-content;
+                display: grid;
+                justify-content: left;
+                gap: 5px;
+                padding: 5px;
+                box-shadow: rgb(0 0 0 / 20%) 0px 1px 4px;
+                visibility: hidden;
+                button {
+                    background-color: transparent;
+                    border: 1px solid #1f1f1f;
+                    border-radius: 25px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: left;
+                    color: #ffffff;
+                    gap: 10px;
+                    font-family: system-ui;
+                    font-size: 13px;
+                    font-weight: 500;
+                    user-select: none;
+                    transition: none;
+                    svg {
+                        transition: none;
+                    }
+                }
+                button:active {
+                    background-color: #000;
+                }
+            }
+        }
+        .btnSearch {
+            //
+        }
+        .btnProfile {
+            //
+            .userAvatar {
+                height: 27px;
+                width: 27px;
+                // outline: rgb(135 135 135 / 50%) solid 2px;
+                border: 2px solid rgb(135 135 135 / 50%);
+                // outline-offset: -1px;
+                border-radius: 50%;
+                object-fit: cover;
+                cursor: pointer;
+            }
+        }
+    }
+
+    // Mini MusicPlayer (for Mobile)
+    .miniMusicPlayerContainer {
+        position: absolute;
+        width: 100%;
+        bottom: 100%;
+        padding: 10px;
+        .miniMusicPlayer {
+            background-color: rgba(18, 18, 18, 0.8);
+            backdrop-filter: blur(15px);
+            // for another browser support
+            -webkit-backdrop-filter: blur(15px);
+            height: 50px;
+            width: 100%;
+            border: 1px solid #1f1f1f;
+            border-radius: 20px;
         }
     }
 }

@@ -4,8 +4,9 @@ import { useContext, useEffect, useState } from 'react';
 import { getNextSongRecommendApi } from '~/utils/api';
 import { AuthContext } from '~/context/auth.context';
 import { useMusicPlayer } from '~/hooks/useMusicPlayer';
+import { get } from 'lodash';
 
-function NextSongRecommend({ type }) {
+function NextSongRecommend({ getNextSongRecommendForMusicPlayerComponent, type }) {
     // State
     const [nextSongRecommendData, setNextSongRecommendData] = useState();
 
@@ -53,21 +54,25 @@ function NextSongRecommend({ type }) {
     // type === 'default' or null
     return (
         <>
-            <div className="nextSongRecommendContainer">
-                <div className="nextSongRecommend">
-                    {/* Title */}
-                    <span className="title">Tiếp theo</span>
-                    {/* Next Song */}
-                    {nextSongRecommendData && (
-                        <MusicCard songData={nextSongRecommendData} typeMusicCard={'atNextSongRecommend'} />
-                    )}
-                </div>
-            </div>
-            {/* {currentIndex < playlist?.length - 1 ? (
-                <span style={{ color: '#ffffff' }}>Next Song In Playlist</span>
-            ) : (
-                <span style={{ color: '#ffffff' }}>Next Song Recommend</span>
-            )} */}
+            {nextSongRecommendData && (
+                <>
+                    <div className="nextSongRecommendContainer">
+                        <div className="nextSongRecommend">
+                            {/* Title */}
+                            <span className="title">Tiếp theo</span>
+                            {/* Next Song */}
+                            {nextSongRecommendData && (
+                                <MusicCard songData={nextSongRecommendData} typeMusicCard={'atNextSongRecommend'} />
+                            )}
+                        </div>
+                    </div>
+                    {/* {currentIndex < playlist?.length - 1 ? (
+                        <span style={{ color: '#ffffff' }}>Next Song In Playlist</span>
+                    ) : (
+                        <span style={{ color: '#ffffff' }}>Next Song Recommend</span>
+                    )} */}
+                </>
+            )}
         </>
     );
 }

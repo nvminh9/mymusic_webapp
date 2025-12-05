@@ -39,7 +39,7 @@ import { AuthContext } from '~/context/auth.context';
 import PlaylistCard from '../PlaylistCard';
 import NextSongRecommend from '../NextSongRecommend';
 
-function MusicPlayer() {
+function MusicPlayer({ type }) {
     // State
     const [isMusicPlayerMaximized, setIsMusicPlayerMaximized] = useState(false);
     const [isOpenAddToPlaylistBox, setIsOpenAddToPlaylistBox] = useState(false);
@@ -198,6 +198,15 @@ function MusicPlayer() {
         document.addEventListener('mousedown', handleClickOutside);
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
+
+    // Mini MusicPlayer (for Mobile)
+    if (type === 'mini') {
+        return (
+            <Fragment>
+                <div className="miniMusicPlayer"></div>
+            </Fragment>
+        );
+    }
 
     return (
         <Fragment>
