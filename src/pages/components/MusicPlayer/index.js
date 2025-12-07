@@ -38,8 +38,10 @@ import { getListPlaylistOfUserDataApi } from '~/utils/api';
 import { AuthContext } from '~/context/auth.context';
 import PlaylistCard from '../PlaylistCard';
 import NextSongRecommend from '../NextSongRecommend';
+import { EnvContext } from '~/context/env.context';
+import noContentImage from '~/assets/images/no_content.jpg';
 
-function MusicPlayer({ type }) {
+function MusicPlayer({ isExpandMiniMusicPlayer, setIsExpandMiniMusicPlayer, type }) {
     // State
     const [isMusicPlayerMaximized, setIsMusicPlayerMaximized] = useState(false);
     const [isOpenAddToPlaylistBox, setIsOpenAddToPlaylistBox] = useState(false);
@@ -68,6 +70,7 @@ function MusicPlayer({ type }) {
         isSaveListeningHistory,
         setIsSaveListeningHistory,
     } = useMusicPlayerContext();
+    const { env } = useContext(EnvContext);
 
     // useMusicPlayer (Custom Hook)
     const {
@@ -203,7 +206,668 @@ function MusicPlayer({ type }) {
     if (type === 'mini') {
         return (
             <Fragment>
-                <div className="miniMusicPlayer"></div>
+                <div
+                    className="miniMusicPlayerWrapper"
+                    style={{
+                        alignItems: isExpandMiniMusicPlayer ? 'end' : '',
+                        height: isExpandMiniMusicPlayer ? '95%' : '',
+                    }}
+                >
+                    {/* miniMusicPlayer */}
+                    <div
+                        className="miniMusicPlayer"
+                        onClick={() => {
+                            setIsExpandMiniMusicPlayer(true);
+                        }}
+                        style={{
+                            height: isExpandMiniMusicPlayer ? '100%' : '',
+                            display: isExpandMiniMusicPlayer ? 'grid' : '',
+                            alignItems: isExpandMiniMusicPlayer ? 'start' : '',
+                            justifyContent: isExpandMiniMusicPlayer ? 'center' : '',
+                            backgroundColor: isExpandMiniMusicPlayer ? 'transparent' : '',
+                            backdropFilter: isExpandMiniMusicPlayer ? 'none' : '',
+                        }}
+                    >
+                        {/* Song Info */}
+                        <div
+                            className="songInfo"
+                            style={{
+                                display: isExpandMiniMusicPlayer ? 'grid' : '',
+                                margin: isExpandMiniMusicPlayer ? '0 auto' : '',
+                                marginTop: isExpandMiniMusicPlayer ? '40px' : '',
+                                gap: isExpandMiniMusicPlayer ? '20px' : '',
+                            }}
+                        >
+                            {/* Song Thumbnail */}
+                            <div className="songThumbnail">
+                                <ImageAmbilight
+                                    imageSrc={
+                                        currentSong?.songImage
+                                            ? env?.backend_url + currentSong?.songImage
+                                            : noContentImage
+                                    }
+                                    style={{
+                                        height: isExpandMiniMusicPlayer ? '260px' : '40px',
+                                        width: isExpandMiniMusicPlayer ? '260px' : '40px',
+                                        borderRadius: isExpandMiniMusicPlayer ? '20px' : '11px',
+                                        transition: isExpandMiniMusicPlayer ? 'ease-in-out 0.2s' : '',
+                                    }}
+                                />
+                                {/* <img
+                                    className="thumbnail"
+                                    src={
+                                        currentSong?.songImage
+                                            ? env?.backend_url + currentSong?.songImage
+                                            : noContentImage
+                                    }
+                                    loading="lazy"
+                                    draggable="false"
+                                    style={{
+                                        height: isExpandMiniMusicPlayer ? '260px' : '',
+                                        width: isExpandMiniMusicPlayer ? '260px' : '',
+                                        borderRadius: isExpandMiniMusicPlayer ? '20px' : '',
+                                        transition: isExpandMiniMusicPlayer ? 'ease-in-out 0.2s' : '',
+                                    }}
+                                /> */}
+                            </div>
+                            {/* Name */}
+                            <span
+                                className="songName"
+                                style={{
+                                    fontSize: isExpandMiniMusicPlayer ? '18px' : '',
+                                    textAlign: isExpandMiniMusicPlayer ? 'center' : '',
+                                    padding: isExpandMiniMusicPlayer ? '5px 0px' : '',
+                                    width: isExpandMiniMusicPlayer ? '260px' : '',
+                                }}
+                            >
+                                {currentSong
+                                    ? currentSong?.name || 'Chưa có bài hát nào được phát'
+                                    : 'Chưa có bài hát nào được phát'}
+                            </span>
+                            {/* Progress Bar */}
+                            {currentSong && (
+                                <>
+                                    <div
+                                        className="progressBarContainer"
+                                        style={{
+                                            display: !isExpandMiniMusicPlayer ? 'none' : '',
+                                            position: 'relative',
+                                        }}
+                                    >
+                                        {/* Progress */}
+                                        <input
+                                            className="progressBar"
+                                            type="range"
+                                            min="0"
+                                            max={duration}
+                                            value={currentTime}
+                                            onChange={handleSeek}
+                                            style={{
+                                                margin: '0px',
+                                                cursor:
+                                                    !playlist?.length || playlist?.length < 1
+                                                        ? 'not-allowed'
+                                                        : 'pointer',
+                                            }}
+                                        />
+                                        {/* Time */}
+                                        <div className="timeBar">
+                                            <div className="left" id="leftTimeBarID">
+                                                {formatTime(currentTime)}
+                                            </div>
+                                            <div className="right" id="rightTimeBarID">
+                                                {formatTime(duration)}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </>
+                            )}
+                            {/* Song Interact Button Box */}
+                            {currentSong && (
+                                <div
+                                    className="interactButtonBoxContainer"
+                                    style={{
+                                        // position: 'absolute',
+                                        // bottom: '-74.6px',
+                                        display: !isExpandMiniMusicPlayer ? 'none' : '',
+                                    }}
+                                >
+                                    <div className="interactButtonBox">
+                                        {/* Button Like Song */}
+                                        {currentSong && (
+                                            <LikeSongButton
+                                                key={currentSong?.songId}
+                                                songData={currentSong}
+                                                playlist={playlist}
+                                                setPlaylist={setPlaylist}
+                                            />
+                                        )}
+                                        {/* Songs Play Count */}
+                                        <div className="btnLikeSongContainer">
+                                            <button
+                                                type="button"
+                                                className={`btnLikeSong ${
+                                                    !playlist?.length || playlist?.length < 1 ? 'btnDisabled' : ''
+                                                }`}
+                                                disabled={!playlist?.length || playlist?.length < 1 ? true : false}
+                                                onClick={() => {
+                                                    // setIsOpenAddToPlaylistBox(true);
+                                                }}
+                                                style={{
+                                                    background: 'transparent',
+                                                    borderRadius: '25px',
+                                                    gap: '3px',
+                                                    padding: '7px 12px',
+                                                    cursor: 'unset',
+                                                }}
+                                            >
+                                                <BsBroadcast />{' '}
+                                                <span
+                                                    style={{
+                                                        fontFamily: 'system-ui',
+                                                        fontSize: '12px',
+                                                        fontWeight: '500',
+                                                    }}
+                                                >
+                                                    {currentSong.playCount} lượt phát
+                                                </span>
+                                            </button>
+                                        </div>
+                                        {/* Button Add To Playlist */}
+                                        <div className="btnLikeSongContainer">
+                                            <button
+                                                type="button"
+                                                className={`btnLikeSong ${
+                                                    !playlist?.length || playlist?.length < 1 ? 'btnDisabled' : ''
+                                                }`}
+                                                disabled={!playlist?.length || playlist?.length < 1 ? true : false}
+                                                onClick={() => {
+                                                    setIsOpenAddToPlaylistBox(true);
+                                                }}
+                                                style={{
+                                                    borderRadius: '25px',
+                                                    gap: '3px',
+                                                    padding: '7px 12px',
+                                                }}
+                                            >
+                                                <CgPlayListAdd />{' '}
+                                                <span
+                                                    style={{
+                                                        fontFamily: 'system-ui',
+                                                        fontSize: '12px',
+                                                        fontWeight: '500',
+                                                    }}
+                                                >
+                                                    Thêm vào danh sách phát
+                                                </span>
+                                            </button>
+                                        </div>
+                                        {/* Button Share Song */}
+                                        <div className="btnLikeSongContainer">
+                                            <button
+                                                type="button"
+                                                className={`btnLikeSong ${
+                                                    !playlist?.length || playlist?.length < 1 ? 'btnDisabled' : ''
+                                                }`}
+                                                disabled
+                                                // disabled={!playlist?.length || playlist?.length < 1 ? true : false}
+                                                // onClick={() => {
+                                                //     handleLikeSong();
+                                                // }}
+                                                style={{
+                                                    borderRadius: '25px',
+                                                    gap: '3px',
+                                                    padding: '7px 12px',
+                                                    opacity: '0.3',
+                                                    background: 'transparent',
+                                                }}
+                                            >
+                                                <IoMdShareAlt />{' '}
+                                                <span
+                                                    style={{
+                                                        fontFamily: 'system-ui',
+                                                        fontSize: '12px',
+                                                        fontWeight: '500',
+                                                    }}
+                                                >
+                                                    Chia sẻ
+                                                </span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                            {/* Controls */}
+                            <div
+                                className="controlsContainer"
+                                style={{
+                                    display: !isExpandMiniMusicPlayer ? 'none' : '',
+                                }}
+                            >
+                                <div className="controls">
+                                    <div
+                                        className="btnPreviousSongContainer"
+                                        style={{
+                                            marginLeft: '-12px',
+                                        }}
+                                    >
+                                        <button
+                                            className={`btnPreviousSong ${
+                                                !playlist?.length || playlist?.length < 1 || currentIndex === 0
+                                                    ? 'btnDisabled'
+                                                    : ''
+                                            }`}
+                                            onClick={previous}
+                                            disabled={
+                                                !playlist?.length || playlist?.length < 1 || currentIndex === 0
+                                                    ? true
+                                                    : false
+                                            }
+                                            style={{
+                                                backgroundColor: 'transparent',
+                                            }}
+                                        >
+                                            <IoPlaySkipBackSharp />
+                                        </button>
+                                    </div>
+                                    <div className="btnPlayContainer">
+                                        <button
+                                            className={`btnPlay ${
+                                                !playlist?.length || playlist?.length < 1 ? 'btnDisabled' : ''
+                                            }`}
+                                            onClick={togglePlay}
+                                            disabled={!playlist?.length || playlist?.length < 1 ? true : false}
+                                            style={{
+                                                backgroundColor: 'transparent',
+                                            }}
+                                        >
+                                            {isPlaying && <IoPauseSharp />}
+                                            {!isPlaying && <IoPlaySharp />}
+                                            {/* {!isPlaying && currentTime === duration && <IoRefreshSharp />} */}
+                                        </button>
+                                    </div>
+                                    <div
+                                        className="btnNextSongContainer"
+                                        style={{
+                                            marginRight: '-12px',
+                                        }}
+                                    >
+                                        <button
+                                            className={`btnNextSong ${
+                                                !playlist?.length ||
+                                                playlist?.length < 1 ||
+                                                currentIndex === playlist?.length - 1
+                                                    ? 'btnDisabled'
+                                                    : ''
+                                            }`}
+                                            onClick={next}
+                                            disabled={
+                                                !playlist?.length ||
+                                                playlist?.length < 1 ||
+                                                currentIndex === playlist?.length - 1
+                                                    ? true
+                                                    : false
+                                            }
+                                            style={{
+                                                backgroundColor: 'transparent',
+                                            }}
+                                        >
+                                            <IoPlaySkipForwardSharp />
+                                        </button>
+                                    </div>
+                                </div>
+                                <div className="controls">
+                                    <div
+                                        className="btnVolumeControlContainer"
+                                        style={{
+                                            marginLeft: '-12px',
+                                        }}
+                                    >
+                                        <button
+                                            className={`btnVolumeControl ${
+                                                !playlist?.length || playlist?.length < 1 ? 'btnDisabled' : ''
+                                            }`}
+                                            onClick={() => {
+                                                handleBtnVolume();
+                                            }}
+                                            disabled={!playlist?.length || playlist?.length < 1 ? true : false}
+                                            style={{
+                                                backgroundColor: 'transparent',
+                                            }}
+                                        >
+                                            {isSongMuted ? <IoVolumeMuteSharp /> : <IoVolumeHighSharp />}
+                                        </button>
+                                    </div>
+                                    <div className="btnShuffleContainer">
+                                        <button
+                                            className={`btnShuffle ${
+                                                !playlist?.length || playlist?.length <= 1 ? 'btnDisabled' : ''
+                                            }`}
+                                            onClick={() => {
+                                                shuffle();
+                                            }}
+                                            style={{
+                                                backgroundColor: isShuffle ? '#ffffff' : 'transparent',
+                                                color: isShuffle ? '#000' : '#ffffff',
+                                                position: 'relative',
+                                            }}
+                                            disabled={!playlist?.length || playlist?.length <= 1 ? true : false}
+                                        >
+                                            <IoShuffleSharp
+                                                style={{
+                                                    color: isShuffle ? '#000' : '#ffffff',
+                                                }}
+                                            />
+                                            {isShuffle && (
+                                                <span
+                                                    style={{
+                                                        position: 'absolute',
+                                                        backgroundColor: '#ffffff',
+                                                        color: '#000',
+                                                        fontFamily: 'system-ui',
+                                                        fontSize: '6px',
+                                                        fontWeight: '500',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                        borderRadius: '50%',
+                                                        padding: '4px 3px',
+                                                        top: '2px',
+                                                        right: '4px',
+                                                    }}
+                                                >
+                                                    ON
+                                                </span>
+                                            )}
+                                        </button>
+                                    </div>
+                                    <div className="btnRepeatContainer">
+                                        <button
+                                            className={`btnRepeat ${
+                                                !playlist?.length || playlist?.length < 1 ? 'btnDisabled' : ''
+                                            }`}
+                                            onClick={() => setIsRepeatOne(!isRepeatOne)}
+                                            style={{
+                                                backgroundColor: isRepeatOne ? '#ffffff' : 'transparent',
+                                                color: isRepeatOne ? '#000' : '#ffffff',
+                                                position: 'relative',
+                                            }}
+                                            disabled={!playlist?.length || playlist?.length < 1 ? true : false}
+                                        >
+                                            {isRepeatOne && (
+                                                <span
+                                                    style={{
+                                                        position: 'absolute',
+                                                        backgroundColor: 'transparent',
+                                                        color: '#000',
+                                                        fontFamily: 'system-ui',
+                                                        fontSize: '8px',
+                                                        fontWeight: '400',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                        borderRadius: '50%',
+                                                        padding: '4px 3px',
+                                                        top: '2px',
+                                                        right: '4px',
+                                                    }}
+                                                >
+                                                    1
+                                                </span>
+                                            )}
+
+                                            <IoRepeatSharp
+                                                style={{
+                                                    color: isRepeatOne ? '#000' : '#ffffff',
+                                                }}
+                                            />
+                                        </button>
+                                    </div>
+                                    <div
+                                        className="btnAutoNextSongContainer"
+                                        style={{
+                                            marginRight: '-12px',
+                                        }}
+                                    >
+                                        <button
+                                            className={`btnAutoNextSong ${
+                                                !playlist?.length || playlist?.length < 1 ? 'btnDisabled' : ''
+                                            }`}
+                                            disabled={!playlist?.length || playlist?.length < 1 ? true : false}
+                                            onClick={() => setIsAutoNextSong(!isAutoNextSong)}
+                                            style={{
+                                                backgroundColor: 'transparent',
+                                            }}
+                                        >
+                                            <span className="title">AUTO</span>
+                                            <span
+                                                className="status"
+                                                style={{ color: isAutoNextSong ? '#2ecc71' : '#d63031' }}
+                                            >
+                                                {isAutoNextSong ? 'ON' : 'OFF'}
+                                            </span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            {/* Playlist */}
+                            {typeMusicPlayer?.type === 'playlist' && (
+                                <div
+                                    className=""
+                                    style={{
+                                        display: !isExpandMiniMusicPlayer ? 'none' : '',
+                                    }}
+                                >
+                                    <Playlist data={typeMusicPlayer} currentIndex={currentIndex} type={'musicPlayer'} />
+                                </div>
+                            )}
+                            {/* Next Song Recommend */}
+                            {currentSong && typeMusicPlayer?.type === 'song' && (
+                                <div
+                                    className=""
+                                    style={{
+                                        display: !isExpandMiniMusicPlayer ? 'none' : '',
+                                    }}
+                                >
+                                    <NextSongRecommend />
+                                </div>
+                            )}
+                        </div>
+                        {/* Audio */}
+                        <audio
+                            ref={audioRef}
+                            onEnded={() => {
+                                // onEnded handled
+                                handleEnded();
+                            }}
+                            onTimeUpdate={(e) => {
+                                // Kiểm tra nếu nghe được 70% thì lưu lịch sử phát
+                                // console.log(e.target.currentTime);
+                                // console.log(isSaveListeningHistory);
+                                if (Math.floor(e.target.currentTime) === Math.floor(e.target.duration * 0.7)) {
+                                    // console.log('Lưu lịch sử');
+                                    // console.log(isSaveListeningHistory);
+                                    if (isSaveListeningHistory !== true) {
+                                        saveListeningHistory(currentSong.songId);
+                                        setIsSaveListeningHistory(true);
+                                    }
+                                }
+                            }}
+                            controls={false}
+                            preload="auto"
+                        />
+                    </div>
+                    {/* Add To Playlist Box */}
+                    <div
+                        className="addToPlaylistBox"
+                        style={{
+                            display: !isExpandMiniMusicPlayer || !isOpenAddToPlaylistBox ? 'none' : '',
+                        }}
+                    >
+                        <div ref={addToPlaylistBoxRef} className="addToPlaylist">
+                            {/* Title */}
+                            <div className="title">
+                                <span>Lưu nhạc vào...</span>
+                                <button
+                                    type="button"
+                                    className="btnClose"
+                                    onClick={() => {
+                                        setIsOpenAddToPlaylistBox(false);
+                                    }}
+                                >
+                                    <IoClose />
+                                </button>
+                            </div>
+                            {/* List Playlist */}
+                            <div className="listPlaylist">
+                                {/* Render list playlist */}
+                                {listPlaylistData ? (
+                                    <>
+                                        {listPlaylistData?.length > 0 ? (
+                                            <>
+                                                {listPlaylistData?.map((playlist) => (
+                                                    <div className="playlistCard">
+                                                        <PlaylistCard
+                                                            key={playlist?.playlistId}
+                                                            playlistData={playlist}
+                                                            typePlaylistCard={'atAddToPlaylistBox'}
+                                                        />
+                                                    </div>
+                                                ))}
+                                            </>
+                                        ) : (
+                                            <>
+                                                <div
+                                                    style={{
+                                                        width: '100%',
+                                                        height: 'max-content',
+                                                        display: 'flex',
+                                                        justifyContent: 'center',
+                                                        alignItems: 'center',
+                                                        padding: '8px',
+                                                        paddingTop: '150px',
+                                                    }}
+                                                >
+                                                    <span
+                                                        style={{
+                                                            fontFamily: 'system-ui',
+                                                            fontSize: '14px',
+                                                            fontWeight: '500',
+                                                            color: '#ffffffaa',
+                                                        }}
+                                                    >
+                                                        Chưa có danh sách phát
+                                                    </span>
+                                                </div>
+                                            </>
+                                        )}
+                                    </>
+                                ) : (
+                                    <>
+                                        <div
+                                            style={{
+                                                width: '100%',
+                                                height: 'max-content',
+                                                display: 'flex',
+                                                justifyContent: 'center',
+                                                alignItems: 'center',
+                                                padding: '8px',
+                                                paddingTop: '150px',
+                                            }}
+                                        >
+                                            <IoSyncSharp
+                                                className="loadingAnimation"
+                                                style={{ color: 'white', width: '16px', height: '16px' }}
+                                            />
+                                        </div>
+                                    </>
+                                )}
+                            </div>
+                            {/* Button Create Playlist */}
+                            <div className="btnCreatePlaylistContainer">
+                                <button
+                                    type="button"
+                                    className="btnCreatePlaylist"
+                                    onClick={() => {
+                                        if (
+                                            location.pathname.split('/')[1] + '/' + location.pathname.split('/')[2] !==
+                                            'playlist/create'
+                                        ) {
+                                            navigate(`/playlist/create`);
+                                        }
+                                    }}
+                                >
+                                    <IoAdd /> Danh sách phát mới
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    {/* Controls */}
+                    <div
+                        className="controls"
+                        style={{
+                            display: isExpandMiniMusicPlayer ? 'none' : '',
+                        }}
+                    >
+                        <div className="btnPreviousSongContainer">
+                            <button
+                                className={`btnPreviousSong ${
+                                    !playlist?.length || playlist?.length < 1 || currentIndex === 0 ? 'btnDisabled' : ''
+                                }`}
+                                onClick={previous}
+                                disabled={
+                                    !playlist?.length || playlist?.length < 1 || currentIndex === 0 ? true : false
+                                }
+                            >
+                                <IoPlaySkipBackSharp />
+                            </button>
+                        </div>
+                        <div className="btnPlayContainer">
+                            <button
+                                className={`btnPlay ${!playlist?.length || playlist?.length < 1 ? 'btnDisabled' : ''}`}
+                                onClick={togglePlay}
+                                disabled={!playlist?.length || playlist?.length < 1 ? true : false}
+                            >
+                                {isPlaying && <IoPauseSharp />}
+                                {!isPlaying && <IoPlaySharp />}
+                                {/* {!isPlaying && currentTime === duration && <IoRefreshSharp />} */}
+                            </button>
+                        </div>
+                        <div className="btnNextSongContainer">
+                            <button
+                                className={`btnNextSong ${
+                                    !playlist?.length || playlist?.length < 1 || currentIndex === playlist?.length - 1
+                                        ? 'btnDisabled'
+                                        : ''
+                                }`}
+                                onClick={next}
+                                disabled={
+                                    !playlist?.length || playlist?.length < 1 || currentIndex === playlist?.length - 1
+                                        ? true
+                                        : false
+                                }
+                            >
+                                <IoPlaySkipForwardSharp />
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {/* Button Close Mini Music Player */}
+                <div
+                    className="btnCloseMiniMusicPlayerContainer"
+                    style={{
+                        display: !isExpandMiniMusicPlayer ? 'none' : '',
+                    }}
+                >
+                    <button
+                        className="btnCloseMiniMusicPlayer"
+                        onClick={() => {
+                            setIsExpandMiniMusicPlayer(false);
+                        }}
+                    >
+                        <IoClose />
+                    </button>
+                </div>
             </Fragment>
         );
     }

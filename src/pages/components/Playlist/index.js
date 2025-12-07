@@ -69,13 +69,17 @@ function Playlist({ data, currentIndex, type }) {
         setIsOpenPlaylist(!isOpenPlaylist);
         //
         const middleMusicPlayer = document.getElementById('middleMusicPlayerID');
-        if (!isOpenPlaylist) {
-            const middleMusicPlayerScrollTimeout = setTimeout(() => {
-                middleMusicPlayer.scrollTop = 167;
-            }, 205);
-            return () => {
-                clearTimeout(middleMusicPlayerScrollTimeout);
-            };
+        if (!middleMusicPlayer) {
+            return;
+        } else {
+            if (!isOpenPlaylist) {
+                const middleMusicPlayerScrollTimeout = setTimeout(() => {
+                    middleMusicPlayer.scrollTop = 167;
+                }, 205);
+                return () => {
+                    clearTimeout(middleMusicPlayerScrollTimeout);
+                };
+            }
         }
     };
 

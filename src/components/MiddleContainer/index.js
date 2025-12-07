@@ -27,21 +27,15 @@ import { EnvContext } from '~/context/env.context';
 import { RiPlayListFill } from 'react-icons/ri';
 import { set } from 'lodash';
 import MusicPlayer from '~/pages/components/MusicPlayer';
+import { useIsMobile } from '~/hooks/useIsMobile';
+import BottomNavigationBar from '~/pages/components/BottomNavigationBar';
 
 function MiddleContainer({ children }) {
     // State
-    const [isExpandMenu, setIsExpandMenu] = useState(false);
-    const [isScrollingDown, setIsScrollingDown] = useState(false);
-    const [isOpenUploadOptionsBox, setIsOpenUploadOptionsBox] = useState(false);
 
     // Context
-    const { auth } = useContext(AuthContext);
-    const { env } = useContext(EnvContext);
 
     // Ref
-    const bottomNavigationBarRef = useRef(null);
-    const btnUploadRef = useRef(null);
-    const uploadOptionsRef = useRef(null);
 
     // React Query
     // Prefetch Conversation List (Chưa phân trang)
@@ -65,45 +59,6 @@ function MiddleContainer({ children }) {
     const navigate = useNavigate();
 
     // --- HANDLE FUNCTION ---
-    // Handle scrolling down window ẩn hiện bottom navigation bar (phone)
-    useEffect(() => {
-        let lastScrollTop = 0;
-        const onScroll = () => {
-            const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
-            if (currentScrollTop > lastScrollTop) {
-                // Scrolling Down
-                setIsScrollingDown(true);
-                bottomNavigationBarRef.current.style.transform = 'translateY(100%)';
-                uploadOptionsRef.current.style.visibility = 'hidden';
-                setIsOpenUploadOptionsBox(false);
-            } else {
-                // Scrolling Up
-                setIsScrollingDown(false);
-                bottomNavigationBarRef.current.style.transform = 'translateY(0)';
-                uploadOptionsRef.current.style.visibility = isOpenUploadOptionsBox ? 'visible' : 'hidden';
-                setIsOpenUploadOptionsBox(isOpenUploadOptionsBox);
-            }
-            lastScrollTop = currentScrollTop <= 0 ? 0 : currentScrollTop; // For Mobile or negative scrolling
-        };
-        window.addEventListener('scroll', onScroll);
-        return () => window.removeEventListener('scroll', onScroll);
-    }, []);
-    // Handle Click Outside To Close
-    useEffect(() => {
-        const handleClickOutside = (event) => {
-            // Click outside uploadOptionsRef
-            if (
-                uploadOptionsRef.current &&
-                !uploadOptionsRef.current.contains(event.target) &&
-                !btnUploadRef.current.contains(event.target)
-            ) {
-                setIsOpenUploadOptionsBox(false);
-            }
-        };
-
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => document.removeEventListener('mousedown', handleClickOutside);
-    }, []);
 
     return (
         <>
@@ -300,120 +255,7 @@ function MiddleContainer({ children }) {
                     {isExpandMenu ? <IoClose /> : <IoEllipsisVertical />}
                 </button> */}
                 {/* Bottom Navigation (Phone) */}
-                <div
-                    ref={bottomNavigationBarRef}
-                    className="bottomNavigationBar"
-                    style={{
-                        transform:
-                            location?.pathname === '/' ||
-                            location?.pathname === '/feeds' ||
-                            location?.pathname === '/messages' ||
-                            location?.pathname === '/search' ||
-                            location?.pathname?.startsWith(`/profile`)
-                                ? ''
-                                : 'translateY(100%)',
-                    }}
-                >
-                    {/* Mini MusicPlayer */}
-                    <div className="miniMusicPlayerContainer">
-                        <MusicPlayer type={'mini'} />
-                    </div>
-                    {/* Button Home */}
-                    <button
-                        className="btnHome"
-                        onClick={() => {
-                            navigate('/');
-                        }}
-                    >
-                        {location?.pathname === '/' || location?.pathname === '/feeds' ? (
-                            <IoHomeSharp />
-                        ) : (
-                            <IoHomeOutline />
-                        )}
-                    </button>
-                    {/* Button Messages */}
-                    <button
-                        className="btnMessages"
-                        onClick={() => {
-                            navigate('/messages');
-                        }}
-                    >
-                        {location?.pathname?.startsWith('/messages') ? <IoChatbubble /> : <IoChatbubbleOutline />}
-                    </button>
-                    {/* Button Upload (Article, Music, Playlist) */}
-                    <button
-                        ref={btnUploadRef}
-                        className="btnUpload"
-                        onClick={() => {
-                            setIsOpenUploadOptionsBox(!isOpenUploadOptionsBox);
-                        }}
-                    >
-                        <IoAddOutline
-                            style={{
-                                transform: isOpenUploadOptionsBox ? 'rotate(-45deg)' : '',
-                            }}
-                        />
-                        {/* Upload Options */}
-                        <div
-                            ref={uploadOptionsRef}
-                            className="uploadOptions"
-                            style={{
-                                visibility: isOpenUploadOptionsBox ? 'visible' : '',
-                            }}
-                        >
-                            <button
-                                onClick={() => {
-                                    navigate('/article/upload');
-                                }}
-                            >
-                                <IoImagesOutline /> Bài viết
-                            </button>
-                            <button
-                                onClick={() => {
-                                    navigate('/music/upload');
-                                }}
-                            >
-                                <IoMusicalNotesOutline /> Nhạc
-                            </button>
-                            <button
-                                onClick={() => {
-                                    navigate('/playlist/create');
-                                }}
-                            >
-                                <RiPlayListFill /> Danh sách phát
-                            </button>
-                        </div>
-                    </button>
-                    {/* Button Search */}
-                    <button
-                        className="btnSearch"
-                        onClick={() => {
-                            navigate('/search');
-                        }}
-                    >
-                        {location?.pathname?.startsWith('/search') ? <IoSearch /> : <IoSearchOutline />}
-                    </button>
-                    {/* Button Profile */}
-                    <button
-                        className="btnProfile"
-                        onClick={() => {
-                            navigate(`/profile/${auth?.user?.userName}`);
-                        }}
-                    >
-                        <img
-                            className="userAvatar"
-                            src={auth?.user?.userAvatar ? env?.backend_url + auth?.user?.userAvatar : defaultAvatar}
-                            alt="Ảnh đại diện"
-                            loading="lazy"
-                            style={{
-                                border:
-                                    location?.pathname === `/profile/${auth?.user?.userName}`
-                                        ? '2px solid #ffffff'
-                                        : '',
-                            }}
-                        />
-                    </button>
-                </div>
+                <BottomNavigationBar />
             </div>
             <div className="col l-3 m-0 c-0"></div>
         </>
