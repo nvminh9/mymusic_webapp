@@ -265,7 +265,6 @@ function MessagePage() {
                             spellCheck="false"
                             value={searchConversationQuery}
                             onChange={handleSearchConversationQueryChange}
-                            autoFocus
                         />
                     </div>
                     <button

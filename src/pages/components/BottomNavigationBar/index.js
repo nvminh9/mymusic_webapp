@@ -43,6 +43,15 @@ function BottomNavigationBar() {
     const isMobile = useIsMobile(768); // breakpoint = 768px
 
     // --- HANDLE FUNCTION ---
+    //
+    useEffect(() => {
+        // Nếu trong cửa sổ chat thì ẩn Bottom Navigation Bar
+        if (location?.pathname?.startsWith('/messages/')) {
+            bottomNavigationBarRef.current.style.display = 'none';
+        } else {
+            bottomNavigationBarRef.current.style.display = '';
+        }
+    }, [location?.pathname]);
     // Handle scrolling down window ẩn hiện bottom navigation bar (phone)
     useEffect(() => {
         let lastScrollTop = 0;
